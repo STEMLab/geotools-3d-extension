@@ -1,0 +1,2 @@
+org.geotools.data.postgis3d.PostgisNGDataStoreFactory
+org.geotools.data.postgis3d.PostgisNGJNDIDataStoreFactory

@@ -1,0 +1,1461 @@
+<run>
+<precisionModel type="FLOATING"/>
+
+<case>
+<desc>Test1 - Solid with Curve touching point</desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 2.0, 1.0 1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test2 - Solid with Curve touching point</desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, -1.0 1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test3 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 1.0 3.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test4 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test5 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -3.0 3.0, 3.0 1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test6 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -2.0 2.0, 3.0 1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test7 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -2.0 2.0, 2.0 0.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test8 - Solid with Curve touching line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 2.0, 0.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test9 - Solid with Curve touching line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.5 0.0 2.0, 1.5 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test10 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 3.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test11 - Solid with inside Surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test12 - Solid with crossing Surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 3.0, 3.0 -1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test13 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 3.0 -1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test14 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 2.0 -1.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test15 - Solid with Surface touching surface</desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 3.0, 1.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test16 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 3.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test17 - Solid with inside surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 2.0, 1.0 -1.0 1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test18 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 -1.0, 1.0 -1.0 3.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test19 - Solid with crossing Surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 2.0, 1.0 -1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test20 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(1.0 -1.0 2.0, 1.0 -1.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test21 - Solid with Curve touching one point and line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 0.0 2.0, 1.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test22 - Solid with Curve touching one point and line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 1.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test23 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-2.0 0.0 4.0, 3.0 -2.5 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test24 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 3.0 -2.5 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test25 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 2.0 -2.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test26 - Solid with Curve touching two points and one line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 0.0 2.0, 3.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test27 - Solid with Curve tuoching two poitns and one line </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 3.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test28 - Solid with Curve touching two points and one line</desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 2.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test29 - Solid with Curve touching one point and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 1.0 2.0, 1.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test30 - Solid with Curve touching one point and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 1.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test31 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(2.5 0.5 3.0, 0.5 -1.5 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test32 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(2.5 0.5 3.0, 1.0 -1.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test33 - Solid with inside Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(2.0 0.0 2.0, 1.0 -1.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test34 - Solid with Curve touching two points and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 1.0 2.0, 3.0 -3.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test35 - Solid with Curve touching two points and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 3.0 -3.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test36 - Solid with Curve touching two points and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 0.0 2.0, 2.0 -2.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test37 - Solid with Curve touching one line and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 2.0, 1.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test38 - Solid with Curve touching one line and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 1.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test39 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 3.0, 3.0 -1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test40 - Solid with crossing Curve </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 3.0 -1.0 -1.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test41 - Solid with inside Surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 1.0 -1.0 0.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test42 - Solid with Curve touching two lines and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-1.0 -1.0 2.0, 3.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test43 - Solid with Curve touching two lines and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 3.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test44 - Solid with Curve touching two lines and one surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -1.0 2.0, 2.0 -1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test45 - Solid with Curve touching one point, line and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(-0.5 -3.0 2.0, 1.5 1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test46 - Solid with Curve touching one point, line and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -2.0 2.0, 1.5 1.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+<case>
+<desc>Test47 - Solid with Curve touching one point, line and surface </desc>
+  <a>
+    Solid((((0.0 0.0 0.0, 2.0 0.0 0.0, 2.0 -2.0 0.0, 0.0 -2.0 0.0, 0.0 0.0 0.0)), ((2.0 -2.0 0.0, 2.0 0.0 0.0, 2.0 0.0 2.0, 2.0 -2.0 2.0, 2.0 -2.0 0.0)), ((0.0 0.0 2.0, 0.0 -2.0 2.0, 2.0 -2.0 2.0, 2.0 0.0 2.0, 0.0 0.0 2.0)), ((0.0 -2.0 2.0, 0.0 0.0 2.0, 0.0 0.0 0.0, 0.0 -2.0 0.0, 0.0 -2.0 2.0)), ((0.0 -2.0 0.0, 2.0 -2.0 0.0, 2.0 -2.0 2.0, 0.0 -2.0 2.0, 0.0 -2.0 0.0)), ((0.0 0.0 0.0, 0.0 0.0 2.0, 2.0 0.0 2.0, 2.0 0.0 0.0, 0.0 0.0 0.0))))
+  </a>
+  <b>
+    Curve(0.0 -2.0 2.0, 1.0 0.0 2.0)
+  </b>
+  <test>
+	<op name="intersects" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="disjoint" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="touches" arg1="A" arg2="B">true</op>
+  </test>
+  <test>
+	<op name="contains" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="within" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="crosses" arg1="A" arg2="B">false</op>
+  </test>
+  <test>
+	<op name="overlaps" arg1="A" arg2="B">false</op>
+  </test>
+</case>
+
+</run>

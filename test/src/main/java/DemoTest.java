@@ -31,6 +31,8 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.feature.ISOFeatureFactoryImpl;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.text.cql2.CQL;
@@ -59,6 +61,8 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+
+
 public class DemoTest extends JFrame{
 	private DataStore dataStore;
 	private JComboBox featureTypeCBox;
@@ -494,7 +498,7 @@ public class DemoTest extends JFrame{
          hints.put(Hints.GEOMETRY_VALIDATE, false);
          builder = new GeometryBuilder(hints);
          ArrayList<Solid> al = getSolids(builder);
-         SimpleFeatureTypeBuilder b = new SimpleFeatureTypeBuilder();
+         ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 
        //set the name
        b.setName( "Flag" );
@@ -506,7 +510,7 @@ public class DemoTest extends JFrame{
        //build the type
        SimpleFeatureType schema = b.buildFeatureType();
          //create the builder
-         SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema);
+         SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 
          //add the values
          builder.add( al.get(0) );
@@ -521,9 +525,10 @@ public class DemoTest extends JFrame{
  			DataStore dataStore1;
  			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
  			int result = wizard.showModalDialog();
+ 			
  			if (result == JWizard.FINISH) {
  				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
-
+ 				
  				dataStore1 = DataStoreFinder.getDataStore(connectionParameters);
 
  				if (dataStore1 == null) {

@@ -24,7 +24,7 @@
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
   <groupId>org.geotools</groupId>
-  <artifactId>main-3d</artifactId>
+  <artifactId>gt-main-3d</artifactId>
   <packaging>jar</packaging>
   <name>Main module for 3D Geometry</name>
   

@@ -135,6 +135,11 @@ public class DemoTest extends JFrame{
 				solidtoBox();
 			}
 		});
+		fileMenu.add(new SafeAction("boxToSolid...") {
+			public void action(ActionEvent e) throws Throwable {
+				boxToSolid();
+			}
+		});
 		fileMenu.addSeparator();
 		fileMenu.add(new SafeAction("Exit") {
 			public void action(ActionEvent e) throws Throwable {
@@ -565,6 +570,31 @@ public class DemoTest extends JFrame{
  			// TODO Auto-generated catch block
  			e.printStackTrace();
  		}
+	}
+	private void boxToSolid() {
+		String typeName = "Flag";
+		SimpleFeatureSource source;
+		try {
+			source = dataStore.getFeatureSource(typeName);
+			FeatureType schema = source.getSchema();
+			String name = schema.getGeometryDescriptor().getLocalName();
+
+			Filter filter = CQL.toFilter(text.getText());
+
+			Query query = new Query(typeName, filter, new String[] { name });
+
+			SimpleFeatureCollection features = source.getFeatures(query);
+
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+			table.setModel(model);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (CQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	private void connect(DataStoreFactorySpi format) {
 		JDataStoreWizard wizard = new JDataStoreWizard(format);

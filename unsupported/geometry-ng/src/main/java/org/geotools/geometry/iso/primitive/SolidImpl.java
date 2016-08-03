@@ -178,8 +178,7 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
 
 	@Override
 	public int getDimension(DirectPosition point) {
-		// TODO Auto-generated method stub
-		return 0;
+		return 3;
 	}
 
 	@Override

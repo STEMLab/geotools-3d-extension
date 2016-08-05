@@ -65,6 +65,7 @@ import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.PropertyName;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -333,6 +334,37 @@ public class JDBCFeatureSource extends ContentFeatureSource {
                                 + name;
                         getDataStore().getLogger().log(Level.WARNING, msg, e);
                     }
+
+                    ab.setBinding(binding);
+                    ab.setName(name);
+                    ab.setCRS(crs);
+                    if(srid != null) {
+                        ab.addUserData(JDBCDataStore.JDBC_NATIVE_SRID, srid);
+                    }
+                    ab.addUserData(Hints.COORDINATE_DIMENSION, dimension);
+                    att = ab.buildDescriptor(name, ab.buildGeometryType());
+                }else if (Solid.class.isAssignableFrom(binding)) {
+                    //add the attribute as a geometry, try to figure out 
+                    // its srid first
+                    Integer srid = null;
+                    CoordinateReferenceSystem crs = null;
+                    try {
+                        if(virtualTable != null) {
+                            srid = virtualTable.getNativeSrid(name);
+                        } else {
+                            srid = dialect.getGeometrySRID(databaseSchema, tableName, name, cx);
+                        }
+                        if(srid != null)
+                            crs = dialect.createCRS(srid, cx);
+                    } catch (Exception e) {
+                        String msg = "Error occured determing srid for " + tableName + "."
+                            + name;
+                        getDataStore().getLogger().log(Level.WARNING, msg, e);
+                    }
+                    
+                    // compute the dimension too
+                    int dimension = 3;
+                   
 
                     ab.setBinding(binding);
                     ab.setName(name);

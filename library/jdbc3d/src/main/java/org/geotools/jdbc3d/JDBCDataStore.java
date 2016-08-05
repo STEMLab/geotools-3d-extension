@@ -1747,6 +1747,11 @@ public final class JDBCDataStore extends ContentDataStore
                         int srid = getGeometrySRID(g, att);
                         int dimension = getGeometryDimension(g, att);
                         dialect.setGeometryValue(g, dimension, srid, binding, ps, i);
+                    }else if (Solid.class.isAssignableFrom(binding)) {
+                    	Solid g = (Solid) value;
+                        int srid = getGeometrySRID(g, att);
+                        int dimension = getGeometryDimension(g, att);
+                        dialect.setGeometryValue(g, dimension, srid, binding, ps, i);
                     } else {
                         dialect.setValue(value, binding, ps, i, cx);
                     }
@@ -4062,6 +4067,16 @@ public final class JDBCDataStore extends ContentDataStore
                 else  if (Geometry.class.isAssignableFrom(binding)) {
                     try {
                         Geometry g = (Geometry) value;
+                        int srid = getGeometrySRID(g, att);
+                        int dimension = getGeometryDimension(g, att);
+                        dialect.encodeGeometryValue(g, dimension, srid, sql);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else if(Solid.class.isAssignableFrom(binding)) {
+                	try {
+                        Solid g = (Solid) value;
                         int srid = getGeometrySRID(g, att);
                         int dimension = getGeometryDimension(g, att);
                         dialect.encodeGeometryValue(g, dimension, srid, sql);

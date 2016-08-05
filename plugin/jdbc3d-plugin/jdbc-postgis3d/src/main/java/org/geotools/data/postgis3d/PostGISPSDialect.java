@@ -31,6 +31,7 @@ import org.geotools.jdbc3d.PreparedFilterToSQL;
 import org.geotools.jdbc3d.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.primitive.Solid;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -260,4 +261,16 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
             Connection cx) throws SQLException {
         return delegate.getGeometryDimension(schemaName, tableName, columnName, cx);
     }
+
+	@Override
+	public void setGeometryValue(Solid g, int dimension, int srid, Class binding, PreparedStatement ps, int column)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		if (g != null) {
+            //byte[] bytes = new WKBWriter(dimension).write(g);
+            //ps.setBytes(column, bytes);
+        } else {
+            ps.setNull(column, Types.OTHER, "Geometry");
+        }
+	}
 }

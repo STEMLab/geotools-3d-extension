@@ -92,6 +92,7 @@ public class PostGISDialect extends BasicSQLDialect {
             put("LINESTRINGM", LineString.class);
             put("POLYGON", Polygon.class);
             put("POLYGONM", Polygon.class);
+            put("BOX3D", Solid.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTILINESTRING", MultiLineString.class);
@@ -120,6 +121,7 @@ public class PostGISDialect extends BasicSQLDialect {
             add(LinearRing.class);
             add(MultiLineString.class);
             add(Polygon.class);
+            add(Solid.class);
             add(MultiPolygon.class);
         }
     };
@@ -131,6 +133,8 @@ public class PostGISDialect extends BasicSQLDialect {
             put(Point.class, "POINT");
             put(LineString.class, "LINESTRING");
             put(Polygon.class, "POLYGON");
+            put(Polygon.class, "POLYGON");
+            put(Solid.class, "BOX3D");
             put(MultiPoint.class, "MULTIPOINT");
             put(MultiLineString.class, "MULTILINESTRING");
             put(MultiPolygon.class, "MULTIPOLYGON");
@@ -805,7 +809,7 @@ public class PostGISDialect extends BasicSQLDialect {
     @Override
     public void registerClassToSqlMappings(Map<Class<?>, Integer> mappings) {
         super.registerClassToSqlMappings(mappings);
-
+        mappings.put(Solid.class, Types.OTHER);
         // jdbc metadata for geom columns reports DATA_TYPE=1111=Types.OTHER
         mappings.put(Geometry.class, Types.OTHER);
         mappings.put(UUID.class, Types.OTHER);
@@ -817,6 +821,7 @@ public class PostGISDialect extends BasicSQLDialect {
         super.registerSqlTypeNameToClassMappings(mappings);
 
         mappings.put("geometry", Geometry.class);
+        mappings.put("box3d", Solid.class);
         mappings.put("geography", Geometry.class);
         mappings.put("text", String.class);
         mappings.put("int8", Long.class);
@@ -915,14 +920,23 @@ public class PostGISDialect extends BasicSQLDialect {
                         } else if(dimensions > 4){
                             throw new IllegalArgumentException("PostGIS only supports geometries with 2, 3 and 4 dimensions, current value: " + dimensions);
                         }
+                       if(Solid.class.isAssignableFrom(att.getType().getBinding())) {
+                    	   sql = "ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
+                                   "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
+                                   "TYPE box3d;";//(" + geomType + ", " + srid + ");";
+                              
+                              LOGGER.fine( sql );
+                              st.execute( sql );
+                       }else {
+                    	   sql = 
+                                   "ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
+                                    "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
+                                    "TYPE geometry (" + geomType + ", " + srid + ");";
+                               
+                               LOGGER.fine( sql );
+                               st.execute( sql );
+                       }
                         
-                        sql = 
-                            "ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
-                             "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
-                             "TYPE geometry (" + geomType + ", " + srid + ");";
-                        
-                        LOGGER.fine( sql );
-                        st.execute( sql );
                     }
                     else {
                         // register the geometry type, first remove and eventual
@@ -993,18 +1007,21 @@ public class PostGISDialect extends BasicSQLDialect {
                     }
                     
                     // add the spatial index
-                    sql = 
-                    "CREATE INDEX \"spatial_" + tableName // 
-                            + "_" + gd.getLocalName().toLowerCase() + "\""// 
-                            + " ON " //
-                            + "\"" + schemaName + "\"" // 
-                            + "." //
-                            + "\"" + tableName + "\"" //
-                            + " USING GIST (" //
-                            + "\"" + gd.getLocalName() + "\"" //
-                            + ")";
-                    LOGGER.fine(sql);
-                    st.execute(sql);
+                    if(!Solid.class.isAssignableFrom(att.getType().getBinding())) {
+                    	sql = 
+                                "CREATE INDEX \"spatial_" + tableName // 
+                                        + "_" + gd.getLocalName().toLowerCase() + "\""// 
+                                        + " ON " //
+                                        + "\"" + schemaName + "\"" // 
+                                        + "." //
+                                        + "\"" + tableName + "\"" //
+                                        + " USING GIST (" //
+                                        + "\"" + gd.getLocalName() + "\"" //
+                                        + ")";
+                                LOGGER.fine(sql);
+                                st.execute(sql);
+                    }
+                    
                 }
             }
             if (!cx.getAutoCommit()) {
@@ -1058,9 +1075,13 @@ public class PostGISDialect extends BasicSQLDialect {
     	if (value == null) {
             sql.append("NULL");
         } else {
-        	GeometryToWKTString writer = new GeometryToWKTString(false);
-            String wkt = writer.getString(value);
-            sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
+        	org.opengis.geometry.Envelope e = value.getEnvelope();
+			double[] max = e.getUpperCorner().getCoordinate();
+			double[] min = e.getLowerCorner().getCoordinate();
+			String text = "box3d(ST_GeomFromEWKT('LINESTRING("
+			+ min[0] + " " + min[1] + " " + min[2] + ",0 0 0," 
+					+ max[0] + " " + max[1] + " " + max[2] + ")'))";
+			sql.append(text);
         }
     }
     @Override

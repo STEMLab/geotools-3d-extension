@@ -29,6 +29,7 @@ import java.sql.Types;
 
 import org.geotools.util.Converters;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.primitive.Solid;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -105,6 +106,8 @@ public abstract class PreparedStatementSQLDialect extends SQLDialect {
      * @throws SQLException
      */
     public abstract void setGeometryValue(Geometry g, int dimension, int srid,
+            Class binding, PreparedStatement ps, int column) throws SQLException;
+    public abstract void setGeometryValue(Solid g, int dimension, int srid,
             Class binding, PreparedStatement ps, int column) throws SQLException;
 
     /**

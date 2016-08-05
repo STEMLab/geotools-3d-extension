@@ -106,9 +106,10 @@ import org.opengis.filter.temporal.OverlappedBy;
 import org.opengis.filter.temporal.TContains;
 import org.opengis.filter.temporal.TEquals;
 import org.opengis.filter.temporal.TOverlaps;
+import org.opengis.geometry.Geometry;
 import org.opengis.temporal.Period;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Encodes a filter into a SQL WHERE statement.  It should hopefully be generic

@@ -16,15 +16,18 @@
  */
 package org.geotools.jdbc3d;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 
 import org.geotools.jdbc3d.BasicSQLDialect;
 import org.geotools.jdbc3d.JDBCDataStore;
 import org.geotools.jdbc3d.SQLDialect;
 import org.junit.Test;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.primitive.Solid;
 
 import java.io.IOException;

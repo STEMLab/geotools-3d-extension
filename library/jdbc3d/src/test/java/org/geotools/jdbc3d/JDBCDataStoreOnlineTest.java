@@ -32,21 +32,29 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.iso.io.wkt.Coordinate;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.jdbc3d.Index;
 import org.geotools.jdbc3d.JDBCDataStoreFactory;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTReader;
+//import com.vividsolutions.jts.geom.Coordinate;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.io.WKTReader;
 
 
 /**
@@ -289,9 +297,9 @@ public abstract class JDBCDataStoreOnlineTest extends JDBCTestSupport {
         //write out a feature with a geomety in teh srs, basically accomodate databases that have 
         // to query the first feature in order to get the srs for the feature type
         SimpleFeature f = (SimpleFeature) w.next();
-
-        Geometry g = new WKTReader().read("POINT(593493 4914730)");
-        g.setSRID(26713);
+        CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+        Geometry g = new WKTReader(crs).read("POINT(593493 4914730)");
+        //g.setSRID(26713);
         
         f.setAttribute(0, g);
         f.setAttribute( 1, new Integer(0));
@@ -377,8 +385,10 @@ public abstract class JDBCDataStoreOnlineTest extends JDBCTestSupport {
 
              public void check(int index, SimpleFeature feature) {
                  assertEquals(4, feature.getAttributeCount());
-                 Point p = gf.createPoint(new Coordinate(index, index));
-                 assertTrue(p.equalsExact((Geometry) feature.getAttribute(aname("geometry"))));
+                 //Point p = gf.createPoint(new Coordinate(index, index));
+                 Point p = (Point) gf.createDirectPosition(new double[]{index, index});
+                 //assertTrue(p.equalsExact((Geometry) feature.getAttribute(aname("geometry"))));
+                 assertTrue(p.equals((Geometry) feature.getAttribute(aname("geometry"))));
 
                  Number ip = (Number) feature.getAttribute(aname("intProperty"));
                  assertEquals(index, ip.intValue());

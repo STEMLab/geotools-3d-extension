@@ -16,12 +16,13 @@
  */
 package org.geotools.jdbc3d;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.factory.Hints;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Geometry;
 
 import java.util.ArrayList;
 import java.util.Collection;

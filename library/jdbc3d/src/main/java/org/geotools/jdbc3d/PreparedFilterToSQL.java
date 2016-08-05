@@ -28,8 +28,9 @@ import org.geotools.data.jdbc3d.FilterToSQL;
 import org.opengis.filter.Id;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.identity.Identifier;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Extension of FilterToSQL intended for use with prepared statements.

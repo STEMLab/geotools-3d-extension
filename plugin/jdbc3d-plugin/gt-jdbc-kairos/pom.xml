@@ -30,7 +30,7 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-data</artifactId>
+      <artifactId>gt-data-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

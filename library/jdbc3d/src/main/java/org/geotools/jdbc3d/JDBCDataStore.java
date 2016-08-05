@@ -73,6 +73,7 @@ import org.geotools.feature.visitor.CountVisitor;
 import org.geotools.feature.visitor.GroupByVisitor;
 import org.geotools.feature.visitor.LimitingVisitor;
 import org.geotools.filter.FilterCapabilities;
+import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc3d.JoinInfo.JoinPart;
 import org.geotools.referencing.CRS;
@@ -94,15 +95,18 @@ import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.identity.GmlObjectId;
 import org.opengis.filter.sort.SortBy;
 import org.opengis.filter.sort.SortOrder;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Point;
 
 
 /**
@@ -1327,8 +1331,7 @@ public final class JDBCDataStore extends ContentDataStore
                         if (envelope instanceof ReferencedEnvelope) {
                             bounds = mergeEnvelope(bounds, (ReferencedEnvelope) envelope);
                         } else {
-                            bounds = mergeEnvelope(bounds, new ReferencedEnvelope(envelope,
-                                    flatCRS));
+                            bounds = mergeEnvelope(bounds, new ReferencedEnvelope(envelope));
                         }
                     }
                 }
@@ -4109,15 +4112,16 @@ public final class JDBCDataStore extends ContentDataStore
         }
         
         // check for srid in the jts geometry then
-        if (srid <= 0 && g.getSRID() > 0) {
+        /*if (srid <= 0 && g.getSRID() > 0) {
             srid = g.getSRID();
-        }
+        }*/
         
         // check if the geometry has anything
-        if (srid <= 0 && g.getUserData() instanceof CoordinateReferenceSystem) {
-            // check for crs object
-            CoordinateReferenceSystem crs = (CoordinateReferenceSystem) g
-                .getUserData();
+        //if (srid <= 0 && g.getUserData() instanceof CoordinateReferenceSystem) {
+        if(srid <=0) { 
+        // check for crs object
+            CoordinateReferenceSystem crs = g.getCoordinateReferenceSystem();
+            		//(CoordinateReferenceSystem) g.getUserData();
 
             try {
                 Integer candidate = CRS.lookupEpsgCode(crs, false);
@@ -4165,9 +4169,11 @@ public final class JDBCDataStore extends ContentDataStore
         }
         
         // check for dimension in the geometry coordinate sequences
-        CoordinateSequenceDimensionExtractor dex = new CoordinateSequenceDimensionExtractor();
-        g.apply(dex);
-        return dex.getDimension();
+        //CoordinateSequenceDimensionExtractor dex = new CoordinateSequenceDimensionExtractor();
+        //g.apply(dex);
+        
+        //return dex.getDimension();
+        return g.getCoordinateDimension();
     }
     protected int getGeometryDimension(Solid g, AttributeDescriptor descriptor) throws IOException {
         int dimension = getDescriptorDimension(descriptor);
@@ -4563,31 +4569,34 @@ public final class JDBCDataStore extends ContentDataStore
     protected void setGmlProperties(Geometry g, String gid, String name, String description) {
         // set up the user data
         Map userData = null;
+        if(g instanceof GeometryImpl) {
+        	GeometryImpl gimpl = (GeometryImpl)g;
+	        if (gimpl.getUserData() != null) {
+	            if (gimpl.getUserData() instanceof Map) {
+	                userData = (Map) gimpl.getUserData();
+	            } else {
+	                userData = new HashMap();
+	                userData.put(gimpl.getUserData().getClass(), gimpl.getUserData());
+	            }
+	        } else {
+	            userData = new HashMap();
+	        }
+	        if (gid != null) {
+	            userData.put("gml:id", gid);
+	        }
 
-        if (g.getUserData() != null) {
-            if (g.getUserData() instanceof Map) {
-                userData = (Map) g.getUserData();
-            } else {
-                userData = new HashMap();
-                userData.put(g.getUserData().getClass(), g.getUserData());
-            }
-        } else {
-            userData = new HashMap();
+	        if (name != null) {
+	            userData.put("gml:name", name);
+	        }
+
+	        if (description != null) {
+	            userData.put("gml:description", description);
+	        }
+
+	        gimpl.setUserData(userData);
         }
 
-        if (gid != null) {
-            userData.put("gml:id", gid);
-        }
-
-        if (name != null) {
-            userData.put("gml:name", name);
-        }
-
-        if (description != null) {
-            userData.put("gml:description", description);
-        }
-
-        g.setUserData(userData);
+        
     }
     
     /**

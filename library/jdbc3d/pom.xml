@@ -74,12 +74,12 @@
   <dependencies>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
+      <artifactId>gt-api-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-geometry</artifactId>
+      <artifactId>gt-geometry-ng</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -89,7 +89,7 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-data</artifactId>
+      <artifactId>gt-data-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
      <dependency>

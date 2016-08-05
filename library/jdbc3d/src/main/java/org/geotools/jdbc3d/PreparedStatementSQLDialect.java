@@ -29,8 +29,9 @@ import java.sql.Types;
 
 import org.geotools.util.Converters;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 
 /**

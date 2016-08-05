@@ -43,6 +43,8 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.filter.identity.FeatureIdImpl;
+import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
+import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.Converters;
@@ -57,10 +59,12 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.BoundingBox;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Reader for jdbc datastore
@@ -203,8 +207,8 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryFactory = (GeometryFactory) hints.get(Hints.JTS_GEOMETRY_FACTORY);
-        if (geometryFactory == null) {
+        geometryFactory = (GeometryFactory) hints.get(Hints.GEOMETRY_FACTORY);
+        /*if (geometryFactory == null) {
             // look for a coordinate sequence factory
             CoordinateSequenceFactory csFactory = 
                 (CoordinateSequenceFactory) hints.get(Hints.JTS_COORDINATE_SEQUENCE_FACTORY);
@@ -212,7 +216,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
             if (csFactory != null) {
                 geometryFactory = new GeometryFactory(csFactory);
             }
-        }
+        }*/
 
         if (geometryFactory == null) {
             // fall back on one privided by datastore
@@ -220,9 +224,9 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         }
         
         Double linearizationTolerance = (Double) hints.get(Hints.LINEARIZATION_TOLERANCE);
-        if (linearizationTolerance != null) {
+        /*if (linearizationTolerance != null) {
             geometryFactory = new CurvedGeometryFactory(geometryFactory, linearizationTolerance);
-        }
+        }*/
 
         // create a feature builder using the factory hinted or the one coming 
         // from the datastore
@@ -345,9 +349,9 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
                             throw new RuntimeException(e);
                         }
                         
-                        if (value != null) {
+                        if (value != null && value instanceof GeometryImpl) {
                             //check to see if a crs was set
-                            Geometry geometry = (Geometry) value;
+                        	GeometryImpl geometry = (GeometryImpl) value;
                             if ( geometry.getUserData() == null ) {
                                 //if not set, set from descriptor
                                 geometry.setUserData( gatt.getCoordinateReferenceSystem() );
@@ -740,7 +744,8 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
             Object obj = getDefaultGeometry();
             if( obj instanceof Geometry ){
                 Geometry geometry = (Geometry) obj;
-                return new ReferencedEnvelope( geometry.getEnvelopeInternal(), featureType.getCoordinateReferenceSystem() );
+                //return new ReferencedEnvelope( geometry.getEnvelopeInternal(), featureType.getCoordinateReferenceSystem() );
+                return new ReferencedEnvelope(geometry.getCoordinateReferenceSystem());
             }
             return new ReferencedEnvelope( featureType.getCoordinateReferenceSystem() );
         }

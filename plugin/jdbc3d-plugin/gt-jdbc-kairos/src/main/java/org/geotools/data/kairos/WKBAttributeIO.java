@@ -7,12 +7,17 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.geotools.data.DataSourceException;
+import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.ByteArrayInStream;
-import com.vividsolutions.jts.io.WKBReader;
-import com.vividsolutions.jts.io.WKBWriter;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.io.ByteArrayInStream;
+//import com.vividsolutions.jts.io.WKBReader;
+//import com.vividsolutions.jts.io.WKBWriter;
 
 /**
  * An attribute IO implementation that can manage the WKB
@@ -26,22 +31,22 @@ import com.vividsolutions.jts.io.WKBWriter;
  */
 public class WKBAttributeIO {
 
-    com.vividsolutions.jts.io.WKBReader wkbr;
+    WKTReader wkbr;
 
-    ByteArrayInStream inStream = new ByteArrayInStream(new byte[0]);
+    //ByteArrayInStream inStream = new ByteArrayInStream(new byte[0]);
 
     GeometryFactory gf;
 
     public WKBAttributeIO() {
-        this(new GeometryFactory());
+        this(new GeometryFactoryImpl());
     }
 
     public WKBAttributeIO(GeometryFactory gf) {
-        wkbr = new WKBReader(gf);
+        wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 
     public void setGeometryFactory(GeometryFactory gf) {
-        wkbr = new WKBReader(gf);
+        wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 
     /**
@@ -61,8 +66,10 @@ public class WKBAttributeIO {
                               // possibility, but this is not the same as NULL
             return null;
         try {
-            inStream.setBytes(wkbBytes);
-            return wkbr.read(inStream);
+            //inStream.setBytes(wkbBytes);
+            String text =  new String(wkbBytes,0,wkbBytes.length);
+            //return wkbr.read(inStream);
+            return wkbr.read(text);
         } catch (Exception e) {
             throw new DataSourceException("An exception occurred while parsing WKB data", e);
         }
@@ -107,7 +114,8 @@ public class WKBAttributeIO {
             if (value == null) {
                 ps.setNull(position, Types.OTHER);
             } else {
-                ps.setBytes(position, new WKBWriter().write((Geometry) value));
+            	ps.setString(position, new GeometryToWKTString(false).getString((Geometry) value));
+                //ps.setBytes(position, new WKBWriter().write((Geometry) value));
             }
         } catch (SQLException e) {
             throw new DataSourceException("SQL exception occurred while reading the geometry.", e);

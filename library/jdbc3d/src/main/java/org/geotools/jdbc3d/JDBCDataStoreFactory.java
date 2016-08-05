@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -34,9 +33,13 @@ import org.geotools.data.Parameter;
 import org.geotools.data.jdbc3d.datasource.DBCPDataSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 
 
 /**
@@ -266,10 +269,14 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
             SessionCommandsListener listener = new SessionCommandsListener(sqlOnBorrow, sqlOnRelease);
             dataStore.getConnectionLifecycleListeners().add(listener);
         }
-        
+        /*Hints hints = GeoTools.getDefaultHints();
+        hints.put( Hints.CRS, DefaultGeographicCRS.WGS84_3D );
+        hints.put(Hints.GEOMETRY_FACTORY, value)*/
+        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		
         // factories
         dataStore.setFilterFactory(CommonFactoryFinder.getFilterFactory(null));
-        dataStore.setGeometryFactory(new GeometryFactory());
+        dataStore.setGeometryFactory((GeometryFactoryImpl)builder.getGeometryFactory());
         dataStore.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
         dataStore.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
         dataStore.setDataStoreFactory(this);

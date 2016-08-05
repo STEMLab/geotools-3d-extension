@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc3d.ColumnMetadata;
 import org.geotools.jdbc3d.JDBCDataStore;
@@ -35,20 +36,23 @@ import org.geotools.jdbc3d.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKBWriter;
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.LinearRing;
+//import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.io.WKBWriter;
 
 public class KairosPSDialect extends PreparedStatementSQLDialect {
 
     private KairosDialect delegate;
 
-    private WKBWriter wkbWriter = new WKBWriter();
+    //private WKBWriter wkbWriter = new WKBWriter();
 
     public KairosPSDialect(JDBCDataStore store, KairosDialect delegate) {
         super(store);
@@ -213,7 +217,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
     public void setGeometryValue(Geometry g, int dimension, int srid, Class binding,
             PreparedStatement ps, int column) throws SQLException {
         if (g != null) {
-            if (g instanceof LinearRing) {
+            /*if (g instanceof LinearRing) {
                 // WKT does not support linear rings
                 g = g.getFactory().createLineString(((LinearRing) g).getCoordinateSequence());
             }
@@ -221,10 +225,12 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
             if ((g instanceof Polygon || g instanceof MultiPolygon) && !g.isValid()) {
                 g = g.buffer(0);
                 LOGGER.warning("Input geometry is not Valid!");
-            }
+            }*/
 
-            byte[] bytes = wkbWriter.write(g);
-            ps.setBytes(column, bytes);
+            //byte[] bytes = wkbWriter.write(g);
+        	String text = new GeometryToWKTString(false).getString(g);
+            //ps.setBytes(column, bytes);
+        	ps.setString(column, text);
         } else {
             ps.setNull(column, Types.OTHER, "Geometry");
         }

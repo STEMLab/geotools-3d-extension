@@ -24,7 +24,8 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
+import org.geotools.data.kairos.KairosNGDataStoreFactory;
+
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -120,12 +121,12 @@ public class DemoTest extends JFrame{
 				connect(new ShapefileDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+		fileMenu.add(new SafeAction("Connect to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
-				connect(new PostgisNGDataStoreFactory());
+				connect(new KairosNGDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Insert to PostGIS database...") {
+		fileMenu.add(new SafeAction("Insert to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
 				insertTable();
 			}
@@ -528,7 +529,7 @@ public class DemoTest extends JFrame{
  			
  			
  			DataStore dataStore1;
- 			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
+ 			JDataStoreWizard wizard = new JDataStoreWizard(new KairosNGDataStoreFactory());
  			int result = wizard.showModalDialog();
  			
  			if (result == JWizard.FINISH) {
@@ -627,7 +628,7 @@ public class DemoTest extends JFrame{
 			
 			FeatureType schema = dataStore.getSchema(typeName);//source.getSchema();
 			DataStore dataStore1;
-			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new KairosNGDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();

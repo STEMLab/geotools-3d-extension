@@ -30,34 +30,50 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc3d.BasicSQLDialect;
 import org.geotools.jdbc3d.ColumnMetadata;
 import org.geotools.jdbc3d.JDBCDataStore;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.GeometryFactory;
+import org.opengis.geometry.primitive.Curve;
+//import org.opengis.geometry.coordinate.LineString;
+//import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+/*import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKBReader;
-import com.vividsolutions.jts.io.WKBWriter;
-import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.io.ParseException;*/
+//import com.vividsolutions.jts.io.WKBReader;
+//import com.vividsolutions.jts.io.WKBWriter;
+//import com.vividsolutions.jts.io.WKTReader;
 
 public class KairosDialect extends BasicSQLDialect {
 
@@ -69,7 +85,7 @@ public class KairosDialect extends BasicSQLDialect {
 
     Version version;
 
-    WKBWriter wkbWriter = new WKBWriter();
+    //WKBWriter wkbWriter = new WKBWriter();
 
     static Integer GEOM_POINT = Integer.valueOf(4001);
 
@@ -92,24 +108,39 @@ public class KairosDialect extends BasicSQLDialect {
             put("POINT", Point.class);
             put("POINTM", Point.class);
             put("POINTZ", Point.class);
-            put("LINESTRING", LineString.class);
+            /*put("LINESTRING", LineString.class);
             put("LINESTRINGM", LineString.class);
-            put("LINESTRINGZ", LineString.class);
-            put("POLYGON", Polygon.class);
+            put("LINESTRINGZ", LineString.class);*/
+            put("LINESTRING", Curve.class);
+            put("LINESTRINGM", Curve.class);
+            put("LINESTRINGZ", Curve.class);
+            /*put("POLYGON", Polygon.class);
             put("POLYGONM", Polygon.class);
-            put("POLYGONZ", Polygon.class);
+            put("POLYGONZ", Polygon.class);*/
+            put("POLYGON", Ring.class);
+            put("POLYGONM", Ring.class);
+            put("POLYGONZ", Ring.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTIPOINTZ", MultiPoint.class);
-            put("MULTILINESTRING", MultiLineString.class);
+            /*put("MULTILINESTRING", MultiLineString.class);
             put("MULTILINESTRINGM", MultiLineString.class);
-            put("MULTILINESTRINGZ", MultiLineString.class);
-            put("MULTIPOLYGON", MultiPolygon.class);
+            put("MULTILINESTRINGZ", MultiLineString.class);*/
+            put("MULTILINESTRING", MultiCurve.class);
+            put("MULTILINESTRINGM", MultiCurve.class);
+            put("MULTILINESTRINGZ", MultiCurve.class);
+            /*put("MULTIPOLYGON", MultiPolygon.class);
             put("MULTIPOLYGONM", MultiPolygon.class);
-            put("MULTIPOLYGONZ", MultiPolygon.class);
-            put("GEOMETRYCOLLECTION", GeometryCollection.class);
+            put("MULTIPOLYGONZ", MultiPolygon.class);*/
+            put("MULTIPOLYGON", MultiSurface.class);
+            put("MULTIPOLYGONM", MultiSurface.class);
+            put("MULTIPOLYGONZ", MultiSurface.class);
+            /*put("GEOMETRYCOLLECTION", GeometryCollection.class);
             put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
-            put("GEOMETRYCOLLECTIONZ", GeometryCollection.class);
+            put("GEOMETRYCOLLECTIONZ", GeometryCollection.class);*/
+            put("GEOMETRYCOLLECTION", MultiPrimitive.class);
+            put("GEOMETRYCOLLECTIONM", MultiPrimitive.class);
+            put("GEOMETRYCOLLECTIONZ", MultiPrimitive.class);
             put("BYTEA", byte[].class);
         }
     };
@@ -119,12 +150,17 @@ public class KairosDialect extends BasicSQLDialect {
         {
             put(Geometry.class, "GEOMETRY");
             put(Point.class, "POINT");
-            put(LineString.class, "LINESTRING");
-            put(Polygon.class, "POLYGON");
+            //put(LineString.class, "LINESTRING");
+            put(Curve.class, "LINESTRING");
+            //put(Polygon.class, "POLYGON");
+            put(Ring.class, "POLYGON");
             put(MultiPoint.class, "MULTIPOINT");
-            put(MultiLineString.class, "MULTILINESTRING");
-            put(MultiPolygon.class, "MULTIPOLYGON");
-            put(GeometryCollection.class, "GEOMCOLLECTION");
+            //put(MultiLineString.class, "MULTILINESTRING");
+            put(MultiCurve.class, "MULTILINESTRING");
+            //put(MultiPolygon.class, "MULTIPOLYGON");
+            put(MultiSurface.class, "MULTIPOLYGON");
+            //put(GeometryCollection.class, "GEOMCOLLECTION");
+            put(MultiPrimitive.class, "GEOMCOLLECTION");
             put(byte[].class, "BYTEA");
         }
     };
@@ -250,18 +286,23 @@ public class KairosDialect extends BasicSQLDialect {
             rs = st.executeQuery(sql.toString());
 
             if (rs.next()) {
-                byte[] bytes = rs.getBytes(1);
-                if (bytes != null) {
+                //byte[] bytes = rs.getBytes(1);
+            	String text = rs.getString(1);
+                if (text != null) {
                     try {
-                        Geometry extGeom = new WKBReader().read(bytes);
-                        CoordinateReferenceSystem crs = att.getCoordinateReferenceSystem();
+                    	CoordinateReferenceSystem crs = att.getCoordinateReferenceSystem();
 
+                        Geometry extGeom = new WKTReader(crs).read(text);
+                        
                         // reproject and merge
-                        result.add(new ReferencedEnvelope(extGeom.getEnvelopeInternal(), crs));
-                    } catch (ParseException e) {
+                        result.add(new ReferencedEnvelope(extGeom.getEnvelope()));
+                    } /*catch (ParseException e) {
                         String msg = "Error decoding wkb";
                         throw (IOException) new IOException(msg).initCause(e);
-                    }
+                    }*/ catch (org.geotools.geometry.iso.io.wkt.ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }
             }
         } catch (SQLException e) {
@@ -284,17 +325,25 @@ public class KairosDialect extends BasicSQLDialect {
     @Override
     public Envelope decodeGeometryEnvelope(ResultSet rs, int column, Connection cx)
             throws SQLException, IOException {
+    	Hints hints = GeoTools.getDefaultHints();
+        hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+        hints.put(Hints.GEOMETRY_VALIDATE, false);
         try {
             String envelope = rs.getString(column);
             if (envelope != null) {
-                return new WKTReader().read(envelope).getEnvelopeInternal();
+                return new WKTReader(hints).read(envelope).getEnvelope();
             } else {
-                return new Envelope();
+                //return new Envelope();
+            	return null;
             }
-        } catch (ParseException e) {
+        } /*catch (ParseException e) {
             throw (IOException) new IOException("Error occurred parsing the bounds WKT")
                     .initCause(e);
-        }
+        }*/ catch (org.geotools.geometry.iso.io.wkt.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
     }
 
     @SuppressWarnings("rawtypes")
@@ -466,12 +515,17 @@ public class KairosDialect extends BasicSQLDialect {
 
         // Geometry Type for Kairos
         mappings.put(Point.class, GEOM_POINT);
-        mappings.put(LineString.class, GEOM_LINESTRING);
-        mappings.put(Polygon.class, GEOM_POLYGON);
+        //mappings.put(LineString.class, GEOM_LINESTRING);
+        mappings.put(Curve.class, GEOM_LINESTRING);
+        //mappings.put(Polygon.class, GEOM_POLYGON);
+        mappings.put(Ring.class, GEOM_POLYGON);
         mappings.put(MultiPoint.class, GEOM_MULTIPOINT);
-        mappings.put(MultiLineString.class, GEOM_MULTILINESTRING);
-        mappings.put(MultiPolygon.class, GEOM_MULTIPOLYGON);
-        mappings.put(GeometryCollection.class, GEOM_GEOMCOLLECTION);
+        //mappings.put(MultiLineString.class, GEOM_MULTILINESTRING);
+        mappings.put(MultiCurve.class, GEOM_MULTILINESTRING);
+        //mappings.put(MultiPolygon.class, GEOM_MULTIPOLYGON);
+        mappings.put(MultiSurface.class, GEOM_MULTIPOLYGON);
+        //mappings.put(GeometryCollection.class, GEOM_GEOMCOLLECTION);
+        mappings.put(MultiPrimitive.class, GEOM_GEOMCOLLECTION);
     }
 
     @Override
@@ -483,24 +537,39 @@ public class KairosDialect extends BasicSQLDialect {
         mappings.put("POINT", Point.class);
         mappings.put("POINTM", Point.class);
         mappings.put("POINTZ", Point.class);
-        mappings.put("LINESTRING", LineString.class);
-        mappings.put("LINESTRINGM", LineString.class);
-        mappings.put("LINESTRINGZ", LineString.class);
-        mappings.put("POLYGON", Polygon.class);
-        mappings.put("POLYGONM", Polygon.class);
-        mappings.put("POLYGONZ", Polygon.class);
+        //mappings.put("LINESTRING", LineString.class);
+        //mappings.put("LINESTRINGM", LineString.class);
+        //mappings.put("LINESTRINGM", LineString.class);
+        mappings.put("LINESTRING", Curve.class);
+        mappings.put("LINESTRINGM", Curve.class);
+        mappings.put("LINESTRINGM", Curve.class);
+        //mappings.put("POLYGON", Polygon.class);
+        //mappings.put("POLYGONM", Polygon.class);
+        //mappings.put("POLYGONZ", Polygon.class);
+        mappings.put("POLYGON", Ring.class);
+        mappings.put("POLYGONM", Ring.class);
+        mappings.put("POLYGONZ", Ring.class);
         mappings.put("MULTIPOINT", MultiPoint.class);
         mappings.put("MULTIPOINTM", MultiPoint.class);
         mappings.put("MULTIPOINTZ", MultiPoint.class);
-        mappings.put("MULTILINESTRING", MultiLineString.class);
-        mappings.put("MULTILINESTRINGM", MultiLineString.class);
-        mappings.put("MULTILINESTRINGZ", MultiLineString.class);
-        mappings.put("MULTIPOLYGON", MultiPolygon.class);
-        mappings.put("MULTIPOLYGONM", MultiPolygon.class);
-        mappings.put("MULTIPOLYGONZ", MultiPolygon.class);
-        mappings.put("GEOMETRYCOLLECTION", GeometryCollection.class);
-        mappings.put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
-        mappings.put("GEOMETRYCOLLECTIONZ", GeometryCollection.class);
+        //mappings.put("MULTILINESTRING", MultiLineString.class);
+        //mappings.put("MULTILINESTRINGM", MultiLineString.class);
+        //mappings.put("MULTILINESTRINGZ", MultiLineString.class);
+        mappings.put("MULTILINESTRING", MultiCurve.class);
+        mappings.put("MULTILINESTRINGM", MultiCurve.class);
+        mappings.put("MULTILINESTRINGZ", MultiCurve.class);
+        //mappings.put("MULTIPOLYGON", MultiPolygon.class);
+        //mappings.put("MULTIPOLYGONM", MultiPolygon.class);
+        //mappings.put("MULTIPOLYGONZ", MultiPolygon.class);
+        mappings.put("MULTIPOLYGON", MultiSurface.class);
+        mappings.put("MULTIPOLYGONM", MultiSurface.class);
+        mappings.put("MULTIPOLYGONZ", MultiSurface.class);
+        //mappings.put("GEOMETRYCOLLECTION", GeometryCollection.class);
+        //mappings.put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
+        //mappings.put("GEOMETRYCOLLECTIONZ", GeometryCollection.class);
+        mappings.put("GEOMETRYCOLLECTION", MultiPrimitive.class);
+        mappings.put("GEOMETRYCOLLECTIONM", MultiPrimitive.class);
+        mappings.put("GEOMETRYCOLLECTIONZ", MultiPrimitive.class);
         mappings.put("BYTEA", byte[].class);
     }
 
@@ -605,9 +674,12 @@ public class KairosDialect extends BasicSQLDialect {
                         }
                         
                         sql = 
-                            "ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
+                    		"ALTER TABLE \"" + tableName + "\" " + 
+                                    "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
+                                    "TYPE geometry (" + geomType + ", " + srid + ");";
+                            /*"ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
                              "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
-                             "TYPE geometry (" + geomType + ", " + srid + ");";
+                             "TYPE geometry (" + geomType + ", " + srid + ");";*/
                         
                         LOGGER.fine( sql );
                         st.execute( sql );
@@ -679,13 +751,13 @@ public class KairosDialect extends BasicSQLDialect {
         if (value == null) {
             sql.append("NULL");
         } else {
-            if (value instanceof LinearRing) {
+            /*if (value instanceof com.vividsolutions.jts.geom.LinearRing) {
                 // WKT does not support linear rings
                 value = value.getFactory().createLineString(
-                        ((LinearRing) value).getCoordinateSequence());
-            }
+                        ((com.vividsolutions.jts.geom.LinearRing) value).getCoordinateSequence());
+            }*/
             // KAIROS ERROR: ERROR(43003) WKT string is too long. Max length is 4KB
-            sql.append("ST_GeomFromText('" + value.toText() + "', " + srid + ")");
+            sql.append("ST_GeomFromText('" + new GeometryToWKTString(false).getString(value) + "', " + srid + ")");
         }
     }
 

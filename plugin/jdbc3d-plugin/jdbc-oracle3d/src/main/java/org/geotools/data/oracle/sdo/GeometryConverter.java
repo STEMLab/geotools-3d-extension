@@ -215,6 +215,34 @@ public class GeometryConverter {
         return toSTRUCT( attributes, DATATYPE );        
     }
     
+    public STRUCT toSDO(Solid geom, int srid) throws SQLException {
+    	if( geom == null) return asEmptyDataType();
+        
+        int gtype = 3008;
+        NUMBER SDO_GTYPE = new NUMBER( gtype );
+        NUMBER SDO_SRID = (srid == SDO.SRID_NULL || srid == 0) ? null :
+                          new NUMBER( srid );
+        STRUCT SDO_POINT = null;
+        ARRAY SDO_ELEM_INFO;
+        ARRAY SDO_ORDINATES;
+        
+        int elemInfo[] = SDO.elemInfo( geom );
+        double ordinates[] = SDO.ordinates( geom );
+        
+        SDO_ELEM_INFO = toARRAY( elemInfo, "MDSYS.SDO_ELEM_INFO_ARRAY" );
+        SDO_ORDINATES = toARRAY( ordinates, "MDSYS.SDO_ORDINATE_ARRAY" );
+        
+        Datum attributes[] = new Datum[]{
+            SDO_GTYPE,
+            SDO_SRID,
+            SDO_POINT,
+            SDO_ELEM_INFO,
+            SDO_ORDINATES
+        };
+        
+        return toSTRUCT( attributes, DATATYPE );
+	}
+    
     
     
     /**

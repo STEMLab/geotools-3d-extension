@@ -88,5 +88,7 @@
 
   <modules> 
     <module>jdbc-postgis3d</module>
+    <module>jdbc-oracle3d</module>
   </modules>
+  
 </project>

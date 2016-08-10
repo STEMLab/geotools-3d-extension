@@ -21,6 +21,8 @@ package org.geotools.data.oracle.sdo;
 
 import java.util.logging.Logger;
 
+import org.opengis.geometry.primitive.Solid;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
@@ -317,4 +319,9 @@ public class SDOSqlDumper {
 
         return buffer.toString();
     }
+
+	public static String toSDOGeom(Solid g, int srid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

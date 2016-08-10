@@ -22,17 +22,25 @@ package org.geotools.data.oracle.sdo;
 import java.lang.reflect.Array;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CompoundCurvedGeometry;
 import org.geotools.geometry.jts.CurvedGeometries;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 import com.vividsolutions.jts.algorithm.RobustCGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -125,6 +133,14 @@ public final class SDO {
 
         return d + l + tt;
     }
+    
+    public static int gType(org.opengis.geometry.Geometry geom) {
+        int d = D(geom) * 1000;
+        int l = L(geom) * 100;
+        int tt = TT(geom);
+
+        return d + l + tt;
+    }
 
     /**
      * Return D as defined by SDO_GTYPE (either 2,3 or 4).
@@ -154,6 +170,10 @@ public final class SDO {
         }
     }
 
+    public static int D(org.opengis.geometry.Geometry geom) {
+    	return geom.getCoordinateDimension();
+    }
+    
     /**
      * Return L as defined by SDO_GTYPE (either 3,4 or 0).
      * 
@@ -179,6 +199,10 @@ public final class SDO {
         } else {
             return 0;
         }
+    }
+    
+    public static int L(org.opengis.geometry.Geometry geom) {
+        return 0;
     }
 
     /**
@@ -224,9 +248,6 @@ public final class SDO {
         } else if (geom instanceof MultiPolygon) {
             return TT.MULTIPOLYGON;
         } 
-        /*else if (geom instanceof Solid) {
-            return TT.SOLID;
-        }*/ 
         else if (geom instanceof GeometryCollection) {
             return TT.COLLECTION;
         }
@@ -236,6 +257,18 @@ public final class SDO {
             + "(Limitied to Point, Line, Polygon, GeometryCollection, MultiPoint,"
             + " MultiLineString and MultiPolygon)");
     }
+    
+    private static int TT(org.opengis.geometry.Geometry geom) {
+    	if (geom == null) {
+            return TT.UNKNOWN; // UNKNOWN
+    	} else if (geom instanceof Solid) {
+            return TT.SOLID;
+        }
+    	
+    	throw new IllegalArgumentException("Cannot encode ISO "
+                + geom.getClass().getTypeName() + " as SDO_GTYPE "
+                + "(Limitied to Solid)");
+	}
 
     /**
      * Returns geometry SRID.
@@ -318,15 +351,27 @@ public final class SDO {
     public static int[] elemInfo(Geometry geom) {
         return elemInfo(geom, gType(geom));
     }
+    
+    public static int[] elemInfo(org.opengis.geometry.Geometry geom) {
+    	return elemInfo(geom, gType(geom));
+	}
 
-    public static int[] elemInfo(Geometry geom, final int GTYPE) {
+	public static int[] elemInfo(Geometry geom, final int GTYPE) {
         List list = new LinkedList();
         elemInfo(list, geom, 1, GTYPE);
 
         return intArray(list);
     }
+	
+	private static int[] elemInfo(org.opengis.geometry.Geometry geom, int GTYPE) {
+		List list = new LinkedList();
+        elemInfo(list, geom, 1, GTYPE);
 
-    /**
+        return intArray(list);
+
+	}
+
+	/**
      * Add to SDO_ELEM_INFO list for geometry and GTYPE.
      *
      * @param elemInfoList List used to gather SDO_ELEM_INFO
@@ -382,8 +427,60 @@ public final class SDO {
             + "(Limitied to Point, Line, Polygon, GeometryCollection, MultiPoint,"
             + " MultiLineString and MultiPolygon)");
     }
+    
+    private static void elemInfo(List elemInfoList, org.opengis.geometry.Geometry geom, 
+    		final int STARTING_OFFSET, final int GTYPE) {
+    	final int tt = TT(geom);
 
-    /**
+        switch (tt) {
+        case TT.SOLID:
+        	addElemInfo(elemInfoList, (Solid) geom, STARTING_OFFSET, GTYPE);
+        	return;
+        }
+        
+        throw new IllegalArgumentException("Cannot encode ISO "
+                + geom.getClass().getTypeName() + " as SDO_GTYPE "
+                + "(Limitied to Solid)");
+	}
+
+	private static void addElemInfo(List elemInfoList, Solid solid, 
+			final int STARTING_OFFSET, int GTYPE) {
+		final int COMPOSITE_SURFACE_NUM = solid.getBoundary().getExterior().getElements().size();
+
+        if (COMPOSITE_SURFACE_NUM == 0) {
+            addInt(elemInfoList, STARTING_OFFSET);
+            addInt(elemInfoList, elemInfoEType(solid));
+            addInt(elemInfoList, elemInfoInterpretation(solid, ETYPE.SOLID));
+
+            return;
+        }
+
+        int LEN = D(GTYPE) + L(GTYPE);
+        int offset = STARTING_OFFSET;
+        Shell shell;
+        
+        shell = solid.getBoundary().getExterior();
+        addInt(elemInfoList, offset);
+        addInt(elemInfoList, elemInfoEType(shell));
+        //addInt(elemInfoList, elemInfoInterpretation(shell, ETYPE.COMPOSITE_SURFACE_EXTERIOR));
+        addInt(elemInfoList, COMPOSITE_SURFACE_NUM);
+        
+        Surface[] shellElements = new SurfaceImpl[COMPOSITE_SURFACE_NUM];
+        shell.getElements().toArray(shellElements);
+        for(int i = 0; i < COMPOSITE_SURFACE_NUM; i++){
+        	addInt(elemInfoList, offset);
+            addInt(elemInfoList, elemInfoEType(shellElements[i]));
+            addInt(elemInfoList, elemInfoInterpretation(shellElements[i], ETYPE.COMPOSITE_SURFACE_EXTERIOR));
+            offset += (shellElements[i].getBoundary().getElements().size() * LEN);
+        }
+        
+        // If Solid has a hole 
+        
+	}
+
+	
+
+	/**
      * Not often called as POINT_TYPE prefered over ELEMINFO & ORDINATES.
      * 
      * <p>
@@ -619,11 +716,20 @@ public final class SDO {
             : ETYPE.POLYGON_INTERIOR; // ccw order
 
         default:
-
             // should never happen!
             throw new IllegalArgumentException("Unknown encoding of SDO_GTYPE");
         }
     }
+
+	private static int elemInfoEType(org.opengis.geometry.Geometry geom) {
+		switch (TT(geom)) {
+    	case TT.SOLID:
+    		return ETYPE.SOLID;
+    	default:
+            // should never happen!
+            throw new IllegalArgumentException("Unknown encoding of SDO_GTYPE");
+    	}
+	}
 
     /**
      * Produce <code>SDO_INTERPRETATION</code> for geometry description as
@@ -756,6 +862,20 @@ public final class SDO {
             + "SDO_INTERPRETATION (Limitied to Point, Line, Polygon, "
             + "GeometryCollection, MultiPoint, MultiLineString and MultiPolygon)");
     }
+    
+
+    private static int elemInfoInterpretation(org.opengis.geometry.Geometry geom, int etype) {
+    	switch (etype) {
+    	case ETYPE.SOLID:
+    		return 1;
+    	case ETYPE.COMPOSITE_SURFACE_EXTERIOR:
+    		return 1;
+    	}
+    	
+    	throw new IllegalArgumentException("Cannot encode ISO "
+                + geom.getClass().getTypeName() + " as SDO_GTYPE "
+                + "(Limitied to Solid)");
+   	}
 
     /**
      * Produce <code>SDO_ORDINATES</code> for geometry.
@@ -819,7 +939,17 @@ public final class SDO {
         return ordinates(list, geom);
     }
     
-    public static CoordinateSequence getCS(Geometry geom)
+
+	public static double[] ordinates(org.opengis.geometry.Geometry geom) {
+		List list = new ArrayList();
+
+        coordinates(list, geom);
+
+        return ordinates(list, geom);
+	}
+	
+
+	public static CoordinateSequence getCS(Geometry geom)
     {
         CoordinateSequence cs = null;
         switch (TT(geom)) {
@@ -943,8 +1073,43 @@ public final class SDO {
             + "SDO_ORDINATRES (Limitied to Point, Line, Polygon, "
             + "GeometryCollection, MultiPoint, MultiLineString and MultiPolygon)");
     }
+    
 
-    /**
+    private static void coordinates(List list, org.opengis.geometry.Geometry geom) {
+    	switch (TT(geom)) {
+    	case TT.SOLID:
+    		addCoordinates(list, (Solid) geom);
+    		
+    		return;
+    	}
+		
+	}
+
+    private static void addCoordinates(List list, Solid solid) {
+    	Shell shellExterior = solid.getBoundary().getExterior();
+    	if(shellExterior != null){
+    		Collection<? extends Primitive> shellElements = shellExterior.getElements();
+        	for (Primitive surface : shellElements) {
+    			List<? extends SurfacePatch> pathes = ((Surface)surface).getPatches();
+    			for (SurfacePatch surfacePatch : pathes) {
+    				if(surfacePatch instanceof org.opengis.geometry.coordinate.Polygon){
+    					addCoordinates(list, (org.opengis.geometry.coordinate.Polygon)surfacePatch);
+    					
+    				}
+				}
+    		}	
+    	}
+	}
+
+	private static void addCoordinates(List list, org.opengis.geometry.coordinate.Polygon polygon) {
+		SurfaceBoundary boundary = polygon.getBoundary();
+        Ring exteriorRing = boundary.getExterior();                
+        List<Ring> interiorRings = boundary.getInteriors();
+        
+        
+	}
+
+	/**
      * Adds a double array to list.
      * 
      * <p>
@@ -1410,6 +1575,13 @@ public final class SDO {
             return ordinates2d(list, L(geom));
         }
     }
+    
+
+
+	private static double[] ordinates(List list, org.opengis.geometry.Geometry geom) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     /**
      * Ordinates (x,y,x1,y1,...) from coordiante list.
@@ -3172,5 +3344,5 @@ GEOMETRYS:
         geoms.setSRID(SRID);
 
         return geoms;
-    }
+    }	
 }

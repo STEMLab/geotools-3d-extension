@@ -1504,7 +1504,30 @@ public class OracleDialect extends PreparedStatementSQLDialect {
 	public void setGeometryValue(Solid g, int dimension, int srid, Class binding, PreparedStatement ps, int column)
 			throws SQLException {
 		// TODO Auto-generated method stub
-		
+		// Handle the null geometry case.
+        // Surprisingly, using setNull(column, Types.OTHER) does not work...
+        if (g == null) {
+            ps.setNull(column, Types.STRUCT, "MDSYS.SDO_GEOMETRY");
+            return;
+        }
+
+        OracleConnection ocx = unwrapConnection(ps.getConnection());
+
+        GeometryConverter converter = new GeometryConverter(ocx);
+        STRUCT s = converter.toSDO(g, srid);
+        ps.setObject(column, s);
+
+        if (LOGGER.isLoggable(Level.FINE)) {
+            String sdo;
+            try {
+                // the dumper cannot translate all types of geometries
+                sdo = SDOSqlDumper.toSDOGeom(g, srid);
+            } catch(Exception e) {
+                sdo = "Could not translate this geometry into a SDO string, " +
+                		"WKT representation is: " + g;
+            }
+            LOGGER.fine("Setting parameter " + column + " as " + sdo);
+        }
 	}
 
 }

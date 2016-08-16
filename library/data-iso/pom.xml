@@ -7,24 +7,25 @@
                                                                                 
         Version: $Id$              
      ======================================================================= -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+  <project xmlns="http://maven.apache.org/POM/4.0.0" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
                                http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geotools.jdbc</groupId>
-  <artifactId>gt-jdbc-postgis3d</artifactId>
+  <groupId>org.geotools</groupId>
+  <artifactId>gt-data-iso</artifactId>
   <packaging>jar</packaging>
-  <name>PostGIS DataStore</name>
+  <name>DataStore Support</name>
   
 
 
   <description>
-	DataStore for PostGIS Database.
+    ContentDataStore implementation and support classes for those implementing
+    their own datastore.
   </description>
 
   <licenses>
@@ -35,25 +36,31 @@
     </license>
   </licenses>
 
+
   <!-- =========================================================== -->
   <!--     Developers and Contributors                             -->
   <!-- =========================================================== -->
   <developers>
     <developer>
-      <name>Andrea Aime</name>
-      <id>aaime</id>
-      <email>aaime@users.sourceforge.net</email>
-      <organization>TOPP</organization>
+      <name>Jody Garnett</name>
+      <email>jody.garnett@lisasoft.com</email>
+      <organization>LISAsoft</organization>
       <roles>
         <role>Module Maintainer</role>
         <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
-      <name>Justin Deoliveira</name>
-      <id>jdeolive</id>
-      <email>jdeolive@users.sourceforge.net</email>
-      <organization>TOPP</organization>
+      <name>Cory Horner</name>
+      <email>cory.horner@gmail.com</email>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Justin Deolivera</name>
+      <email>jdeolive@openplans.org</email>
+      <organization>The Open Planning Project</organization>
       <roles>
         <role>Module Maintainer</role>
         <role>Java Developer</role>
@@ -61,10 +68,26 @@
     </developer>
   </developers>
 
+
+  <!-- =========================================================== -->
+  <!--     Dependency Management                                   -->
+  <!-- =========================================================== -->
   <dependencies>
     <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-main-iso</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+     <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-data</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 

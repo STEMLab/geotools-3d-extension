@@ -18,11 +18,10 @@
   <!-- =========================================================== -->
   <groupId>org.geotools</groupId>
   <artifactId>gt-data-iso</artifactId>
+  <version>15-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>DataStore Support</name>
   
-
-
   <description>
     ContentDataStore implementation and support classes for those implementing
     their own datastore.
@@ -41,48 +40,41 @@
   <!--     Developers and Contributors                             -->
   <!-- =========================================================== -->
   <developers>
-    <developer>
-      <name>Jody Garnett</name>
-      <email>jody.garnett@lisasoft.com</email>
-      <organization>LISAsoft</organization>
+  	<developer>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
+      <organization>Pusan National University</organization>
       <roles>
         <role>Module Maintainer</role>
         <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
-      <name>Cory Horner</name>
-      <email>cory.horner@gmail.com</email>
-      <roles>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <name>Justin Deolivera</name>
-      <email>jdeolive@openplans.org</email>
-      <organization>The Open Planning Project</organization>
+      <name>Hyung-Gyu Ryoo</name>
+      <email>hgryoo@pnu.edu</email>
+      <organization>Pusan National University</organization>
       <roles>
         <role>Module Maintainer</role>
         <role>Java Developer</role>
       </roles>
     </developer>
   </developers>
-
-
+  
   <!-- =========================================================== -->
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
+  <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-data</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-main-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
-     <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-data</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+     
     <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-hsql</artifactId>
@@ -90,5 +82,7 @@
         <scope>test</scope>
     </dependency>
   </dependencies>
-
+  
+  
+  
 </project>

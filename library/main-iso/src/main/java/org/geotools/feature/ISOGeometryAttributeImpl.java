@@ -67,19 +67,6 @@ public class ISOGeometryAttributeImpl extends AttributeImpl implements GeometryA
         return super.getValue();
     }
 
-    @Override
-    public synchronized BoundingBox getBounds() {
-        if(bounds == null) {
-            //TODO
-        }
-        return bounds;
-    }
-
-    @Override
-    public synchronized void setBounds(BoundingBox bbox) {
-        this.bounds = bbox;
-    }
-
     public boolean equals(Object o) {
         if ( this == o ) {
             return true;
@@ -183,5 +170,15 @@ public class ISOGeometryAttributeImpl extends AttributeImpl implements GeometryA
         sb.append(value);
         return sb.toString();
     }
-    
+
+    public synchronized BoundingBox getBounds() {
+        if(bounds == null) {
+            //TODO
+        }
+        return bounds;
+    }
+
+    public synchronized void setBounds(BoundingBox bbox) {
+        this.bounds = bbox;
+    }
 }

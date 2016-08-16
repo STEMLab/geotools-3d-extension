@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Build-Timestamp: 17-7￬ﾛﾔ-2016 07:23
+Built-By: bgKim
+Class-Path: gt-api-15-SNAPSHOT.jar jts-1.13.jar gt-referencing-15-SNAP
+ SHOT.jar core-0.26.jar gt-metadata-15-SNAPSHOT.jar gt-opengis-15-SNAP
+ SHOT.jar jsr-275-1.0-beta-2.jar jgridshift-1.0.jar GeographicLib-Java
+ -1.44.jar gt-main-15-SNAPSHOT.jar jdom-1.1.3.jar gt-data-15-SNAPSHOT.
+ jar commons-dbcp-1.4.jar commons-pool-1.5.4.jar commons-collections-3
+ .1.jar jai_core-1.1.3.jar
+Project-Version: 15-SNAPSHOT
+Git-Revision: 
+Build-Jdk: 1.8.0_25
+Created-By: Maven Integration for Eclipse
+

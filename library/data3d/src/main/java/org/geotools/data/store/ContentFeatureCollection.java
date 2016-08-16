@@ -43,8 +43,9 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
+import org.opengis.geometry.primitive.Point;
 
-import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Point;
 
 /**
  * A FeatureCollection that completely delegates to a backing FetaureSource#getReader

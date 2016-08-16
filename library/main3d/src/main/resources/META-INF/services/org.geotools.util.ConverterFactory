@@ -1,0 +1,15 @@
+org.geotools.util.CommonsConverterFactory
+org.geotools.util.NumericConverterFactory
+org.geotools.util.GeometryConverterFactory
+org.geotools.util.GeometryTypeConverterFactory
+org.geotools.util.TemporalConverterFactory
+org.geotools.util.BooleanConverterFactory
+org.geotools.util.ColorConverterFactory
+org.geotools.util.CollectionConverterFactory
+org.geotools.util.CharsetConverterFactory
+org.geotools.util.UuidConverterFactory
+org.geotools.util.EnumerationConverterFactory
+org.geotools.util.QNameConverterFactory
+org.geotools.util.MeasureConverterFactory
+org.geotools.temporal.TemporalConverterFactory
+org.geotools.util.NameConverterFactory

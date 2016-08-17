@@ -35,10 +35,10 @@ import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.data.store.ContentEntry;
+import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.data.store.ContentFeatureStore;
-import org.geotools.data.store.ContentState;
+import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;
@@ -51,7 +51,8 @@ import org.opengis.feature.type.FeatureTypeFactory;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
-import org.opengis.geometry.coordinate.GeometryFactory;
+import org.geotools.geometry.GeometryBuilder;
+//import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.util.TypeName;
 
 //import com.vividsolutions.jts.geom.GeometryFactory;
@@ -148,8 +149,8 @@ public abstract class ContentDataStore implements DataStore {
     /**
      * Factory used to create geometries
      */
-    protected GeometryFactory geometryFactory;
-
+    //protected GeometryFactory geometryFactory;
+    protected GeometryBuilder geometryFactory;
     /**
      * namespace uri of the datastore itself, or default namespace
      */
@@ -229,7 +230,7 @@ public abstract class ContentDataStore implements DataStore {
     /**
      * The factory used to create geometries.
      */
-    public GeometryFactory getGeometryFactory() {
+    public GeometryBuilder getGeometryFactory() {
         return geometryFactory;
     }
 
@@ -237,7 +238,7 @@ public abstract class ContentDataStore implements DataStore {
      * Sets the factory used to create geometries.
      * 
      */
-    public void setGeometryFactory(GeometryFactory geometryFactory) {
+    public void setGeometryFactory(GeometryBuilder geometryFactory) {
         this.geometryFactory = geometryFactory;
     }
 

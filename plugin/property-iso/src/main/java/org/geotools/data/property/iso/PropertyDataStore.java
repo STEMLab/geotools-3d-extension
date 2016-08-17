@@ -31,17 +31,17 @@ import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultServiceInfo;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
-import org.geotools.data.store.ContentDataStore;
 import org.geotools.data.store.ContentEntry;
 import org.geotools.data.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureTypes;
+import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
 /**
  * Sample DataStore implementation, please see formal tutorial included with
@@ -53,6 +53,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @source $URL$
  */
 public class PropertyDataStore extends ContentDataStore {
+
     protected File dir;
     
     public PropertyDataStore(File dir) {
@@ -72,9 +73,9 @@ public class PropertyDataStore extends ContentDataStore {
         
         // factories
         setFilterFactory(CommonFactoryFinder.getFilterFactory(null));
-        setGeometryFactory(new GeometryFactory());
+        //setGeometryFactory(new GeometryFactory());
         setFeatureTypeFactory(new FeatureTypeFactoryImpl());
-        setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
+        setFeatureFactory(new ISOFeatureFactoryImpl());
     }
     // constructor end
     

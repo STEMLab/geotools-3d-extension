@@ -147,7 +147,7 @@ public class PropertyFeatureSource extends ContentFeatureSource {
     protected FeatureReader<SimpleFeatureType, SimpleFeature> getReaderInternal(Query query)
             throws IOException {
         File file = new File( store.dir, typeName+".properties");
-        PropertyFeatureReader reader = new PropertyFeatureReader(store.getNamespaceURI(), file,
+        PropertyFeatureReader3D reader = new PropertyFeatureReader3D(store.getNamespaceURI(), file,
                 getGeometryFactory(query));
         
         Double tolerance = (Double)query.getHints().get(Hints.LINEARIZATION_TOLERANCE);

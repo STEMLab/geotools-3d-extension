@@ -16,7 +16,7 @@
  */
 package org.geotools.jdbc3d;
 
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -32,7 +32,7 @@ public abstract class JDBCFeatureSourceExposePkOnlineTest extends JDBCFeatureSou
     @Override
     protected void connect() throws Exception {
         super.connect();
-        ((JDBCFeatureStore) featureSource).setExposePrimaryKeyColumns(true);
+        ((JDBCFeatureStore3D) featureSource).setExposePrimaryKeyColumns(true);
     }
 
     public void testSchema() throws Exception {

@@ -19,7 +19,7 @@ import org.geotools.data.DefaultQuery;
 import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc3d.JDBCFeatureSourceOnlineTest;
 import org.geotools.jdbc3d.JDBCTestSetup;
 import org.geotools.referencing.CRS;
@@ -54,7 +54,7 @@ public class PostGISFeatureSourceOnlineTest extends JDBCFeatureSourceOnlineTest 
     
     public void testBBOXOverlapsEncoding() throws Exception {
         // enable bbox envelope encoding
-        ((PostGISDialect) ((JDBCDataStore) dataStore).getSQLDialect()).setEncodeBBOXFilterAsEnvelope(true);
+        ((PostGISDialect) ((JDBCDataStore3D) dataStore).getSQLDialect()).setEncodeBBOXFilterAsEnvelope(true);
         
         GeometryFactory gf = dataStore.getGeometryFactory();
         FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
@@ -78,7 +78,7 @@ public class PostGISFeatureSourceOnlineTest extends JDBCFeatureSourceOnlineTest 
     
     public void testEstimatedBounds() throws Exception {
         // enable fast bbox
-        ((PostGISDialect) ((JDBCDataStore) dataStore).getSQLDialect()).setEstimatedExtentsEnabled(true);
+        ((PostGISDialect) ((JDBCDataStore3D) dataStore).getSQLDialect()).setEstimatedExtentsEnabled(true);
         
         ReferencedEnvelope bounds = dataStore.getFeatureSource(tname("ft1")).getBounds();
         assertEquals(0l, Math.round(bounds.getMinX()));
@@ -91,7 +91,7 @@ public class PostGISFeatureSourceOnlineTest extends JDBCFeatureSourceOnlineTest 
     
     public void testEstimatedBoundsWithQuery() throws Exception {
         // enable fast bbox
-        ((PostGISDialect) ((JDBCDataStore) dataStore).getSQLDialect()).setEstimatedExtentsEnabled(true);
+        ((PostGISDialect) ((JDBCDataStore3D) dataStore).getSQLDialect()).setEstimatedExtentsEnabled(true);
         
         FilterFactory ff = dataStore.getFilterFactory();
         PropertyIsEqualTo filter = ff.equals(ff.property(aname("stringProperty")), ff.literal("one"));

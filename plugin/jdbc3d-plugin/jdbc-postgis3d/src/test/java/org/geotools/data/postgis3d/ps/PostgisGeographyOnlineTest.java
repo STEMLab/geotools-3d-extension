@@ -17,7 +17,7 @@
 package org.geotools.data.postgis3d.ps;
 
 import org.geotools.data.postgis3d.PostgisGeographyTestSetup;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc3d.JDBCGeographyOnlineTest;
 import org.geotools.jdbc3d.JDBCGeographyTestSetup;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -44,6 +44,6 @@ public class PostgisGeographyOnlineTest extends JDBCGeographyOnlineTest {
 
         // extra check, pg specific: the native typename is actually geography
         SimpleFeatureType ft = dataStore.getFeatureSource(tname("geopoint")).getSchema();
-        assertEquals("geography", ft.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME));
+        assertEquals("geography", ft.getGeometryDescriptor().getUserData().get(JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
     }
 }

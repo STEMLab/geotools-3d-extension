@@ -17,7 +17,7 @@
 package org.geotools.jdbc3d;
 
 import org.geotools.jdbc.BasicSQLDialect;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.SQLDialect;
 import org.junit.Test;
 import org.opengis.feature.type.GeometryDescriptor;
@@ -59,7 +59,7 @@ public class JDBCDataStoreTest {
 
         for (int i = 0; i < 100; i++) {
             final CountDownLatch latch = new CountDownLatch(nThreads);
-            final JDBCDataStore jdbcDataStore = new JDBCDataStore();
+            final JDBCDataStore3D jdbcDataStore = new JDBCDataStore3D();
             SQLDialect sqlDialect = new BasicSQLDialect(jdbcDataStore) {
                 @Override
                 public void encodeGeometryValue(Geometry value, int dimension, int srid, StringBuffer sql) throws IOException {
@@ -116,10 +116,10 @@ public class JDBCDataStoreTest {
 
     @Test(expected=IOException.class)
     public void testCheckAllInsertedPositive() throws IOException {
-        JDBCDataStore.checkAllInserted(new int[0], 0);
-        JDBCDataStore.checkAllInserted(new int[] {1,1,1}, 3);
-        JDBCDataStore.checkAllInserted(new int[] {3}, 3);
-        JDBCDataStore.checkAllInserted(new int[] {1, 1, 0}, 3);
+        JDBCDataStore3D.checkAllInserted(new int[0], 0);
+        JDBCDataStore3D.checkAllInserted(new int[] {1,1,1}, 3);
+        JDBCDataStore3D.checkAllInserted(new int[] {3}, 3);
+        JDBCDataStore3D.checkAllInserted(new int[] {1, 1, 0}, 3);
     }
 }
 

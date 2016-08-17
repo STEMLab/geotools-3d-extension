@@ -21,7 +21,7 @@ import org.geotools.data3d.store.ContentFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.geotools.jdbc.NonIncrementingPrimaryKeyColumn;
 import org.geotools.jdbc.SequencedPrimaryKeyColumn;
 import org.opengis.feature.Feature;
@@ -48,7 +48,7 @@ public abstract class JDBCPrimaryKeyFinderOnlineTest extends JDBCTestSupport {
     }
     
     public void testSequencedPrimaryKey() throws Exception {
-        JDBCFeatureStore fs = (JDBCFeatureStore) dataStore.getFeatureSource(tname("seqtable"));
+        JDBCFeatureStore3D fs = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("seqtable"));
         
         assertEquals( 1, fs.getPrimaryKey().getColumns().size() );
         assertTrue( fs.getPrimaryKey().getColumns().get(0) instanceof SequencedPrimaryKeyColumn );
@@ -60,7 +60,7 @@ public abstract class JDBCPrimaryKeyFinderOnlineTest extends JDBCTestSupport {
     }
 
     public void testAssignedSinglePKeyView() throws Exception {
-        JDBCFeatureStore fs = (JDBCFeatureStore) dataStore.getFeatureSource(tname("assignedsinglepk"));
+        JDBCFeatureStore3D fs = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("assignedsinglepk"));
         
         assertEquals( 1, fs.getPrimaryKey().getColumns().size() );
         assertTrue( fs.getPrimaryKey().getColumns().get(0) instanceof NonIncrementingPrimaryKeyColumn );
@@ -70,7 +70,7 @@ public abstract class JDBCPrimaryKeyFinderOnlineTest extends JDBCTestSupport {
     }
     
     public void testAssignedMultiPKeyView() throws Exception {
-        JDBCFeatureStore fs = (JDBCFeatureStore) dataStore.getFeatureSource(tname("assignedmultipk"));
+        JDBCFeatureStore3D fs = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("assignedmultipk"));
         
         assertEquals( 2, fs.getPrimaryKey().getColumns().size() );
         assertTrue( fs.getPrimaryKey().getColumns().get(0) instanceof NonIncrementingPrimaryKeyColumn );
@@ -87,7 +87,7 @@ public abstract class JDBCPrimaryKeyFinderOnlineTest extends JDBCTestSupport {
         i.close();
     }
     
-    protected void addFeature( SimpleFeatureType featureType, JDBCFeatureStore features ) throws Exception {
+    protected void addFeature( SimpleFeatureType featureType, JDBCFeatureStore3D features ) throws Exception {
         SimpleFeatureBuilder b = new SimpleFeatureBuilder( featureType );
         b.add("four");
         b.add( new GeometryFactory().createPoint( new Coordinate(4,4) ) );

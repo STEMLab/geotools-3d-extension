@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.geotools.data.DataAccessFactory.Param;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
 import org.geotools.jdbc.SQLDialect;
@@ -55,7 +55,7 @@ public abstract class JDBCJNDIDataSourceOnlineTest extends JDBCTestSupport {
         params.put(JDBCDataStoreFactory.DBTYPE.key, dbtype);
         params.put(JDBCJNDIDataStoreFactory.JNDI_REFNAME.key, "ds");
 
-        JDBCDataStore dataStore = (JDBCDataStore) DataStoreFinder.getDataStore(params);
+        JDBCDataStore3D dataStore = (JDBCDataStore3D) DataStoreFinder.getDataStore(params);
         Connection con = dataStore.getDataSource().getConnection();
         assertTrue(con != null);
         assertFalse(con.isClosed());
@@ -123,7 +123,7 @@ public abstract class JDBCJNDIDataSourceOnlineTest extends JDBCTestSupport {
             }
 
             @Override
-            protected SQLDialect createSQLDialect(JDBCDataStore dataStore) {
+            protected SQLDialect createSQLDialect(JDBCDataStore3D dataStore) {
                 // nothing to do here
                 return null;
             }

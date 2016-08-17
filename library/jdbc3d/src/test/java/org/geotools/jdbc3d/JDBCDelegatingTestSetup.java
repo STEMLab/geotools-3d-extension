@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 
 /**
@@ -88,7 +88,7 @@ public class JDBCDelegatingTestSetup extends JDBCTestSetup {
     }
     
     @Override
-    protected void setUpDataStore(JDBCDataStore dataStore) {
+    protected void setUpDataStore(JDBCDataStore3D dataStore) {
         delegate.setUpDataStore(dataStore);
     }
 

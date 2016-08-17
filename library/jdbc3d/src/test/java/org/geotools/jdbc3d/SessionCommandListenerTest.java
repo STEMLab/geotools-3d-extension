@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.filter.function.EnvFunction;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.SessionCommandsListener;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class SessionCommandListenerTest {
 
     RecordingConnection conn = new RecordingConnection();
 
-    JDBCDataStore store = new JDBCDataStore();
+    JDBCDataStore3D store = new JDBCDataStore3D();
 
     @Test
     public void testPlain() throws Exception {

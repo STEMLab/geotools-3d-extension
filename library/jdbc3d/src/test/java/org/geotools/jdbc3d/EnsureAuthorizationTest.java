@@ -34,7 +34,7 @@ import org.geotools.data.Transaction;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.NameImpl;
 import org.geotools.jdbc.BasicSQLDialect;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.junit.Before;
 import org.junit.Test;
@@ -124,7 +124,7 @@ public class EnsureAuthorizationTest {
         
     }
 
-    private JDBCDataStore dataStore;
+    private JDBCDataStore3D dataStore;
     private SimpleFeatureType featureType;
     private Transaction tx;
     private TracingMockConnection cx;
@@ -140,7 +140,7 @@ public class EnsureAuthorizationTest {
         cx = new TracingMockConnection();
         configureMetadata();
         
-        dataStore = new JDBCDataStore();
+        dataStore = new JDBCDataStore3D();
         dataStore.setFilterFactory(CommonFactoryFinder.getFilterFactory2());
         dataStore.setSQLDialect(createBasicSQLDialect());
         
@@ -200,7 +200,7 @@ public class EnsureAuthorizationTest {
     }
 
     private void createManyLocks() throws IOException {
-        for (int count = 0; count < JDBCDataStore.MAX_IDS_IN_FILTER + 1; count++) {
+        for (int count = 0; count < JDBCDataStore3D.MAX_IDS_IN_FILTER + 1; count++) {
             dataStore.getLockingManager().lockFeatureID(SAMPLE_FEATURE_NAME,
                     count + "", tx, new FeatureLock(count + "", 10000000L));
     

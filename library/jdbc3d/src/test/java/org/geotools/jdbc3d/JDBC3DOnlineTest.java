@@ -39,7 +39,7 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -117,7 +117,7 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
                 .getCoordinateReferenceSystem();
         assertEquals(new Integer(4326), CRS.lookupEpsgCode(crs, false));
         assertEquals(getNativeSRID(),
-                schema.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
+                schema.getGeometryDescriptor().getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID));
         assertEquals(3,
                 schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
     }
@@ -229,7 +229,7 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
         assertEquals(
                 getNativeSRID(),
                 actualSchema.getGeometryDescriptor().getUserData()
-                        .get(JDBCDataStore.JDBC_NATIVE_SRID));
+                        .get(JDBCDataStore3D.JDBC_NATIVE_SRID));
 
         // insert the feature
         FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(

@@ -28,8 +28,8 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.jdbc.ConnectionLifecycleListener;
-import org.geotools.jdbc.JDBCDataStore;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -40,11 +40,11 @@ public abstract class JDBCConnectionLifecycleOnlineTest extends JDBCTestSupport 
 
     
 
-    JDBCFeatureStore featureStore;
+    JDBCFeatureStore3D featureStore;
 
     protected void connect() throws Exception {
         super.connect();
-        featureStore = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+        featureStore = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
     }
 
     /**
@@ -117,20 +117,20 @@ public abstract class JDBCConnectionLifecycleOnlineTest extends JDBCTestSupport 
 
         boolean onRollbackCalled;
 
-        public void onBorrow(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onBorrow(JDBCDataStore3D store, Connection cx) throws SQLException {
             onBorrowCalled = true;
         }
 
-        public void onRelease(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onRelease(JDBCDataStore3D store, Connection cx) throws SQLException {
             onReleaseCalled = true;
         }
 
-        public void onCommit(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onCommit(JDBCDataStore3D store, Connection cx) throws SQLException {
             onCommitCalled = true;
             
         }
 
-        public void onRollback(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onRollback(JDBCDataStore3D store, Connection cx) throws SQLException {
             onRollbackCalled = true;
             
         }
@@ -139,19 +139,19 @@ public abstract class JDBCConnectionLifecycleOnlineTest extends JDBCTestSupport 
     
     private static class ExceptionListener implements ConnectionLifecycleListener {
 
-        public void onBorrow(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onBorrow(JDBCDataStore3D store, Connection cx) throws SQLException {
             // nothing to do
         }
 
-        public void onRelease(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onRelease(JDBCDataStore3D store, Connection cx) throws SQLException {
             throw new SQLException("Ha, are you relasing the connection anyways??");
         }
 
-        public void onCommit(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onCommit(JDBCDataStore3D store, Connection cx) throws SQLException {
             throw new SQLException("Nope, no writes sir");
         }
 
-        public void onRollback(JDBCDataStore store, Connection cx) throws SQLException {
+        public void onRollback(JDBCDataStore3D store, Connection cx) throws SQLException {
             // nothing to do
         }
 

@@ -18,7 +18,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.PrimaryKey;
 import org.geotools.jdbc.PrimaryKeyColumn;
 import org.geotools.jdbc.RegexpValidator;
@@ -157,7 +157,7 @@ public abstract class JDBCVirtualTableOnlineTest extends JDBCTestSupport {
         assertTrue(Number.class.isAssignableFrom(doubleFlow.getType().getBinding()));
         
         // check srid and dimension are set as expected
-        assertEquals(4326, type.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
+        assertEquals(4326, type.getGeometryDescriptor().getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID));
         assertEquals(2, type.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
     }
     

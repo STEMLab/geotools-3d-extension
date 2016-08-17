@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.geotools.data.Transaction;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCTransactionState;
 import org.junit.After;
 import org.junit.Assert;
@@ -52,7 +52,7 @@ public class JDBCTransactionStateTest {
 
     private Handler mockLogHandler = mock(Handler.class);
 
-    private JDBCDataStore dataStore = new JDBCDataStore();
+    private JDBCDataStore3D dataStore = new JDBCDataStore3D();
 
     private int warningsCount;
 

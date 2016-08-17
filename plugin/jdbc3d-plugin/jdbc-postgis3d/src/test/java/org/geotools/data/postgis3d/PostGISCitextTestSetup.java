@@ -1,7 +1,7 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc3d.JDBCTestSetup;
 
@@ -21,7 +21,7 @@ public class PostGISCitextTestSetup extends JDBCTestSetup {
     }
 
     @Override
-    protected void setUpDataStore(JDBCDataStore dataStore) {
+    protected void setUpDataStore(JDBCDataStore3D dataStore) {
         super.setUpDataStore(dataStore);
 
         // let's work with the most common schema please

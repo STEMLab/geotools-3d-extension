@@ -27,6 +27,9 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.PreparedFilterToSQL;
+import org.geotools.jdbc.SQLDialect;
 import org.geotools.util.Converters;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.Geometry;
@@ -46,7 +49,7 @@ import org.opengis.geometry.Geometry;
  */
 public abstract class PreparedStatementSQLDialect extends SQLDialect {
 
-    protected PreparedStatementSQLDialect(JDBCDataStore dataStore) {
+    protected PreparedStatementSQLDialect(JDBCDataStore3D dataStore) {
         super(dataStore);
         
     }

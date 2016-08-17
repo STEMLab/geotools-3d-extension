@@ -19,7 +19,7 @@ package org.geotools.data.kairos;
 import java.io.IOException;
 import java.util.Map;
 
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc.SQLDialect;
 
@@ -48,7 +48,7 @@ public class KairosNGDataStoreFactory extends JDBCDataStoreFactory {
     public static final Param PREPARED_STATEMENTS = new Param("preparedStatements", Boolean.class, "Use prepared statements", false, Boolean.TRUE);
 
     @Override
-    protected SQLDialect createSQLDialect(JDBCDataStore dataStore) {
+    protected SQLDialect createSQLDialect(JDBCDataStore3D dataStore) {
         return new KairosDialect(dataStore);
     }
 
@@ -86,7 +86,7 @@ public class KairosNGDataStoreFactory extends JDBCDataStoreFactory {
     }
 
     @SuppressWarnings("unchecked")
-    protected JDBCDataStore createDataStoreInternal(JDBCDataStore dataStore, Map params)
+    protected JDBCDataStore3D createDataStoreInternal(JDBCDataStore3D dataStore, Map params)
             throws IOException {
         // database schema
         String schema = (String) USER.lookUp(params);

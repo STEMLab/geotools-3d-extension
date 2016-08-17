@@ -34,7 +34,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.geotools.data.jdbc3d.datasource.DBCPDataSource;
 import org.geotools.data.jdbc3d.datasource.ManageableDataSource;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc.SQLDialect;
 import org.geotools.test.OnlineTestCase;
@@ -99,7 +99,7 @@ public abstract class JDBCTestSetup {
     protected void setUpData() throws Exception {
     }
 
-    protected void setUpDataStore(JDBCDataStore dataStore) {
+    protected void setUpDataStore(JDBCDataStore3D dataStore) {
     }
 
     public void tearDown() throws Exception {
@@ -179,9 +179,9 @@ public abstract class JDBCTestSetup {
      */
     protected Connection getConnection() throws SQLException, IOException {
         Connection conn = getDataSource().getConnection();
-        JDBCDataStore store = null;
+        JDBCDataStore3D store = null;
         try {
-            store = new JDBCDataStore();
+            store = new JDBCDataStore3D();
             createDataStoreFactory().createSQLDialect(store).initializeConnection(conn);
         } finally {
             if (store != null) {
@@ -263,7 +263,7 @@ public abstract class JDBCTestSetup {
 
     protected abstract JDBCDataStoreFactory createDataStoreFactory();
     
-    protected final SQLDialect createSQLDialect(JDBCDataStore dataStore) {
+    protected final SQLDialect createSQLDialect(JDBCDataStore3D dataStore) {
         return null;
     }
     

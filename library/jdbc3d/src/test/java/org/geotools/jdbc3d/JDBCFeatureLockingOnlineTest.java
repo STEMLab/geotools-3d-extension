@@ -26,7 +26,7 @@ import org.geotools.data.FeatureLockFactory;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -41,12 +41,12 @@ import org.opengis.filter.PropertyIsEqualTo;
  */
 public abstract class JDBCFeatureLockingOnlineTest extends JDBCTestSupport {
 
-    JDBCFeatureStore store;
+    JDBCFeatureStore3D store;
     
     protected void connect() throws Exception {
         super.connect();
     
-        store = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+        store = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
         store.setFeatureLock(FeatureLock.TRANSACTION);
     }
     

@@ -36,7 +36,7 @@ import java.util.Properties;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.feature.SchemaException;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.test.OnlineTestCase;
 
 /**
@@ -51,7 +51,7 @@ public class PostgisNGCreateDatabaseOnlineTest extends OnlineTestCase {
     @Override
     protected boolean isOnline() throws Exception {
         PostgisNGDataStoreFactory factory =  new PostgisNGDataStoreFactory();
-        JDBCDataStore closer = new JDBCDataStore();
+        JDBCDataStore3D closer = new JDBCDataStore3D();
         Class.forName(factory.getDriverClassName());
         
         // get host and port
@@ -129,7 +129,7 @@ public class PostgisNGCreateDatabaseOnlineTest extends OnlineTestCase {
         assertTrue(factory.canProcess(params));
         
         // force database creation and check the store functions
-        JDBCDataStore store = factory.createDataStore(params);
+        JDBCDataStore3D store = factory.createDataStore(params);
         assertNotNull(store);
         store.createSchema(DataUtilities.createType("test", "id:String,polygonProperty:Polygon:srid=32615"));
         store.getSchema("test");

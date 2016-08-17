@@ -45,7 +45,7 @@ import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
@@ -553,7 +553,7 @@ public class DemoTest extends JFrame{
 				if (dataStore1 == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
-				JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				JDBCDataStore3D jds = (JDBCDataStore3D)dataStore1;
 				jds.setDatabaseSchema(null);
 
 				dataStore1.createSchema((SimpleFeatureType) schema);
@@ -712,7 +712,7 @@ public class DemoTest extends JFrame{
 				if (dataStore1 == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
-				JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				JDBCDataStore3D jds = (JDBCDataStore3D)dataStore1;
 				jds.setDatabaseSchema(null);
 
 				dataStore1.createSchema((SimpleFeatureType) schema);

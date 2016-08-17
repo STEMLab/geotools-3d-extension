@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import org.geotools.data.DataSourceException;
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.store.ContentFeatureSource;
@@ -38,6 +38,9 @@ import org.geotools.util.Converters;
 import org.opengis.feature.IllegalAttributeException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTWriter;
 /**
  * Uses PropertyAttributeWriter to generate a property file on disk.
  *
@@ -81,7 +84,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
         writer = new BufferedWriter(new FileWriter(write));
         // write header
         writer.write("_=");
-        writer.write(DataUtilities.encodeType(type));
+        writer.write(ISODataUtilities.encodeType(type));
     }
     // constructor end
     
@@ -149,6 +152,9 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
         } else if (attribute instanceof Geometry) {
             Geometry geometry = (Geometry) attribute;
             wktWriter.write(geometry, writer);
+        } else if (attribute instanceof org.opengis.geometry.Geometry) {
+            org.opengis.geometry.Geometry geometry = (org.opengis.geometry.Geometry) attribute;
+            writer.write(geometry.toString());
         } else {
             String txt = Converters.convert( attribute, String.class );
             if( txt == null ){ // could not convert?
@@ -180,7 +186,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
                 return live;
             } else {
                 fid = type.getTypeName() + "." + System.currentTimeMillis();
-                Object values[] = DataUtilities.defaultValues(type);
+                Object values[] = ISODataUtilities.defaultValues(type);
                 
                 origional = null;
                 live = SimpleFeatureBuilder.build(type, values, fid);

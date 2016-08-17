@@ -32,9 +32,9 @@ import org.geotools.data.Join;
 import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.data.store.ContentDataStore;
-import org.geotools.data.store.ContentFeatureSource;
-import org.geotools.data.store.ContentFeatureStore;
+import org.geotools.data3d.store.ContentDataStore;
+import org.geotools.data3d.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data.store.ContentState;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.FeatureTypes;
@@ -62,7 +62,7 @@ import org.opengis.geometry.primitive.Point;
  */
 public class ContentFeatureCollection implements SimpleFeatureCollection {
     
-    protected static final Logger LOGGER = Logging.getLogger("org.geotools.data.store");
+    protected static final Logger LOGGER = Logging.getLogger("org.geotools.data3d.store");
     /**
      * feature store the collection originated from.
      */

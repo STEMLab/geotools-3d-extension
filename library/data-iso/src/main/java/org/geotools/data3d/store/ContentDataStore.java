@@ -36,8 +36,8 @@ import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data3d.store.ContentEntry;
-import org.geotools.data.store.ContentFeatureSource;
-import org.geotools.data.store.ContentFeatureStore;
+import org.geotools.data3d.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
@@ -52,9 +52,8 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.geotools.geometry.GeometryBuilder;
-//import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.util.TypeName;
-
+//import org.opengis.geometry.coordinate.GeometryFactory;
 //import com.vividsolutions.jts.geom.GeometryFactory;
 
 

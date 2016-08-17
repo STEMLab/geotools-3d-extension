@@ -26,6 +26,7 @@ import java.util.List;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.Transaction;
 import org.geotools.data3d.store.ContentDataStore;
+import org.geotools.data3d.store.ContentEntry;
 import org.geotools.feature.NameImpl;
 import org.junit.Test;
 import org.opengis.feature.type.Name;

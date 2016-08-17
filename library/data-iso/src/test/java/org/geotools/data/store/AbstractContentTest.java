@@ -27,6 +27,7 @@ import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureWriter;
 import org.geotools.data3d.store.ContentDataStore;
+import org.geotools.data3d.store.ContentEntry;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;

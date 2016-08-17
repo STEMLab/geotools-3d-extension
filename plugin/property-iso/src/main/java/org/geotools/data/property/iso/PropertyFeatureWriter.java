@@ -51,7 +51,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
     PropertyDataStore store;
     ContentFeatureSource featureSource;
     File read;
-    private PropertyFeatureReader delegate;
+    private PropertyFeatureReader3D delegate;
     File write;
 
     WKTWriter wktWriter = new WKTWriter2();
@@ -74,7 +74,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
         write = File.createTempFile(typeName + System.currentTimeMillis(),null, dir);
         
         // start reading
-        delegate = new PropertyFeatureReader(namespaceURI, read );
+        delegate = new PropertyFeatureReader3D(namespaceURI, read );
         type = delegate.getFeatureType();
         
         // open writer

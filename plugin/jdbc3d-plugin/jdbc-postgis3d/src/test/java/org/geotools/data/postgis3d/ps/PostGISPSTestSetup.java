@@ -19,7 +19,7 @@ package org.geotools.data.postgis3d.ps;
 import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.data.postgis3d.PostGISPSDialect;
 import org.geotools.data.postgis3d.PostGISTestSetup;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 
 /**
  * 

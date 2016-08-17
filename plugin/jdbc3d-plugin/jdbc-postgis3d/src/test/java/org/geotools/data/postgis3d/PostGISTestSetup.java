@@ -23,8 +23,8 @@ import javax.sql.DataSource;
 
 import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc3d.JDBCTestSetup;
 import org.geotools.util.Version;
 

@@ -20,7 +20,7 @@ import static org.geotools.data.postgis3d.PostgisNGDataStoreFactory.*;
 
 import java.util.Map;
 
-import org.geotools.jdbc3d.JDBCJNDIDataStoreFactory;
+import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
 
 /**
  * JNDI DataStoreFactory  for Postgis database.

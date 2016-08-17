@@ -17,11 +17,11 @@
 package org.geotools.data.postgis3d;
 
 import static org.geotools.data.postgis3d.PostgisNGDataStoreFactory.PORT;
-import static org.geotools.jdbc3d.JDBCDataStoreFactory.DATABASE;
-import static org.geotools.jdbc3d.JDBCDataStoreFactory.DBTYPE;
-import static org.geotools.jdbc3d.JDBCDataStoreFactory.HOST;
-import static org.geotools.jdbc3d.JDBCDataStoreFactory.PASSWD;
-import static org.geotools.jdbc3d.JDBCDataStoreFactory.USER;
+import static org.geotools.jdbc.JDBCDataStoreFactory.DATABASE;
+import static org.geotools.jdbc.JDBCDataStoreFactory.DBTYPE;
+import static org.geotools.jdbc.JDBCDataStoreFactory.HOST;
+import static org.geotools.jdbc.JDBCDataStoreFactory.PASSWD;
+import static org.geotools.jdbc.JDBCDataStoreFactory.USER;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.factory.Hints;
 import org.geotools.factory.Hints.Key;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc3d.JDBCTestSetup;
 import org.geotools.jdbc3d.JDBCTestSupport;
 

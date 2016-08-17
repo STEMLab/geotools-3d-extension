@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.postgis3d.PostgisNGJNDIDataStoreFactory;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
 import org.geotools.jdbc3d.JDBCJNDIDataSourceOnlineTest;
-import org.geotools.jdbc3d.JDBCJNDIDataStoreFactory;
 import org.geotools.jdbc3d.JDBCJNDITestSetup;
 
 /**

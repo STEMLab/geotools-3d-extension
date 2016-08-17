@@ -21,7 +21,7 @@ import java.io.Writer;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
 import org.geotools.filter.FilterCapabilities;
-import org.geotools.jdbc3d.SQLDialect;
+import org.geotools.jdbc.SQLDialect;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BBOX;

@@ -28,8 +28,8 @@ import org.geotools.data.DataSourceException;
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
-import org.geotools.data.store.ContentFeatureSource;
-import org.geotools.data.store.ContentState;
+import org.geotools.data3d.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.Hints;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -54,7 +54,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
     PropertyDataStore store;
     ContentFeatureSource featureSource;
     File read;
-    private PropertyFeatureReader3D delegate;
+    private PropertyFeatureReader delegate;
     File write;
 
     WKTWriter wktWriter = new WKTWriter2();
@@ -77,7 +77,7 @@ public class PropertyFeatureWriter implements FeatureWriter<SimpleFeatureType, S
         write = File.createTempFile(typeName + System.currentTimeMillis(),null, dir);
         
         // start reading
-        delegate = new PropertyFeatureReader3D(namespaceURI, read );
+        delegate = new PropertyFeatureReader(namespaceURI, read );
         type = delegate.getFeatureType();
         
         // open writer

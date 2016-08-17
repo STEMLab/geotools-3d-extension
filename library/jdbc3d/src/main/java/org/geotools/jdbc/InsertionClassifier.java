@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.jdbc3d;
+package org.geotools.jdbc;
 
 //import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.factory.Hints;

@@ -17,13 +17,13 @@
 package org.geotools.jdbc3d;
 
 import org.geotools.data.DataUtilities;
-import org.geotools.data.store.ContentFeatureCollection;
+import org.geotools.data3d.store.ContentFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.jdbc3d.JDBCFeatureStore;
-import org.geotools.jdbc3d.NonIncrementingPrimaryKeyColumn;
-import org.geotools.jdbc3d.SequencedPrimaryKeyColumn;
+import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.NonIncrementingPrimaryKeyColumn;
+import org.geotools.jdbc.SequencedPrimaryKeyColumn;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

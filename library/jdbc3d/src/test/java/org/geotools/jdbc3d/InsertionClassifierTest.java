@@ -31,7 +31,7 @@ import org.geotools.geometry.iso.coordinate.LineSegmentImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
-import org.geotools.jdbc3d.InsertionClassifier;
+import org.geotools.jdbc.InsertionClassifier;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

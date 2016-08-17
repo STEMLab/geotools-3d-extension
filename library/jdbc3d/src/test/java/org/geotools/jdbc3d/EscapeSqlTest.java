@@ -19,9 +19,9 @@ package org.geotools.jdbc3d;
 import java.util.Collections;
 import junit.framework.TestCase;
 import org.geotools.factory.Hints;
-import org.geotools.jdbc3d.RegexpValidator;
-import org.geotools.jdbc3d.VirtualTable;
-import org.geotools.jdbc3d.VirtualTableParameter;
+import org.geotools.jdbc.RegexpValidator;
+import org.geotools.jdbc.VirtualTable;
+import org.geotools.jdbc.VirtualTableParameter;
 
 /**
  * Check that SQL escape code generates the correct strings

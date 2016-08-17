@@ -16,7 +16,7 @@
  */
 package org.geotools.jdbc3d;
 
-import org.geotools.jdbc3d.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeatureType;
 

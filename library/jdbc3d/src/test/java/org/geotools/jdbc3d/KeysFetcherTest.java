@@ -18,7 +18,7 @@ package org.geotools.jdbc3d;
 
 import junit.framework.TestCase;
 
-import org.geotools.jdbc3d.KeysFetcher;
+import org.geotools.jdbc.KeysFetcher;
 import org.junit.Test;
 
 import java.io.IOException;

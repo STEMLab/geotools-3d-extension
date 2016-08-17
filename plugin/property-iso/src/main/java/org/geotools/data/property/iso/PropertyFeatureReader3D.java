@@ -25,10 +25,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.geotools.data.DataSourceException;
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.property.PropertyFeatureReader;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.geometry.text.WKTParser;
 import org.geotools.util.Converters;
@@ -143,35 +144,48 @@ public class PropertyFeatureReader3D extends PropertyFeatureReader {
         // Use of Converters to convert from String to requested java binding
         if(attType instanceof GeometryDescriptor && stringValue != null && !stringValue.isEmpty()) {
             
+            boolean isISO = false;
             if(stringValue.contains("Solid") || stringValue.contains("Shell")) {
-                org.opengis.geometry.Geometry g = new WKTParser(new GeometryBuilder()).parse(text)
+                isISO = true;
             }
-            else {
-                try {
-                    Geometry geometry = wktReader.read(stringValue);
-                    value = Converters.convert(geometry, attType.getType().getBinding());
-                } catch (ParseException e) {
-                    // to be consistent with converters
-                    value = null;
+            
+            if (attType.getType() instanceof GeometryType) {
+                // this is to be passed on in the geometry objects so the srs name gets encoded
+                CoordinateReferenceSystem crs = ((GeometryType) attType.getType())
+                        .getCoordinateReferenceSystem();
+                if (crs != null) {
+                    
+                    //TODO
+                    // must be geometry, but check anyway
+                    //if (value != null && value instanceof Geometry) {
+                    //    ((Geometry) value).getCoordinateReferenceSystem()
+                    //}
+                }
+                
+                if(isISO) {
+                    try {
+                        org.opengis.geometry.Geometry g = new WKTParser(new GeometryBuilder(crs)).parse(stringValue);
+                        value = g;
+                    } catch (java.text.ParseException e) {
+                        // to be consistent with converters
+                        value = null;
+                    }
+                }
+                else {
+                    try {
+                        Geometry geometry = wktReader.read(stringValue);
+                        value = Converters.convert(geometry, attType.getType().getBinding());
+                    } catch (ParseException e) {
+                        // to be consistent with converters
+                        value = null;
+                    }
                 }
             }
+            
         } else {
             value = Converters.convert(stringValue, attType.getType().getBinding());
         }
         
-        if (attType.getType() instanceof GeometryType) {
-            // this is to be passed on in the geometry objects so the srs name gets encoded
-            CoordinateReferenceSystem crs = ((GeometryType) attType.getType())
-                    .getCoordinateReferenceSystem();
-            if (crs != null) {
-                
-                //TODO
-                // must be geometry, but check anyway
-                //if (value != null && value instanceof Geometry) {
-                //    ((Geometry) value).getCoordinateReferenceSystem()
-                //}
-            }
-        }
         return value;
     }
     

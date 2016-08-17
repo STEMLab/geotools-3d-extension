@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.geotools.data.DataSourceException;
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
@@ -38,6 +38,9 @@ import org.opengis.feature.FeatureVisitor;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
+
+import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Jody Garnett
@@ -120,7 +123,7 @@ public class PropertyFeatureSource extends ContentFeatureSource {
         
         String typeSpec = property("_");
         try {
-            return DataUtilities.createType(namespace, typeName, typeSpec);
+            return ISODataUtilities.createType(namespace, typeName, typeSpec);
         } catch (SchemaException e) {
             e.printStackTrace();
             throw new DataSourceException(typeName + " schema not available", e);

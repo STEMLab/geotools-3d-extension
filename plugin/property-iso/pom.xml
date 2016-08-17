@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.geotools</groupId>
-  <artifactId>property-iso</artifactId>
+  <artifactId>gt-property-iso</artifactId>
   <version>15-SNAPSHOT</version>
   
   <description>

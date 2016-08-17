@@ -315,13 +315,17 @@ public final class JTSUtils {
         
         Coordinate[] coordinates = new Coordinate[resultPoints.size()];
         for (int i = 0; i < resultPoints.size(); i++) {
-            coordinates[i] = directPositionToCoordinate((DirectPosition) resultPoints.get(i));
+        	Position dp = resultPoints.get(i);
+        	if(resultPoints.get(i) instanceof DirectPosition)
+        		coordinates[i] = directPositionToCoordinate((DirectPosition) resultPoints.get(i));
+        	else if(resultPoints.get(i) instanceof Position)
+        		coordinates[i] = directPositionToCoordinate(resultPoints.get(i).getDirectPosition());
         }
         
         return GEOMETRY_FACTORY.createLinearRing(coordinates);
     }
-    
-    public static com.vividsolutions.jts.geom.Polygon polygonToJTSPolygon(Polygon polygon) {
+
+	public static com.vividsolutions.jts.geom.Polygon polygonToJTSPolygon(Polygon polygon) {
         SurfaceBoundary boundary = polygon.getBoundary();
         Ring exteriorRing = boundary.getExterior();                
         List<Ring> interiorRings = boundary.getInteriors();
@@ -349,16 +353,18 @@ public final class JTSUtils {
                 Polygon polygon = (Polygon) patch;
                 com.vividsolutions.jts.geom.Polygon jtsPolygon = polygonToJTSPolygon(polygon);
                 
-                Object userData = ((SurfaceImpl) surface).getUserData();
-                if (userData != null) {
-                    Object newUserData = null;
-                    if (userData instanceof Map) {
-                        newUserData = new HashMap<Object, Object>();
-                        ((Map) newUserData).putAll((Map) userData);
-                    } else {
-                        newUserData = userData;
+                if(surface instanceof SurfaceImpl){
+                	Object userData = ((SurfaceImpl) surface).getUserData();
+                    if (userData != null) {
+                        Object newUserData = null;
+                        if (userData instanceof Map) {
+                            newUserData = new HashMap<Object, Object>();
+                            ((Map) newUserData).putAll((Map) userData);
+                        } else {
+                            newUserData = userData;
+                        }
+                        jtsPolygon.setUserData(newUserData);
                     }
-                    jtsPolygon.setUserData(newUserData);
                 }
                 
                 polygons.add(jtsPolygon);

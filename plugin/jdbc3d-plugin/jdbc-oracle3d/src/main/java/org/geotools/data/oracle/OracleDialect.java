@@ -511,27 +511,35 @@ public class OracleDialect extends PreparedStatementSQLDialect {
     @Override
     public Envelope decodeGeometryEnvelope(ResultSet rs, int column, Connection cx )
             throws SQLException, IOException {
-        Geometry geom = readGeometry(rs, column, new GeometryFactory(), cx);
-        return geom != null ? geom.getEnvelopeInternal() : null;
+    	Object geom = readGeometry(rs, column, new GeometryFactory(), cx);
+    	return geom != null ? ((Geometry)geom).getEnvelopeInternal() : null;
+    	/*
+    	if(geom instanceof Geometry)
+    		return geom != null ? ((Geometry)geom).getEnvelopeInternal() : null;
+    	else if(geom instanceof org.opengis.geometry.Geometry)
+    		return geom != null ? ((org.opengis.geometry.Geometry)geom).getEnvelope() : null;
+		else 
+			return null;
+		*/	
     }
 
     @Override
-    public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
+    public Object decodeGeometryValue(GeometryDescriptor descriptor,
             ResultSet rs, String column, GeometryFactory factory, Connection cx )
             throws IOException, SQLException {
         
         // read the geometry
-        Geometry geom = readGeometry( rs, column, factory, cx );
+    	Object geom = readGeometry( rs, column, factory, cx );
         return convertGeometry(geom, descriptor, factory);
     }
     
-    public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column, GeometryFactory factory, Connection cx) throws IOException ,SQLException {
+    public Object decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column, GeometryFactory factory, Connection cx) throws IOException ,SQLException {
         // read the geometry
-        Geometry geom = readGeometry( rs, column, factory, cx );
+    	Object geom = readGeometry( rs, column, factory, cx );
         return convertGeometry(geom, descriptor, factory);
     };
     
-    Geometry convertGeometry(Geometry geom, GeometryDescriptor descriptor, GeometryFactory factory) {
+    Object convertGeometry(Object geom, GeometryDescriptor descriptor, GeometryFactory factory) {
         //if the geometry is null no need to convert it
         if(geom == null) {
             return null;
@@ -552,22 +560,23 @@ public class OracleDialect extends PreparedStatementSQLDialect {
             return factory.createMultiLineString(new LineString[] {(LineString) geom});
         }
         else if(targetClazz.equals(GeometryCollection.class)) {
-            return factory.createGeometryCollection(new Geometry[] {geom});
+            return factory.createGeometryCollection(new Geometry[] {(Geometry) geom});
         }
+        
         return geom;
     }
     
-    Geometry readGeometry(ResultSet rs, String column, GeometryFactory factory, Connection cx)
+    Object readGeometry(ResultSet rs, String column, GeometryFactory factory, Connection cx)
             throws IOException, SQLException {
         return readGeometry(rs.getObject(column), factory, cx);
     }
 
-    Geometry readGeometry(ResultSet rs, int column, GeometryFactory factory, Connection cx)
+    Object readGeometry(ResultSet rs, int column, GeometryFactory factory, Connection cx)
             throws IOException, SQLException {
         return readGeometry(rs.getObject(column), factory, cx);
     }
 
-    Geometry readGeometry(Object struct, GeometryFactory factory, Connection cx)
+    Object readGeometry(Object struct, GeometryFactory factory, Connection cx)
             throws IOException, SQLException {
         if (struct == null) {
             return null;
@@ -610,6 +619,36 @@ public class OracleDialect extends PreparedStatementSQLDialect {
             LOGGER.fine("Setting parameter " + column + " as " + sdo);
         }
     }
+    
+    @Override
+	public void setGeometryValue(Solid g, int dimension, int srid, Class binding, PreparedStatement ps, int column)
+			throws SQLException {
+		// Handle the null geometry case.
+        // Surprisingly, using setNull(column, Types.OTHER) does not work...
+        if (g == null) {
+            ps.setNull(column, Types.STRUCT, "MDSYS.SDO_GEOMETRY");
+            return;
+        }
+
+        OracleConnection ocx = unwrapConnection(ps.getConnection());
+
+        GeometryConverter converter = new GeometryConverter(ocx);
+        STRUCT s = converter.toSDO(g, srid);
+        ps.setObject(column, s);
+        /*
+        if (LOGGER.isLoggable(Level.FINE)) {
+            String sdo;
+            try {
+                // the dumper cannot translate all types of geometries
+                sdo = SDOSqlDumper.toSDOGeom(g, srid);
+            } catch(Exception e) {
+                sdo = "Could not translate this geometry into a SDO string, " +
+                		"WKT representation is: " + g;
+            }
+            LOGGER.fine("Setting parameter " + column + " as " + sdo);
+        }
+        */
+	}
     
     /**
      * Obtains the native oracle connection object given a database connecetion.
@@ -1066,7 +1105,7 @@ public class OracleDialect extends PreparedStatementSQLDialect {
                     if (rs.next()) {
                         // decode the geometry
                         GeometryDescriptor descriptor = (GeometryDescriptor) att;
-                        Geometry geometry = readGeometry(rs, 1, new GeometryFactory(), cx);
+                        Geometry geometry = (Geometry) readGeometry(rs, 1, new GeometryFactory(), cx);
                         
                         // Either a ReferencedEnvelope or ReferencedEnvelope3D will be generated here
                         ReferencedEnvelope env = JTS.bounds(geometry, descriptor.getCoordinateReferenceSystem() );
@@ -1500,34 +1539,5 @@ public class OracleDialect extends PreparedStatementSQLDialect {
         return new Envelope(minx,maxx,miny,maxy);
     }
 
-	@Override
-	public void setGeometryValue(Solid g, int dimension, int srid, Class binding, PreparedStatement ps, int column)
-			throws SQLException {
-		// TODO Auto-generated method stub
-		// Handle the null geometry case.
-        // Surprisingly, using setNull(column, Types.OTHER) does not work...
-        if (g == null) {
-            ps.setNull(column, Types.STRUCT, "MDSYS.SDO_GEOMETRY");
-            return;
-        }
-
-        OracleConnection ocx = unwrapConnection(ps.getConnection());
-
-        GeometryConverter converter = new GeometryConverter(ocx);
-        STRUCT s = converter.toSDO(g, srid);
-        ps.setObject(column, s);
-
-        if (LOGGER.isLoggable(Level.FINE)) {
-            String sdo;
-            try {
-                // the dumper cannot translate all types of geometries
-                sdo = SDOSqlDumper.toSDOGeom(g, srid);
-            } catch(Exception e) {
-                sdo = "Could not translate this geometry into a SDO string, " +
-                		"WKT representation is: " + g;
-            }
-            LOGGER.fine("Setting parameter " + column + " as " + sdo);
-        }
-	}
 
 }

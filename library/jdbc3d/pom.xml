@@ -77,9 +77,9 @@
       <artifactId>gt-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
+	<dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-geometry</artifactId>
+      <artifactId>gt-geometry-ng</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -144,7 +144,6 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>

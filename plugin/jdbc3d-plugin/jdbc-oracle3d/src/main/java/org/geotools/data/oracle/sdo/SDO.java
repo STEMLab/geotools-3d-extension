@@ -28,16 +28,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.geotools.factory.GeoTools;
+import org.geotools.factory.Hints;
+import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CompoundCurvedGeometry;
 import org.geotools.geometry.jts.CurvedGeometries;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
+import org.geotools.geometry.jts.JTSUtils;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.geometry.primitive.SurfacePatch;
@@ -263,7 +270,7 @@ public final class SDO {
             return TT.UNKNOWN; // UNKNOWN
     	} else if (geom instanceof Solid) {
             return TT.SOLID;
-        }
+        } 
     	
     	throw new IllegalArgumentException("Cannot encode ISO "
                 + geom.getClass().getTypeName() + " as SDO_GTYPE "
@@ -445,35 +452,52 @@ public final class SDO {
 
 	private static void addElemInfo(List elemInfoList, Solid solid, 
 			final int STARTING_OFFSET, int GTYPE) {
-		final int COMPOSITE_SURFACE_NUM = solid.getBoundary().getExterior().getElements().size();
-
-        if (COMPOSITE_SURFACE_NUM == 0) {
-            addInt(elemInfoList, STARTING_OFFSET);
-            addInt(elemInfoList, elemInfoEType(solid));
-            addInt(elemInfoList, elemInfoInterpretation(solid, ETYPE.SOLID));
-
-            return;
-        }
+		addInt(elemInfoList, STARTING_OFFSET);
+        addInt(elemInfoList, elemInfoEType(solid));
+        addInt(elemInfoList, elemInfoInterpretation(solid, ETYPE.SOLID));
 
         int LEN = D(GTYPE) + L(GTYPE);
         int offset = STARTING_OFFSET;
         Shell shell;
         
         shell = solid.getBoundary().getExterior();
+        if(shell == null) 
+        	return;
+        
         addInt(elemInfoList, offset);
-        addInt(elemInfoList, elemInfoEType(shell));
+        addInt(elemInfoList, ETYPE.COMPOSITE_SURFACE_EXTERIOR);
         //addInt(elemInfoList, elemInfoInterpretation(shell, ETYPE.COMPOSITE_SURFACE_EXTERIOR));
-        addInt(elemInfoList, COMPOSITE_SURFACE_NUM);
+        addInt(elemInfoList, shell.getElements().size());
         
-        Surface[] shellElements = new SurfaceImpl[COMPOSITE_SURFACE_NUM];
-        shell.getElements().toArray(shellElements);
-        for(int i = 0; i < COMPOSITE_SURFACE_NUM; i++){
+        Collection<? extends Primitive> shellElements = shell.getElements();
+        for (Primitive surface : shellElements) {
+        	/*
         	addInt(elemInfoList, offset);
-            addInt(elemInfoList, elemInfoEType(shellElements[i]));
-            addInt(elemInfoList, elemInfoInterpretation(shellElements[i], ETYPE.COMPOSITE_SURFACE_EXTERIOR));
-            offset += (shellElements[i].getBoundary().getElements().size() * LEN);
-        }
-        
+            addInt(elemInfoList, elemInfoEType((Surface)surface));
+            addInt(elemInfoList, elemInfoInterpretation((Surface)surface, ETYPE.COMPOSITE_SURFACE_EXTERIOR));
+            */
+            Polygon jtsPolygon = (Polygon) JTSUtils.surfaceToPolygon((Surface)surface);
+            LineString ring = jtsPolygon.getExteriorRing();
+            addInt(elemInfoList, offset);
+            addInt(elemInfoList, elemInfoEType(jtsPolygon));
+            addInt(elemInfoList, elemInfoInterpretation(jtsPolygon, ETYPE.POLYGON_EXTERIOR));
+            switch (elemInfoInterpretation(jtsPolygon, ETYPE.POLYGON_EXTERIOR)) {
+            case 4:  // circle not supported
+                break;
+           
+            case 3:
+            	offset += (2 * LEN);
+                break;
+
+            case 2: // curve not suppported
+                break;
+
+            case 1:
+            	offset += (ring.getNumPoints() * LEN);
+                break;
+            }
+            
+		}        
         // If Solid has a hole 
         
 	}
@@ -725,6 +749,7 @@ public final class SDO {
 		switch (TT(geom)) {
     	case TT.SOLID:
     		return ETYPE.SOLID;
+
     	default:
             // should never happen!
             throw new IllegalArgumentException("Unknown encoding of SDO_GTYPE");
@@ -1090,25 +1115,34 @@ public final class SDO {
     	if(shellExterior != null){
     		Collection<? extends Primitive> shellElements = shellExterior.getElements();
         	for (Primitive surface : shellElements) {
-    			List<? extends SurfacePatch> pathes = ((Surface)surface).getPatches();
-    			for (SurfacePatch surfacePatch : pathes) {
-    				if(surfacePatch instanceof org.opengis.geometry.coordinate.Polygon){
-    					addCoordinates(list, (org.opengis.geometry.coordinate.Polygon)surfacePatch);
-    					
-    				}
-				}
+        		// Assumed that shell is created by 1 surface
+        		Polygon polygon = (Polygon) JTSUtils.surfaceToPolygon((Surface)surface);
+        		switch (elemInfoInterpretation(polygon)) {
+                case 4:  // circle not supported
+                    break;
+               
+                case 3:
+                	addCoordinatesInterpretation3(list, surface);
+                    break;
+
+                case 2: // curve not suppported
+                    break;
+
+                case 1:
+                    addCoordinatesInterpretation1(list, polygon);
+
+                    break;
+                }
     		}	
     	}
+    	// In case shellInterior?
 	}
 
-	private static void addCoordinates(List list, org.opengis.geometry.coordinate.Polygon polygon) {
-		SurfaceBoundary boundary = polygon.getBoundary();
-        Ring exteriorRing = boundary.getExterior();                
-        List<Ring> interiorRings = boundary.getInteriors();
-        
-        
+	private static void addCoordinatesInterpretation3(List list, Primitive surface) {
+		org.opengis.geometry.Envelope envelope = surface.getEnvelope();
+		list.add(envelope.getLowerCorner().getCoordinate());
+        list.add(envelope.getUpperCorner().getCoordinate());
 	}
-
 	/**
      * Adds a double array to list.
      * 
@@ -1566,7 +1600,7 @@ public final class SDO {
      *
      */
     public static double[] ordinates(List list, Geometry geom) {
-        LOGGER.finest( "ordinates D:" + D(geom));
+        LOGGER.finest("ordinates D:" + D(geom));
         LOGGER.finest("ordinates L:" + L(geom));
 
         if (D(geom) == 3) {
@@ -1579,8 +1613,14 @@ public final class SDO {
 
 
 	private static double[] ordinates(List list, org.opengis.geometry.Geometry geom) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.finest("ordinates D:" + D(geom));
+        LOGGER.finest("ordinates L:" + L(geom));
+
+        if (D(geom) == 3) {
+            return ordinates3d(list, L(geom));
+        } else {
+            return ordinates2d(list, L(geom));
+        }
 	}
 
     /**
@@ -1803,13 +1843,14 @@ public final class SDO {
      * @return <code>true</code> if polygon is SRID==0 and a rectangle
      */
     private static boolean isRectangle(Polygon polygon) {
+
         if (polygon.getFactory().getSRID() != SRID_NULL) {
             // Rectangles only valid in CAD applications
             // that do not have an SRID system
             //
             return false;
         }
-
+		
         if (L(polygon) != 0) {
             // cannot support LRS on a rectangle
             return false;
@@ -2525,7 +2566,7 @@ public final class SDO {
      *
      * @return Geometry as encoded
      */
-    public static Geometry create(GeometryFactory gf, final int GTYPE,
+    public static Object create(GeometryFactory gf, final int GTYPE,
         final int SRID, double[] point, int[] elemInfo, double[] ordinates) {
         final int L = SDO.L(GTYPE);
         final int TT = SDO.TT(GTYPE);
@@ -2590,11 +2631,11 @@ public final class SDO {
      *
      * @return Geometry as encoded, or null w/ log if it cannot be represented via JTS
      */
-    public static Geometry create(GeometryFactory gf, final int GTYPE,
+    public static Object create(GeometryFactory gf, final int GTYPE,
         final int SRID, final int[] elemInfo, final int triplet,
         CoordinateSequence coords, final int N) {
         CurvedGeometryFactory curvedFactory = getCurvedGeometryFactory(gf);
-
+        
         switch (SDO.TT(GTYPE)) {
         case TT.POINT:
             return createPoint(curvedFactory, GTYPE, SRID, elemInfo, triplet, coords);
@@ -2620,8 +2661,7 @@ public final class SDO {
                 N);
             
         case TT.SOLID:
-            return createMultiPolygon(curvedFactory, GTYPE, SRID, elemInfo, triplet,
-                    coords, N, true);
+            return createSolid(curvedFactory, GTYPE, SRID, elemInfo, triplet, coords);
         
         case TT.UNKNOWN:  
         default:
@@ -2630,7 +2670,77 @@ public final class SDO {
         }        
     }
 
-    /**
+    private static org.opengis.geometry.Geometry createSolid(CurvedGeometryFactory gf, final int GTYPE,
+            final int SRID, final int[] elemInfo, final int triplet,
+            CoordinateSequence coords) {
+    	
+    	final int STARTING_OFFSET = STARTING_OFFSET(elemInfo, triplet);
+        final int eTYPE = ETYPE(elemInfo, triplet);
+        final int INTERPRETATION = INTERPRETATION(elemInfo, triplet);
+
+        ensure( "ELEM_INFO STARTING_OFFSET {1} must be in the range {0}..{1} of COORDINATES",
+                1,STARTING_OFFSET, ordinateSize( coords, GTYPE ) );        
+        if( !(1 <= STARTING_OFFSET && STARTING_OFFSET <= ordinateSize( coords, GTYPE ))){
+            throw new IllegalArgumentException(
+                    "ELEM_INFO STARTING_OFFSET "+STARTING_OFFSET+
+                    "inconsistent with COORDINATES length "+ordinateSize( coords, GTYPE ) );
+        } 
+        ensure("ETYPE {0} must be expected SOLID (one of {1})", eTYPE,
+                new int[] { ETYPE.SOLID});
+        
+        Shell shell = null;
+        if(INTERPRETATION == 1)
+        	shell = createShell(gf, GTYPE, SRID, elemInfo, triplet + 1, coords);
+        else
+        	shell = createShell(gf, GTYPE, SRID, elemInfo, triplet, coords);
+        List<Shell> interiors = new ArrayList<Shell>();
+        
+        Hints hints = GeoTools.getDefaultHints();
+        hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+        PrimitiveFactoryImpl pmFF = new PrimitiveFactoryImpl(hints);        
+        SolidBoundary solidBoundary = pmFF.createSolidBoundary(shell, interiors);
+        Solid solid = pmFF.createSolid(solidBoundary);
+
+		return solid;
+	}
+
+	private static Shell createShell(CurvedGeometryFactory gf, final int GTYPE,
+            final int SRID, final int[] elemInfo, final int triplet,
+            CoordinateSequence coords) {
+		
+		final int STARTING_OFFSET = STARTING_OFFSET(elemInfo, triplet);
+        final int eTYPE = ETYPE(elemInfo, triplet);
+        final int INTERPRETATION = INTERPRETATION(elemInfo, triplet);
+
+        ensure( "ELEM_INFO STARTING_OFFSET {1} must be in the range {0}..{1} of COORDINATES",
+                1,STARTING_OFFSET, ordinateSize( coords, GTYPE ) );        
+        if( !(1 <= STARTING_OFFSET && STARTING_OFFSET <= ordinateSize( coords, GTYPE ))){
+            throw new IllegalArgumentException(
+                    "ELEM_INFO STARTING_OFFSET "+STARTING_OFFSET+
+                    "inconsistent with COORDINATES length "+ordinateSize( coords, GTYPE ) );
+        } 
+        ensure("ETYPE {0} must be expected SHELL (one of {1})", eTYPE,
+                new int[] { ETYPE.COMPOSITE_SURFACE_EXTERIOR, ETYPE.COMPOSITE_SURFACE_INTERIOR});
+		
+        int triplets = INTERPRETATION;
+        List<OrientableSurface> surfaces = new ArrayList<>(triplets);
+        for (int i = 1; i <= triplets; i++) {
+        	LinearRing exteriorRing = createLinearRing(gf, GTYPE, SRID, elemInfo, triplet+i, coords);
+            Polygon poly = gf.createPolygon(exteriorRing);
+            poly.setSRID(SRID);
+            Surface surface = JTSUtils.polygonToSurface(poly, DefaultGeographicCRS.WGS84_3D);
+            surfaces.add(surface);
+        }
+        
+        Hints hints = GeoTools.getDefaultHints();
+        hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+        PrimitiveFactoryImpl pmFF = new PrimitiveFactoryImpl(hints);
+        Shell exteriorShell = pmFF.createShell(surfaces);
+        
+		return exteriorShell;
+	}
+
+	/**
      * Casts the provided geometry factory to a curved one if possible, or wraps it into one with
      * infinite tolerance (the linearization will happen using the default base segments number set
      * in {@link CircularArc}
@@ -2827,7 +2937,7 @@ public final class SDO {
             LOGGER.warning("Could not create JTS Polygon with INTERPRETATION "
                     + INTERPRETATION
                     + " "
- + "- we can only support 1 for straight edges, 2 for circular ones, "
+                    + "- we can only support 1 for straight edges, 2 for circular ones, "
                     + "3 for rectangle and 4 for circles");
             return null;
         }
@@ -2933,7 +3043,7 @@ public final class SDO {
                     + " - we can only support 1, 2, 3 and 4");
             return null;
         }
-        LinearRing ring;
+        LinearRing ring = null;
 
         if (eTYPE == ETYPE.COMPOUND_POLYGON_EXTERIOR || eTYPE == ETYPE.COMPOUND_POLYGON_INTERIOR) {
             int triplets = INTERPRETATION;
@@ -2968,10 +3078,38 @@ public final class SDO {
                     elemInfo, triplet, false);
             Coordinate min = ext.getCoordinate(0);
             Coordinate max = ext.getCoordinate(1);
-            ring = gf.createLinearRing(new Coordinate[] {
+            
+            if(min.Z == Coordinate.NULL_ORDINATE) {
+            	ring = gf.createLinearRing(new Coordinate[] {
                         min, new Coordinate(max.x, min.y), max,
                         new Coordinate(min.x, max.y), min
-                    });
+                    });	
+            }
+            else {
+            	// assume that 3-dim LinearRing is flat on AXIS
+            	double commonValue;
+            	if(min.x == max.x){
+            		commonValue = max.x; 
+            		ring = gf.createLinearRing(new Coordinate[] {
+                            min, new Coordinate(commonValue, max.y, min.z), max,
+                            new Coordinate(commonValue, min.y, max.z), min
+                        });	
+            	}
+            	else if(min.y == max.y){
+            		commonValue = max.y;
+            		ring = gf.createLinearRing(new Coordinate[] {
+                            min, new Coordinate(max.x, commonValue, min.z), max,
+                            new Coordinate(min.x, commonValue, max.z), min
+                        });	
+            	}
+            	else if(min.z == max.z){
+            		commonValue = max.z;
+            		ring = gf.createLinearRing(new Coordinate[] {
+                            min, new Coordinate(max.x, min.y, commonValue), max,
+                            new Coordinate(min.x, max.y, commonValue), min
+                        });	
+            	}
+            }
         } else if (INTERPRETATION == 4) {
             // rectangle does not maintain measures
             //

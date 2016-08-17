@@ -91,7 +91,6 @@ public class GeometryConverter {
         if( geom instanceof Point      || geom instanceof MultiPoint ||
         	geom instanceof LineString || geom instanceof MultiLineString ||
         	geom instanceof Polygon    || geom instanceof MultiPolygon ||
-        	//geom instanceof Solid    || 
         	geom instanceof GeometryCollection )
         {
             int d = SDO.D( geom );
@@ -114,7 +113,7 @@ public class GeometryConverter {
      * 
      * @see net.refractions.jspatial.Converter#toObject(oracle.sql.STRUCT)
      */
-    public Geometry asGeometry(STRUCT sdoGeometry) throws SQLException {
+    public Object asGeometry(STRUCT sdoGeometry) throws SQLException {
         // Note Returning null for null Datum
         if( sdoGeometry == null ) return null;
         
@@ -123,7 +122,7 @@ public class GeometryConverter {
         final int SRID = asInteger( data[1], SDO.SRID_NULL );
         final double POINT[] = asDoubleArray( (STRUCT) data[2], Double.NaN );
         final int ELEMINFO[] = asIntArray( (ARRAY) data[3], 0 );
-        final double ORDINATES[] = asDoubleArray( (ARRAY) data[4], Double.NaN );;
+        final double ORDINATES[] = asDoubleArray( (ARRAY) data[4], Double.NaN );
                 
         return SDO.create( geometryFactory,
                            GTYPE,

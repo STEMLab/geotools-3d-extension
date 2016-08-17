@@ -667,7 +667,7 @@ public abstract class SQLDialect {
      * value.
      * @param The database connection.
      */
-    public abstract Envelope decodeGeometryEnvelope(ResultSet rs, int column, Connection cx )
+    public abstract Object decodeGeometryEnvelope(ResultSet rs, int column, Connection cx )
         throws SQLException, IOException;
 
     /**
@@ -849,7 +849,7 @@ public abstract class SQLDialect {
      * objects.
      * </p>
      */
-    public abstract Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
+    public abstract Object decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
         String column, GeometryFactory factory, Connection cx ) throws IOException, SQLException;
     
     /**
@@ -861,7 +861,7 @@ public abstract class SQLDialect {
      * </p>
      * @see {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, GeometryFactory)}.
      */
-    public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
+    public Object decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
         int column, GeometryFactory factory, Connection cx ) throws IOException, SQLException {
         
         String columnName = rs.getMetaData().getColumnName( column );

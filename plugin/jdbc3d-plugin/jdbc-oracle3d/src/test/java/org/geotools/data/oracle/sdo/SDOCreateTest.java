@@ -271,7 +271,7 @@ public class SDOCreateTest {
         final GeometryFactory geometryFactory = new GeometryFactory();
         WKTReader wktRdr = new WKTReader();
 
-        final Geometry actual = create(oraGeom, geometryFactory);
+        final Geometry actual = (Geometry) create(oraGeom, geometryFactory);
 
         Geometry expected = null;
         try {
@@ -287,7 +287,7 @@ public class SDOCreateTest {
         assertTrue(isEqual);
     }
 
-    private Geometry create(SDO_GEOMETRY oraGeom, GeometryFactory gf) {
+    private Object create(SDO_GEOMETRY oraGeom, GeometryFactory gf) {
         return SDO.create(gf, oraGeom.gType, oraGeom.srid, oraGeom.ptType, oraGeom.elemInfo,
                 oraGeom.ordinates);
     }

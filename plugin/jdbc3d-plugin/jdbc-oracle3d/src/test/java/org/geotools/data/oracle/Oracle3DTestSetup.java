@@ -72,6 +72,18 @@ public class Oracle3DTestSetup extends JDBC3DTestSetup {
                 + "MDSYS.SDO_GEOMETRY(3001, 4326, NULL, MDSYS.SDO_ELEM_INFO_ARRAY(1,1,1), "
                 + "MDSYS.SDO_ORDINATE_ARRAY(3, 0, 1)), 'p2')");
     }
+    
+    @Override
+    protected void createSolidTable() throws Exception {
+    	run("CREATE TABLE solid (fid int, id int, "
+    			+" geom MDSYS.SDO_GEOMETRY, name VARCHAR(20), PRIMARY KEY (fid) )");
+    	run("CREATE SEQUENCE solid_fid_seq START WITH 0 MINVALUE 0");
+    	run("INSERT INTO USER_SDO_GEOM_METADATA (TABLE_NAME, COLUMN_NAME, DIMINFO, SRID)" 
+                + " VALUES ('solid','geom',MDSYS.SDO_DIM_ARRAY(MDSYS.SDO_DIM_ELEMENT('X',-180,180,0.5), " 
+                + "MDSYS.SDO_DIM_ELEMENT('Y',-90,90,0.5), MDSYS.SDO_DIM_ELEMENT('Z',-1000,1000,0.5)), 4326)");   
+        run("CREATE INDEX SOLID_GEOM_IDX ON SOLID(GEOM) INDEXTYPE IS MDSYS.SPATIAL_INDEX" //
+                + " PARAMETERS ('SDO_INDX_DIMS=2 LAYER_GTYPE=\"SOLID\"')");
+    }
 
     @Override
     protected void dropLine3DTable() throws Exception {
@@ -93,6 +105,13 @@ public class Oracle3DTestSetup extends JDBC3DTestSetup {
         runSafe("DROP TABLE point3d");
         runSafe("DELETE FROM USER_SDO_GEOM_METADATA WHERE TABLE_NAME='POINT3D'");
     }
+
+	@Override
+	protected void dropSolidTable() throws Exception {
+		runSafe("DROP SEQUENCE solid_fid_seq");
+        runSafe("DROP TABLE solid");
+        runSafe("DELETE FROM USER_SDO_GEOM_METADATA WHERE TABLE_NAME='SOLID'");
+	}
 
     
     

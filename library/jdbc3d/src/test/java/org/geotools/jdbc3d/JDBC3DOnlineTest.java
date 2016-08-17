@@ -16,6 +16,9 @@
  */
 package org.geotools.jdbc3d;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream.Filter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,22 +33,37 @@ import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
+import org.geotools.data.store.ContentFeatureCollection;
 import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.PositionFactoryImpl;
+import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.sfcgal.util.Geometry3DOperationTest;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc3d.JDBCDataStore;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.identity.FeatureId;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.PositionFactory;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
+import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -75,6 +93,8 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
     protected static final String POLY3D = "poly3d";
 
     protected static final String POINT3D = "point3d";
+    
+    protected static final String SOLID = "solid";
 
     protected static final String ID = "id";
 
@@ -87,6 +107,8 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
     protected SimpleFeatureType poly3DType;
 
     protected SimpleFeatureType line3DType;
+    
+    protected SimpleFeatureType solidType;
 
     protected CoordinateReferenceSystem epsg4326;
 
@@ -94,7 +116,7 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
 
     @Override
     protected void connect() throws Exception {
-        super.connect();
+    	super.connect();
 
         line3DType = DataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(LINE3D),
                 aname(ID) + ":0," + aname(GEOM) + ":LineString:srid=4326," + aname(NAME)
@@ -104,6 +126,10 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
                 aname(ID) + ":0," + aname(GEOM) + ":Polygon:srid=4326," + aname(NAME) + ":String");
         poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 
+        solidType =  DataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(SOLID),
+                aname(ID) + ":0," + aname(GEOM) + ":Solid:srid=4326," + aname(NAME) + ":String");
+        solidType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+              
         epsg4326 = CRS.decode("EPSG:4326");
     }
 
@@ -111,8 +137,20 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
         return new Integer(4326);
     }
 
+    
     public void testSchema() throws Exception {
         SimpleFeatureType schema = dataStore.getSchema(tname(LINE3D));
+        CoordinateReferenceSystem crs = schema.getGeometryDescriptor()
+                .getCoordinateReferenceSystem();
+        assertEquals(new Integer(4326), CRS.lookupEpsgCode(crs, false));
+        assertEquals(getNativeSRID(),
+                schema.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
+        assertEquals(3,
+                schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
+    }
+    
+    public void testSolidSchema() throws Exception {
+    	SimpleFeatureType schema = dataStore.getSchema(tname(SOLID));
         CoordinateReferenceSystem crs = schema.getGeometryDescriptor()
                 .getCoordinateReferenceSystem();
         assertEquals(new Integer(4326), CRS.lookupEpsgCode(crs, false));
@@ -215,8 +253,134 @@ public abstract class JDBC3DOnlineTest extends JDBCTestSupport {
 
         checkCreateSchemaAndInsert(poly);
     }
+    
+    public void testCreateSchemaAndInsertSolid() throws Exception {
+    	Hints hints = GeoTools.getDefaultHints();
+        //hints.put(Hints.CRS, CRS.decode("EPSG:4326"));
+    	hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+        hints.put(Hints.GEOMETRY_VALIDATE, false);
+        GeometryBuilder builder = new GeometryBuilder(hints);
+        PositionFactory posF = new PositionFactoryImpl(hints);
+                
+        DirectPosition position1 = posF.createDirectPosition(new double[] { 2,0,2 });
+        DirectPosition position2 = posF.createDirectPosition(new double[] { 4,0,2 });
+        DirectPosition position3 = posF.createDirectPosition(new double[] { 4,0,4 });
+        DirectPosition position4 = posF.createDirectPosition(new double[] { 2,0,4 });
+        DirectPosition position5 = posF.createDirectPosition(new double[] { 2,2,2 });
+        DirectPosition position6 = posF.createDirectPosition(new double[] { 4,2,2 });
+        DirectPosition position7 = posF.createDirectPosition(new double[] { 4,2,4 });
+        DirectPosition position8 = posF.createDirectPosition(new double[] { 2,2,4 });
+        
+        List<DirectPosition> dps1 = new ArrayList<DirectPosition>();
+        dps1.add(position6);
+        dps1.add(position2);
+        dps1.add(position1);
+        dps1.add(position5);
+        dps1.add(position6);
+        
+        List<DirectPosition> dps2 = new ArrayList<DirectPosition>();
+        dps2.add(position4);
+        dps2.add(position3);
+        dps2.add(position7);
+        dps2.add(position8);
+        dps2.add(position4);
 
-    /**
+        List<DirectPosition> dps3 = new ArrayList<DirectPosition>();
+        dps3.add(position2);
+        dps3.add(position6);
+        dps3.add(position7);
+        dps3.add(position3);
+        dps3.add(position2);
+
+        List<DirectPosition> dps4 = new ArrayList<DirectPosition>();
+        dps4.add(position8);
+        dps4.add(position5);
+        dps4.add(position1);
+        dps4.add(position4);
+        dps4.add(position8);
+
+        List<DirectPosition> dps5 = new ArrayList<DirectPosition>();
+        dps5.add(position3);
+        dps5.add(position4);
+        dps5.add(position1);
+        dps5.add(position2);
+        dps5.add(position3);
+
+        List<DirectPosition> dps6 = new ArrayList<DirectPosition>();
+        dps6.add(position5);
+        dps6.add(position8);
+        dps6.add(position7);
+        dps6.add(position6);
+        dps6.add(position5);
+        
+        PrimitiveFactoryImpl pmFF = new PrimitiveFactoryImpl(hints);
+        
+        Surface surface1 = pmFF.createSurfaceByDirectPositions(dps1);
+        Surface surface2 = pmFF.createSurfaceByDirectPositions(dps2);
+        Surface surface3 = pmFF.createSurfaceByDirectPositions(dps3);
+        Surface surface4 = pmFF.createSurfaceByDirectPositions(dps4);
+        Surface surface5 = pmFF.createSurfaceByDirectPositions(dps5);
+        Surface surface6 = pmFF.createSurfaceByDirectPositions(dps6);
+        
+        List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+        surfaces.add(surface1);
+        surfaces.add(surface2);
+        surfaces.add(surface3);
+        surfaces.add(surface4);
+        surfaces.add(surface5);
+        surfaces.add(surface6);
+
+        Shell exteriorShell = pmFF.createShell(surfaces);
+        List<Shell> interiors = new ArrayList<Shell>();
+
+        SolidBoundary solidBoundary = pmFF.createSolidBoundary(exteriorShell, interiors);
+        Solid solid = pmFF.createSolid(solidBoundary);
+        
+        checkCreateSchemaAndInsert(solid);
+    }
+    
+    private void checkCreateSchemaAndInsert(Solid solid) throws Exception {
+    	//dataStore.createSchema(solidType);
+    	SimpleFeatureType actualSchema = dataStore.getSchema(tname(SOLID));
+        assertFeatureTypesEqual(solidType, actualSchema);
+        assertEquals(
+                getNativeSRID(),
+                actualSchema.getGeometryDescriptor().getUserData()
+                        .get(JDBCDataStore.JDBC_NATIVE_SRID));
+        
+        // insert the feature
+        FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
+                tname(SOLID), Transaction.AUTO_COMMIT);
+        SimpleFeature f = fw.next();
+        f.setAttribute(aname(ID), 0);
+        f.setAttribute(aname(GEOM), solid);
+        f.setAttribute(aname(NAME), "solid!");
+        fw.write();
+        fw.close();
+
+        /*
+        SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(SOLID)).getFeatures();
+        SimpleFeatureIterator fr = fc.features();
+        assertTrue(fr.hasNext());
+        org.opengis.geometry.Geometry geom = (org.opengis.geometry.Geometry) fr.next().getDefaultGeometry();
+        */
+        
+        final Hints hints = new Hints();
+        //hints.put(Hints.JTS_COORDINATE_SEQUENCE_FACTORY, new LiteCoordinateSequenceFactory());
+        Query query = new DefaultQuery(tname(SOLID));
+        //query.setHints(hints);
+        
+        FeatureReader<SimpleFeatureType, SimpleFeature> fr = dataStore.getFeatureReader(
+                query, Transaction.AUTO_COMMIT);
+        assertTrue(fr.hasNext());
+        f = fr.next();
+		
+        org.opengis.geometry.Geometry fgeom = (org.opengis.geometry.Geometry) f.getDefaultGeometry();
+        fr.close();
+	}
+
+    
+	/**
      * Creates the polygon schema, inserts a 3D geometry into the datastore,
      * and retrieves it back to make sure 3d data is preserved.
      * 

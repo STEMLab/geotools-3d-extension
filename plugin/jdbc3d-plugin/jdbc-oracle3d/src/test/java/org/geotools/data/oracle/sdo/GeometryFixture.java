@@ -19,6 +19,25 @@
  */
 package org.geotools.data.oracle.sdo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geotools.factory.GeoTools;
+import org.geotools.factory.Hints;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
@@ -668,5 +687,88 @@ public class GeometryFixture {
             array[i] = new Coordinate(coords[i * 2], coords[i * 2 + 1]);
         }
         return gf.getCoordinateSequenceFactory().create(array);
+    }
+    
+    protected Solid createSolid() throws NoSuchAuthorityCodeException, FactoryException{
+    	Hints hints = GeoTools.getDefaultHints();
+        hints.put(Hints.CRS, CRS.decode("EPSG:4326"));
+        hints.put(Hints.GEOMETRY_VALIDATE, false);
+        GeometryBuilder builder = new GeometryBuilder(hints);
+                
+        DirectPosition position1 = builder.createDirectPosition(new double[] { 2,0,2 });
+        DirectPosition position2 = builder.createDirectPosition(new double[] { 4,0,2 });
+        DirectPosition position3 = builder.createDirectPosition(new double[] { 4,0,4 });
+        DirectPosition position4 = builder.createDirectPosition(new double[] { 2,0,4 });
+        DirectPosition position5 = builder.createDirectPosition(new double[] { 2,2,2 });
+        DirectPosition position6 = builder.createDirectPosition(new double[] { 4,2,2 });
+        DirectPosition position7 = builder.createDirectPosition(new double[] { 4,2,4 });
+        DirectPosition position8 = builder.createDirectPosition(new double[] { 2,2,4 });
+        
+        List<DirectPosition> dps1 = new ArrayList<DirectPosition>();
+        dps1.add(position7);
+        dps1.add(position2);
+        dps1.add(position1);
+        dps1.add(position5);
+        dps1.add(position7);
+        
+        List<DirectPosition> dps2 = new ArrayList<DirectPosition>();
+        dps2.add(position4);
+        dps2.add(position3);
+        dps2.add(position7);
+        dps2.add(position8);
+        dps2.add(position4);
+
+        List<DirectPosition> dps3 = new ArrayList<DirectPosition>();
+        dps3.add(position2);
+        dps3.add(position6);
+        dps3.add(position7);
+        dps3.add(position3);
+        dps3.add(position2);
+
+        List<DirectPosition> dps4 = new ArrayList<DirectPosition>();
+        dps4.add(position8);
+        dps4.add(position5);
+        dps4.add(position1);
+        dps4.add(position4);
+        dps4.add(position8);
+
+        List<DirectPosition> dps5 = new ArrayList<DirectPosition>();
+        dps5.add(position3);
+        dps5.add(position4);
+        dps5.add(position1);
+        dps5.add(position2);
+        dps5.add(position3);
+
+        List<DirectPosition> dps6 = new ArrayList<DirectPosition>();
+        dps6.add(position5);
+        dps6.add(position8);
+        dps6.add(position7);
+        dps6.add(position6);
+        dps6.add(position5);
+        
+        PrimitiveFactoryImpl pmFF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
+        
+        Surface surface1 = pmFF.createSurfaceByDirectPositions(dps1);
+        Surface surface2 = pmFF.createSurfaceByDirectPositions(dps2);
+        Surface surface3 = pmFF.createSurfaceByDirectPositions(dps3);
+        Surface surface4 = pmFF.createSurfaceByDirectPositions(dps4);
+        Surface surface5 = pmFF.createSurfaceByDirectPositions(dps5);
+        Surface surface6 = pmFF.createSurfaceByDirectPositions(dps6);
+        
+        List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+        surfaces.add(surface1);
+        surfaces.add(surface2);
+        surfaces.add(surface3);
+        surfaces.add(surface4);
+        surfaces.add(surface5);
+        surfaces.add(surface6);
+
+        Shell exteriorShell = pmFF.createShell(surfaces);
+        List<Shell> interiors = new ArrayList<Shell>();
+
+        SolidBoundary solidBoundary = pmFF.createSolidBoundary(exteriorShell, interiors);
+        Solid solid = pmFF.createSolid(solidBoundary);
+
+        return solid;
     }
 }

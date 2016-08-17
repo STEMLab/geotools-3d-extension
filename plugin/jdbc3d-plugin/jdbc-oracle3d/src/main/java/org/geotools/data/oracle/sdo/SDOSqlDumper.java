@@ -321,7 +321,7 @@ public class SDOSqlDumper {
     }
 
 	public static String toSDOGeom(Solid g, int srid) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

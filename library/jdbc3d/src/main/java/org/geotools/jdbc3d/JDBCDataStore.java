@@ -866,7 +866,7 @@ public final class JDBCDataStore extends ContentDataStore
                     try {
                         if ( rs.next() ) {
                             //read the geometry
-                            Geometry g = getSQLDialect().decodeGeometryValue(
+                            Geometry g = (Geometry) getSQLDialect().decodeGeometryValue(
                                 null, rs, "geometry", getGeometryFactory(), cx );
                             
                             //read the metadata
@@ -1321,7 +1321,7 @@ public final class JDBCDataStore extends ContentDataStore
             final int columns = rs.getMetaData().getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columns; i++) {
-                    final Envelope envelope = dialect.decodeGeometryEnvelope(rs, i, st
+                    final Envelope envelope = (Envelope) dialect.decodeGeometryEnvelope(rs, i, st
                             .getConnection());
                     if (envelope != null) {
                         if (envelope instanceof ReferencedEnvelope) {
@@ -1830,7 +1830,7 @@ public final class JDBCDataStore extends ContentDataStore
             // geometries might need special treatment, delegate to the dialect
             if(att instanceof GeometryDescriptor) {
                 Class<? extends Geometry> geometryClass =
-                        kind.geometryTypes.get(att.getName().getLocalPart());
+                        (Class<? extends Geometry>) kind.geometryTypes.get(att.getName().getLocalPart());
                 dialect.prepareGeometryValue(geometryClass, getDescriptorDimension(att),
                         getDescriptorSRID(att), att.getType().getBinding(), sql);
             } else {

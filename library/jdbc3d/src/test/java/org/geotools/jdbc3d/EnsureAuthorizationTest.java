@@ -300,6 +300,13 @@ public class EnsureAuthorizationTest {
                     throws SQLException {
                 
             }
+
+			@Override
+			public void setGeometryValue(Solid g, int dimension, int srid, Class binding, PreparedStatement ps,
+					int column) throws SQLException {
+				// TODO Auto-generated method stub
+				
+			}
             
         };
     }

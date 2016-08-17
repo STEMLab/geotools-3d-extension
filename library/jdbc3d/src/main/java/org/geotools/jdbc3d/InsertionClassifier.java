@@ -38,7 +38,7 @@ import java.util.TreeMap;
  */
 class InsertionClassifier {
     public final boolean useExisting;
-    public final Map<String, Class<? extends Geometry>> geometryTypes;
+    public final Map<String, Object> geometryTypes;
 
     public static Map<InsertionClassifier, Collection<SimpleFeature>> classify(
             SimpleFeatureType featureType, Collection<? extends SimpleFeature> features) {
@@ -60,12 +60,16 @@ class InsertionClassifier {
         geometryTypes = new TreeMap<>();
         for (AttributeDescriptor att : featureType.getAttributeDescriptors()) {
             if (att instanceof GeometryDescriptor) {
-                Geometry geometry = (Geometry) feature.getAttribute(att.getName());
-                if (geometry == null) {
+            	Object geometry = feature.getAttribute(att.getName());
+            	if (geometry == null) {
                     geometryTypes.put(att.getLocalName(), null);
-                } else {
-                    geometryTypes.put(att.getLocalName(), geometry.getClass());
-                }
+                } 
+            	if(geometry instanceof Geometry){
+            		geometryTypes.put(att.getLocalName(), ((Geometry)geometry).getClass());
+            	}
+            	else if(geometry instanceof org.opengis.geometry.Geometry){
+            		geometryTypes.put(att.getLocalName(), ((org.opengis.geometry.Geometry)geometry).getClass());
+            	}
             }
         }
     }

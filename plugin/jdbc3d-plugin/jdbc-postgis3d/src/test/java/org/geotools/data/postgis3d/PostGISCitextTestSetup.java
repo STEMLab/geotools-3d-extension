@@ -1,8 +1,8 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc3d.JDBCTestSetup;
 
 public class PostGISCitextTestSetup extends JDBCTestSetup {

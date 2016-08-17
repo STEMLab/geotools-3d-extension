@@ -19,9 +19,9 @@ package org.geotools.data.kairos;
 import java.io.IOException;
 import java.util.Map;
 
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
-import org.geotools.jdbc3d.SQLDialect;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.SQLDialect;
 
 @SuppressWarnings("rawtypes")
 public class KairosNGDataStoreFactory extends JDBCDataStoreFactory {

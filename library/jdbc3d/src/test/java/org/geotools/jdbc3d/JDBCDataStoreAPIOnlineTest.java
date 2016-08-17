@@ -52,7 +52,7 @@ import org.geotools.filter.function.math.FilterFunction_ceil;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

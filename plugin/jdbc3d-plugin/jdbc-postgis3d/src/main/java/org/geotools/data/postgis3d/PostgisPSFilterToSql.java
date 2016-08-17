@@ -17,7 +17,7 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.filter.FilterCapabilities;
-import org.geotools.jdbc3d.PreparedFilterToSQL;
+import org.geotools.jdbc.PreparedFilterToSQL;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Literal;

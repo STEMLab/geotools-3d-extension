@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.jdbc3d;
+package org.geotools.jdbc;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -57,15 +57,15 @@ import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.Transaction.State;
 import org.geotools.data.jdbc3d.FilterToSQL;
-import org.geotools.data.jdbc3d.FilterToSQLException;
-import org.geotools.data.jdbc3d.datasource.ManageableDataSource;
-import org.geotools.data.jdbc3d.fidmapper.FIDMapper;
+import org.geotools.data.jdbc.FilterToSQLException;
+import org.geotools.data.jdbc.datasource.ManageableDataSource;
+import org.geotools.data.jdbc.fidmapper.FIDMapper;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.data.store.ContentDataStore;
 import org.geotools.data.store.ContentEntry;
 import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.data.store.ContentState;
+import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.Hints;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -75,7 +75,18 @@ import org.geotools.feature.visitor.LimitingVisitor;
 import org.geotools.filter.FilterCapabilities;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc3d.JoinInfo.JoinPart;
+import org.geotools.jdbc.ColumnMetadata;
+import org.geotools.jdbc.ConnectionLifecycleListener;
+import org.geotools.jdbc.JDBCFeatureSource;
+import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCState;
+import org.geotools.jdbc.JoinInfo.JoinPart;
+import org.geotools.jdbc.NonIncrementingPrimaryKeyColumn;
+import org.geotools.jdbc.NullPrimaryKey;
+import org.geotools.jdbc.PrimaryKey;
+import org.geotools.jdbc.PrimaryKeyColumn;
+import org.geotools.jdbc.PrimaryKeyFinder;
+import org.geotools.jdbc.VirtualTable;
 import org.geotools.referencing.CRS;
 import org.geotools.util.Converters;
 import org.opengis.feature.FeatureVisitor;

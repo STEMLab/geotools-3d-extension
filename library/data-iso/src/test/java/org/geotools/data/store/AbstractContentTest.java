@@ -26,6 +26,7 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureWriter;
+import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -92,7 +93,7 @@ public abstract class AbstractContentTest {
         }
 
         /**
-         * @see org.geotools.data.store.ContentDataStore#createTypeNames()
+         * @see org.geotools.data3d.store.ContentDataStore#createTypeNames()
          */
         @SuppressWarnings("serial")
         @Override
@@ -105,7 +106,7 @@ public abstract class AbstractContentTest {
         }
 
         /**
-         * @see org.geotools.data.store.ContentDataStore#createFeatureSource(org.geotools.data.store.ContentEntry)
+         * @see org.geotools.data3d.store.ContentDataStore#createFeatureSource(org.geotools.data.store.ContentEntry)
          */
         @Override
         protected ContentFeatureSource createFeatureSource(ContentEntry entry) throws IOException {

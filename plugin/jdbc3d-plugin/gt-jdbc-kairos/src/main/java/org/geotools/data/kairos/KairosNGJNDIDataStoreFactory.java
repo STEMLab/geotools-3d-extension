@@ -18,7 +18,7 @@ package org.geotools.data.kairos;
 
 import java.util.Map;
 
-import org.geotools.jdbc3d.JDBCJNDIDataStoreFactory;
+import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
 
 @SuppressWarnings("unchecked")
 public class KairosNGJNDIDataStoreFactory extends JDBCJNDIDataStoreFactory {

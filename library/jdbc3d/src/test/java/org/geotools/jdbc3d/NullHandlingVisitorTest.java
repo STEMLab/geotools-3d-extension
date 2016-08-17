@@ -8,7 +8,7 @@ import java.util.Arrays;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.visitor.SimplifyingFilterVisitor;
-import org.geotools.jdbc3d.NullHandlingVisitor;
+import org.geotools.jdbc.NullHandlingVisitor;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.And;

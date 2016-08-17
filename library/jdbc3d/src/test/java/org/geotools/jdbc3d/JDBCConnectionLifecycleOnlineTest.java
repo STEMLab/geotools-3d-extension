@@ -27,9 +27,9 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.jdbc3d.ConnectionLifecycleListener;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCFeatureStore;
+import org.geotools.jdbc.ConnectionLifecycleListener;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCFeatureStore;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;

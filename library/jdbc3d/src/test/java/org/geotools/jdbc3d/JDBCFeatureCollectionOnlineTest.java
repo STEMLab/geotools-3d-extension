@@ -26,7 +26,7 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc3d.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.geotools.feature.FeatureIterator;

@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.jdbc3d;
+package org.geotools.jdbc;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,7 +30,7 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.Parameter;
-import org.geotools.data.jdbc3d.datasource.DBCPDataSource;
+import org.geotools.data.jdbc.datasource.DBCPDataSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.geometry.GeometryBuilder;

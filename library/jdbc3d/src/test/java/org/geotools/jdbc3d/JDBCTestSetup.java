@@ -34,9 +34,9 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.geotools.data.jdbc3d.datasource.DBCPDataSource;
 import org.geotools.data.jdbc3d.datasource.ManageableDataSource;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
-import org.geotools.jdbc3d.SQLDialect;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.SQLDialect;
 import org.geotools.test.OnlineTestCase;
 
 

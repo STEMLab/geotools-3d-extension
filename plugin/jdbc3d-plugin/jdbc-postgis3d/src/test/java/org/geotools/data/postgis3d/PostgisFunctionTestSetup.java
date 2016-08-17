@@ -1,7 +1,7 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.data.postgis3d.PostGISDialect;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 
 /**
  * 

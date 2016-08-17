@@ -39,7 +39,7 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

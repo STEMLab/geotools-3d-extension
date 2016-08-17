@@ -17,7 +17,7 @@
 package org.geotools.data.postgis3d.ps;
 
 import org.geotools.data.postgis3d.PostgisGeographyTestSetup;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc3d.JDBCGeographyOnlineTest;
 import org.geotools.jdbc3d.JDBCGeographyTestSetup;
 import org.opengis.feature.simple.SimpleFeatureType;

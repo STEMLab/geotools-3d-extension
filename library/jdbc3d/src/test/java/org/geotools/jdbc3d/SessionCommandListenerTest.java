@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.filter.function.EnvFunction;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.SessionCommandsListener;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.SessionCommandsListener;
 import org.junit.Test;
 
 import com.mockrunner.mock.jdbc.MockConnection;

@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.store;
+package org.geotools.data3d.store;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +35,10 @@ import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.data.store.ContentEntry;
+import org.geotools.data.store.ContentFeatureSource;
+import org.geotools.data.store.ContentFeatureStore;
+import org.geotools.data.store.ContentState;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;

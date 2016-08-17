@@ -9,7 +9,7 @@ import java.util.TimeZone;
 
 import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
-import org.geotools.jdbc3d.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;

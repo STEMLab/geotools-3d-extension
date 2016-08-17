@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.geotools.data.DataAccessFactory.Param;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
-import org.geotools.jdbc3d.JDBCJNDIDataStoreFactory;
-import org.geotools.jdbc3d.SQLDialect;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
+import org.geotools.jdbc.SQLDialect;
 import org.geotools.data.DataStoreFinder;
 
 /**

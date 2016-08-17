@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
 import org.geotools.filter.FilterCapabilities;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Add;
 import org.opengis.filter.expression.Expression;

@@ -25,10 +25,10 @@ import java.sql.Types;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
-import org.geotools.jdbc3d.ColumnMetadata;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.PreparedFilterToSQL;
-import org.geotools.jdbc3d.PreparedStatementSQLDialect;
+import org.geotools.jdbc.ColumnMetadata;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.PreparedFilterToSQL;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 

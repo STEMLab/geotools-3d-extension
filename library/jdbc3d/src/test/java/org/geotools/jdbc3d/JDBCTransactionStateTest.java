@@ -30,8 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.geotools.data.Transaction;
-import org.geotools.jdbc3d.JDBCDataStore;
-import org.geotools.jdbc3d.JDBCTransactionState;
+import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCTransactionState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

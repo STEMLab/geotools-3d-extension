@@ -19,7 +19,7 @@ import org.geotools.data.DefaultQuery;
 import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc3d.JDBCFeatureSourceOnlineTest;
 import org.geotools.jdbc3d.JDBCTestSetup;
 import org.geotools.referencing.CRS;

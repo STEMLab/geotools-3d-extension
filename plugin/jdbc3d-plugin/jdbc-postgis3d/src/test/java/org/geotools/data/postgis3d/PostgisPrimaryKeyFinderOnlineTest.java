@@ -2,7 +2,7 @@ package org.geotools.data.postgis3d;
 
 import java.util.HashMap;
 
-import org.geotools.jdbc3d.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc3d.JDBCPrimaryKeyFinderOnlineTest;
 import org.geotools.jdbc3d.JDBCPrimaryKeyFinderTestSetup;
 

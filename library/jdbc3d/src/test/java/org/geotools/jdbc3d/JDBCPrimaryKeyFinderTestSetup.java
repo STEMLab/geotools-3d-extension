@@ -18,7 +18,7 @@ package org.geotools.jdbc3d;
 
 import java.sql.SQLException;
 
-import org.geotools.jdbc3d.MetadataTablePrimaryKeyFinder;
+import org.geotools.jdbc.MetadataTablePrimaryKeyFinder;
 
 /**
  * 

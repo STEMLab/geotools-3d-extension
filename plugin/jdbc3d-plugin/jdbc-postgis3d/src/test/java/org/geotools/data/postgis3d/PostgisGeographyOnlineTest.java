@@ -26,7 +26,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.jdbc3d.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc3d.JDBCGeographyOnlineTest;
 import org.geotools.jdbc3d.JDBCGeographyTestSetup;
 import org.opengis.feature.simple.SimpleFeature;

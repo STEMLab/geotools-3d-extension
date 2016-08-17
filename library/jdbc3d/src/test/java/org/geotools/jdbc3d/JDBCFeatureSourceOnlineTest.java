@@ -32,7 +32,7 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.Feature;
 import org.opengis.feature.FeatureVisitor;
@@ -65,7 +65,7 @@ public abstract class JDBCFeatureSourceOnlineTest extends JDBCTestSupport {
     protected void connect() throws Exception {
         super.connect();
 
-        featureSource = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+        featureSource = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
     }
 
     public void testSchema() throws Exception {
@@ -574,7 +574,7 @@ public abstract class JDBCFeatureSourceOnlineTest extends JDBCTestSupport {
     	visitor.total = 0; // reset
 
     	// test on a transaction
-    	JDBCFeatureStore ft1 = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+    	JDBCFeatureStore3D ft1 = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
     	Transaction transaction = new DefaultTransaction();
     	try {
     		ft1.setTransaction( transaction );

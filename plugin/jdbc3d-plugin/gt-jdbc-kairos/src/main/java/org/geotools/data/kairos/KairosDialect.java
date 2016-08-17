@@ -37,7 +37,7 @@ import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.BasicSQLDialect;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Version;
@@ -165,7 +165,7 @@ public class KairosDialect extends BasicSQLDialect {
         }
     };
 
-    public KairosDialect(JDBCDataStore dataStore) {
+    public KairosDialect(JDBCDataStore3D dataStore) {
         super(dataStore);
     }
 
@@ -634,8 +634,8 @@ public class KairosDialect extends BasicSQLDialect {
                     // lookup or reverse engineer the srid
                     int srid = -1;
 
-                    if (gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID) != null) {
-                        srid = (Integer) gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID);
+                    if (gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID) != null) {
+                        srid = (Integer) gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID);
                     } else if (gd.getCoordinateReferenceSystem() != null) {
                         try {
                             Integer result = CRS.lookupEpsgCode(gd.getCoordinateReferenceSystem(),

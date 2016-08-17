@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.filter.Id;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.identity.Identifier;

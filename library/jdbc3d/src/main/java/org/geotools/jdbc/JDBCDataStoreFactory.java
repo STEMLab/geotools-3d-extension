@@ -35,6 +35,13 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
+import org.geotools.jdbc.CompositePrimaryKeyFinder;
+import org.geotools.jdbc.HeuristicPrimaryKeyFinder;
+import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.MetadataTablePrimaryKeyFinder;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.SessionCommandsListener;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
 import org.opengis.geometry.coordinate.GeometryFactory;
@@ -196,9 +203,9 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
         }
     }
     
-    public final JDBCDataStore createDataStore(Map params)
+    public final JDBCDataStore3D createDataStore(Map params)
         throws IOException {
-        JDBCDataStore dataStore = new JDBCDataStore();
+        JDBCDataStore3D dataStore = new JDBCDataStore3D();
         
         // dialect
         final SQLDialect dialect = createSQLDialect(dataStore);
@@ -276,13 +283,13 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
 		
         // factories
         dataStore.setFilterFactory(CommonFactoryFinder.getFilterFactory(null));
-        dataStore.setGeometryFactory((GeometryFactoryImpl)builder.getGeometryFactory());
+        dataStore.setGeometryFactory(builder);
         dataStore.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
         dataStore.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
         dataStore.setDataStoreFactory(this);
         
         //call subclass hook and return
-        JDBCDataStore result = createDataStoreInternal(dataStore, params);
+        JDBCDataStore3D result = createDataStoreInternal(dataStore, params);
         if( result.getDataSource() == null ){
             throw new IOException("JDBC Connection not available with provided parameters");
         }
@@ -308,7 +315,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
      * @param params THe datastore parameters.
      *
      */
-    protected JDBCDataStore createDataStoreInternal(JDBCDataStore dataStore, Map params)
+    protected JDBCDataStore3D createDataStoreInternal(JDBCDataStore3D dataStore, Map params)
         throws IOException {
         return dataStore;
     }
@@ -422,7 +429,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
      * 
      * @param dataStore The datastore.
      */
-    protected abstract SQLDialect createSQLDialect(JDBCDataStore dataStore);
+    protected abstract SQLDialect createSQLDialect(JDBCDataStore3D dataStore);
 
     /**
      * Creates the datasource for the data store.

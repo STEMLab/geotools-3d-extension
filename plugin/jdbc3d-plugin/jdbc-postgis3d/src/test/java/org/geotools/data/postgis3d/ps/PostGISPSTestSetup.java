@@ -19,7 +19,7 @@ package org.geotools.data.postgis3d.ps;
 import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.data.postgis3d.PostGISPSDialect;
 import org.geotools.data.postgis3d.PostGISTestSetup;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 
 /**
  * 
@@ -29,7 +29,7 @@ import org.geotools.jdbc.JDBCDataStore;
 public class PostGISPSTestSetup extends PostGISTestSetup {
 
     @Override
-    protected void setUpDataStore(JDBCDataStore dataStore) {
+    protected void setUpDataStore(JDBCDataStore3D dataStore) {
         super.setUpDataStore(dataStore);
         
         // for this test we need a PS based dialect

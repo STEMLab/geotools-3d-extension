@@ -39,7 +39,7 @@ import org.geotools.filter.FilterCapabilities;
 import org.geotools.filter.FunctionImpl;
 import org.geotools.filter.LikeFilterImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JoinPropertyName;
 import org.geotools.jdbc.PrimaryKey;
 import org.geotools.util.ConverterFactory;
@@ -1004,7 +1004,7 @@ public class FilterToSQL implements FilterVisitor, ExpressionVisitor {
                 if (descriptor instanceof GeometryDescriptor) {
                     currentGeometry = (GeometryDescriptor) descriptor;
                     currentSRID = (Integer) descriptor.getUserData().get(
-                            JDBCDataStore.JDBC_NATIVE_SRID);
+                            JDBCDataStore3D.JDBC_NATIVE_SRID);
                     currentDimension = (Integer) descriptor.getUserData().get(
                             Hints.COORDINATE_DIMENSION);
                 }

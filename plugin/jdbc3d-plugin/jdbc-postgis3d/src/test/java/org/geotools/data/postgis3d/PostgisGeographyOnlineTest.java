@@ -26,7 +26,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc3d.JDBCGeographyOnlineTest;
 import org.geotools.jdbc3d.JDBCGeographyTestSetup;
 import org.opengis.feature.simple.SimpleFeature;
@@ -65,7 +65,7 @@ public class PostgisGeographyOnlineTest extends JDBCGeographyOnlineTest {
         
         // extra check, pg specific: the native typename is actually geography
         SimpleFeatureType ft = dataStore.getFeatureSource(tname("geopoint")).getSchema();
-        assertEquals("geography", ft.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME));
+        assertEquals("geography", ft.getGeometryDescriptor().getUserData().get(JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
     }
     
     // As reported in GEOS-4384 (http://jira.codehaus.org/browse/GEOS-4384)

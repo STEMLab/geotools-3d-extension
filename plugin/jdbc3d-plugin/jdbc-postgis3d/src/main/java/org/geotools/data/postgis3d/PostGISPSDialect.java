@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.geotools.factory.Hints;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.PreparedFilterToSQL;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -48,7 +48,7 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
     
     private PostGISDialect delegate;
 
-    public PostGISPSDialect(JDBCDataStore store, PostGISDialect delegate) {
+    public PostGISPSDialect(JDBCDataStore3D store, PostGISDialect delegate) {
         super(store);
         this.delegate = delegate;
     }

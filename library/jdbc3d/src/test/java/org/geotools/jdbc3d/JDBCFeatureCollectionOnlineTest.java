@@ -26,7 +26,7 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.geotools.feature.FeatureIterator;
@@ -45,12 +45,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public abstract class JDBCFeatureCollectionOnlineTest extends JDBCTestSupport {
     SimpleFeatureCollection collection;
-    JDBCFeatureStore source;
+    JDBCFeatureStore3D source;
 
     protected void connect() throws Exception {
         super.connect();
 
-        source = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+        source = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
         collection = source.getFeatures(); 
     }
 

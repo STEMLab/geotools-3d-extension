@@ -50,7 +50,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.WKTWriter2;
 import org.geotools.jdbc.BasicSQLDialect;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
 import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -159,7 +159,7 @@ public class PostGISDialect extends BasicSQLDialect {
     
     static final Version PGSQL_V_9_1 = new Version("9.1");
 
-    public PostGISDialect(JDBCDataStore dataStore) {
+    public PostGISDialect(JDBCDataStore3D dataStore) {
         super(dataStore);
     }
 
@@ -294,7 +294,7 @@ public class PostGISDialect extends BasicSQLDialect {
         StringBuffer sql) {
     
         boolean geography = "geography".equals(gatt.getUserData().get(
-                JDBCDataStore.JDBC_NATIVE_TYPENAME));
+                JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
     
         if (geography) {
             sql.append("encode(ST_AsBinary(");
@@ -324,7 +324,7 @@ public class PostGISDialect extends BasicSQLDialect {
             super.encodeGeometryColumnSimplified(gatt, prefix, srid, sql, distance);
         } else {
             boolean geography = "geography".equals(gatt.getUserData().get(
-                    JDBCDataStore.JDBC_NATIVE_TYPENAME));
+                    JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
     
             if (geography) {
                 sql.append("encode(ST_AsBinary(");
@@ -875,9 +875,9 @@ public class PostGISDialect extends BasicSQLDialect {
 
                     // lookup or reverse engineer the srid
                     int srid = -1;
-                    if (gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID) != null) {
+                    if (gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID) != null) {
                         srid = (Integer) gd.getUserData().get(
-                                JDBCDataStore.JDBC_NATIVE_SRID);
+                                JDBCDataStore3D.JDBC_NATIVE_SRID);
                     } else if (gd.getCoordinateReferenceSystem() != null) {
                         try {
                             Integer result = CRS.lookupEpsgCode(gd

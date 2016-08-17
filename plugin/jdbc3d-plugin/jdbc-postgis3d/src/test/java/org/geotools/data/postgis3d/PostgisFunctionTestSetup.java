@@ -1,7 +1,7 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.data.postgis3d.PostGISDialect;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 
 /**
  * 
@@ -10,7 +10,7 @@ import org.geotools.jdbc.JDBCDataStore;
  */
 public class PostgisFunctionTestSetup extends PostGISTestSetup {
     
-    protected void setUpDataStore(JDBCDataStore dataStore) {
+    protected void setUpDataStore(JDBCDataStore3D dataStore) {
         super.setUpDataStore(dataStore);
         
         // the unit tests needs function encoding enabled to actually test that

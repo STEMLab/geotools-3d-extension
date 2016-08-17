@@ -30,7 +30,7 @@ import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.PreparedFilterToSQL;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -54,7 +54,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
 
     //private WKBWriter wkbWriter = new WKBWriter();
 
-    public KairosPSDialect(JDBCDataStore store, KairosDialect delegate) {
+    public KairosPSDialect(JDBCDataStore3D store, KairosDialect delegate) {
         super(store);
         this.delegate = delegate;
     }

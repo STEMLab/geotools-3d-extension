@@ -51,7 +51,7 @@ import org.geotools.filter.function.math.FilterFunction_abs_4;
 import org.geotools.filter.function.math.FilterFunction_ceil;
 import org.geotools.filter.function.math.FilterFunction_floor;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.SQLDialect;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.expression.Expression;
@@ -332,7 +332,7 @@ class FilterToSqlHelper {
         } 
         
         return geom != null && 
-            "geography".equals(geom.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME));
+            "geography".equals(geom.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
     }
 
     private Literal clipToWorld(Literal geometry) {

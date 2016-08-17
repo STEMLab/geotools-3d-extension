@@ -31,7 +31,7 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.NameImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc.SQLDialect;
 import org.geotools.test.OnlineTestCase;
@@ -76,7 +76,7 @@ public abstract class JDBCTestSupport extends OnlineTestCase {
     }
 
     protected JDBCTestSetup setup;
-    protected JDBCDataStore dataStore;
+    protected JDBCDataStore3D dataStore;
     protected SQLDialect dialect;
     
     @Override
@@ -140,7 +140,7 @@ public abstract class JDBCTestSupport extends OnlineTestCase {
         try {
             HashMap temp = (HashMap) params.clone();
             temp.putAll(fixture);
-            dataStore = (JDBCDataStore) DataStoreFinder.getDataStore(temp);
+            dataStore = (JDBCDataStore3D) DataStoreFinder.getDataStore(temp);
         } catch (Exception e) {
             // ignore
         }

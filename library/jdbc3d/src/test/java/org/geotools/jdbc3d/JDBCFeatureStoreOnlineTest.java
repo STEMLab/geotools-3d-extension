@@ -38,7 +38,7 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.jdbc.JDBCFeatureStore;
+import org.geotools.jdbc.JDBCFeatureStore3D;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -60,12 +60,12 @@ import com.vividsolutions.jts.geom.Point;
  * @source $URL$
  */
 public abstract class JDBCFeatureStoreOnlineTest extends JDBCTestSupport {
-    JDBCFeatureStore featureStore;
+    JDBCFeatureStore3D featureStore;
 
     protected void connect() throws Exception {
         super.connect();
 
-        featureStore = (JDBCFeatureStore) dataStore.getFeatureSource(tname("ft1"));
+        featureStore = (JDBCFeatureStore3D) dataStore.getFeatureSource(tname("ft1"));
     }
 
     public void testAddFeatures() throws IOException {
@@ -163,7 +163,7 @@ public abstract class JDBCFeatureStoreOnlineTest extends JDBCTestSupport {
         Transaction t = new DefaultTransaction();
         featureStore.setTransaction(t);
         featureStore.addFeatureListener(watcher);
-        JDBCFeatureStore featureStore2 = (JDBCFeatureStore) dataStore.getFeatureSource(featureStore.getName().getLocalPart()); 
+        JDBCFeatureStore3D featureStore2 = (JDBCFeatureStore3D) dataStore.getFeatureSource(featureStore.getName().getLocalPart()); 
         List<FeatureId> fids = featureStore.addFeatures((SimpleFeatureCollection)collection);
         
         assertEquals(1, fids.size());
@@ -196,7 +196,7 @@ public abstract class JDBCFeatureStoreOnlineTest extends JDBCTestSupport {
         Transaction t = dataStore.buildTransaction(conn);
         featureStore.setTransaction(t);
         featureStore.addFeatureListener(watcher);
-        JDBCFeatureStore featureStore2 = (JDBCFeatureStore) dataStore.getFeatureSource(featureStore.getName().getLocalPart()); 
+        JDBCFeatureStore3D featureStore2 = (JDBCFeatureStore3D) dataStore.getFeatureSource(featureStore.getName().getLocalPart()); 
         List<FeatureId> fids = featureStore.addFeatures((SimpleFeatureCollection)collection);
         
         assertEquals(1, fids.size());

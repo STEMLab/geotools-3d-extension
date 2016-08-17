@@ -34,7 +34,7 @@ import org.geotools.data.postgis3d.PostGISDialect;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.factory.Hints;
 import org.geotools.factory.Hints.Key;
-import org.geotools.jdbc.JDBCDataStore;
+import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc3d.JDBCTestSetup;
 import org.geotools.jdbc3d.JDBCTestSupport;
 
@@ -74,7 +74,7 @@ public class PostgisNGDataStoreFactoryOnlineTest extends JDBCTestSupport {
         params.put(DBTYPE.key, dbtype);
 
         assertTrue(factory.canProcess(params));
-        JDBCDataStore store = factory.createDataStore(params);
+        JDBCDataStore3D store = factory.createDataStore(params);
         assertNotNull(store);
         try {
             // check dialect
@@ -99,7 +99,7 @@ public class PostgisNGDataStoreFactoryOnlineTest extends JDBCTestSupport {
         
         // force simplify off
         params.put(PostgisNGDataStoreFactory.SIMPLIFY.key, false);
-        JDBCDataStore store = factory.createDataStore(params);
+        JDBCDataStore3D store = factory.createDataStore(params);
         assertNotNull(store);
         try {
             // check dialect
@@ -125,7 +125,7 @@ public class PostgisNGDataStoreFactoryOnlineTest extends JDBCTestSupport {
         params.put(PASSWD.key, db.getProperty(PASSWD.key));
         
         // do not specify simplify, on by default
-        JDBCDataStore store = factory.createDataStore(params);
+        JDBCDataStore3D store = factory.createDataStore(params);
         assertNotNull(store);
         try {
             // check dialect
@@ -151,7 +151,7 @@ public class PostgisNGDataStoreFactoryOnlineTest extends JDBCTestSupport {
         params.put(USER.key, db.getProperty(USER.key));
         params.put(PASSWD.key, db.getProperty(PASSWD.key));
         
-        JDBCDataStore store = factory.createDataStore(params);
+        JDBCDataStore3D store = factory.createDataStore(params);
         assertNotNull(store);
         try {
             PostGISDialect dialect = (PostGISDialect) store.getSQLDialect();

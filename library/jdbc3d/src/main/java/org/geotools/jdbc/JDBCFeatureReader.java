@@ -43,10 +43,18 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.filter.identity.FeatureIdImpl;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.jdbc.BasicSQLDialect;
+import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.JDBCFeatureReader;
+import org.geotools.jdbc.JDBCFeatureSource3D;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PrimaryKey;
+import org.geotools.jdbc.PrimaryKeyColumn;
 import org.geotools.util.Converters;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.FeatureFactory;
@@ -88,11 +96,11 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * The feature source the reader originated from. 
      */
-    protected JDBCFeatureSource featureSource;
+    protected JDBCFeatureSource3D featureSource;
     /**
      * the datastore
      */
-    protected JDBCDataStore dataStore;
+    protected JDBCDataStore3D dataStore;
     /**
      * schema of features
      */
@@ -100,7 +108,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * geometry factory used to create geometry objects
      */
-    protected GeometryFactory geometryFactory;
+    protected GeometryBuilder geometryFactory;
     /**
      * hints
      */
@@ -136,7 +144,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
      */
     protected int offset = 0;
     
-    public JDBCFeatureReader( String sql, Connection cx, JDBCFeatureSource featureSource, SimpleFeatureType featureType, Hints hints ) 
+    public JDBCFeatureReader( String sql, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
         throws SQLException {
         init( featureSource, featureType, hints );
         
@@ -160,7 +168,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         }
     }
     
-    public JDBCFeatureReader( PreparedStatement st, Connection cx, JDBCFeatureSource featureSource, SimpleFeatureType featureType, Hints hints ) 
+    public JDBCFeatureReader( PreparedStatement st, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
         throws SQLException {
             
         init( featureSource, featureType, hints );
@@ -183,7 +191,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         }
     }
     
-    public JDBCFeatureReader(ResultSet rs, Connection cx, int offset, JDBCFeatureSource featureSource, 
+    public JDBCFeatureReader(ResultSet rs, Connection cx, int offset, JDBCFeatureSource3D featureSource, 
         SimpleFeatureType featureType, Hints hints) throws SQLException {
         init(featureSource, featureType, hints);
         
@@ -192,7 +200,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.rs = rs;
         this.offset = offset;
     }
-    protected void init( JDBCFeatureSource featureSource, SimpleFeatureType featureType, Hints hints ) {
+    protected void init( JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) {
         // init the tracer if we need to debug a connection leak
         if(TRACE_ENABLED) {
             tracer = new Exception();
@@ -207,7 +215,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryFactory = (GeometryFactory) hints.get(Hints.GEOMETRY_FACTORY);
+        geometryFactory = (GeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
         /*if (geometryFactory == null) {
             // look for a coordinate sequence factory
             CoordinateSequenceFactory csFactory = 

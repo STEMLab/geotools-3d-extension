@@ -45,6 +45,10 @@ import org.geotools.feature.visitor.SumVisitor;
 import org.geotools.feature.visitor.UniqueVisitor;
 import org.geotools.filter.FilterCapabilities;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.jdbc.ColumnMetadata;
+import org.geotools.jdbc.Index;
+import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.SQLDialect;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.FeatureVisitor;
@@ -63,9 +67,9 @@ import org.opengis.filter.expression.Multiply;
 import org.opengis.filter.expression.Subtract;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.GeometryFactory;
+import org.geotools.geometry.GeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
+//import org.opengis.geometry.coordinate.GeometryFactory;
 //import com.vividsolutions.jts.geom.Envelope;
 //import com.vividsolutions.jts.geom.Geometry;
 //import com.vividsolutions.jts.geom.GeometryFactory;
@@ -156,13 +160,13 @@ public abstract class SQLDialect {
     /**
      * The datastore using the dialect
      */
-    protected JDBCDataStore dataStore;
+    protected JDBCDataStore3D dataStore;
     
     /**
      * Creates the dialect.
      * @param dataStore The dataStore using the dialect.
      */
-    protected SQLDialect( JDBCDataStore dataStore ) {
+    protected SQLDialect( JDBCDataStore3D dataStore ) {
         this.dataStore = dataStore;
     }
     
@@ -853,7 +857,7 @@ public abstract class SQLDialect {
      * </p>
      */
     public abstract Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
-        String column, GeometryFactory factory, Connection cx ) throws IOException, SQLException;
+        String column, GeometryBuilder factory, Connection cx ) throws IOException, SQLException;
     
     /**
      * Decodes a geometry value from the result of a query specifying the column 
@@ -865,7 +869,7 @@ public abstract class SQLDialect {
      * @see {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, GeometryFactory)}.
      */
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
-        int column, GeometryFactory factory, Connection cx ) throws IOException, SQLException {
+        int column, GeometryBuilder factory, Connection cx ) throws IOException, SQLException {
         
         String columnName = rs.getMetaData().getColumnName( column );
         return decodeGeometryValue(descriptor, rs, columnName, factory, cx);

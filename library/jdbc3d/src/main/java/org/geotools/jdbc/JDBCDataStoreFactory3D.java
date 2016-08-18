@@ -35,13 +35,13 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
-import org.geotools.jdbc.CompositePrimaryKeyFinder;
-import org.geotools.jdbc.HeuristicPrimaryKeyFinder;
+import org.geotools.jdbc.CompositePrimaryKeyFinder3D;
+import org.geotools.jdbc.HeuristicPrimaryKeyFinder3D;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.MetadataTablePrimaryKeyFinder;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
-import org.geotools.jdbc.SQLDialect;
-import org.geotools.jdbc.SessionCommandsListener;
+import org.geotools.jdbc.MetadataTablePrimaryKeyFinder3D;
+import org.geotools.jdbc.PreparedStatementSQLDialect3D;
+import org.geotools.jdbc.SQLDialect3D;
+import org.geotools.jdbc.SessionCommandsListener3D;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
 import org.opengis.geometry.coordinate.GeometryFactory;
@@ -61,7 +61,7 @@ import org.opengis.geometry.coordinate.GeometryFactory;
  *
  * @source $URL$
  */
-public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
+public abstract class JDBCDataStoreFactory3D implements DataStoreFactorySpi {
     
     /** parameter for database type */
     public static final Param DBTYPE = new Param("dbtype", String.class, "Type", true);
@@ -208,7 +208,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
         JDBCDataStore3D dataStore = new JDBCDataStore3D();
         
         // dialect
-        final SQLDialect dialect = createSQLDialect(dataStore);
+        final SQLDialect3D dialect = createSQLDialect(dataStore);
         dataStore.setSQLDialect(dialect);
 
         // datasource 
@@ -248,7 +248,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
         // primary key finder lookup table location, if any
         String metadataTable = (String) PK_METADATA_TABLE.lookUp(params);
         if(metadataTable != null)  {
-            MetadataTablePrimaryKeyFinder tableFinder = new MetadataTablePrimaryKeyFinder();
+            MetadataTablePrimaryKeyFinder3D tableFinder = new MetadataTablePrimaryKeyFinder3D();
             if(metadataTable.contains(".")) {
                 String[] parts = metadataTable.split("\\.");
                 if(parts.length > 2) 
@@ -259,8 +259,8 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
             } else {
                 tableFinder.setTableName(metadataTable);
             }
-            dataStore.setPrimaryKeyFinder(new CompositePrimaryKeyFinder(tableFinder, 
-                    new HeuristicPrimaryKeyFinder()));
+            dataStore.setPrimaryKeyFinder(new CompositePrimaryKeyFinder3D(tableFinder, 
+                    new HeuristicPrimaryKeyFinder3D()));
         }
         
         // expose primary keys
@@ -273,7 +273,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
         String sqlOnBorrow = (String) SQL_ON_BORROW.lookUp(params);
         String sqlOnRelease = (String) SQL_ON_RELEASE.lookUp(params);
         if(sqlOnBorrow != null || sqlOnRelease != null) {
-            SessionCommandsListener listener = new SessionCommandsListener(sqlOnBorrow, sqlOnRelease);
+            SessionCommandsListener3D listener = new SessionCommandsListener3D(sqlOnBorrow, sqlOnRelease);
             dataStore.getConnectionLifecycleListeners().add(listener);
         }
         /*Hints hints = GeoTools.getDefaultHints();
@@ -429,7 +429,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
      * 
      * @param dataStore The datastore.
      */
-    protected abstract SQLDialect createSQLDialect(JDBCDataStore3D dataStore);
+    protected abstract SQLDialect3D createSQLDialect(JDBCDataStore3D dataStore);
 
     /**
      * Creates the datasource for the data store.
@@ -447,11 +447,11 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
      * overridden.
      * </p>
      */
-    protected DataSource createDataSource(Map params, SQLDialect dialect) throws IOException {
+    protected DataSource createDataSource(Map params, SQLDialect3D dialect) throws IOException {
         BasicDataSource dataSource = createDataSource(params);
 
         // some default data source behaviour
-        if(dialect instanceof PreparedStatementSQLDialect) {
+        if(dialect instanceof PreparedStatementSQLDialect3D) {
             dataSource.setPoolPreparedStatements(true);
             
             // check if the dialect exposes the max prepared statements param 

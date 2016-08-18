@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * In charge for setting/getting the primary key values for inserts.
  */
-abstract class KeysFetcher {
+abstract class KeysFetcher3D {
     protected final PrimaryKey key;
     private final Set<String> columnNames;
 
@@ -52,12 +52,12 @@ abstract class KeysFetcher {
     protected static Object NOT_SET_BEFORE_INSERT = new Object();
 
 
-    protected KeysFetcher(PrimaryKey key) {
+    protected KeysFetcher3D(PrimaryKey key) {
         this.key = key;
         columnNames = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(getColumnNames())));
     }
 
-    public static KeysFetcher create(JDBCDataStore3D ds, Connection cx, boolean useExisting,
+    public static KeysFetcher3D create(JDBCDataStore3D ds, Connection cx, boolean useExisting,
                                      PrimaryKey key)
             throws SQLException, IOException {
         if (useExisting) {
@@ -70,7 +70,7 @@ abstract class KeysFetcher {
     /**
      * Set all the key values (the ones that are known before insert) for a prepared statement.
      */
-    public int setKeyValues(PreparedStatementSQLDialect dialect, PreparedStatement ps,
+    public int setKeyValues(PreparedStatementSQLDialect3D dialect, PreparedStatement ps,
                             Connection cx, SimpleFeatureType featureType, SimpleFeature feature,
                             int curFieldPos)
             throws IOException, SQLException {
@@ -98,7 +98,7 @@ abstract class KeysFetcher {
     public void setKeyValues(JDBCDataStore3D ds, Connection cx, SimpleFeatureType featureType,
                              SimpleFeature feature, StringBuffer sql)
             throws IOException, SQLException {
-        BasicSQLDialect dialect = (BasicSQLDialect) ds.getSQLDialect();
+        BasicSQLDialect3D dialect = (BasicSQLDialect3D) ds.getSQLDialect();
         List<Object> keyValues = getNextValues(cx, feature);
         for (int i = 0; i < key.getColumns().size(); i++) {
             PrimaryKeyColumn col = key.getColumns().get(i);
@@ -168,10 +168,10 @@ abstract class KeysFetcher {
     /**
      * When the PK is set by the user in the feature ID.
      */
-    private static class Existing extends KeysFetcher {
+    private static class Existing extends KeysFetcher3D {
         private final String keyColumnNames;
 
-        public Existing(SQLDialect dialect, PrimaryKey key) {
+        public Existing(SQLDialect3D dialect, PrimaryKey key) {
             super(key);
             final StringBuffer keyColumnNames = new StringBuffer();
             for (PrimaryKeyColumn col : key.getColumns()) {
@@ -217,7 +217,7 @@ abstract class KeysFetcher {
     /**
      * Class for a PK that has it's value computed from the database.
      */
-    private static class FromDB extends KeysFetcher {
+    private static class FromDB extends KeysFetcher3D {
         private final List<KeyFetcher> fetchers;
 
         public FromDB(JDBCDataStore3D ds, Connection cx, PrimaryKey key)
@@ -536,7 +536,7 @@ abstract class KeysFetcher {
         @Override
         public boolean isPostInsert() {
             return ds.getSQLDialect().lookupGeneratedValuesPostInsert() &&
-                    ds.getSQLDialect() instanceof PreparedStatementSQLDialect;
+                    ds.getSQLDialect() instanceof PreparedStatementSQLDialect3D;
         }
 
         @Override

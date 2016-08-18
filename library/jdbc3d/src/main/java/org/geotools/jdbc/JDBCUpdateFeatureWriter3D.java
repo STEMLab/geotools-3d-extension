@@ -40,20 +40,20 @@ import org.opengis.filter.Id;
  *
  * @source $URL$
  */
-public class JDBCUpdateFeatureWriter extends JDBCFeatureReader implements
+public class JDBCUpdateFeatureWriter3D extends JDBCFeatureReader3D implements
         FeatureWriter<SimpleFeatureType, SimpleFeature> {
 
     ResultSetFeature last;
     ReferencedEnvelope lastBounds;
     
-    public JDBCUpdateFeatureWriter(String sql, Connection cx,
+    public JDBCUpdateFeatureWriter3D(String sql, Connection cx,
             JDBCFeatureSource3D featureSource, Hints hints) throws SQLException, IOException {
         
         super(sql, cx, featureSource, featureSource.getSchema(), hints);
         last = new ResultSetFeature( rs, cx );
     }
     
-    public JDBCUpdateFeatureWriter(PreparedStatement ps, Connection cx,
+    public JDBCUpdateFeatureWriter3D(PreparedStatement ps, Connection cx,
             JDBCFeatureSource3D featureSource, Hints hints) throws SQLException, IOException {
         
         super(ps, cx, featureSource, featureSource.getSchema(), hints);

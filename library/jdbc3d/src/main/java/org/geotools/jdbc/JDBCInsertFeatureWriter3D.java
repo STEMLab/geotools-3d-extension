@@ -38,26 +38,26 @@ import org.opengis.feature.simple.SimpleFeatureType;
  *
  * @source $URL$
  */
-public class JDBCInsertFeatureWriter extends JDBCFeatureReader implements FeatureWriter<SimpleFeatureType, SimpleFeature> {
+public class JDBCInsertFeatureWriter3D extends JDBCFeatureReader3D implements FeatureWriter<SimpleFeatureType, SimpleFeature> {
     /**
      * Grouping elements together in order to have a decent batch size.
      */
     private final ResultSetFeature[] buffer;
     private int curBufferPos = 0;
     
-    public JDBCInsertFeatureWriter(String sql, Connection cx,
+    public JDBCInsertFeatureWriter3D(String sql, Connection cx,
             JDBCFeatureSource3D featureSource, Hints hints) throws SQLException, IOException {
         super(sql, cx, featureSource, featureSource.getSchema(), hints);
         buffer = new ResultSetFeature[dataStore.getBatchInsertSize()];
     }
 
-    public JDBCInsertFeatureWriter(PreparedStatement ps, Connection cx, JDBCFeatureSource3D featureSource, Hints hints)
+    public JDBCInsertFeatureWriter3D(PreparedStatement ps, Connection cx, JDBCFeatureSource3D featureSource, Hints hints)
         throws SQLException, IOException {
         super( ps, cx, featureSource, featureSource.getSchema(), hints );
         buffer = new ResultSetFeature[dataStore.getBatchInsertSize()];
     }
     
-    public JDBCInsertFeatureWriter(JDBCUpdateFeatureWriter other) throws IOException {
+    public JDBCInsertFeatureWriter3D(JDBCUpdateFeatureWriter3D other) throws IOException {
         super(other);
         buffer = new ResultSetFeature[dataStore.getBatchInsertSize()];
     }

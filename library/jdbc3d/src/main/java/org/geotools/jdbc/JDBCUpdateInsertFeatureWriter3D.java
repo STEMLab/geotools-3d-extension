@@ -30,17 +30,17 @@ import org.opengis.feature.simple.SimpleFeature;
  *
  * @source $URL$
  */
-public class JDBCUpdateInsertFeatureWriter extends JDBCUpdateFeatureWriter {
+public class JDBCUpdateInsertFeatureWriter3D extends JDBCUpdateFeatureWriter3D {
 
-    JDBCInsertFeatureWriter inserter;
+    JDBCInsertFeatureWriter3D inserter;
     
-    public JDBCUpdateInsertFeatureWriter(String sql, Connection cx,
+    public JDBCUpdateInsertFeatureWriter3D(String sql, Connection cx,
             JDBCFeatureSource3D featureSource, Hints hints) throws SQLException,
             IOException {
         super(sql, cx, featureSource, hints);
     }
     
-    public JDBCUpdateInsertFeatureWriter(PreparedStatement ps, Connection cx,
+    public JDBCUpdateInsertFeatureWriter3D(PreparedStatement ps, Connection cx,
             JDBCFeatureSource3D featureSource, String[] attributeNames, Hints hints) throws SQLException,
             IOException {
         super(ps, cx, featureSource, hints);
@@ -55,7 +55,7 @@ public class JDBCUpdateInsertFeatureWriter extends JDBCUpdateFeatureWriter {
         boolean hasNext = super.hasNext();
         if ( !hasNext ) {
             //update phase is up, switch to insert mode
-            inserter = new JDBCInsertFeatureWriter( this );
+            inserter = new JDBCInsertFeatureWriter3D( this );
             return inserter.hasNext();
         }
     

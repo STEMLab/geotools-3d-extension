@@ -48,11 +48,11 @@ import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.BasicSQLDialect;
+import org.geotools.jdbc.BasicSQLDialect3D;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.JDBCFeatureReader;
+import org.geotools.jdbc.JDBCFeatureReader3D;
 import org.geotools.jdbc.JDBCFeatureSource3D;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PreparedStatementSQLDialect3D;
 import org.geotools.jdbc.PrimaryKey;
 import org.geotools.jdbc.PrimaryKeyColumn;
 import org.geotools.util.Converters;
@@ -84,8 +84,8 @@ import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
  *
  * @source $URL$
  */
-public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, SimpleFeature> {
-    protected static final Logger LOGGER = Logging.getLogger(JDBCFeatureReader.class);
+public class JDBCFeatureReader3D implements  FeatureReader<SimpleFeatureType, SimpleFeature> {
+    protected static final Logger LOGGER = Logging.getLogger(JDBCFeatureReader3D.class);
     
     /**
      * When true, the stack trace that created a reader that wasn't closed is recorded and then
@@ -144,7 +144,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
      */
     protected int offset = 0;
     
-    public JDBCFeatureReader( String sql, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
+    public JDBCFeatureReader3D( String sql, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
         throws SQLException {
         init( featureSource, featureType, hints );
         
@@ -153,7 +153,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         st = cx.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         st.setFetchSize(featureSource.getDataStore().getFetchSize());
         
-        ((BasicSQLDialect)featureSource.getDataStore().getSQLDialect()).onSelect(st, cx, featureType);
+        ((BasicSQLDialect3D)featureSource.getDataStore().getSQLDialect()).onSelect(st, cx, featureType);
         try {
             rs = st.executeQuery(sql);
         } catch (Exception e1) {
@@ -168,7 +168,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         }
     }
     
-    public JDBCFeatureReader( PreparedStatement st, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
+    public JDBCFeatureReader3D( PreparedStatement st, Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, Hints hints ) 
         throws SQLException {
             
         init( featureSource, featureType, hints );
@@ -177,7 +177,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.cx = cx;
         this.st = st;
         
-        ((PreparedStatementSQLDialect)featureSource.getDataStore().getSQLDialect()).onSelect(st, cx, featureType);
+        ((PreparedStatementSQLDialect3D)featureSource.getDataStore().getSQLDialect()).onSelect(st, cx, featureType);
         try {
             rs = st.executeQuery();
         } catch (Exception e1) {
@@ -191,7 +191,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         }
     }
     
-    public JDBCFeatureReader(ResultSet rs, Connection cx, int offset, JDBCFeatureSource3D featureSource, 
+    public JDBCFeatureReader3D(ResultSet rs, Connection cx, int offset, JDBCFeatureSource3D featureSource, 
         SimpleFeatureType featureType, Hints hints) throws SQLException {
         init(featureSource, featureType, hints);
         
@@ -252,7 +252,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
 
     }
 
-    public JDBCFeatureReader( JDBCFeatureReader other ) {
+    public JDBCFeatureReader3D( JDBCFeatureReader3D other ) {
         this.featureType = other.featureType;
         this.dataStore = other.dataStore;
         this.featureSource = other.featureSource;

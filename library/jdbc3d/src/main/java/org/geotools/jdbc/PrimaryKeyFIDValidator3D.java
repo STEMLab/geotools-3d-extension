@@ -28,11 +28,11 @@ import org.geotools.filter.visitor.SimplifyingFilterVisitor.FIDValidator;
  *
  * @source $URL$
  */
-public class PrimaryKeyFIDValidator implements FIDValidator {
+public class PrimaryKeyFIDValidator3D implements FIDValidator {
 
     JDBCFeatureSource3D featureSource;
     
-    public PrimaryKeyFIDValidator( JDBCFeatureSource3D featureSource ) {
+    public PrimaryKeyFIDValidator3D( JDBCFeatureSource3D featureSource ) {
         this.featureSource = featureSource;
     }
     public boolean isValid(String fid) {

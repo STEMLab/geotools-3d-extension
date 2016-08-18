@@ -48,7 +48,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.Index;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.SQLDialect3D;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.FeatureVisitor;
@@ -130,8 +130,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  *
  * @source $URL$
  */
-public abstract class SQLDialect {
-    protected static final Logger LOGGER = Logging.getLogger(SQLDialect.class);
+public abstract class SQLDialect3D {
+    protected static final Logger LOGGER = Logging.getLogger(SQLDialect3D.class);
     
     /**
      * The basic filter capabilities all databases should have
@@ -166,7 +166,7 @@ public abstract class SQLDialect {
      * Creates the dialect.
      * @param dataStore The dataStore using the dialect.
      */
-    protected SQLDialect( JDBCDataStore3D dataStore ) {
+    protected SQLDialect3D( JDBCDataStore3D dataStore ) {
         this.dataStore = dataStore;
     }
     
@@ -817,7 +817,7 @@ public abstract class SQLDialect {
      * Encodes a simplified geometry using a DB provided SQL function if available
      * If not supported, subclasses should not implement
      * Only called if {@link Hints#GEOMETRY_SIMPLIFICATION is supported}  
-     * @see SQLDialect#encodeGeometryColumnGeneralized(GeometryDescriptor, StringBuffer, Double)
+     * @see SQLDialect3D#encodeGeometryColumnGeneralized(GeometryDescriptor, StringBuffer, Double)
      * @deprecated use {@link #encodeGeometryColumnSimplified(GeometryDescriptor, String, int, StringBuffer, Double)}
      */
     public void encodeGeometryColumnSimplified(GeometryDescriptor gatt, int srid,StringBuffer sql, Double distance) {

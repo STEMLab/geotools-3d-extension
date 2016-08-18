@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PreparedStatementSQLDialect3D;
 import org.opengis.filter.Id;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.identity.Identifier;
@@ -49,7 +49,7 @@ import org.opengis.geometry.Geometry;
  *
  * @source $URL$
  */
-public class PreparedFilterToSQL extends FilterToSQL {
+public class PreparedFilterToSQL3D extends FilterToSQL {
     /**
      * ordered list of literal values encountered and their types
      */
@@ -57,14 +57,14 @@ public class PreparedFilterToSQL extends FilterToSQL {
     protected List<Class> literalTypes = new ArrayList<Class>();
     protected List<Integer> SRIDs = new ArrayList<Integer>();
     protected List<Integer> dimensions = new ArrayList<Integer>();
-    protected PreparedStatementSQLDialect dialect;
+    protected PreparedStatementSQLDialect3D dialect;
     boolean prepareEnabled = true;
     
     /**
      * Default constructor
      * @deprecated Use {@link PreparedFilterToSQL(PreparedStatementSQLDialect)} instead
      */
-    public PreparedFilterToSQL() {
+    public PreparedFilterToSQL3D() {
         this.dialect = null;
     }
     
@@ -73,7 +73,7 @@ public class PreparedFilterToSQL extends FilterToSQL {
      * encode geometry placeholders
      * @param dialect
      */
-    public PreparedFilterToSQL(PreparedStatementSQLDialect dialect) {
+    public PreparedFilterToSQL3D(PreparedStatementSQLDialect3D dialect) {
         this.dialect = dialect;
     }
 
@@ -90,7 +90,7 @@ public class PreparedFilterToSQL extends FilterToSQL {
         this.prepareEnabled = prepareEnabled;
     }
 
-    public PreparedFilterToSQL(Writer out) {
+    public PreparedFilterToSQL3D(Writer out) {
         super(out);
     }
 

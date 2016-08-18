@@ -42,36 +42,36 @@ import java.util.logging.Logger;
 import org.geotools.util.logging.Logging;
 
 /**
- * Calls the {@link ConnectionLifecycleListener#onBorrow(Connection)} method on construction and
- * makes sure the {@link ConnectionLifecycleListener#onRelease(Connection)} is called when this
+ * Calls the {@link ConnectionLifecycleListener3D#onBorrow(Connection)} method on construction and
+ * makes sure the {@link ConnectionLifecycleListener3D#onRelease(Connection)} is called when this
  * connection is closed (the assumption is that the wrapped connection is pooled, as such on "close"
  * it will actually be returned to the pool)
  * 
  * @author Andrea Aime - GeoSolutions
  */
-class LifecycleConnection implements Connection {
+class LifecycleConnection3D implements Connection {
     
-    static final Logger LOGGER = Logging.getLogger(LifecycleConnection.class);
+    static final Logger LOGGER = Logging.getLogger(LifecycleConnection3D.class);
 
     Connection delegate;
     
     JDBCDataStore3D store;
 
-    List<ConnectionLifecycleListener> listeners;
+    List<ConnectionLifecycleListener3D> listeners;
 
-    public LifecycleConnection(JDBCDataStore3D store, Connection delegate, List<ConnectionLifecycleListener> listeners)
+    public LifecycleConnection3D(JDBCDataStore3D store, Connection delegate, List<ConnectionLifecycleListener3D> listeners)
             throws SQLException {
         this.delegate = delegate;
         this.listeners = listeners;
         this.store = store;
 
-        for (ConnectionLifecycleListener listener : listeners) {
+        for (ConnectionLifecycleListener3D listener : listeners) {
             listener.onBorrow(store, delegate);
         }
     }
     
     public void commit() throws SQLException {
-        for (ConnectionLifecycleListener listener : listeners) {
+        for (ConnectionLifecycleListener3D listener : listeners) {
             listener.onCommit(store, delegate);
         }
         delegate.commit();
@@ -79,14 +79,14 @@ class LifecycleConnection implements Connection {
 
     public void rollback() throws SQLException {
         delegate.rollback();
-        for (ConnectionLifecycleListener listener : listeners) {
+        for (ConnectionLifecycleListener3D listener : listeners) {
             listener.onRollback(store, delegate);
         }
     }
 
     public void close() throws SQLException {
         try {
-            for (ConnectionLifecycleListener listener : listeners) {
+            for (ConnectionLifecycleListener3D listener : listeners) {
                 listener.onRelease(store, delegate);
             }
         } finally {

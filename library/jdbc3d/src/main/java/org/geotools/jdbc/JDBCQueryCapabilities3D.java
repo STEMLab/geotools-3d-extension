@@ -33,11 +33,11 @@ import com.vividsolutions.jts.geom.Geometry;
  * @version $Id$
  * @since 2.5.4
  */
-class JDBCQueryCapabilities extends QueryCapabilities {
+class JDBCQueryCapabilities3D extends QueryCapabilities {
 
     JDBCFeatureSource3D source;
 
-    public JDBCQueryCapabilities(JDBCFeatureSource3D source) {
+    public JDBCQueryCapabilities3D(JDBCFeatureSource3D source) {
         this.source = source;
     }
 

@@ -43,6 +43,7 @@ import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -75,16 +76,17 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PropertyDataStore3DTest {
     
-    private PropertyDataStore store;
+    private static PropertyDataStore store;
+    private static File dir;
     
     static FilterFactory2 ff = (FilterFactory2) CommonFactoryFinder.getFilterFactory(null);
     
     /**
      * @throws java.lang.Exception
      */
-    @Before
-    public void setUp() throws Exception {
-        File dir = new File(".", "propertyTestData" );
+    @BeforeClass
+    public static void setUp() throws Exception {
+        dir = new File(".", "propertyTestData" );
         dir.mkdir();
         
         File file = new File(dir, "solid.properties");
@@ -95,13 +97,12 @@ public class PropertyDataStore3DTest {
         writer.write("_=name:String,geom:Geometry");
         writer.newLine();
         writer.close();
-        
-        store = new PropertyDataStore( dir, "propertyTestData" );
     }
 
     /**
      * @throws java.lang.Exception
      */
+    /*
     @After
     public void tearDown() throws Exception {
         if( store != null ){
@@ -115,9 +116,11 @@ public class PropertyDataStore3DTest {
         }
         dir.delete();
     }
+    */
     
     @Test
     public void testGetNames() throws IOException {
+        store = new PropertyDataStore( dir, "propertyTestData" );
         String names[] = store.getTypeNames();
         Arrays.sort(names);
         
@@ -128,6 +131,7 @@ public class PropertyDataStore3DTest {
     
     @Test
     public void testGetSchema() throws IOException {
+        store = new PropertyDataStore( dir, "propertyTestData" );
         SimpleFeatureType type = store.getSchema( "solid" );
         assertNotNull( type );
         assertEquals( "solid", type.getTypeName() );
@@ -138,6 +142,7 @@ public class PropertyDataStore3DTest {
     @Test
     public void testInsert3DLine() throws Exception {
         // write out new feature
+        store = new PropertyDataStore( dir, "propertyTestData" );
         SimpleFeatureStore fs = (SimpleFeatureStore) store.getFeatureSource("solid");
         
         final String featureId = "full3d.newLine";
@@ -147,7 +152,7 @@ public class PropertyDataStore3DTest {
         
         SimpleFeatureBuilder builder = new SimpleFeatureBuilder(fs.getSchema(), featureFactory);
         
-        SimpleFeature feature = builder.buildFeature(featureId, new Object[] { "New Solid", makeSolid() } );
+        SimpleFeature feature = builder.buildFeature(featureId, new Object[] { "name", makeSolid() } );
         
         List<FeatureId> ids = fs.addFeatures(ISODataUtilities.collection(feature));
         assertEquals(1, ids.size());
@@ -155,9 +160,7 @@ public class PropertyDataStore3DTest {
     
     @Test
     public void testRead() throws Exception {
-        
-        testInsert3DLine();
-        
+        store = new PropertyDataStore( dir, "propertyTestData" );
         SimpleFeatureSource fs = store.getFeatureSource("solid");
         
         SimpleFeatureCollection features = fs.getFeatures();

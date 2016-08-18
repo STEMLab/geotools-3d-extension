@@ -27,13 +27,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.DefaultServiceInfo;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
-import org.geotools.data.store.ContentEntry;
-import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.data3d.store.ContentDataStore;
+import org.geotools.data3d.store.ContentEntry;
+import org.geotools.data3d.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.ISOFeatureFactoryImpl;
@@ -41,7 +41,6 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
-import org.opengis.geometry.coordinate.GeometryFactory;
 
 /**
  * Sample DataStore implementation, please see formal tutorial included with
@@ -89,7 +88,7 @@ public class PropertyDataStore extends ContentDataStore {
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write("_=");
-        writer.write(DataUtilities.encodeType(featureType));
+        writer.write(ISODataUtilities.encodeType(featureType));
         writer.flush();
         writer.close();
     }

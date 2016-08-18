@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
 import org.geotools.factory.Hints;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.jdbc.JoinInfo.JoinPart;
+import org.geotools.jdbc.JoinInfo3D.JoinPart;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -39,13 +39,13 @@ import org.opengis.feature.type.AttributeDescriptor;
  * @author Justin Deoliveira, OpenGeo
  *
  */
-public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
+public class JDBCJoiningFeatureReader3D extends JDBCFeatureReader3D {
 
-    List<JDBCFeatureReader> joinReaders;
+    List<JDBCFeatureReader3D> joinReaders;
     SimpleFeatureBuilder joinFeatureBuilder;
     
-    public JDBCJoiningFeatureReader(String sql, Connection cx, JDBCFeatureSource3D featureSource,
-        SimpleFeatureType featureType, JoinInfo join, Hints hints) 
+    public JDBCJoiningFeatureReader3D(String sql, Connection cx, JDBCFeatureSource3D featureSource,
+        SimpleFeatureType featureType, JoinInfo3D join, Hints hints) 
         throws SQLException, IOException {
 
         //super(sql, cx, featureSource, retype(featureType, join), hints);
@@ -54,8 +54,8 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
         init(cx, featureSource, featureType, join, hints);
     }
     
-    public JDBCJoiningFeatureReader(PreparedStatement st, Connection cx, JDBCFeatureSource3D featureSource,
-        SimpleFeatureType featureType, JoinInfo join, Hints hints) 
+    public JDBCJoiningFeatureReader3D(PreparedStatement st, Connection cx, JDBCFeatureSource3D featureSource,
+        SimpleFeatureType featureType, JoinInfo3D join, Hints hints) 
         throws SQLException, IOException {
 
         super(st, cx, featureSource, featureType, hints);
@@ -64,14 +64,14 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
     }
 
     void init(Connection cx, JDBCFeatureSource3D featureSource, SimpleFeatureType featureType, 
-        JoinInfo join, Hints hints) throws SQLException, IOException {
-        joinReaders = new ArrayList<JDBCFeatureReader>();
+        JoinInfo3D join, Hints hints) throws SQLException, IOException {
+        joinReaders = new ArrayList<JDBCFeatureReader3D>();
         int offset = featureType.getAttributeCount()
                 + getPrimaryKeyOffset(featureSource, getPrimaryKey(), featureType);
 
         for (JoinPart part : join.getParts()) {
             SimpleFeatureType ft = part.getQueryFeatureType();
-            JDBCFeatureReader joinReader = new JDBCFeatureReader(rs, cx, offset, featureSource.getDataStore()
+            JDBCFeatureReader3D joinReader = new JDBCFeatureReader3D(rs, cx, offset, featureSource.getDataStore()
                     .getAbsoluteFeatureSource(ft.getTypeName()), ft, hints) {
                 @Override
                 protected void finalize() throws Throwable {
@@ -115,7 +115,7 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
     @Override
     public boolean hasNext() throws IOException {
         boolean next = super.hasNext();
-        for (JDBCFeatureReader r : joinReaders) {
+        for (JDBCFeatureReader3D r : joinReaders) {
             r.setNext(next);
         }
         return next;
@@ -133,7 +133,7 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
 
         //add additional attributes for joined features
         for (int i = 0; i < joinReaders.size(); i++) {
-            JDBCFeatureReader r = joinReaders.get(i);
+            JDBCFeatureReader3D r = joinReaders.get(i);
             f.setAttribute(f.getAttributeCount() - joinReaders.size() + i, r.next());
         }
 
@@ -148,7 +148,7 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
         // and connection as this reader
     }
 
-    static SimpleFeatureType retype(SimpleFeatureType featureType, JoinInfo join) {
+    static SimpleFeatureType retype(SimpleFeatureType featureType, JoinInfo3D join) {
         SimpleFeatureTypeBuilder b = new SimpleFeatureTypeBuilder();
         b.init(featureType);
         

@@ -24,7 +24,7 @@ import java.sql.Statement;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.SQLDialect3D;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Literal;
@@ -38,9 +38,9 @@ import org.opengis.geometry.primitive.Solid;
  *
  * @source $URL$
  */
-public abstract class BasicSQLDialect extends SQLDialect {
+public abstract class BasicSQLDialect3D extends SQLDialect3D {
 
-    protected BasicSQLDialect(JDBCDataStore3D dataStore) {
+    protected BasicSQLDialect3D(JDBCDataStore3D dataStore) {
         super(dataStore);
     }
 

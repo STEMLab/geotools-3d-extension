@@ -129,7 +129,7 @@ public final class JDBCFeatureStore3D extends ContentFeatureStore {
     }
 
     @Override
-    public JDBCState getState() {
+    public JDBCState3D getState() {
         return delegate.getState();
     }
 
@@ -267,9 +267,9 @@ public final class JDBCFeatureStore3D extends ContentFeatureStore {
             if ( (flags | WRITER_ADD) == WRITER_ADD ) {
                 DefaultQuery queryNone = new DefaultQuery(query);
                 queryNone.setFilter(Filter.EXCLUDE);
-                if ( getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect ) {
+                if ( getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect3D ) {
                     PreparedStatement ps = getDataStore().selectSQLPS(getSchema(), queryNone, cx);
-                    return new JDBCInsertFeatureWriter( ps, cx, delegate, query.getHints() );
+                    return new JDBCInsertFeatureWriter3D( ps, cx, delegate, query.getHints() );
                 }
                 else {
                     //build up a statement for the content, inserting only so we dont want
@@ -277,7 +277,7 @@ public final class JDBCFeatureStore3D extends ContentFeatureStore {
                     String sql = getDataStore().selectSQL(getSchema(), queryNone);
                     getDataStore().getLogger().fine(sql);
     
-                    return new JDBCInsertFeatureWriter( sql, cx, delegate, query.getHints() );
+                    return new JDBCInsertFeatureWriter3D( sql, cx, delegate, query.getHints() );
                 }
             }
             
@@ -289,23 +289,23 @@ public final class JDBCFeatureStore3D extends ContentFeatureStore {
             // build up a statement for the content
             DefaultQuery preQuery = new DefaultQuery(query);
             preQuery.setFilter(preFilter);
-            if(getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect) {
+            if(getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect3D) {
                 PreparedStatement ps = getDataStore().selectSQLPS(getSchema(), preQuery, cx);
                 if ( (flags | WRITER_UPDATE) == WRITER_UPDATE ) {
-                    writer = new JDBCUpdateFeatureWriter(ps, cx, delegate, query.getHints() );
+                    writer = new JDBCUpdateFeatureWriter3D(ps, cx, delegate, query.getHints() );
                 } else {
                     //update insert case
-                    writer = new JDBCUpdateInsertFeatureWriter(ps, cx, delegate, query.getPropertyNames(), query.getHints() );
+                    writer = new JDBCUpdateInsertFeatureWriter3D(ps, cx, delegate, query.getPropertyNames(), query.getHints() );
                 }
             } else {
                 String sql = getDataStore().selectSQL(getSchema(), preQuery);
                 getDataStore().getLogger().fine(sql);
                 
                 if ( (flags | WRITER_UPDATE) == WRITER_UPDATE ) {
-                    writer = new JDBCUpdateFeatureWriter( sql, cx, delegate, query.getHints() );
+                    writer = new JDBCUpdateFeatureWriter3D( sql, cx, delegate, query.getHints() );
                 } else {
                     //update insert case
-                    writer = new JDBCUpdateInsertFeatureWriter( sql, cx, delegate, query.getHints() );
+                    writer = new JDBCUpdateInsertFeatureWriter3D( sql, cx, delegate, query.getHints() );
                 }
             }
         } catch (Throwable e) { // NOSONAR

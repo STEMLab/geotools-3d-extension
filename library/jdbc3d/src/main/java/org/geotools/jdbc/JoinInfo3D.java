@@ -37,16 +37,16 @@ import org.opengis.filter.expression.PropertyName;
  * @author Justin Deoliveira, OpenGeo
  *
  */
-public class JoinInfo {
+public class JoinInfo3D {
 
-    public static JoinInfo create(Query query, JDBCFeatureSource3D featureSource) throws IOException {
+    public static JoinInfo3D create(Query query, JDBCFeatureSource3D featureSource) throws IOException {
         return create(query, featureSource.getSchema(), featureSource.getDataStore());
     }
 
-    public static JoinInfo create(Query query, SimpleFeatureType featureType, JDBCDataStore3D dataStore)
+    public static JoinInfo3D create(Query query, SimpleFeatureType featureType, JDBCDataStore3D dataStore)
         throws IOException {
         
-        JoinInfo info = new JoinInfo();
+        JoinInfo3D info = new JoinInfo3D();
         info.setPrimaryAlias("a");
         
         for (int i = 0; i < query.getJoins().size(); i++) {
@@ -138,7 +138,7 @@ public class JoinInfo {
     /** the "joinified" filter of the main query */
     Filter filter;
 
-    private JoinInfo() {
+    private JoinInfo3D() {
     }
 
     public String getPrimaryAlias() {

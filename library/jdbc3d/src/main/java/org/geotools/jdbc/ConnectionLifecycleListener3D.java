@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * @author Andrea Aime - GeoSolutions
  * 
  */
-public interface ConnectionLifecycleListener {
+public interface ConnectionLifecycleListener3D {
 
     /**
      * Called when the collection is being borrowed from the connection pool

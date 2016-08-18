@@ -18,7 +18,7 @@ package org.geotools.jdbc;
 
 import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data3d.store.ContentState;
-import org.geotools.jdbc.JDBCState;
+import org.geotools.jdbc.JDBCState3D;
 import org.geotools.jdbc.PrimaryKey;
 
 
@@ -33,7 +33,7 @@ import org.geotools.jdbc.PrimaryKey;
  *
  * @source $URL$
  */
-public final class JDBCState extends ContentState {
+public final class JDBCState3D extends ContentState {
     /**
      * cached primary key
      */
@@ -48,7 +48,7 @@ public final class JDBCState extends ContentState {
     /**
      * Creates the state from an existing one.
      */
-    public JDBCState(JDBCState state) {
+    public JDBCState3D(JDBCState3D state) {
         super(state);
 
         //copy the primary key
@@ -59,7 +59,7 @@ public final class JDBCState extends ContentState {
     /**
      * Creates a new state object.
      */
-    public JDBCState(ContentEntry entry) {
+    public JDBCState3D(ContentEntry entry) {
         super(entry);
     }
 
@@ -110,7 +110,7 @@ public final class JDBCState extends ContentState {
      * Copies the state.
      */
     public ContentState copy() {
-        return new JDBCState(this);
+        return new JDBCState3D(this);
     }
 
 }

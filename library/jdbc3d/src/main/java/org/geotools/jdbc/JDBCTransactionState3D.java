@@ -29,7 +29,7 @@ import org.geotools.data.Transaction.State;
  *
  * @source $URL$
  */
-final class JDBCTransactionState implements State {
+final class JDBCTransactionState3D implements State {
     /**
      * The datastore
      */
@@ -48,11 +48,11 @@ final class JDBCTransactionState implements State {
      */
     boolean external;
 
-    public JDBCTransactionState(Connection cx, JDBCDataStore3D dataStore) {
+    public JDBCTransactionState3D(Connection cx, JDBCDataStore3D dataStore) {
         this(cx, dataStore, false);
     }
     
-    public JDBCTransactionState(Connection cx, JDBCDataStore3D dataStore, boolean external) {
+    public JDBCTransactionState3D(Connection cx, JDBCDataStore3D dataStore, boolean external) {
         this.cx = cx;
         this.dataStore = dataStore;
         this.external = external;

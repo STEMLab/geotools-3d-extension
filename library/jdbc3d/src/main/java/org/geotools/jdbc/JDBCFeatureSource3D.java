@@ -57,21 +57,21 @@ import org.geotools.filter.visitor.SimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.JDBCFeatureReader;
+import org.geotools.jdbc.JDBCFeatureReader3D;
 import org.geotools.jdbc.JDBCFeatureSource3D;
 import org.geotools.jdbc.JDBCFeatureStore3D;
-import org.geotools.jdbc.JDBCJoiningFeatureReader;
-import org.geotools.jdbc.JDBCJoiningFilteringFeatureReader;
-import org.geotools.jdbc.JDBCQueryCapabilities;
-import org.geotools.jdbc.JDBCState;
-import org.geotools.jdbc.JoinInfo;
+import org.geotools.jdbc.JDBCJoiningFeatureReader3D;
+import org.geotools.jdbc.JDBCJoiningFilteringFeatureReader3D;
+import org.geotools.jdbc.JDBCQueryCapabilities3D;
+import org.geotools.jdbc.JDBCState3D;
+import org.geotools.jdbc.JoinInfo3D;
 import org.geotools.jdbc.NullHandlingVisitor;
 import org.geotools.jdbc.NullPrimaryKey;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PreparedStatementSQLDialect3D;
 import org.geotools.jdbc.PrimaryKey;
 import org.geotools.jdbc.PrimaryKeyColumn;
-import org.geotools.jdbc.PrimaryKeyFIDValidator;
-import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.PrimaryKeyFIDValidator3D;
+import org.geotools.jdbc.SQLDialect3D;
 import org.geotools.jdbc.VirtualTable;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
@@ -125,7 +125,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
     
     @Override
     protected QueryCapabilities buildQueryCapabilities() {
-        return new JDBCQueryCapabilities(this);
+        return new JDBCQueryCapabilities3D(this);
     }
     
     @Override
@@ -144,10 +144,10 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
     }
 
     /**
-     * Type narrow to {@link JDBCState}.
+     * Type narrow to {@link JDBCState3D}.
      */
-    public JDBCState getState() {
-        return (JDBCState) super.getState();
+    public JDBCState3D getState() {
+        return (JDBCState3D) super.getState();
     }
 
     /**
@@ -166,7 +166,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
      * </p>
      */
     public void setExposePrimaryKeyColumns(boolean exposePrimaryKeyColumns) {
-        ((JDBCState)entry.getState(transaction)).setExposePrimaryKeyColumns(exposePrimaryKeyColumns);
+        ((JDBCState3D)entry.getState(transaction)).setExposePrimaryKeyColumns(exposePrimaryKeyColumns);
     }
     
     /**
@@ -174,7 +174,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
      * through feature type attributes.
      */
     public boolean isExposePrimaryKeyColumns() {
-        return ((JDBCState)entry.getState(transaction)).isExposePrimaryKeyColumns();
+        return ((JDBCState3D)entry.getState(transaction)).isExposePrimaryKeyColumns();
     }
     
     /**
@@ -207,7 +207,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
         }
 
         //grab the state
-        JDBCState state = getState();
+        JDBCState3D state = getState();
         
         //grab the schema
         String databaseSchema = getDataStore().getDatabaseSchema();
@@ -216,7 +216,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
         Connection cx = getDataStore().getConnection(state);
         
         // grab the dialect
-        SQLDialect dialect = getDataStore().getSQLDialect();
+        SQLDialect3D dialect = getDataStore().getSQLDialect();
 
 
         //get metadata about columns from database
@@ -261,7 +261,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
                     //check for an association
                     Statement st = null;
                     ResultSet relationships = null;
-                    if ( getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect ) {
+                    if ( getDataStore().getSQLDialect() instanceof PreparedStatementSQLDialect3D ) {
                         st = getDataStore().selectRelationshipSQLPS(tableName, name, cx);
                         relationships = ((PreparedStatement)st).executeQuery();
                     }
@@ -430,7 +430,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
         split[0] = (Filter) split[0].accept(nhv, null);
         
         SimplifyingFilterVisitor visitor = new SimplifyingFilterVisitor();
-        visitor.setFIDValidator( new PrimaryKeyFIDValidator( featureSource ) );
+        visitor.setFIDValidator( new PrimaryKeyFIDValidator3D( featureSource ) );
         visitor.setFeatureType(getSchema());
         split[0] = (Filter) split[0].accept(visitor, null);
         split[1] = (Filter) split[1].accept(visitor, null);
@@ -449,7 +449,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
         boolean manual = (postFilter != null) && (postFilter != Filter.INCLUDE);
         if (!manual && !query.getJoins().isEmpty()) {
             //check any join post filters as well
-            JoinInfo join = JoinInfo.create(query, this);
+            JoinInfo3D join = JoinInfo3D.create(query, this);
             manual = join.hasPostFilters();
         }
             if (manual) {
@@ -618,7 +618,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
         FeatureReader<SimpleFeatureType, SimpleFeature> reader;
         
         try {            
-            SQLDialect dialect = getDataStore().getSQLDialect();
+            SQLDialect3D dialect = getDataStore().getSQLDialect();
 
             // allow dialect to override this if needed
             if(getState().getTransaction() == Transaction.AUTO_COMMIT) {
@@ -627,34 +627,34 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
 
             if (query.getJoins().isEmpty()) {
                 //regular query
-                if ( dialect instanceof PreparedStatementSQLDialect ) {
+                if ( dialect instanceof PreparedStatementSQLDialect3D ) {
                     PreparedStatement ps = getDataStore().selectSQLPS(querySchema, preQuery, cx);
-                    reader = new JDBCFeatureReader( ps, cx, this, querySchema, query.getHints() );
+                    reader = new JDBCFeatureReader3D( ps, cx, this, querySchema, query.getHints() );
                 } else {
                     //build up a statement for the content
                     String sql = getDataStore().selectSQL(querySchema, preQuery);
                     getDataStore().getLogger().fine(sql);
         
-                    reader = new JDBCFeatureReader( sql, cx, this, querySchema, query.getHints() );
+                    reader = new JDBCFeatureReader3D( sql, cx, this, querySchema, query.getHints() );
                 }
             }
             else {
-                JoinInfo join = JoinInfo.create(preQuery, this);
+                JoinInfo3D join = JoinInfo3D.create(preQuery, this);
 
-                if ( dialect instanceof PreparedStatementSQLDialect ) {
+                if ( dialect instanceof PreparedStatementSQLDialect3D ) {
                     PreparedStatement ps =getDataStore().selectJoinSQLPS(querySchema, join, preQuery, cx);
-                    reader = new JDBCJoiningFeatureReader(ps, cx, this, querySchema, join, query.getHints());
+                    reader = new JDBCJoiningFeatureReader3D(ps, cx, this, querySchema, join, query.getHints());
                 } else {
                     //build up a statement for the content
                     String sql = getDataStore().selectJoinSQL(querySchema, join, preQuery);
                     getDataStore().getLogger().fine(sql);
         
-                    reader = new JDBCJoiningFeatureReader(sql, cx, this, querySchema, join, query.getHints());
+                    reader = new JDBCJoiningFeatureReader3D(sql, cx, this, querySchema, join, query.getHints());
                 }
                 
                 //check for post filters
                 if (join.hasPostFilters()) {
-                    reader = new JDBCJoiningFilteringFeatureReader(reader, join);
+                    reader = new JDBCJoiningFilteringFeatureReader3D(reader, join);
                     //TODO: retyping 
                 }
             }
@@ -810,7 +810,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
      * @return
      * @throws SQLException
      */
-    List<ColumnMetadata> getColumnMetadata(Connection cx, String databaseSchema, String tableName, SQLDialect dialect)
+    List<ColumnMetadata> getColumnMetadata(Connection cx, String databaseSchema, String tableName, SQLDialect3D dialect)
             throws SQLException {
         List<ColumnMetadata> result = new ArrayList<ColumnMetadata>();
 
@@ -878,7 +878,7 @@ public class JDBCFeatureSource3D extends ContentFeatureSource {
      * @return
      * @throws SQLException
      */
-    static List<ColumnMetadata> getColumnMetadata(Connection cx, VirtualTable vtable, SQLDialect dialect, JDBCDataStore3D store) throws SQLException {
+    static List<ColumnMetadata> getColumnMetadata(Connection cx, VirtualTable vtable, SQLDialect3D dialect, JDBCDataStore3D store) throws SQLException {
         List<ColumnMetadata> result = new ArrayList<ColumnMetadata>();
 
         Statement st = null;

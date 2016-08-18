@@ -31,7 +31,7 @@ import org.opengis.feature.type.FeatureType;
  *
  * @source $URL$
  */
-public abstract class PrimaryKeyFinder {
+public abstract class PrimaryKeyFinder3D {
 
     /**
      * Returns the {@link PrimaryKey}, or {@code null} if a specific type could not be determined

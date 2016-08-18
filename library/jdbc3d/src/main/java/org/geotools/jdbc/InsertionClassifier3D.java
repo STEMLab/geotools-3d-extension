@@ -18,7 +18,7 @@ package org.geotools.jdbc;
 
 //import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.factory.Hints;
-import org.geotools.jdbc.InsertionClassifier;
+import org.geotools.jdbc.InsertionClassifier3D;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -38,15 +38,15 @@ import java.util.TreeMap;
  * <p/>
  * This class allows to do the splitting.
  */
-class InsertionClassifier {
+class InsertionClassifier3D {
     public final boolean useExisting;
     public final Map<String, Class<? extends Geometry>> geometryTypes;
 
-    public static Map<InsertionClassifier, Collection<SimpleFeature>> classify(
+    public static Map<InsertionClassifier3D, Collection<SimpleFeature>> classify(
             SimpleFeatureType featureType, Collection<? extends SimpleFeature> features) {
-        Map<InsertionClassifier, Collection<SimpleFeature>> kinds = new HashMap<>();
+        Map<InsertionClassifier3D, Collection<SimpleFeature>> kinds = new HashMap<>();
         for (SimpleFeature feature : features) {
-            InsertionClassifier kind = new InsertionClassifier(featureType, feature);
+            InsertionClassifier3D kind = new InsertionClassifier3D(featureType, feature);
             Collection<SimpleFeature> currents = kinds.get(kind);
             if (currents == null) {
                 currents = new ArrayList<>();
@@ -57,7 +57,7 @@ class InsertionClassifier {
         return kinds;
     }
 
-    private InsertionClassifier(SimpleFeatureType featureType, SimpleFeature feature) {
+    private InsertionClassifier3D(SimpleFeatureType featureType, SimpleFeature feature) {
         useExisting = useExisting(feature);
         geometryTypes = new TreeMap<>();
         for (AttributeDescriptor att : featureType.getAttributeDescriptors()) {
@@ -80,7 +80,7 @@ class InsertionClassifier {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        InsertionClassifier that = (InsertionClassifier) o;
+        InsertionClassifier3D that = (InsertionClassifier3D) o;
         if (useExisting != that.useExisting) {
             return false;
         }

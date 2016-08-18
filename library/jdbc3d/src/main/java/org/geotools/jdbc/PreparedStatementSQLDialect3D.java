@@ -28,8 +28,8 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.PreparedFilterToSQL3D;
+import org.geotools.jdbc.SQLDialect3D;
 import org.geotools.util.Converters;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.Geometry;
@@ -47,9 +47,9 @@ import org.opengis.geometry.Geometry;
  *
  * @source $URL$
  */
-public abstract class PreparedStatementSQLDialect extends SQLDialect {
+public abstract class PreparedStatementSQLDialect3D extends SQLDialect3D {
 
-    protected PreparedStatementSQLDialect(JDBCDataStore3D dataStore) {
+    protected PreparedStatementSQLDialect3D(JDBCDataStore3D dataStore) {
         super(dataStore);
         
     }
@@ -203,8 +203,8 @@ public abstract class PreparedStatementSQLDialect extends SQLDialect {
         return (T) value;
     }
     
-    public PreparedFilterToSQL createPreparedFilterToSQL() {
-        PreparedFilterToSQL f2s = new PreparedFilterToSQL();
+    public PreparedFilterToSQL3D createPreparedFilterToSQL() {
+        PreparedFilterToSQL3D f2s = new PreparedFilterToSQL3D();
         f2s.setCapabilities(BASE_DBMS_CAPABILITIES);
         return f2s;
     }

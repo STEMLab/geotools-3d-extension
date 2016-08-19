@@ -43,11 +43,12 @@ import org.opengis.feature.type.GeometryType;
 import org.opengis.feature.type.Name;
 import org.opengis.feature.type.Schema;
 import org.opengis.filter.Filter;
+import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.util.InternationalString;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * A builder for simple feature types.
@@ -672,7 +673,7 @@ public class ISOSimpleFeatureTypeBuilder {
         // to remove this check
         //
         if ((defaultGeometry != null && defaultGeometry.equals(name))
-                || Geometry.class.isAssignableFrom(binding) || Solid.class.isAssignableFrom(binding)) {
+                || Geometry.class.isAssignableFrom(binding)) {
 
             // if no crs was set, set to defaultCRS
             if (!attributeBuilder.isCRSSet()) {

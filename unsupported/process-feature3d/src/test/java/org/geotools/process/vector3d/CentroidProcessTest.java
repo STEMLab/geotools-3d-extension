@@ -7,19 +7,23 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.process.vector3d.CentroidProcess;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.Before;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Point;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTReader;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.io.WKTReader;
 
 public class CentroidProcessTest {
 
-    WKTReader reader = new WKTReader();
+    WKTReader reader = new WKTReader(DefaultGeographicCRS.WGS84);
     private ListFeatureCollection fc;
 
     @Before
@@ -33,10 +37,10 @@ public class CentroidProcessTest {
         fc = new ListFeatureCollection(ft);
         
         SimpleFeatureBuilder fb = new SimpleFeatureBuilder(ft);
-        fb.add(reader.read("POINT(0 0)").buffer(10));
+        fb.add(reader.read("POINT(0 0)"));//.getBuffer(10));
         fb.add("one");
         fc.add(fb.buildFeature(null));
-        fb.add(reader.read("POINT(10 0)").buffer(10));
+        fb.add(reader.read("POINT(10 0)"));//.getBuffer(10));
         fb.add("two");
         fc.add(fb.buildFeature(null));
     }
@@ -60,12 +64,12 @@ public class CentroidProcessTest {
         SimpleFeatureIterator it = result.features();
         assertTrue(it.hasNext());
         SimpleFeature f = it.next();
-        assertEquals(0, ((Point) f.getDefaultGeometry()).getX(), 1e-6);
-        assertEquals(0, ((Point) f.getDefaultGeometry()).getY(), 1e-6);
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getDirectPosition().getOrdinate(0), 1e-6);
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getDirectPosition().getOrdinate(1), 1e-6);
         assertEquals("one", f.getAttribute("name"));
         f = it.next();
-        assertEquals(10, ((Point) f.getDefaultGeometry()).getX(), 1e-6);
-        assertEquals(0, ((Point) f.getDefaultGeometry()).getY(), 1e-6);
+        assertEquals(10, ((Point) f.getDefaultGeometry()).getDirectPosition().getOrdinate(0), 1e-6);
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getDirectPosition().getOrdinate(1), 1e-6);
         assertEquals("two", f.getAttribute("name"));
     }
 }

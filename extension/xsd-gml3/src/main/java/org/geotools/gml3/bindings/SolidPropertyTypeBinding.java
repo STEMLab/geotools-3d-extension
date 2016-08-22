@@ -21,14 +21,15 @@ import javax.xml.namespace.QName;
 import org.geotools.geometry.iso.primitive.SolidImpl;
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
+import org.geotools.gml3.bindings.ext.GML3EncodingUtils3D;
 
 /**
  * @author Donguk Seo
  *
  */
-public class SolidPropertyTypeBinding extends GeometryPropertyTypeBindingBase {
+public class SolidPropertyTypeBinding extends GeometryPropertyTypeBindingBaseExt {
 
-    public SolidPropertyTypeBinding(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry) {
+    public SolidPropertyTypeBinding(GML3EncodingUtils3D encodingUtils, XSDIdRegistry idRegistry) {
         super(encodingUtils, idRegistry);
     }
 

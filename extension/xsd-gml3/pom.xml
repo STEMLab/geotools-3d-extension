@@ -13,7 +13,7 @@
 	<groupId>org.geotools.xsd</groupId>
 	<artifactId>gt-xsd-gml3-3d</artifactId>
 	<packaging>jar</packaging>
-	<version>16-SNAPSHOT</version>
+	<version>15-SNAPSHOT</version>
 	<name>GML3 XML Support</name>
 
 

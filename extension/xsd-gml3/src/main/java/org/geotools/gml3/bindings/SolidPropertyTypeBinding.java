@@ -27,7 +27,7 @@ import org.geotools.gml3.bindings.ext.GML3EncodingUtils3D;
  * @author Donguk Seo
  *
  */
-public class SolidPropertyTypeBinding extends GeometryPropertyTypeBindingExt {
+public class SolidPropertyTypeBinding extends GeometryPropertyTypeBindingBaseExt {
 
     public SolidPropertyTypeBinding(GML3EncodingUtils3D encodingUtils, XSDIdRegistry idRegistry) {
         super(encodingUtils, idRegistry);

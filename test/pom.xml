@@ -16,17 +16,7 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-main-iso</artifactId>
       <version>${project.version}</version>
-    </dependency> 
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-main-3d</artifactId>
-      <version>${project.version}</version>
-    </dependency> 
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-api-iso</artifactId>
-      <version>${project.version}</version>
-    </dependency>     
+    </dependency>   
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-shapefile</artifactId>

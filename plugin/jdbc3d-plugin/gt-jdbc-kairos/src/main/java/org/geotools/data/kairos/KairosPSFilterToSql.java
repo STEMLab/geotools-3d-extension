@@ -18,12 +18,13 @@ package org.geotools.data.kairos;
 
 import org.geotools.filter.FilterCapabilities;
 import org.geotools.jdbc.PreparedFilterToSQL;
+import org.geotools.jdbc.PreparedFilterToSQL3D;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 
 @SuppressWarnings("deprecation")
-public class KairosPSFilterToSql extends PreparedFilterToSQL {
+public class KairosPSFilterToSql extends PreparedFilterToSQL3D {
 
     FilterToSqlHelper helper;
 

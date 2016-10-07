@@ -16,11 +16,13 @@
  */
 package org.geotools.jdbc;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
@@ -32,7 +34,9 @@ import org.geotools.jdbc.PreparedFilterToSQL3D;
 import org.geotools.jdbc.SQLDialect3D;
 import org.geotools.util.Converters;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.GeometryFactory;
 
 //import com.vividsolutions.jts.geom.Geometry;
 
@@ -276,4 +280,5 @@ public abstract class PreparedStatementSQLDialect3D extends SQLDialect3D {
      */
     public void onUpdate(PreparedStatement update, Connection cx, SimpleFeatureType featureType) throws SQLException {
     }
+
 }

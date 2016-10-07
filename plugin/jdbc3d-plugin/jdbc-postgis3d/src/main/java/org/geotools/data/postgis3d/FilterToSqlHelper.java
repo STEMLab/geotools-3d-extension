@@ -121,7 +121,8 @@ class FilterToSqlHelper {
         this.delegate = delegate;
     }
 
-    public static FilterCapabilities createFilterCapabilities(boolean encodeFunctions) {
+
+	public static FilterCapabilities createFilterCapabilities(boolean encodeFunctions) {
         FilterCapabilities caps = new FilterCapabilities();
         caps.addAll(SQLDialect.BASE_DBMS_CAPABILITIES);
 

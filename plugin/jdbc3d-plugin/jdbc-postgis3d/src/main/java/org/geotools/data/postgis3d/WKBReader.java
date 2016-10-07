@@ -41,7 +41,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.geometry.jts.CircularArc;
+import org.geotools.factory.GeoTools;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.PrecisionModel;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Point;
+
+/*import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CompoundCurve;
 import org.geotools.geometry.jts.CompoundRing;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
@@ -66,7 +75,7 @@ import com.vividsolutions.jts.io.ByteOrderDataInStream;
 import com.vividsolutions.jts.io.ByteOrderValues;
 import com.vividsolutions.jts.io.InStream;
 import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKBWriter;
+import com.vividsolutions.jts.io.WKBWriter;*/
 
 /**
  * Reads a {@link Geometry}from a byte stream in Postgis Extended Well-Known Binary format. Supports
@@ -116,11 +125,12 @@ public class WKBReader {
 
     private static final String INVALID_GEOM_TYPE_MSG = "Invalid geometry type encountered in ";
 
-    private CurvedGeometryFactory factory;
-
+    //private CurvedGeometryFactory factory;
+    private GeometryBuilder factory;
+    
     private CoordinateSequenceFactory csFactory;
 
-    private PrecisionModel precisionModel;
+    //private PrecisionModel precisionModel;
 
     // default dimension - will be set on read
     private int inputDimension = 2;
@@ -140,12 +150,13 @@ public class WKBReader {
     private double[] ordValues;
 
     public WKBReader() {
-        this(new GeometryFactory());
+        this(new GeometryBuilder(GeoTools.getDefaultHints()));
     }
 
-    public WKBReader(GeometryFactory geometryFactory) {
-        this.factory = getCurvedGeometryFactory(geometryFactory);
-        precisionModel = factory.getPrecisionModel();
+    public WKBReader(GeometryBuilder geometryFactory) {
+        //this.factory = getCurvedGeometryFactory(geometryFactory);
+    	this.factory = geometryFactory;
+        //precisionModel = factory.getPrecisionModel();
         csFactory = factory.getCoordinateSequenceFactory();
     }
 
@@ -450,7 +461,7 @@ public class WKBReader {
      * Reads a coordinate value with the specified dimensionality. Makes the X and Y ordinates
      * precise according to the precision model in use.
      */
-    private void readCoordinate() throws IOException {
+    /*private void readCoordinate() throws IOException {
         for (int i = 0; i < inputDimension; i++) {
             if (i <= 1) {
                 ordValues[i] = precisionModel.makePrecise(dis.readDouble());
@@ -459,7 +470,7 @@ public class WKBReader {
             }
 
         }
-    }
+    }*/
 
     /**
      * Casts the provided geometry factory to a curved one if possible, or wraps it into one with
@@ -469,7 +480,7 @@ public class WKBReader {
      * @param gf
      * @return
      */
-    private CurvedGeometryFactory getCurvedGeometryFactory(GeometryFactory gf) {
+    /*private CurvedGeometryFactory getCurvedGeometryFactory(GeometryBuilder gf) {
         CurvedGeometryFactory curvedFactory;
         if (gf instanceof CurvedGeometryFactory) {
             curvedFactory = (CurvedGeometryFactory) gf;
@@ -477,6 +488,6 @@ public class WKBReader {
             curvedFactory = new CurvedGeometryFactory(gf, Double.MAX_VALUE);
         }
         return curvedFactory;
-    }
+    }*/
 
 }

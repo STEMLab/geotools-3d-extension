@@ -37,7 +37,9 @@ import java.util.logging.Level;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
 import org.geotools.factory.Hints;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
+import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.jts.CircularRing;
 import org.geotools.geometry.jts.CircularString;
 import org.geotools.geometry.jts.CompoundCurve;
@@ -48,7 +50,7 @@ import org.geotools.geometry.jts.MultiCurve;
 import org.geotools.geometry.jts.MultiSurface;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.WKTWriter2;
-import org.geotools.jdbc.BasicSQLDialect;
+import org.geotools.jdbc.BasicSQLDialect3D;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
@@ -56,30 +58,37 @@ import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryCollection;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.LineString;
+//import com.vividsolutions.jts.geom.LinearRing;
+//import com.vividsolutions.jts.geom.MultiLineString;
+//import com.vividsolutions.jts.geom.MultiPoint;
+//import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.io.ParseException;
+//import com.vividsolutions.jts.io.WKTReader;
+//import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  * 
  *
  * @source $URL$
  */
-public class PostGISDialect extends BasicSQLDialect {
+public class PostGISDialect extends BasicSQLDialect3D {
 
 	//geometry type to class map
     final static Map<String, Class> TYPE_TO_CLASS_MAP = new HashMap<String, Class>() {
@@ -94,12 +103,21 @@ public class PostGISDialect extends BasicSQLDialect {
             put("POLYGONM", Polygon.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
-            put("MULTILINESTRING", MultiLineString.class);
-            put("MULTILINESTRINGM", MultiLineString.class);
-            put("MULTIPOLYGON", MultiPolygon.class);
-            put("MULTIPOLYGONM", MultiPolygon.class);
-            put("GEOMETRYCOLLECTION", GeometryCollection.class);
-            put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
+            /*put("MULTILINESTRING", MultiLineString.class);
+            put("MULTILINESTRINGM", MultiLineString.class);*/
+            put("MULTILINESTRING", MultiCurve.class);
+            put("MULTILINESTRINGM", MultiCurve.class);
+            //put("MULTILINESTRINGZ", MultiCurve.class);
+            /*put("MULTIPOLYGON", MultiPolygon.class);
+            put("MULTIPOLYGONM", MultiPolygon.class);*/
+            put("MULTIPOLYGON", MultiSurface.class);
+            put("MULTIPOLYGONM", MultiSurface.class);
+            //put("MULTIPOLYGONZ", MultiSurface.class);
+            /*put("GEOMETRYCOLLECTION", GeometryCollection.class);
+            put("GEOMETRYCOLLECTIONM", GeometryCollection.class);*/
+            put("GEOMETRYCOLLECTION", MultiPrimitive.class);
+            put("GEOMETRYCOLLECTIONM", MultiPrimitive.class);
+            put("GEOMETRYCOLLECTIONZ", MultiPrimitive.class);
             put("COMPOUNDCURVE", CompoundCurve.class);
             put("MULTICURVE", MultiCurve.class);
             put("CURVEPOLYGON", CurvePolygon.class);
@@ -121,6 +139,7 @@ public class PostGISDialect extends BasicSQLDialect {
             add(MultiLineString.class);
             add(Polygon.class);
             add(MultiPolygon.class);
+            
         }
     };
 
@@ -132,9 +151,12 @@ public class PostGISDialect extends BasicSQLDialect {
             put(LineString.class, "LINESTRING");
             put(Polygon.class, "POLYGON");
             put(MultiPoint.class, "MULTIPOINT");
-            put(MultiLineString.class, "MULTILINESTRING");
-            put(MultiPolygon.class, "MULTIPOLYGON");
-            put(GeometryCollection.class, "GEOMETRYCOLLECTION");
+            //put(MultiLineString.class, "MULTILINESTRING");
+            //put(MultiPolygon.class, "MULTIPOLYGON");
+            //put(GeometryCollection.class, "GEOMETRYCOLLECTION");
+            put(MultiCurve.class, "MULTILINESTRING");
+            put(MultiSurface.class, "MULTIPOLYGON");
+            put(MultiPrimitive.class, "GEOMETRYCOLLECTION");
             put(CircularString.class, "CIRCULARSTRING");
             put(CircularRing.class, "CIRCULARSTRING");
             put(MultiCurve.class, "MULTICURVE");
@@ -257,7 +279,7 @@ public class PostGISDialect extends BasicSQLDialect {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, String column, GeometryFactory factory, Connection cx)
+            ResultSet rs, String column, GeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
@@ -265,14 +287,14 @@ public class PostGISDialect extends BasicSQLDialect {
     }
     
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, int column, GeometryFactory factory, Connection cx)
+            ResultSet rs, int column, GeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
         return (Geometry) reader.read(rs, column);
     }
 
-    private WKBAttributeIO getWKBReader(GeometryFactory factory) {
+    private WKBAttributeIO getWKBReader(GeometryBuilder factory) {
         WKBAttributeIO reader = wkbReader.get();
         if(reader == null) {
             reader = new WKBAttributeIO(factory);
@@ -1052,7 +1074,7 @@ public class PostGISDialect extends BasicSQLDialect {
             sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
         }
     }
-    @Override
+    /*@Override
     public void encodeGeometryValue(Solid value, int dimension, int srid, StringBuffer sql)
             throws IOException {
     	if (value == null) {
@@ -1062,7 +1084,7 @@ public class PostGISDialect extends BasicSQLDialect {
             String wkt = writer.getString(value);
             sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
         }
-    }
+    }*/
     @Override
     public FilterToSQL createFilterToSQL() {
         PostgisFilterToSQL sql = new PostgisFilterToSQL(this);

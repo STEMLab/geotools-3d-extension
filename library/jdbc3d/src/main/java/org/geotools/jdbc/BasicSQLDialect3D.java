@@ -23,10 +23,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
-import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.SQLDialect3D;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Literal;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Solid;
@@ -182,4 +179,5 @@ public abstract class BasicSQLDialect3D extends SQLDialect3D {
      */
     public void onUpdate(Statement update, Connection cx, SimpleFeatureType featureType) throws SQLException {
     }
+
 }

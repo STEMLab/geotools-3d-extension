@@ -25,9 +25,11 @@ import java.sql.Types;
 
 import org.geotools.data.Base64;
 import org.geotools.data.DataSourceException;
+import org.geotools.factory.GeoTools;
+import org.geotools.geometry.GeometryBuilder;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ByteArrayInStream;
 import com.vividsolutions.jts.io.WKBWriter;
 
@@ -45,17 +47,17 @@ import com.vividsolutions.jts.io.WKBWriter;
 public class WKBAttributeIO {
     WKBReader wkbr;
     ByteArrayInStream inStream = new ByteArrayInStream(new byte[0]);
-    GeometryFactory gf;
+    GeometryBuilder gf;
 
     public WKBAttributeIO() {
-        this(new GeometryFactory());
+        this(new GeometryBuilder(GeoTools.getDefaultHints()));
     }
     
-    public WKBAttributeIO(GeometryFactory gf) {
+    public WKBAttributeIO(GeometryBuilder gf) {
         wkbr = new WKBReader(gf);
     }
     
-    public void setGeometryFactory(GeometryFactory gf) {
+    public void setGeometryFactory(GeometryBuilder gf) {
         wkbr = new WKBReader(gf);
     }
 

@@ -19,11 +19,6 @@
     </dependency>   
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-jdbc3d</artifactId>
-      <version>${project.version}</version>
-    </dependency>  
-    <dependency>
-      <groupId>org.geotools</groupId>
       <artifactId>gt-shapefile</artifactId>
       <version>${project.version}</version>
     </dependency> 

@@ -27,15 +27,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
-//import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.PreparedFilterToSQL3D;
-//import org.geotools.jdbc.PreparedStatementSQLDialect;
-import org.geotools.jdbc.PreparedStatementSQLDialect3D;
+import org.geotools.jdbc.PreparedFilterToSQL;
+import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
@@ -51,7 +48,7 @@ import org.opengis.geometry.coordinate.GeometryFactory;
 //import com.vividsolutions.jts.geom.Polygon;
 //import com.vividsolutions.jts.io.WKBWriter;
 
-public class KairosPSDialect extends PreparedStatementSQLDialect3D {
+public class KairosPSDialect extends PreparedStatementSQLDialect {
 
     private KairosDialect delegate;
 
@@ -82,13 +79,13 @@ public class KairosPSDialect extends PreparedStatementSQLDialect3D {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
+            GeometryFactory factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, String column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
+            GeometryFactory factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
@@ -240,7 +237,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect3D {
     }
 
     @Override
-    public PreparedFilterToSQL3D createPreparedFilterToSQL() {
+    public PreparedFilterToSQL createPreparedFilterToSQL() {
         KairosPSFilterToSql fts = new KairosPSFilterToSql(this);
         fts.setLooseBBOXEnabled(delegate.isLooseBBOXEnabled());
         return fts;
@@ -260,7 +257,5 @@ public class KairosPSDialect extends PreparedStatementSQLDialect3D {
     public void onInsert(PreparedStatement insert, Connection cx, SimpleFeatureType featureType)
             throws SQLException {
     }
-
-
 
 }

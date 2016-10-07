@@ -19,14 +19,12 @@ package org.geotools.data.kairos;
 import java.io.IOException;
 import java.util.Map;
 
-//import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc.JDBCDataStore3D;
-//import org.geotools.jdbc.JDBCDataStoreFactory;
-import org.geotools.jdbc.JDBCDataStoreFactory3D;
-import org.geotools.jdbc.SQLDialect3D;
+import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.SQLDialect;
 
 @SuppressWarnings("rawtypes")
-public class KairosNGDataStoreFactory extends JDBCDataStoreFactory3D {
+public class KairosNGDataStoreFactory extends JDBCDataStoreFactory {
 
     /** parameter for database type */
     public static final Param DBTYPE = new Param("dbtype", String.class, "Type", true, "kairos");
@@ -50,7 +48,7 @@ public class KairosNGDataStoreFactory extends JDBCDataStoreFactory3D {
     public static final Param PREPARED_STATEMENTS = new Param("preparedStatements", Boolean.class, "Use prepared statements", false, Boolean.TRUE);
 
     @Override
-    protected SQLDialect3D createSQLDialect(JDBCDataStore3D dataStore) {
+    protected SQLDialect createSQLDialect(JDBCDataStore3D dataStore) {
         return new KairosDialect(dataStore);
     }
 

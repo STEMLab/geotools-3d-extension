@@ -32,11 +32,10 @@ import java.util.logging.Level;
 import org.geotools.data.jdbc3d.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.BasicSQLDialect3D;
+import org.geotools.jdbc.BasicSQLDialect;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
@@ -52,8 +51,6 @@ import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.coordinate.GeometryFactory;
-import org.opengis.geometry.coordinate.LineString;
-import org.opengis.geometry.coordinate.Polygon;
 import org.opengis.geometry.primitive.Curve;
 //import org.opengis.geometry.coordinate.LineString;
 //import org.opengis.geometry.coordinate.Polygon;
@@ -78,7 +75,7 @@ import com.vividsolutions.jts.io.ParseException;*/
 //import com.vividsolutions.jts.io.WKBWriter;
 //import com.vividsolutions.jts.io.WKTReader;
 
-public class KairosDialect extends BasicSQLDialect3D {
+public class KairosDialect extends BasicSQLDialect {
 
     static final Version V_5_5_0 = new Version("5.5.0");
 
@@ -111,18 +108,18 @@ public class KairosDialect extends BasicSQLDialect3D {
             put("POINT", Point.class);
             put("POINTM", Point.class);
             put("POINTZ", Point.class);
-            put("LINESTRING", LineString.class);
+            /*put("LINESTRING", LineString.class);
             put("LINESTRINGM", LineString.class);
-            put("LINESTRINGZ", LineString.class);
-            /*put("LINESTRING", Curve.class);
+            put("LINESTRINGZ", LineString.class);*/
+            put("LINESTRING", Curve.class);
             put("LINESTRINGM", Curve.class);
-            put("LINESTRINGZ", Curve.class);*/
-            put("POLYGON", Polygon.class);
+            put("LINESTRINGZ", Curve.class);
+            /*put("POLYGON", Polygon.class);
             put("POLYGONM", Polygon.class);
-            put("POLYGONZ", Polygon.class);
-            /*put("POLYGON", Ring.class);
+            put("POLYGONZ", Polygon.class);*/
+            put("POLYGON", Ring.class);
             put("POLYGONM", Ring.class);
-            put("POLYGONZ", Ring.class);*/
+            put("POLYGONZ", Ring.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTIPOINTZ", MultiPoint.class);
@@ -153,10 +150,10 @@ public class KairosDialect extends BasicSQLDialect3D {
         {
             put(Geometry.class, "GEOMETRY");
             put(Point.class, "POINT");
-            put(LineString.class, "LINESTRING");
-            //put(Curve.class, "LINESTRING");
-            put(Polygon.class, "POLYGON");
-            //put(Ring.class, "POLYGON");
+            //put(LineString.class, "LINESTRING");
+            put(Curve.class, "LINESTRING");
+            //put(Polygon.class, "POLYGON");
+            put(Ring.class, "POLYGON");
             put(MultiPoint.class, "MULTIPOINT");
             //put(MultiLineString.class, "MULTILINESTRING");
             put(MultiCurve.class, "MULTILINESTRING");
@@ -207,18 +204,18 @@ public class KairosDialect extends BasicSQLDialect3D {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, String column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
-        WKBAttributeIO reader = getWKBReader(factory);
-        return (Geometry) reader.read(rs, column);
-    }
-    @Override
-    public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
+            GeometryFactory factory, Connection cx) throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         return (Geometry) reader.read(rs, column);
     }
 
-    WKBAttributeIO getWKBReader(GeometryBuilder factory) {
+    public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
+            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+        WKBAttributeIO reader = getWKBReader(factory);
+        return (Geometry) reader.read(rs, column);
+    }
+
+    WKBAttributeIO getWKBReader(GeometryFactory factory) {
         WKBAttributeIO reader = wkbReader.get();
         if (reader == null) {
             reader = new WKBAttributeIO(factory);
@@ -851,20 +848,5 @@ public class KairosDialect extends BasicSQLDialect3D {
 		// TODO Auto-generated method stub
 		
 	}
-
-	/*@Override
-	public void encodeGeometryValue(com.vividsolutions.jts.geom.Geometry value, int dimension, int srid,
-			StringBuffer sql) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public com.vividsolutions.jts.geom.Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
-			String column, com.vividsolutions.jts.geom.GeometryFactory factory, Connection cx)
-			throws IOException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
 
 }

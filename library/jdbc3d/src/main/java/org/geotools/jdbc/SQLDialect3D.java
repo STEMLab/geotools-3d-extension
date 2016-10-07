@@ -67,7 +67,6 @@ import org.opengis.filter.expression.Multiply;
 import org.opengis.filter.expression.Subtract;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.GeometryFactory;
 import org.geotools.geometry.GeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 //import org.opengis.geometry.coordinate.GeometryFactory;
@@ -859,7 +858,7 @@ public abstract class SQLDialect3D {
      */
     public abstract Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
         String column, GeometryBuilder factory, Connection cx ) throws IOException, SQLException;
-
+    
     /**
      * Decodes a geometry value from the result of a query specifying the column 
      * as an index.
@@ -1416,11 +1415,4 @@ public abstract class SQLDialect3D {
     public String[] getDesiredTablesType() {
         return new String[]{"TABLE", "VIEW", "MATERIALIZED VIEW", "SYNONYM"};
     }
-
-
-
-
-
-
-
 }

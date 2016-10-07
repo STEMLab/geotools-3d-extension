@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.geotools.data.DataSourceException;
-import org.geotools.factory.GeoTools;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
@@ -37,17 +35,17 @@ public class WKBAttributeIO {
 
     //ByteArrayInStream inStream = new ByteArrayInStream(new byte[0]);
 
-    GeometryBuilder gf;
+    GeometryFactory gf;
 
     public WKBAttributeIO() {
-        this(new GeometryBuilder(GeoTools.getDefaultHints()));
+        this(new GeometryFactoryImpl());
     }
 
-    public WKBAttributeIO(GeometryBuilder gf) {
+    public WKBAttributeIO(GeometryFactory gf) {
         wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 
-    public void setGeometryFactory(GeometryBuilder gf) {
+    public void setGeometryFactory(GeometryFactory gf) {
         wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 

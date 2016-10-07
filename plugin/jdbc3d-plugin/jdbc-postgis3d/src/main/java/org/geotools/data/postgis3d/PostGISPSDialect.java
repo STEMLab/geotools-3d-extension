@@ -25,24 +25,18 @@ import java.sql.Types;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.PreparedFilterToSQL3D;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
-import org.geotools.jdbc.PreparedStatementSQLDialect3D;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
-import org.opengis.geometry.Envelope;
-import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.GeometryFactory;
 
-//import com.vividsolutions.jts.geom.Envelope;
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.geom.GeometryFactory;
-//import com.vividsolutions.jts.geom.LinearRing;
-//import com.vividsolutions.jts.io.WKBWriter;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.io.WKBWriter;
 
 
 /**
@@ -50,7 +44,7 @@ import org.opengis.geometry.coordinate.GeometryFactory;
  *
  * @source $URL$
  */
-public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
+public class PostGISPSDialect extends PreparedStatementSQLDialect {
     
     private PostGISDialect delegate;
 
@@ -78,7 +72,7 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
     
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
+            GeometryFactory factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
@@ -244,7 +238,7 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
     }
 
     @Override
-    public PreparedFilterToSQL3D createPreparedFilterToSQL() {
+    public PreparedFilterToSQL createPreparedFilterToSQL() {
         PostgisPSFilterToSql fts = new PostgisPSFilterToSql(this);
         fts.setLooseBBOXEnabled(delegate.isLooseBBOXEnabled());
         fts.setEncodeBBOXFilterAsEnvelope(delegate.isEncodeBBOXFilterAsEnvelope());

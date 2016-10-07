@@ -26,16 +26,20 @@ import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
+import org.geotools.data.memory.MemoryFeatureCollection;
+import org.geotools.data.memory.MemoryFeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
@@ -51,6 +55,8 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory;
+import org.opengis.filter.expression.Expression;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
@@ -626,7 +632,7 @@ public class DemoTest extends JFrame{
 			String name = schema.getGeometryDescriptor().getLocalName();
 			Query query = new Query("fid.1", filter, new String[] { name });
 			ContentFeatureSource source = data.getFeatureSource("Flag");
-			
+
 			SimpleFeatureCollection features = source.getFeatures(query);
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);

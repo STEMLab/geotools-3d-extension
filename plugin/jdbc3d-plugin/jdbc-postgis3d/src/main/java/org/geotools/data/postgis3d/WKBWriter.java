@@ -3,9 +3,11 @@ package org.geotools.data.postgis3d;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.geotools.referencing.CRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.referencing.FactoryException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -368,8 +370,13 @@ public class WKBWriter {
 		typeInt |= includeSRID ? 0x20000000 : 0;
 		writeInt(typeInt, os);
 		if (includeSRID) {
-			//writeInt(g.getSRID(), os);
-			writeInt(g.getCoordinateReferenceSystem(), os);
+			//writeInt(g.getSRID(), sos);
+			try {
+				writeInt(CRS.lookupEpsgCode(g.getCoordinateReferenceSystem(), true), os);
+			} catch (FactoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

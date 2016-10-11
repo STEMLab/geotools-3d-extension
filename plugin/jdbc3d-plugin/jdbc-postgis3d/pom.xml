@@ -21,7 +21,7 @@
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
   <groupId>org.geotools.jdbc</groupId>
-  <artifactId>gt-jdbc-postgis3d</artifactId>
+  <artifactId>gt-jdbc-postgis-iso</artifactId>
   <packaging>jar</packaging>
   <name>PostGIS DataStore</name>
   

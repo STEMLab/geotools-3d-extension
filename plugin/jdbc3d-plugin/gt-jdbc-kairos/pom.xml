@@ -35,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-jdbc3d</artifactId>
+      <artifactId>gt-jdbc-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
       <dependency>

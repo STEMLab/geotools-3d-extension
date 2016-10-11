@@ -12,15 +12,24 @@
            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
                                http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.geotools</groupId>
+    <artifactId>library</artifactId>
+    <version>15-SNAPSHOT</version>
+  </parent>
   
+
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
   <groupId>org.geotools</groupId>
-  <artifactId>gt-jdbc3d</artifactId>
+  <artifactId>gt-jdbc-iso</artifactId>
   <packaging>jar</packaging>
   <name>JDBC DataStore Support</name>
   
+
+
   <description>
     Abstract datastore implementation and helper classes / apis to be extended
     by datastores backed by releational databases accesible via jdbc.
@@ -63,24 +72,21 @@
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
+
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
+      <artifactId>gt-jdbc</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-geometry</artifactId>
+      <artifactId>gt-geometry-ng</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-main</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-data</artifactId>
+      <artifactId>gt-data-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
      <dependency>

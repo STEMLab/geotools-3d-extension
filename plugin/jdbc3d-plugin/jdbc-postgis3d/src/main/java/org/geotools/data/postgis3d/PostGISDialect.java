@@ -36,19 +36,22 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.CircularRing;
 import org.geotools.geometry.jts.CircularString;
 import org.geotools.geometry.jts.CompoundCurve;
 import org.geotools.geometry.jts.CompoundRing;
 import org.geotools.geometry.jts.CurvePolygon;
-import org.geotools.geometry.jts.CurvedRing;
 import org.geotools.geometry.jts.MultiCurve;
 import org.geotools.geometry.jts.MultiSurface;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.WKTWriter2;
-import org.geotools.jdbc.BasicSQLDialect;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.jdbc.BasicSQLDialect3D;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.referencing.CRS;
@@ -56,10 +59,13 @@ import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
-import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Envelope;
+/*import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -72,14 +78,14 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
+import com.vividsolutions.jts.io.WKTWriter;*/
 
 /**
  * 
  *
  * @source $URL$
  */
-public class PostGISDialect extends BasicSQLDialect {
+public class PostGISDialect extends BasicSQLDialect3D {
 
 	//geometry type to class map
     final static Map<String, Class> TYPE_TO_CLASS_MAP = new HashMap<String, Class>() {
@@ -88,7 +94,7 @@ public class PostGISDialect extends BasicSQLDialect {
             put("GEOGRAPHY", Geometry.class);
             put("POINT", Point.class);
             put("POINTM", Point.class);
-            put("LINESTRING", LineString.class);
+            /*put("LINESTRING", LineString.class);
             put("LINESTRINGM", LineString.class);
             put("POLYGON", Polygon.class);
             put("POLYGONM", Polygon.class);
@@ -99,7 +105,7 @@ public class PostGISDialect extends BasicSQLDialect {
             put("MULTIPOLYGON", MultiPolygon.class);
             put("MULTIPOLYGONM", MultiPolygon.class);
             put("GEOMETRYCOLLECTION", GeometryCollection.class);
-            put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
+            put("GEOMETRYCOLLECTIONM", GeometryCollection.class);*/
             put("COMPOUNDCURVE", CompoundCurve.class);
             put("MULTICURVE", MultiCurve.class);
             put("CURVEPOLYGON", CurvePolygon.class);
@@ -116,11 +122,11 @@ public class PostGISDialect extends BasicSQLDialect {
         {
             add(Point.class);
             add(MultiPoint.class);
-            add(LineString.class);
+            /*add(LineString.class);
             add(LinearRing.class);
             add(MultiLineString.class);
             add(Polygon.class);
-            add(MultiPolygon.class);
+            add(MultiPolygon.class);*/
         }
     };
 
@@ -129,12 +135,12 @@ public class PostGISDialect extends BasicSQLDialect {
         {
             put(Geometry.class, "GEOMETRY");
             put(Point.class, "POINT");
-            put(LineString.class, "LINESTRING");
-            put(Polygon.class, "POLYGON");
+            //put(LineString.class, "LINESTRING");
+            //put(Polygon.class, "POLYGON");
             put(MultiPoint.class, "MULTIPOINT");
-            put(MultiLineString.class, "MULTILINESTRING");
-            put(MultiPolygon.class, "MULTIPOLYGON");
-            put(GeometryCollection.class, "GEOMETRYCOLLECTION");
+            //put(MultiLineString.class, "MULTILINESTRING");
+            //put(MultiPolygon.class, "MULTIPOLYGON");
+            //put(GeometryCollection.class, "GEOMETRYCOLLECTION");
             put(CircularString.class, "CIRCULARSTRING");
             put(CircularRing.class, "CIRCULARSTRING");
             put(MultiCurve.class, "MULTICURVE");
@@ -257,22 +263,22 @@ public class PostGISDialect extends BasicSQLDialect {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, String column, GeometryFactory factory, Connection cx)
+            ResultSet rs, String column, GeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
         return (Geometry) reader.read(rs, column);
     }
-    
+    @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, int column, GeometryFactory factory, Connection cx)
+            ResultSet rs, int column, GeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
         return (Geometry) reader.read(rs, column);
     }
 
-    private WKBAttributeIO getWKBReader(GeometryFactory factory) {
+    private WKBAttributeIO getWKBReader(GeometryBuilder factory) {
         WKBAttributeIO reader = wkbReader.get();
         if(reader == null) {
             reader = new WKBAttributeIO(factory);
@@ -401,10 +407,15 @@ public class PostGISDialect extends BasicSQLDialect {
                         Envelope env = decodeGeometryEnvelope(rs, 1, cx);
 
                         // reproject and merge
-                        if (!env.isNull()) {
+                        if (env != null){
                             CoordinateReferenceSystem crs = ((GeometryDescriptor) att)
                                     .getCoordinateReferenceSystem();
-                            result.add(new ReferencedEnvelope(env, crs));
+                            double[] lowerCorner = env.getLowerCorner().getDirectPosition().getCoordinate();
+                            double[] upperCorner = env.getUpperCorner().getDirectPosition().getCoordinate();
+                            if(env.getDimension() == 2) 
+                            	result.add(new ReferencedEnvelope(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], crs));
+                            else if(env.getDimension() == 3)
+                            	result.add(new ReferencedEnvelope3D(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], lowerCorner[2], upperCorner[2], crs));
                         }
                     }
                     rs.close();
@@ -432,14 +443,15 @@ public class PostGISDialect extends BasicSQLDialect {
         try {
             String envelope = rs.getString(column);
             if (envelope != null)
-                return new WKTReader().read(envelope).getEnvelopeInternal();
-            else
-                // empty one
-                return new Envelope();
+                return new WKTReader(GeoTools.getDefaultHints()).read(envelope).getEnvelope();
+            else// empty one
+                return null;//new Envelope();
         } catch (ParseException e) {
-            throw (IOException) new IOException(
-                    "Error occurred parsing the bounds WKT").initCause(e);
-        }
+			// TODO Auto-generated catch block
+			throw(IOException) new IOException(
+					"Error occurred parsing the bounds WKT").initCause(e);
+		}
+		
     }
 
     @Override
@@ -1035,34 +1047,27 @@ public class PostGISDialect extends BasicSQLDialect {
             dataStore.closeSafe(st);
         }
     }
-
+    //jts check geometry is empty, but iso interface isn't isempty() function.
+    //and don't consider geometry is empty. so remove the check
     @Override
     public void encodeGeometryValue(Geometry value, int dimension, int srid, StringBuffer sql)
             throws IOException {
-    	if (value == null || value.isEmpty()) {
+    	if (value == null ){//|| value.isEmpty()) {
             sql.append("NULL");
         } else {
-            if (value instanceof LinearRing && !(value instanceof CurvedRing)) {
+            /*if (value instanceof LinearRing && !(value instanceof CurvedRing)) {
                 //postgis does not handle linear rings, convert to just a line string
                 value = value.getFactory().createLineString(((LinearRing) value).getCoordinateSequence());
-            }
-            
-            WKTWriter writer = new WKTWriter2(dimension);
-            String wkt = writer.write(value);
-            sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
-        }
-    }
-    @Override
-    public void encodeGeometryValue(Solid value, int dimension, int srid, StringBuffer sql)
-            throws IOException {
-    	if (value == null) {
-            sql.append("NULL");
-        } else {
+            }*/
+        	
         	GeometryToWKTString writer = new GeometryToWKTString(false);
             String wkt = writer.getString(value);
             sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
+            
+
         }
     }
+   
     @Override
     public FilterToSQL createFilterToSQL() {
         PostgisFilterToSQL sql = new PostgisFilterToSQL(this);

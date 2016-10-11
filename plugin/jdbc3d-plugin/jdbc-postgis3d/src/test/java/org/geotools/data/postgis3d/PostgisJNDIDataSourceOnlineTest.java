@@ -22,7 +22,7 @@ import java.util.List;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.postgis3d.PostgisNGJNDIDataStoreFactory;
 import org.geotools.jdbc.JDBCDataStoreFactory;
-import org.geotools.jdbc.JDBCJNDIDataStoreFactory;
+import org.geotools.jdbc.JDBCJNDIDataStoreFactory3D;
 import org.geotools.jdbc3d.JDBCJNDIDataSourceOnlineTest;
 import org.geotools.jdbc3d.JDBCJNDITestSetup;
 
@@ -38,7 +38,7 @@ public  class PostgisJNDIDataSourceOnlineTest extends JDBCJNDIDataSourceOnlineTe
     }
 
     @Override
-    protected JDBCJNDIDataStoreFactory getJNDIStoreFactory() {
+    protected JDBCJNDIDataStoreFactory3D getJNDIStoreFactory() {
         return new PostgisNGJNDIDataStoreFactory();
     }
 

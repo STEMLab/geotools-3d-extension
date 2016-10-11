@@ -41,24 +41,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.factory.GeoTools;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CompoundCurve;
 import org.geotools.geometry.jts.CompoundRing;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
 import com.vividsolutions.jts.geom.CoordinateSequences;
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ByteArrayInStream;
@@ -116,11 +120,12 @@ public class WKBReader {
 
     private static final String INVALID_GEOM_TYPE_MSG = "Invalid geometry type encountered in ";
 
-    private CurvedGeometryFactory factory;
+    //private CurvedGeometryFactory factory;
+    private GeometryBuilder builder;
 
     private CoordinateSequenceFactory csFactory;
 
-    private PrecisionModel precisionModel;
+    //private PrecisionModel precisionModel;
 
     // default dimension - will be set on read
     private int inputDimension = 2;
@@ -140,13 +145,13 @@ public class WKBReader {
     private double[] ordValues;
 
     public WKBReader() {
-        this(new GeometryFactory());
+        this(new GeometryBuilder(GeoTools.getDefaultHints()));
     }
 
-    public WKBReader(GeometryFactory geometryFactory) {
-        this.factory = getCurvedGeometryFactory(geometryFactory);
-        precisionModel = factory.getPrecisionModel();
-        csFactory = factory.getCoordinateSequenceFactory();
+    public WKBReader(GeometryBuilder geometrybuilder) {
+        this.builder = geometrybuilder;//getCurvedGeometryFactory(geometryFactory);
+        //precisionModel = builder.getPrecisionModel();
+        //csFactory = builder.getCoordinateSequenceFactory();
     }
 
     /**
@@ -217,33 +222,33 @@ public class WKBReader {
             geom = readPoint();
             break;
         case WKBConstants.wkbLineString:
-            geom = readLineString();
+            //geom = readLineString();
             break;
         case WKBConstants.wkbPolygon:
-            geom = readPolygon();
+            //geom = readPolygon();
             break;
         case WKBConstants.wkbMultiPoint:
-            geom = readMultiPoint();
+            //geom = readMultiPoint();
             break;
         case WKBConstants.wkbMultiCurve:
         case WKBConstants.wkbMultiLineString:
-            geom = readMultiLineString();
+            //geom = readMultiLineString();
             break;
         case WKBConstants.wkbMultiPolygon:
         case WKBConstants.wkbMultiSurface:
-            geom = readMultiPolygon();
+            //geom = readMultiPolygon();
             break;
         case WKBConstants.wkbGeometryCollection:
-            geom = readGeometryCollection();
+            //geom = readGeometryCollection();
             break;
         case WKBConstants.wkbCircularString:
-            geom = readCircularString();
+            //geom = readCircularString();
             break;
         case WKBConstants.wkbCompoundCurve:
-            geom = readCompoundCurve();
+            //geom = readCompoundCurve();
             break;
         case WKBConstants.wkbCurvePolygon:
-            geom = readCurvePolygon();
+            //geom = readCurvePolygon();
             break;
 
         default:
@@ -259,26 +264,28 @@ public class WKBReader {
      * @return the geometry with an updated SRID value, if required
      */
     private Geometry setSRID(Geometry g, int SRID) {
-        if (SRID != 0)
-            g.setSRID(SRID);
+        //if (SRID != 0)
+            //g.setSRID(SRID);
         return g;
     }
 
     private Point readPoint() throws IOException {
-        CoordinateSequence pts = readCoordinateSequence(1);
-        return factory.createPoint(pts);
+        //CoordinateSequence pts = readCoordinateSequence(1);
+    	double[] pts = readCoordinateSequence(1);
+        return builder.createPoint(pts);
+
     }
 
-    private LineString readLineString() throws IOException {
+    /*private LineString readLineString() throws IOException {
         int size = dis.readInt();
         CoordinateSequence pts = readCoordinateSequenceLineString(size);
-        return factory.createLineString(pts);
+        return builder.createLineString(pts);
     }
 
     private Geometry readCircularString() throws IOException {
         int size = dis.readInt();
         CoordinateSequence pts = readCoordinateSequenceCircularString(size);
-        return factory.createCurvedGeometry(pts);
+        return builder.createCurvedGeometry(pts);
     }
 
     private Geometry readCompoundCurve() throws IOException, ParseException {
@@ -290,13 +297,13 @@ public class WKBReader {
                 throw new ParseException(INVALID_GEOM_TYPE_MSG + "CompoundCurve");
             geoms.add((LineString) g);
         }
-        return factory.createCurvedGeometry(geoms);
+        return builder.createCurvedGeometry(geoms);
     }
 
     private LinearRing readLinearRing() throws IOException {
         int size = dis.readInt();
         CoordinateSequence pts = readCoordinateSequenceRing(size);
-        return factory.createLinearRing(pts);
+        return builder.createLinearRing(pts);
     }
 
     protected Polygon readPolygon() throws IOException {
@@ -309,7 +316,7 @@ public class WKBReader {
         for (int i = 0; i < numRings - 1; i++) {
             holes[i] = readLinearRing();
         }
-        return factory.createPolygon(shell, holes);
+        return builder.createPolygon(shell, holes);
     }
 
     protected Polygon readCurvePolygon() throws IOException, ParseException {
@@ -322,7 +329,7 @@ public class WKBReader {
         for (int i = 0; i < numRings - 1; i++) {
             holes[i] = readRing();
         }
-        return factory.createPolygon(shell, holes);
+        return builder.createPolygon(shell, holes);
     }
 
     private LinearRing readRing() throws IOException, ParseException {
@@ -335,14 +342,14 @@ public class WKBReader {
                     Coordinate start = components.get(0).getCoordinateN(0);
                     LineString lastGeom = components.get(components.size() - 1);
                     Coordinate end = lastGeom.getCoordinateN((lastGeom.getNumPoints() - 1));
-                    components.add(factory.createLineString(new Coordinate[] { start, end }));
-                    ls = factory.createCurvedGeometry(components);
+                    components.add(builder.createLineString(new Coordinate[] { start, end }));
+                    ls = builder.createCurvedGeometry(components);
                 } else {
                     Coordinate start = ls.getCoordinateN(0);
                     Coordinate end = ls.getCoordinateN((ls.getNumPoints() - 1));
                     // turn it into a compound and add the segment that closes it
-                    LineString closer = factory.createLineString(new Coordinate[] { start, end });
-                    ls = factory.createCurvedGeometry(ls, closer);
+                    LineString closer = builder.createLineString(new Coordinate[] { start, end });
+                    ls = builder.createCurvedGeometry(ls, closer);
                 }
             } else {
                 if (ls instanceof CompoundCurve) {
@@ -369,7 +376,7 @@ public class WKBReader {
                 throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPoint");
             geoms[i] = (Point) g;
         }
-        return factory.createMultiPoint(geoms);
+        return builder.createMultiPoint(geoms);
     }
 
     private MultiLineString readMultiLineString() throws IOException, ParseException {
@@ -381,7 +388,7 @@ public class WKBReader {
                 throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiLineString");
             geoms[i] = (LineString) g;
         }
-        return factory.createMultiLineString(geoms);
+        return builder.createMultiLineString(geoms);
     }
 
     private MultiPolygon readMultiPolygon() throws IOException, ParseException {
@@ -393,7 +400,7 @@ public class WKBReader {
                 throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPolygon");
             geoms[i] = (Polygon) g;
         }
-        return factory.createMultiPolygon(geoms);
+        return builder.createMultiPolygon(geoms);
     }
 
     private GeometryCollection readGeometryCollection() throws IOException, ParseException {
@@ -402,61 +409,115 @@ public class WKBReader {
         for (int i = 0; i < numGeom; i++) {
             geoms[i] = readGeometry();
         }
-        return factory.createGeometryCollection(geoms);
-    }
+        return builder.createGeometryCollection(geoms);
+    }*/
 
-    private CoordinateSequence readCoordinateSequence(int size) throws IOException {
-        CoordinateSequence seq = csFactory.create(size, inputDimension);
-        int targetDim = seq.getDimension();
-        if (targetDim > inputDimension)
-            targetDim = inputDimension;
+    //private CoordinateSequence readCoordinateSequence(int size) throws IOException {
+    private double[] readCoordinateSequence(int size) throws IOException {
+        //CoordinateSequence seq = csFactory.create(size, inputDimension);
+        //int targetDim = seq.getDimension();
+        //if (targetDim > inputDimension)
+        //    targetDim = inputDimension;
+    	double[] seq = new double[size * inputDimension];
         for (int i = 0; i < size; i++) {
             readCoordinate();
-            for (int j = 0; j < targetDim; j++) {
-                seq.setOrdinate(i, j, ordValues[j]);
+            //for (int j = 0; j < targetDim; j++) {
+            for (int j = 0; j < inputDimension; j++) {
+                //seq.setOrdinate(i, j, ordValues[j]);
+            	seq[i + j] = ordValues[j];
             }
         }
         return seq;
     }
-
-    private CoordinateSequence readCoordinateSequenceCircularString(int size) throws IOException {
-        CoordinateSequence seq = readCoordinateSequence(size);
+    private double[] repair(double[] seq, int size) {
+    	double[] newseq = new double[size * inputDimension];
+        int n = seq.length;
+        for (int i = 0; i < n; i++)
+            newseq[i] = seq[i];
+        // fill remaining coordinates with end point, if it exists
+        if (n > 0) {
+          for (int i = n; i < size; i++)
+            newseq[i] = seq[n - 1];
+        }
+        return newseq;
+    }
+    //private CoordinateSequence readCoordinateSequenceCircularString(int size) throws IOException {
+    private double[] readCoordinateSequenceCircularString(int size) throws IOException {
+    	double[] seq = readCoordinateSequence(size);
         if (isStrict)
             return seq;
-        if (seq.size() == 0 || seq.size() >= 3)
+        if (seq.length == 0 || seq.length >= 3)
             return seq;
-        return CoordinateSequences.extend(csFactory, seq, 3);
+        return repair(seq, 3);
     }
 
-    private CoordinateSequence readCoordinateSequenceLineString(int size) throws IOException {
-        CoordinateSequence seq = readCoordinateSequence(size);
+    private double[] readCoordinateSequenceLineString(int size) throws IOException {
+    	double[] seq = readCoordinateSequence(size);
         if (isStrict)
             return seq;
-        if (seq.size() == 0 || seq.size() >= 2)
+        if (seq.length == 0 || seq.length >= 2)
             return seq;
-        return CoordinateSequences.extend(csFactory, seq, 2);
+        return repair(seq, 2);
     }
+    private boolean isRing(double[] seq) {
+    	int n = seq.length;
+      	if (n == 0) return true;
+      	// too few points
+      	if (n <= 3) 
+      		return false;
+      	// test if closed
+      	return seq[0] == seq[n - inputDimension]
+      		&& seq[1] == seq[n - inputDimension - 1];
+     
+    }
+    private double[] ensureValidRing(double[] seq) {
+    	int n = seq.length;
+      	// empty sequence is valid
+      	if (n == 0) return seq; 
+      	// too short - make a new one
+      	if (n <= 3) 
+      		return createClosedRing(seq, 4);
+      	
+      	boolean isClosed = seq[0] == seq[n - inputDimension]
+    		&& seq[1] == seq[n - inputDimension - 1];
+      	if (isClosed) return seq;
+      	// make a new closed ring
+      	return createClosedRing(seq, n+1);
+    }
+    private double[] createClosedRing(double[] seq, int size) {
+    	double[] newseq = new double[size * inputDimension];
+        int n = seq.length;
+        // fill remaining coordinates with start point  
+        for (int i = 0; i < n; i++)
+            newseq[i] = seq[i];
+        // fill remaining coordinates with end point, if it exists
 
-    private CoordinateSequence readCoordinateSequenceRing(int size) throws IOException {
-        CoordinateSequence seq = readCoordinateSequence(size);
+        for (int i = n; i < size; i++)
+          newseq[i] = seq[0];
+        
+        return newseq;
+    }
+    private double[] readCoordinateSequenceRing(int size) throws IOException {
+    	double[] seq = readCoordinateSequence(size);
         if (isStrict)
             return seq;
-        if (CoordinateSequences.isRing(seq))
+        //if (CoordinateSequences.isRing(seq))
+        if (isRing(seq))
             return seq;
-        return CoordinateSequences.ensureValidRing(csFactory, seq);
+        return ensureValidRing(seq);
     }
-
+    
     /**
      * Reads a coordinate value with the specified dimensionality. Makes the X and Y ordinates
      * precise according to the precision model in use.
      */
     private void readCoordinate() throws IOException {
         for (int i = 0; i < inputDimension; i++) {
-            if (i <= 1) {
-                ordValues[i] = precisionModel.makePrecise(dis.readDouble());
-            } else {
+            //if (i <= 1) {
+            //    ordValues[i] = precisionModel.makePrecise(dis.readDouble());
+            //} else {
                 ordValues[i] = dis.readDouble();
-            }
+            //}
 
         }
     }
@@ -469,7 +530,7 @@ public class WKBReader {
      * @param gf
      * @return
      */
-    private CurvedGeometryFactory getCurvedGeometryFactory(GeometryFactory gf) {
+    /*private CurvedGeometryFactory getCurvedGeometryFactory(GeometryFactory gf) {
         CurvedGeometryFactory curvedFactory;
         if (gf instanceof CurvedGeometryFactory) {
             curvedFactory = (CurvedGeometryFactory) gf;
@@ -477,6 +538,6 @@ public class WKBReader {
             curvedFactory = new CurvedGeometryFactory(gf, Double.MAX_VALUE);
         }
         return curvedFactory;
-    }
+    }*/
 
 }

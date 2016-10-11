@@ -102,9 +102,7 @@ public abstract class BasicSQLDialect3D extends SQLDialect3D {
      */
     public abstract void encodeGeometryValue(Geometry value, int dimension, int srid, StringBuffer sql)
         throws IOException;
-    public abstract void encodeGeometryValue(Solid value, int dimension, int srid, StringBuffer sql)
-            throws IOException;
-
+    
     /**
      * Creates the filter encoder to be used by the datastore when encoding 
      * query predicates.

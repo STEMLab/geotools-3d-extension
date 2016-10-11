@@ -25,18 +25,21 @@ import java.sql.Types;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.PreparedFilterToSQL3D;
+import org.geotools.jdbc.PreparedStatementSQLDialect3D;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Envelope;
+/*import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.io.WKBWriter;
+import com.vividsolutions.jts.io.WKBWriter;*/
 
 
 /**
@@ -44,7 +47,7 @@ import com.vividsolutions.jts.io.WKBWriter;
  *
  * @source $URL$
  */
-public class PostGISPSDialect extends PreparedStatementSQLDialect {
+public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
     
     private PostGISDialect delegate;
 
@@ -72,13 +75,13 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
     
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
 
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, String column, GeometryFactory factory, Connection cx)
+            ResultSet rs, String column, GeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         return delegate
                 .decodeGeometryValue(descriptor, rs, column, factory, cx);
@@ -220,15 +223,16 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
             sql.append("?");
         }
     }
-
+    //jts check geometry is empty, but iso interface isn't isempty() function.
+    //and don't consider geometry is empty. so remove the check
     @Override
     public void setGeometryValue(Geometry g, int dimension, int srid, Class binding,
             PreparedStatement ps, int column) throws SQLException {
-        if (g != null && !g.isEmpty()) {
-            if (g instanceof LinearRing ) {
+        if (g != null) {
+            /*if (g instanceof LinearRing ) {
                 //postgis does not handle linear rings, convert to just a line string
                 g = g.getFactory().createLineString(((LinearRing) g).getCoordinateSequence());
-            }
+            }*/
             
             byte[] bytes = new WKBWriter(dimension).write(g);
             ps.setBytes(column, bytes);
@@ -238,7 +242,7 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
     }
 
     @Override
-    public PreparedFilterToSQL createPreparedFilterToSQL() {
+    public PreparedFilterToSQL3D createPreparedFilterToSQL() {
         PostgisPSFilterToSql fts = new PostgisPSFilterToSql(this);
         fts.setLooseBBOXEnabled(delegate.isLooseBBOXEnabled());
         fts.setEncodeBBOXFilterAsEnvelope(delegate.isEncodeBBOXFilterAsEnvelope());

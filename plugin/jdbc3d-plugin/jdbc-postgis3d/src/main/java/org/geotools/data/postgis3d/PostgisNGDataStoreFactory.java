@@ -30,7 +30,9 @@ import javax.sql.DataSource;
 
 import org.geotools.jdbc.JDBCDataStore3D;
 import org.geotools.jdbc.JDBCDataStoreFactory;
+import org.geotools.jdbc.JDBCDataStoreFactory3D;
 import org.geotools.jdbc.SQLDialect;
+import org.geotools.jdbc.SQLDialect3D;
 import org.geotools.util.KVP;
 
 /**
@@ -38,7 +40,7 @@ import org.geotools.util.KVP;
  *
  * @source $URL$
  */
-public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
+public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
     
     /** parameter for database type */
     public static final Param DBTYPE = new Param("dbtype", String.class, "Type", true, "postgis");
@@ -86,7 +88,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
             "When enabled, operations such as map rendering will pass a hint that will enable the usage of ST_Simplify", false, Boolean.TRUE);
     
     @Override
-    protected SQLDialect createSQLDialect(JDBCDataStore3D dataStore) {
+    protected SQLDialect3D createSQLDialect(JDBCDataStore3D dataStore) {
         return new PostGISDialect(dataStore);
     }
 
@@ -199,7 +201,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
         return "jdbc:postgresql" + "://" + host + ":" + port + "/" + db;
     }
     
-    protected DataSource createDataSource(Map params, SQLDialect dialect) throws IOException {
+    protected DataSource createDataSource(Map params, SQLDialect3D dialect) throws IOException {
         DataSource ds = super.createDataSource(params, dialect);
         JDBCDataStore3D closer = new JDBCDataStore3D();
 

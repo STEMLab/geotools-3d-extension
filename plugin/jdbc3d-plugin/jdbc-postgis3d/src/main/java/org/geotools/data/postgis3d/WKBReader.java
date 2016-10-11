@@ -264,14 +264,16 @@ public class WKBReader {
      * @return the geometry with an updated SRID value, if required
      */
     private Geometry setSRID(Geometry g, int SRID) {
-        //if (SRID != 0)
+        if (SRID != 0)
             //g.setSRID(SRID);
+        	builder.setCoordinateReferenceSystem(CRS);
         return g;
     }
 
     private Point readPoint() throws IOException {
         //CoordinateSequence pts = readCoordinateSequence(1);
     	double[] pts = readCoordinateSequence(1);
+    	
         return builder.createPoint(pts);
 
     }

@@ -17,8 +17,7 @@
 package org.geotools.data.postgis3d;
 
 import org.geotools.filter.FilterCapabilities;
-import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.PreparedFilterToSQL3D;
+import org.geotools.jdbc.iso.PreparedFilterToSQL;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Literal;
@@ -30,7 +29,7 @@ import org.opengis.filter.spatial.BinarySpatialOperator;
  *
  * @source $URL$
  */
-public class PostgisPSFilterToSql extends PreparedFilterToSQL3D {
+public class PostgisPSFilterToSql extends PreparedFilterToSQL {
     
     FilterToSqlHelper helper;
     boolean functionEncodingEnabled;

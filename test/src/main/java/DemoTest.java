@@ -24,10 +24,11 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.kairos.KairosNGDataStoreFactory;
+//import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.data.memory.MemoryFeatureSource;
+import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -43,9 +44,12 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
+import org.geotools.geometry.DirectPosition3D;
 import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
+import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
@@ -63,6 +67,7 @@ import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
@@ -130,7 +135,7 @@ public class DemoTest extends JFrame{
 		});
 		fileMenu.add(new SafeAction("Connect to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
-				connect(new KairosNGDataStoreFactory());
+				connect(new PostgisNGDataStoreFactory());
 			}
 		});
 		fileMenu.add(new SafeAction("Insert to Kairos database...") {
@@ -512,27 +517,32 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void solidtoBox() {
-		hints = GeoTools.getDefaultHints();
-		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		hints.put(Hints.GEOMETRY_VALIDATE, false);
-		builder = new GeometryBuilder(hints);
-		ArrayList<Solid> al = getSolids(builder);
+		//hints = GeoTools.getDefaultHints();
+		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		//hints.put(Hints.GEOMETRY_VALIDATE, false);
+		//hints.put(Hints.COORDINATE_DIMENSION, 3);
+		//builder = new GeometryBuilder(hints);
+		//ArrayList<Solid> al = getSolids(builder);
+		Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-
+		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		//b.userData(Hints.COORDINATE_DIMENSION, 3);
 		//set the name
 		b.setName( "Flag" );
 		//add some properties
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
-		b.add( "location", Solid.class );
+		//b.add( "location", Solid.class );
+		b.add("location",Point.class);
 
 		//build the type
 		SimpleFeatureType schema = b.buildFeatureType();
 		//create the builder
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
+		//builder.userData(Hints.COORDINATE_DIMENSION, 3);
 
 		//add the values
-		builder.add( al.get(0) );
+		builder.add( al );
 
 		//build the feature with provided ID
 		SimpleFeature feature = builder.buildFeature( "fid.1" );
@@ -542,7 +552,7 @@ public class DemoTest extends JFrame{
 
 
 			DataStore dataStore1;
-			JDataStoreWizard wizard = new JDataStoreWizard(new KairosNGDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			int result = wizard.showModalDialog();
 
 			if (result == JWizard.FINISH) {
@@ -553,8 +563,8 @@ public class DemoTest extends JFrame{
 				if (dataStore1 == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
-				JDBCDataStore3D jds = (JDBCDataStore3D)dataStore1;
-				jds.setDatabaseSchema(null);
+				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				//jds.setDatabaseSchema(null);
 
 				dataStore1.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
@@ -589,6 +599,7 @@ public class DemoTest extends JFrame{
 		hints = GeoTools.getDefaultHints();
 		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		hints.put(Hints.GEOMETRY_VALIDATE, false);
+		
 		builder = new GeometryBuilder(hints);
 		ArrayList<Solid> al = getSolids(builder);
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
@@ -702,7 +713,7 @@ public class DemoTest extends JFrame{
 
 			FeatureType schema = dataStore.getSchema(typeName);//source.getSchema();
 			DataStore dataStore1;
-			JDataStoreWizard wizard = new JDataStoreWizard(new KairosNGDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
@@ -712,7 +723,7 @@ public class DemoTest extends JFrame{
 				if (dataStore1 == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
-				JDBCDataStore3D jds = (JDBCDataStore3D)dataStore1;
+				JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				jds.setDatabaseSchema(null);
 
 				dataStore1.createSchema((SimpleFeatureType) schema);

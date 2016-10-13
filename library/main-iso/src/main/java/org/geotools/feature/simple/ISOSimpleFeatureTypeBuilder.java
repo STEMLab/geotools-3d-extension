@@ -958,6 +958,12 @@ public class ISOSimpleFeatureTypeBuilder {
 			//none was set by name, look for first geometric type
 			for ( AttributeDescriptor att : attributes() ) {
 				if ( att instanceof GeometryDescriptor ) {
+					
+					attributeBuilder.init( att );
+					attributeBuilder.setCRS(defaultCrs);
+					GeometryType type = attributeBuilder.buildGeometryType();
+					
+					att = attributeBuilder.buildDescriptor(att.getName(),type);
 					defGeom = (GeometryDescriptor) att;
 					break;
 				}

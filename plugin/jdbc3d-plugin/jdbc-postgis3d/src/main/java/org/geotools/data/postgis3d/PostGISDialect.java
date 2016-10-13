@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.GeometryBuilder;
@@ -51,9 +51,9 @@ import org.geotools.geometry.jts.MultiCurve;
 import org.geotools.geometry.jts.MultiSurface;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
-import org.geotools.jdbc.BasicSQLDialect3D;
-import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.iso.BasicSQLDialect;
+import org.geotools.jdbc.iso.ColumnMetadata;
+import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.CRS;
 import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -85,7 +85,7 @@ import com.vividsolutions.jts.io.WKTWriter;*/
  *
  * @source $URL$
  */
-public class PostGISDialect extends BasicSQLDialect3D {
+public class PostGISDialect extends BasicSQLDialect {
 
 	//geometry type to class map
     final static Map<String, Class> TYPE_TO_CLASS_MAP = new HashMap<String, Class>() {
@@ -165,7 +165,7 @@ public class PostGISDialect extends BasicSQLDialect3D {
     
     static final Version PGSQL_V_9_1 = new Version("9.1");
 
-    public PostGISDialect(JDBCDataStore3D dataStore) {
+    public PostGISDialect(JDBCDataStore dataStore) {
         super(dataStore);
     }
 
@@ -300,7 +300,7 @@ public class PostGISDialect extends BasicSQLDialect3D {
         StringBuffer sql) {
     
         boolean geography = "geography".equals(gatt.getUserData().get(
-                JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
+                JDBCDataStore.JDBC_NATIVE_TYPENAME));
     
         if (geography) {
             sql.append("encode(ST_AsBinary(");
@@ -330,7 +330,7 @@ public class PostGISDialect extends BasicSQLDialect3D {
             super.encodeGeometryColumnSimplified(gatt, prefix, srid, sql, distance);
         } else {
             boolean geography = "geography".equals(gatt.getUserData().get(
-                    JDBCDataStore3D.JDBC_NATIVE_TYPENAME));
+                    JDBCDataStore.JDBC_NATIVE_TYPENAME));
     
             if (geography) {
                 sql.append("encode(ST_AsBinary(");
@@ -887,9 +887,9 @@ public class PostGISDialect extends BasicSQLDialect3D {
 
                     // lookup or reverse engineer the srid
                     int srid = -1;
-                    if (gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID) != null) {
+                    if (gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID) != null) {
                         srid = (Integer) gd.getUserData().get(
-                                JDBCDataStore3D.JDBC_NATIVE_SRID);
+                                JDBCDataStore.JDBC_NATIVE_SRID);
                     } else if (gd.getCoordinateReferenceSystem() != null) {
                         try {
                             Integer result = CRS.lookupEpsgCode(gd
@@ -908,7 +908,11 @@ public class PostGISDialect extends BasicSQLDialect3D {
                     if(gd.getUserData().get(Hints.COORDINATE_DIMENSION) != null) {
                         dimensions = (Integer) gd.getUserData().get(Hints.COORDINATE_DIMENSION);
                     }
-
+                    CoordinateReferenceSystem crs = gd.getType().getCoordinateReferenceSystem();
+                    if(crs != null) {
+                    	if(crs.getCoordinateSystem() != null)
+                    		dimensions = crs.getCoordinateSystem().getDimension();
+                    }
                     // grab the geometry type
                     String geomType = CLASS_TO_TYPE_MAP.get(gd.getType().getBinding());
                     if (geomType == null) {

@@ -66,6 +66,11 @@
   </developers>
 
   <dependencies>
+  <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-jdbc-iso</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>

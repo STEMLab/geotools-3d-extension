@@ -47,8 +47,11 @@ import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CompoundCurve;
 import org.geotools.geometry.jts.CompoundRing;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
+import org.geotools.referencing.CRS;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -265,8 +268,15 @@ public class WKBReader {
      */
     private Geometry setSRID(Geometry g, int SRID) {
         if (SRID != 0)
-            //g.setSRID(SRID);
-        	builder.setCoordinateReferenceSystem(CRS);
+			try {
+				builder.setCoordinateReferenceSystem(CRS.decode("EPSG:" + SRID));
+			} catch (NoSuchAuthorityCodeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FactoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         return g;
     }
 

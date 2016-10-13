@@ -26,10 +26,10 @@ import java.util.Map;
 
 import org.geotools.factory.Hints;
 import org.geotools.geometry.GeometryBuilder;
-import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.PreparedFilterToSQL3D;
-import org.geotools.jdbc.PreparedStatementSQLDialect3D;
+import org.geotools.jdbc.iso.ColumnMetadata;
+import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.jdbc.iso.PreparedFilterToSQL;
+import org.geotools.jdbc.iso.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
@@ -47,11 +47,11 @@ import com.vividsolutions.jts.io.WKBWriter;*/
  *
  * @source $URL$
  */
-public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
+public class PostGISPSDialect extends PreparedStatementSQLDialect {
     
     private PostGISDialect delegate;
 
-    public PostGISPSDialect(JDBCDataStore3D store, PostGISDialect delegate) {
+    public PostGISPSDialect(JDBCDataStore store, PostGISDialect delegate) {
         super(store);
         this.delegate = delegate;
     }
@@ -242,7 +242,7 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect3D {
     }
 
     @Override
-    public PreparedFilterToSQL3D createPreparedFilterToSQL() {
+    public PreparedFilterToSQL createPreparedFilterToSQL() {
         PostgisPSFilterToSql fts = new PostgisPSFilterToSql(this);
         fts.setLooseBBOXEnabled(delegate.isLooseBBOXEnabled());
         fts.setEncodeBBOXFilterAsEnvelope(delegate.isEncodeBBOXFilterAsEnvelope());

@@ -18,11 +18,7 @@
     <artifactId>library</artifactId>
     <version>15-SNAPSHOT</version>
   </parent>
-  <parent>
-  <groupId>org.geotools</groupId>
-  <artifactId>library</artifactId>
-  <version>15-SNAPSHOT</version>
-  </parent>
+
 
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
@@ -82,11 +78,7 @@
       <artifactId>gt-jdbc</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-geometry-ng</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+
 
     <dependency>
       <groupId>org.geotools</groupId>

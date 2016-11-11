@@ -2,9 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.geotools</groupId>
   <artifactId>test</artifactId>
-  <version>15-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
@@ -32,7 +30,7 @@
 
 	<dependency>
       <groupId>org.geotools.jdbc</groupId>
-      <artifactId>gt-jdbc-kairos</artifactId>
+      <artifactId>gt-jdbc-postgis-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!-- Provides GUI components -->
@@ -42,4 +40,10 @@
         <version>${project.version}</version>
     </dependency>
   </dependencies>
+  <parent>
+  	<groupId>org.geotools</groupId>
+  	<artifactId>geotools-iso</artifactId>
+  	<version>15-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
 </project>

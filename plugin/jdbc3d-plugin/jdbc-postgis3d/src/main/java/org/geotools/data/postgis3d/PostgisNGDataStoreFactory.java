@@ -28,11 +28,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.JDBCDataStoreFactory;
-import org.geotools.jdbc.JDBCDataStoreFactory3D;
-import org.geotools.jdbc.SQLDialect;
-import org.geotools.jdbc.SQLDialect3D;
+import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.jdbc.iso.JDBCDataStoreFactory;
+import org.geotools.jdbc.iso.SQLDialect;
 import org.geotools.util.KVP;
 
 /**
@@ -40,7 +38,7 @@ import org.geotools.util.KVP;
  *
  * @source $URL$
  */
-public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
+public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
     
     /** parameter for database type */
     public static final Param DBTYPE = new Param("dbtype", String.class, "Type", true, "postgis");
@@ -88,7 +86,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
             "When enabled, operations such as map rendering will pass a hint that will enable the usage of ST_Simplify", false, Boolean.TRUE);
     
     @Override
-    protected SQLDialect3D createSQLDialect(JDBCDataStore3D dataStore) {
+    protected SQLDialect createSQLDialect(JDBCDataStore dataStore) {
         return new PostGISDialect(dataStore);
     }
 
@@ -132,7 +130,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
         }
     }
     
-    protected JDBCDataStore3D createDataStoreInternal(JDBCDataStore3D dataStore, Map params)
+    protected JDBCDataStore createDataStoreInternal(JDBCDataStore dataStore, Map params)
         throws IOException {
         
         // setup loose bbox
@@ -201,9 +199,9 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
         return "jdbc:postgresql" + "://" + host + ":" + port + "/" + db;
     }
     
-    protected DataSource createDataSource(Map params, SQLDialect3D dialect) throws IOException {
+    protected DataSource createDataSource(Map params, SQLDialect dialect) throws IOException {
         DataSource ds = super.createDataSource(params, dialect);
-        JDBCDataStore3D closer = new JDBCDataStore3D();
+        JDBCDataStore closer = new JDBCDataStore();
 
         if (Boolean.TRUE.equals(CREATE_DB_IF_MISSING.lookUp(params))) {
             // verify we can connect
@@ -293,7 +291,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory3D {
      * @throws IOException
      */
     public void dropDatabase(Map<String, Object> params) throws IOException {
-        JDBCDataStore3D closer = new JDBCDataStore3D();
+        JDBCDataStore closer = new JDBCDataStore();
         // get the connection params
         String host = (String) HOST.lookUp(params);
         int port = (Integer) PORT.lookUp(params);

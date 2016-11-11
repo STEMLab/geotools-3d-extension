@@ -21,11 +21,9 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.geotools.data.postgis3d.PostGISDialect;
-import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
-import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.JDBCDataStoreFactory;
-import org.geotools.jdbc3d.JDBCTestSetup;
+import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.jdbc.iso.JDBCDataStoreFactory;
+import org.geotools.jdbc.iso.JDBCTestSetup;
 import org.geotools.util.Version;
 
 /**
@@ -42,7 +40,7 @@ public class PostGISTestSetup extends JDBCTestSetup {
         DataSource dataSource = getDataSource();
         Connection cx = dataSource.getConnection();
         try {
-            PostGISDialect dialect = new PostGISDialect(new JDBCDataStore3D());
+            PostGISDialect dialect = new PostGISDialect(new JDBCDataStore());
             postgisVersion = dialect.getVersion(cx);
             pgsqlVersion = dialect.getPostgreSQLVersion(cx);
         }
@@ -60,7 +58,7 @@ public class PostGISTestSetup extends JDBCTestSetup {
     }
 
     @Override
-    protected void setUpDataStore(JDBCDataStore3D dataStore) {
+    protected void setUpDataStore(JDBCDataStore dataStore) {
         super.setUpDataStore(dataStore);
         
         // the unit tests assume a non loose behaviour

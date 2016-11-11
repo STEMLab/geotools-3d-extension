@@ -18,9 +18,9 @@ package org.geotools.data.postgis3d;
 
 import java.io.IOException;
 
-import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.filter.FilterCapabilities;
-import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.iso.JDBCDataStore;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Add;
 import org.opengis.filter.expression.Expression;
@@ -72,7 +72,7 @@ public class PostgisFilterToSQL extends FilterToSQL {
             geom = geom.getFactory().createLineString(((LinearRing) geom).getCoordinateSequence());
         }
         
-        Object typename = currentGeometry.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_TYPENAME);
+        Object typename = currentGeometry.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME);
         if("geography".equals(typename)) {
             out.write("ST_GeogFromText('");
             out.write(geom.toText());

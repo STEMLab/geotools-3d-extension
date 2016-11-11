@@ -15,8 +15,9 @@
   
   <parent>
     <groupId>org.geotools</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>geotools-iso</artifactId>
     <version>15-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
   </parent>
   
   <!-- =========================================================== -->
@@ -60,9 +61,9 @@
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
-  	<dependency>
+    <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
+      <artifactId>gt-geometry-ng</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

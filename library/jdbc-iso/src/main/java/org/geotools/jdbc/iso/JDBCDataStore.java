@@ -4153,7 +4153,8 @@ public final class JDBCDataStore extends ContentDataStore
             		//(CoordinateReferenceSystem) g.getUserData();
 
             try {
-                Integer candidate = CRS.lookupEpsgCode(crs, false);
+                //Integer candidate = CRS.lookupEpsgCode(crs, false);
+            	Integer candidate = CRS.lookupEpsgCode(crs, true);
                 if (candidate != null)
                     srid = candidate;
             } catch (Exception e) {

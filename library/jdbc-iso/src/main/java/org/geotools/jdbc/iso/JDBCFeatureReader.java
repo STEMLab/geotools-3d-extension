@@ -48,6 +48,7 @@ import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.jdbc.iso.BasicSQLDialect;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.jdbc.iso.JDBCFeatureReader;
@@ -753,9 +754,9 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
             if( obj instanceof Geometry ){
                 Geometry geometry = (Geometry) obj;
                 //return new ReferencedEnvelope( geometry.getEnvelopeInternal(), featureType.getCoordinateReferenceSystem() );
-                return new ReferencedEnvelope(geometry.getCoordinateReferenceSystem());
+                return ReferencedEnvelope.create(geometry.getCoordinateReferenceSystem());
             }
-            return new ReferencedEnvelope( featureType.getCoordinateReferenceSystem() );
+            return ReferencedEnvelope.create( featureType.getCoordinateReferenceSystem() );
         }
 
         public GeometryAttribute getDefaultGeometryProperty() {

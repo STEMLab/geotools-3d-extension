@@ -1244,6 +1244,8 @@
 		<module>library/data-iso</module>
 		<module>library/jdbc-iso</module>
 		<module>plugin/jdbc3d-plugin</module>
+		
+		<module>test</module>
 	</modules>
 </project>
 

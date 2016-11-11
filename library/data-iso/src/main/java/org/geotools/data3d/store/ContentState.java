@@ -32,6 +32,7 @@ import org.geotools.data.FeatureSource;
 import org.geotools.data.Transaction;
 import org.geotools.data3d.store.DiffTransactionState;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
@@ -310,7 +311,7 @@ public class ContentState {
             return; // nobody is listenting
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = new ReferencedEnvelope(feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope)feature.getBounds());
         if( bounds != null ){
             bounds.expandToInclude(before);
         }
@@ -330,7 +331,7 @@ public class ContentState {
             return;
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = new ReferencedEnvelope(feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope) feature.getBounds());
 
         FeatureEvent event = new FeatureEvent(source, Type.ADDED, bounds, filter);
 
@@ -342,7 +343,7 @@ public class ContentState {
             return;
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = new ReferencedEnvelope(feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope) feature.getBounds());
 
         FeatureEvent event = new FeatureEvent(source, Type.REMOVED, bounds, filter);
 

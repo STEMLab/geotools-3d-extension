@@ -136,6 +136,7 @@ public class DemoTest extends JFrame{
 		fileMenu.add(new SafeAction("Connect to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
+				System.out.println("Connection succeeded");
 			}
 		});
 		fileMenu.add(new SafeAction("Insert to Kairos database...") {
@@ -533,7 +534,7 @@ public class DemoTest extends JFrame{
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
-		b.add("location",Point.class);
+		b.add("loc", Point.class);
 
 		//build the type
 		SimpleFeatureType schema = b.buildFeatureType();

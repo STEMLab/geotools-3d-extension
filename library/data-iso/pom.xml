@@ -15,8 +15,9 @@
   
   <parent>
     <groupId>org.geotools</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>geotools-iso</artifactId>
     <version>15-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
   </parent>
   
   <!-- =========================================================== -->
@@ -24,7 +25,7 @@
   <!-- =========================================================== -->
   <artifactId>gt-data-iso</artifactId>
   <packaging>jar</packaging>
-  <name>DataStore Support</name>
+  <name>DataStore Support 3D</name>
   
   <description>
     ContentDataStore implementation and support classes for those implementing
@@ -68,7 +69,13 @@
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
-  <dependency>
+  
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-main-iso</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  	<dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-data</artifactId>
       <version>${project.version}</version>
@@ -76,11 +83,6 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-referencing</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-main-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
      
@@ -91,7 +93,5 @@
         <scope>test</scope>
     </dependency>
   </dependencies>
-  
-  
   
 </project>

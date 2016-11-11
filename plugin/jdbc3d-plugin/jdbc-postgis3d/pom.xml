@@ -13,8 +13,8 @@
                                http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-  <groupId>org.geotools</groupId>
-  <artifactId>library</artifactId>
+  <groupId>org.geotools.jdbc</groupId>
+  <artifactId>gt-jdbc3d-plugin</artifactId>
   <version>15-SNAPSHOT</version>
   </parent>
   <!-- =========================================================== -->
@@ -23,7 +23,7 @@
   <groupId>org.geotools.jdbc</groupId>
   <artifactId>gt-jdbc-postgis-iso</artifactId>
   <packaging>jar</packaging>
-  <name>PostGIS DataStore</name>
+  <name>PostGIS DataStore 3D</name>
   
 
 
@@ -39,37 +39,18 @@
     </license>
   </licenses>
 
-  <!-- =========================================================== -->
-  <!--     Developers and Contributors                             -->
-  <!-- =========================================================== -->
-  <developers>
-    <developer>
-      <name>Andrea Aime</name>
-      <id>aaime</id>
-      <email>aaime@users.sourceforge.net</email>
-      <organization>TOPP</organization>
-      <roles>
-        <role>Module Maintainer</role>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <name>Justin Deoliveira</name>
-      <id>jdeolive</id>
-      <email>jdeolive@users.sourceforge.net</email>
-      <organization>TOPP</organization>
-      <roles>
-        <role>Module Maintainer</role>
-        <role>Java Developer</role>
-      </roles>
-    </developer>
-  </developers>
-
   <dependencies>
-  <dependency>
+  	<dependency>
+      <groupId>org.geotools.jdbc</groupId>
+      <artifactId>gt-jdbc-postgis</artifactId>
+      <version>${project.version}</version> 
+    </dependency>
+    <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-jdbc-iso</artifactId>
+      <artifactId>gt-jdbc</artifactId>
       <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>

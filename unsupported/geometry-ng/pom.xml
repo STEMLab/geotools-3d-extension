@@ -15,18 +15,18 @@
 
   <parent>
     <groupId>org.geotools</groupId>
-    <artifactId>unsupported</artifactId>
+    <artifactId>geotools-iso</artifactId>
     <version>15-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
   </parent>
 
 
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geotools</groupId>
   <artifactId>gt-geometry-ng</artifactId>
   <packaging>jar</packaging>
-  <name>Geometries</name>
+  <name>Geometries 3D</name>
   
   <properties>
     <allow.test.skip>true</allow.test.skip>
@@ -149,13 +149,19 @@
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
-    <dependency>
+  
+  	<dependency>
       <groupId>net.java.dev.jsr-275</groupId>
       <artifactId>jsr-275</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-main-iso</artifactId>
+      <artifactId>gt-api</artifactId>
+      <version>${project.version}</version>  
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-opengis</artifactId>
       <version>${project.version}</version>  
     </dependency>
     <dependency>

@@ -38,36 +38,20 @@
 package org.geotools.data.postgis3d;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.jts.CircularArc;
-import org.geotools.geometry.jts.CompoundCurve;
-import org.geotools.geometry.jts.CompoundRing;
-import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.CoordinateSequences;
-//import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
 //import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-//import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.io.ByteArrayInStream;
 import com.vividsolutions.jts.io.ByteOrderDataInStream;
 import com.vividsolutions.jts.io.ByteOrderValues;
@@ -225,34 +209,50 @@ public class WKBReader {
             geom = readPoint();
             break;
         case WKBConstants.wkbLineString:
-            //geom = readLineString();
+            geom = readLineString();
             break;
         case WKBConstants.wkbPolygon:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readPolygon();
-            break;
+            //break;
         case WKBConstants.wkbMultiPoint:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readMultiPoint();
-            break;
+            //break;
         case WKBConstants.wkbMultiCurve:
         case WKBConstants.wkbMultiLineString:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readMultiLineString();
-            break;
+            //break;
         case WKBConstants.wkbMultiPolygon:
         case WKBConstants.wkbMultiSurface:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readMultiPolygon();
-            break;
+            //break;
         case WKBConstants.wkbGeometryCollection:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readGeometryCollection();
-            break;
+            //break;
         case WKBConstants.wkbCircularString:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readCircularString();
-            break;
+            //break;
         case WKBConstants.wkbCompoundCurve:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readCompoundCurve();
-            break;
+            //break;
         case WKBConstants.wkbCurvePolygon:
+        	//TODO 
+        	throw new UnsupportedOperationException();
             //geom = readCurvePolygon();
-            break;
+            //break;
 
         default:
             throw new ParseException("Unknown WKB type " + geometryType);
@@ -282,18 +282,20 @@ public class WKBReader {
 
     private Point readPoint() throws IOException {
         //CoordinateSequence pts = readCoordinateSequence(1);
-    	double[] pts = readCoordinateSequence(1);
+    	double[] pt = readCoordinateSequence(1);
     	
-        return builder.createPoint(pts);
+        return builder.createPoint(pt);
 
     }
 
-    /*private LineString readLineString() throws IOException {
+    private Curve readLineString() throws IOException {
         int size = dis.readInt();
-        CoordinateSequence pts = readCoordinateSequenceLineString(size);
-        return builder.createLineString(pts);
+        double[] pts = readCoordinateSequenceLineString(size);
+        PointArray parr = builder.createPointArray(pts);
+        return builder.createCurve(parr);
     }
-
+    
+    /*
     private Geometry readCircularString() throws IOException {
         int size = dis.readInt();
         CoordinateSequence pts = readCoordinateSequenceCircularString(size);
@@ -436,7 +438,7 @@ public class WKBReader {
             //for (int j = 0; j < targetDim; j++) {
             for (int j = 0; j < inputDimension; j++) {
                 //seq.setOrdinate(i, j, ordValues[j]);
-            	seq[i + j] = ordValues[j];
+            	seq[(i * inputDimension) + j] = ordValues[j];
             }
         }
         return seq;

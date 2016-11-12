@@ -64,12 +64,13 @@ import org.geotools.data.view.DefaultView;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.AttributeImpl;
-import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.FeatureTypes;
-import org.geotools.feature.GeometryAttributeImpl;
+import org.geotools.feature.ISOAttributeTypeBuilder;
+import org.geotools.feature.ISOFeatureFactoryImpl;
+import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
@@ -1597,7 +1598,7 @@ public class ISODataUtilities {
             types[i] = featureType.getDescriptor(properties[i]);
 
             if ((override != null) && types[i] instanceof GeometryDescriptor) {
-                AttributeTypeBuilder ab = new AttributeTypeBuilder();
+            	ISOAttributeTypeBuilder ab = new ISOAttributeTypeBuilder();
                 ab.init(types[i]);
                 ab.setCRS(override);
                 types[i] = ab.buildDescriptor(types[i].getLocalName(), ab.buildGeometryType());
@@ -2944,13 +2945,14 @@ public class ISODataUtilities {
      * @return a template feature
      */
     public static Feature templateFeature(FeatureType schema) {
-    	FeatureFactory ff = CommonFactoryFinder.getFeatureFactory(null);
+    	//TODO : find FeatureFactory for ISO Geometry
+    	FeatureFactory ff = new ISOFeatureFactoryImpl();
     	Collection<Property> value = new ArrayList<Property>();
     	
     	for (PropertyDescriptor pd : schema.getDescriptors()) {
     		if (pd instanceof AttributeDescriptor) {
     			if (pd instanceof GeometryDescriptor) {
-    				value.add(new GeometryAttributeImpl (((AttributeDescriptor) pd).getDefaultValue(), (GeometryDescriptor) pd, null) );
+    				value.add(new ISOGeometryAttributeImpl (((AttributeDescriptor) pd).getDefaultValue(), (GeometryDescriptor) pd, null) );
     			} else {
     				value.add(new AttributeImpl (((AttributeDescriptor) pd).getDefaultValue(), (AttributeDescriptor) pd, null) );
     			}

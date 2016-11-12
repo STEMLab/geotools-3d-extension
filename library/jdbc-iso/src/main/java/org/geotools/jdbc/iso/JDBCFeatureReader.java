@@ -754,7 +754,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
             if( obj instanceof Geometry ){
                 Geometry geometry = (Geometry) obj;
                 //return new ReferencedEnvelope( geometry.getEnvelopeInternal(), featureType.getCoordinateReferenceSystem() );
-                return ReferencedEnvelope.create(geometry.getCoordinateReferenceSystem());
+                return ReferencedEnvelope.create( geometry.getEnvelope(), geometry.getCoordinateReferenceSystem() );
             }
             return ReferencedEnvelope.create( featureType.getCoordinateReferenceSystem() );
         }

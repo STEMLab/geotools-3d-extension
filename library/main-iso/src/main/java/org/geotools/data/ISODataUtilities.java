@@ -798,7 +798,8 @@ public class ISODataUtilities {
 
         GeometryBuilder fac = new GeometryBuilder(DefaultGeographicCRS.WGS84);
         DirectPosition ds = fac.createDirectPosition();
-        
+
+        //TODO : set the default value of ISO Geometry
         Point point = fac.createPoint(ds);
         if (type == Point.class) {
             return point;
@@ -807,7 +808,6 @@ public class ISODataUtilities {
             return fac.createMultiPoint(new HashSet(Arrays.asList(new Point[] {point})));
         }
         
-        //TODO
 
         throw new IllegalArgumentException(type + " is not supported by this method");
     }

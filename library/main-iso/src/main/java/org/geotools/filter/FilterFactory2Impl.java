@@ -52,9 +52,9 @@ import org.geotools.filter.identity.FeatureIdImpl;
 import org.geotools.filter.identity.FeatureIdVersionedImpl;
 import org.geotools.filter.identity.GmlObjectIdImpl;
 import org.geotools.filter.identity.ResourceIdImpl;
-import org.geotools.filter.spatial.BBOXISOImpl;
+import org.geotools.filter.spatial.ISOBBOXImpl;
 import org.geotools.filter.spatial.BeyondImpl;
-import org.geotools.filter.spatial.ContainsImpl;
+import org.geotools.filter.spatial.ISOContainsImpl;
 import org.geotools.filter.spatial.CrossesImpl;
 import org.geotools.filter.spatial.DWithinImpl;
 import org.geotools.filter.spatial.DisjointImpl;
@@ -158,7 +158,7 @@ import org.opengis.geometry.Geometry;
 import org.opengis.parameter.Parameter;
 import org.opengis.util.InternationalString;
 import org.xml.sax.helpers.NamespaceSupport;
-import org.geotools.filter.spatial.BBOX3DISOImpl;
+import org.geotools.filter.spatial.ISOBBOX3DImpl;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -404,7 +404,7 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
     }
 
     public BBOX bbox( Expression geometry, Expression bounds ) {
-        return new BBOXISOImpl(geometry, bounds );
+        return new ISOBBOXImpl(geometry, bounds );
     }
     
     public BBOX bbox( Expression geometry, BoundingBox bounds ) {
@@ -424,7 +424,7 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
                 
     }
     
-    private BBOXISOImpl bbox2d (Expression e, BoundingBox bounds, MatchAction matchAction) {    	       
+    private ISOBBOXImpl bbox2d (Expression e, BoundingBox bounds, MatchAction matchAction) {    	       
     	PropertyName name = null;
         if ( e instanceof PropertyName ) {
             name = (PropertyName) e;
@@ -436,13 +436,13 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
         Literal bbox = null;
         try {
             ReferencedEnvelope env = ReferencedEnvelope.reference(bounds);
-            bbox = literal(BBOXISOImpl.boundingPolygon( env ) );
+            bbox = literal(ISOBBOXImpl.boundingPolygon( env ) );
         } 
         catch (IllegalFilterException ife) {
             new IllegalArgumentException("Unable to convert to Polygon:"+bounds).initCause(ife);
         }
         
-        return new BBOXISOImpl(name,bbox, matchAction);
+        return new ISOBBOXImpl(name,bbox, matchAction);
     }
     
     public BBOX bbox(String propertyName, double minx, double miny, double maxx, double maxy,
@@ -458,7 +458,7 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
 
     public BBOX bbox(Expression e, double minx, double miny, double maxx, double maxy, String srs, MatchAction matchAction) {
     	
-    	BBOXISOImpl box = bbox2d (e, new ReferencedEnvelope(minx,maxx,miny,maxy,null), matchAction);        
+    	ISOBBOXImpl box = bbox2d (e, new ReferencedEnvelope(minx,maxx,miny,maxy,null), matchAction);        
         box.setSRS(srs);
         
         return box;
@@ -485,7 +485,7 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
             throw new IllegalArgumentException();
         }
         
-        return new BBOX3DISOImpl(name, new ReferencedEnvelope3D(env), this);  
+        return new ISOBBOX3DImpl(name, new ReferencedEnvelope3D(env), this);  
     }
     
     public Beyond beyond(String propertyName, Geometry geometry,
@@ -533,11 +533,11 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
     }
     
     public Contains contains(Expression geometry1, Expression geometry2) {
-        return new ContainsImpl(geometry1, geometry2 );
+        return new ISOContainsImpl(geometry1, geometry2 );
     }
     
     public Contains contains(Expression geometry1, Expression geometry2, MatchAction matchAction) {
-        return new ContainsImpl(geometry1, geometry2, matchAction );
+        return new ISOContainsImpl(geometry1, geometry2, matchAction );
     }
     
     public Contains contains(String propertyName, Geometry geometry, MatchAction matchAction) {

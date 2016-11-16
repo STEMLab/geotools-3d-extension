@@ -39,6 +39,11 @@
         <artifactId>gt-swing</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-cql</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>org.geotools</groupId>

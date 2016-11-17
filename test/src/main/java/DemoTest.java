@@ -35,6 +35,7 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.data3d.store.ContentDataStore;
+import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
@@ -60,6 +61,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
+import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.LineString;
@@ -518,6 +520,7 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void solidtoBox() {
+		String typeName = "Flag";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		//hints.put(Hints.GEOMETRY_VALIDATE, false);
@@ -529,7 +532,7 @@ public class DemoTest extends JFrame{
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
 		//b.userData(Hints.COORDINATE_DIMENSION, 3);
 		//set the name
-		b.setName( "Flag" );
+		b.setName( typeName );
 		//add some properties
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
@@ -552,26 +555,26 @@ public class DemoTest extends JFrame{
 			//source = dataStore.getFeatureSource(typeName);
 
 
-			DataStore dataStore1;
+			//DataStore dataStore1;
 			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			int result = wizard.showModalDialog();
 
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
 
-				dataStore1 = DataStoreFinder.getDataStore(connectionParameters);
+				dataStore = DataStoreFinder.getDataStore(connectionParameters);
 
-				if (dataStore1 == null) {
+				if (dataStore == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
 				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				//jds.setDatabaseSchema(null);
 
-				dataStore1.createSchema((SimpleFeatureType) schema);
+				dataStore.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
 
 				// insert the feature
-				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(
+				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 						schema.getTypeName(), Transaction.AUTO_COMMIT);
 				//SimpleFeature f = fw.next();
 				//SimpleFeatureCollection sfc = (SimpleFeatureCollection) feature;
@@ -585,6 +588,16 @@ public class DemoTest extends JFrame{
 				//}
 				//fw.write();
 				fw.close();
+				updateUI();
+				String name = schema.getGeometryDescriptor().getLocalName();
+				FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2( GeoTools.getDefaultHints() );
+				Filter filter = ff.contains( ff.property( "loc"), ff.literal( feature.getDefaultGeometry() ) );
+				Query query = new Query(typeName, filter, new String[] { name });
+				SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
+				SimpleFeatureCollection features = source.getFeatures(query);
+
+				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+				table.setModel(model);
 			}
 
 		} catch (IOException e) {
@@ -652,10 +665,7 @@ public class DemoTest extends JFrame{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (CQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
 	private void boxToSolid() {
@@ -678,10 +688,7 @@ public class DemoTest extends JFrame{
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-		} catch (CQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 	private void connect(DataStoreFactorySpi format) {
 		JDataStoreWizard wizard = new JDataStoreWizard(format);
@@ -781,11 +788,7 @@ public class DemoTest extends JFrame{
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-		} catch (CQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
+		} 
 
 
 	}
@@ -819,10 +822,7 @@ public class DemoTest extends JFrame{
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-		} catch (CQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 
 	}

@@ -59,7 +59,7 @@ import org.geotools.test.OnlineTestCase;
  */
 public abstract class JDBCTestSetup {
     static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger(
-            "org.geotools.data.jdbc");
+            "org.geotools.data.jdbc.iso");
     protected Properties fixture = null;
     private DataSource dataSource = null;
 

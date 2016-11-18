@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.geotools.data.csv.CSVFileState;
 import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.opengis.feature.Property;
@@ -51,7 +51,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
 
     @Override
     protected SimpleFeatureType buildFeatureType() {
-        SimpleFeatureTypeBuilder featureBuilder = createBuilder(csvFileState);
+    	ISOSimpleFeatureTypeBuilder featureBuilder = createBuilder(csvFileState);
         // For WKT strategy, we need to make sure the wktField is recognized as a Geometry
         AttributeDescriptor descriptor = featureBuilder.get(wktField);
         if( descriptor != null ){

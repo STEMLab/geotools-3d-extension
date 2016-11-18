@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.geotools.data.csv.CSVFileState;
 import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
@@ -82,7 +83,7 @@ public class CSVLatLonStrategy extends CSVStrategy {
                 csvReader.close();
             }
         }
-        SimpleFeatureTypeBuilder builder = createBuilder(csvFileState, headers,
+        ISOSimpleFeatureTypeBuilder builder = createBuilder(csvFileState, headers,
                 typesFromData);
         
         // If the lat/lon fields were not specified, figure out their spelling now

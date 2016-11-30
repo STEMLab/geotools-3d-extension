@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.geotools.data.csv.CSVFileState;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -41,7 +41,7 @@ public class CSVAttributesOnlyStrategy extends CSVStrategy {
 
     @Override
     protected SimpleFeatureType buildFeatureType() {
-        SimpleFeatureTypeBuilder builder = createBuilder(csvFileState);
+    	ISOSimpleFeatureTypeBuilder builder = createBuilder(csvFileState);
         return builder.buildFeatureType();
     }
 

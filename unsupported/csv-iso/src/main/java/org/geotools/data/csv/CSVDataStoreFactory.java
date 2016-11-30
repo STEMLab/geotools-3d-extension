@@ -38,9 +38,10 @@ import org.geotools.data.csv.parse.CSVStrategy;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.geometry.GeometryBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.KVP;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
 
@@ -189,7 +190,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
             store.setNamespaceURI(namespace.toString());
         }
         store.setDataStoreFactory(this);
-        store.setGeometryFactory(new GeometryBuilder(.WGS84));
+        store.setGeometryFactory(new GeometryBuilder(DefaultGeographicCRS.WGS84));
         store.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
         store.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
         return store;

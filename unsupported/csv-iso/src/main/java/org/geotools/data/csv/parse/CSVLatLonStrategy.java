@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.geotools.data.csv.CSVFileState;
+import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
@@ -35,12 +37,13 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.primitive.Point;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Coordinate;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.Point;
 
 public class CSVLatLonStrategy extends CSVStrategy {
 
@@ -82,7 +85,7 @@ public class CSVLatLonStrategy extends CSVStrategy {
                 csvReader.close();
             }
         }
-        SimpleFeatureTypeBuilder builder = createBuilder(csvFileState, headers,
+        ISOSimpleFeatureTypeBuilder builder = createBuilder(csvFileState, headers,
                 typesFromData);
         
         // If the lat/lon fields were not specified, figure out their spelling now
@@ -164,7 +167,8 @@ public class CSVLatLonStrategy extends CSVStrategy {
         SimpleFeatureType featureType = getFeatureType();
         SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
-        GeometryFactory geometryFactory = new GeometryFactory();
+        //GeometryFactory geometryFactory = new GeometryFactory();
+        GeometryBuilder geometryFactory = new GeometryBuilder(GeoTools.getDefaultHints());
         Double lat = null, lng = null;
         String[] headers = csvFileState.getCSVHeaders();
         for (int i = 0; i < headers.length; i++) {
@@ -183,7 +187,8 @@ public class CSVLatLonStrategy extends CSVStrategy {
             }
         }
         if (geometryDescriptor != null && lat != null && lng != null) {
-            Coordinate coordinate = new Coordinate(lng, lat);
+            //Coordinate coordinate = new Coordinate(lng, lat);
+        	double[] coordinate = new double[]{lng, lat};
             Point point = geometryFactory.createPoint(coordinate);
             builder.set(geometryDescriptor.getLocalName(), point);
         }
@@ -199,8 +204,10 @@ public class CSVLatLonStrategy extends CSVStrategy {
                 csvRecord.add("");
             } else if (value instanceof Point) {
                 Point point = (Point) value;
-                csvRecord.add(Double.toString(point.getY()));
-                csvRecord.add(Double.toString(point.getX()));
+                double[] coordinate = point.getDirectPosition().getCoordinate();
+                csvRecord.add(Double.toString(coordinate[2]));
+                csvRecord.add(Double.toString(coordinate[1]));
+                csvRecord.add(Double.toString(coordinate[0]));
             }
             else {
                 String txt = value.toString();

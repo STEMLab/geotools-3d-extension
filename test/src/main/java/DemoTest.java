@@ -24,6 +24,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
+import org.geotools.data.csv.CSVDataStoreFactory;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.memory.MemoryFeatureCollection;
@@ -132,7 +133,7 @@ public class DemoTest extends JFrame{
 		pack();
 		fileMenu.add(new SafeAction("Open shapefile...") {
 			public void action(ActionEvent e) throws Throwable {
-				connect(new ShapefileDataStoreFactory());
+				connect(new CSVDataStoreFactory());
 			}
 		});
 		fileMenu.add(new SafeAction("Connect to Kairos database...") {
@@ -556,7 +557,8 @@ public class DemoTest extends JFrame{
 
 
 			//DataStore dataStore1;
-			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
+			//JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
 
 			if (result == JWizard.FINISH) {
@@ -662,7 +664,7 @@ public class DemoTest extends JFrame{
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-		} catch (IOException e) {
+		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
@@ -673,18 +675,18 @@ public class DemoTest extends JFrame{
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
-			FeatureType schema = source.getSchema();
-			String name = schema.getGeometryDescriptor().getLocalName();
-
+   			FeatureType schema = source.getSchema();
+			//String name = schema.getGeometryDescriptor().getLocalName();
+		
 			Filter filter = CQL.toFilter(text.getText());
 
-			Query query = new Query(typeName, filter, new String[] { name });
+			Query query = new Query(typeName, filter, new String[] { "*geom" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-		} catch (IOException e) {
+		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -784,13 +786,11 @@ public class DemoTest extends JFrame{
 			SimpleFeatureCollection features = source.getFeatures(filter);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-		} catch (IOException e) {
+		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} 
-
-
 	}
 	private void countFeatures() throws Exception {
 		String typeName = (String) featureTypeCBox.getSelectedItem();
@@ -818,7 +818,7 @@ public class DemoTest extends JFrame{
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-		} catch (IOException e) {
+		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();

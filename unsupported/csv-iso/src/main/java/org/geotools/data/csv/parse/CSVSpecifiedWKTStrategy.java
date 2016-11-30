@@ -23,9 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.data.csv.CSVFileState;
+import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.opengis.feature.Property;
@@ -33,11 +36,12 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Geometry;
 
 import com.csvreader.CsvWriter;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.io.ParseException;
+//import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 
 public class CSVSpecifiedWKTStrategy extends CSVStrategy {
@@ -51,7 +55,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
 
     @Override
     protected SimpleFeatureType buildFeatureType() {
-        SimpleFeatureTypeBuilder featureBuilder = createBuilder(csvFileState);
+    	ISOSimpleFeatureTypeBuilder featureBuilder = createBuilder(csvFileState);
         // For WKT strategy, we need to make sure the wktField is recognized as a Geometry
         AttributeDescriptor descriptor = featureBuilder.get(wktField);
         if( descriptor != null ){
@@ -97,7 +101,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
                 csvRecord.add("");
             } else if (name.compareTo(wktField) == 0) {
                 WKTWriter wkt = new WKTWriter();
-                String txt = wkt.write((Geometry)value);
+                String txt = wkt.write((com.vividsolutions.jts.geom.Geometry)value);
                 csvRecord.add(txt);
             } else {
                 String txt = Converters.convert(value, String.class);
@@ -118,7 +122,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
             if (i < csvRecord.length) {
                 String value = csvRecord[i].trim();
                 if (geometryDescriptor != null && header.equals(wktField)) {
-                    WKTReader wktReader = new WKTReader();
+                    WKTReader wktReader = new WKTReader(GeoTools.getDefaultHints());
                     Geometry geometry;
                     try {
                         geometry = wktReader.read(value);

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.geotools.data.csv.CSVFileState;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -67,7 +67,7 @@ public abstract class CSVStrategy {
      * Originally in a strategy support class - giving a chance to override them to
      * improve efficiency and utilize the different strategies
      */
-    public static SimpleFeatureTypeBuilder createBuilder(CSVFileState csvFileState) {
+    public static ISOSimpleFeatureTypeBuilder createBuilder(CSVFileState csvFileState) {
         CsvReader csvReader = null;
         Map<String, Class<?>> typesFromData = null;
         String[] headers = null;
@@ -85,9 +85,9 @@ public abstract class CSVStrategy {
         return createBuilder(csvFileState, headers, typesFromData);
     }
 
-    public static SimpleFeatureTypeBuilder createBuilder(CSVFileState csvFileState,
+    public static ISOSimpleFeatureTypeBuilder createBuilder(CSVFileState csvFileState,
             String[] headers, Map<String, Class<?>> typesFromData) {
-        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+    	ISOSimpleFeatureTypeBuilder builder = new ISOSimpleFeatureTypeBuilder();
         builder.setName(csvFileState.getTypeName());
         builder.setCRS(csvFileState.getCrs());
         if (csvFileState.getNamespace() != null) {

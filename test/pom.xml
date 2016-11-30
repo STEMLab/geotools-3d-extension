@@ -21,6 +21,11 @@
       <version>${project.version}</version>
     </dependency> 
     <dependency>
+    	<groupId>org.geotools</groupId>
+  		<artifactId>gt-csv-iso</artifactId>
+  		<version>${project.version}</version>
+  	</dependency> 
+    <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
       <version>${project.version}</version>

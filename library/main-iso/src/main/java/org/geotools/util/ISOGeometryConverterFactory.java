@@ -26,14 +26,14 @@ import org.opengis.geometry.Geometry;
  * <p>
  * Supported conversions:
  * <ul>
- * 	<li>{@link String} to {@link com.vividsolutions.jts.geom.Geometry}
- *  <li>{@link com.vividsolutions.jts.geom.Geometry} to {@link String}
- * 	<li>{@link com.vividsolutions.jts.geom.Envelope} to {@link com.vividsolutions.jts.geom.Geometry}
- *  <li>{@link com.vividsolutions.jts.geom.Geometry} to {@link com.vividsolutions.jts.geom.Envelope} 
+ * 	<li>{@link String} to {@link org.opengis.geometry.Geometry}
+ *  <li>{@link org.opengis.geometry.Geometry} to {@link String}
+ * 	<li>{@link org.opengis.geometry.Envelope} to {@link org.opengis.geometry.Geometry}
+ *  <li>{@link org.opengis.geometry.Geometry} to {@link org.opengis.geometry.Envelope} 
  *  <li>
  * </ul>
  * </p>
- * @author Justin Deoliveira, The Open Planning Project
+ * @author Hyung-Gyu Ryoo, Pusan National University
  * @since 2.4
  *
  *
@@ -61,6 +61,7 @@ public class ISOGeometryConverterFactory implements ConverterFactory {
 					public Object convert(Object source, Class target) throws Exception {
 						Envelope e = (Envelope) source;
 						//TODO
+						
 						return null;
 						/*GeometryFactory factory = new GeometryFactory();
 						return factory.createPolygon(

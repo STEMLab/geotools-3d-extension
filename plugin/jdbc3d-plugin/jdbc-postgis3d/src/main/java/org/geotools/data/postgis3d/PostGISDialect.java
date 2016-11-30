@@ -62,6 +62,7 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -92,8 +93,17 @@ public class PostGISDialect extends BasicSQLDialect {
         {
             put("GEOMETRY", Geometry.class);
             put("GEOGRAPHY", Geometry.class);
+            
             put("POINT", Point.class);
+            put("POINTZ", Point.class);
             put("POINTM", Point.class);
+            put("POINTZM", Point.class);
+            
+            put("CURVE", Curve.class);
+            put("CURVEZ", Curve.class);
+            put("CURVEM", Curve.class);
+            put("CURVEZM", Curve.class);
+            
             /*put("LINESTRING", LineString.class);
             put("LINESTRINGM", LineString.class);
             put("POLYGON", Polygon.class);
@@ -135,6 +145,8 @@ public class PostGISDialect extends BasicSQLDialect {
         {
             put(Geometry.class, "GEOMETRY");
             put(Point.class, "POINT");
+            put(Curve.class, "CURVE");
+            
             //put(LineString.class, "LINESTRING");
             //put(Polygon.class, "POLYGON");
             put(MultiPoint.class, "MULTIPOINT");

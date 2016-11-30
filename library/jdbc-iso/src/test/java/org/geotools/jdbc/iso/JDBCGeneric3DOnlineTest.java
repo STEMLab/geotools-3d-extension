@@ -16,43 +16,32 @@
  */
 package org.geotools.jdbc.iso;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.geotools.data.DataUtilities;
-import org.geotools.data.FeatureReader;
-import org.geotools.data.FeatureWriter;
-import org.geotools.data.Query;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureStore;
-import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
-import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
-import org.opengis.geometry.primitive.CurveBoundary;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.Point;
-import org.opengis.geometry.primitive.Primitive;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -170,25 +159,29 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
     public void testWriteLine() throws Exception {
         // build a 3d line
-        /*GeometryFactory gf = new GeometryFactory();
-        LineString ls = gf.createLineString(new Coordinate[] { new Coordinate(0, 0, 0),
-                new Coordinate(1, 1, 1) });
+    	DirectPosition c1 = builder.createDirectPosition(new double[] {0, 0, 0});
+        DirectPosition c2 = builder.createDirectPosition(new double[] {1, 1, 1});
+        
+        PointArray pa = builder.createPointArray(new double[] {0, 0, 0,  1, 1, 1});
+    	Curve c = builder.createCurve(pa);
 
         // build a feature around it
-        SimpleFeature newFeature = SimpleFeatureBuilder.build(line3DType, new Object[] { 2, ls,
-                "l3" }, null);
+    	//TODO : uses FeaturFactoryFinder
+    	SimpleFeatureBuilder sfb = new SimpleFeatureBuilder(line3DType, new ISOFeatureFactoryImpl());
+        SimpleFeature newFeature = sfb.buildFeature("c1", new Object[] { 2, c,
+                "l3" });
 
         // insert it
         SimpleFeatureStore fs = (SimpleFeatureStore) dataStore.getFeatureSource(tname(getLine3d()),
                 Transaction.AUTO_COMMIT);
-        List<FeatureId> fids = fs.addFeatures(DataUtilities.collection(newFeature));
+        List<FeatureId> fids = fs.addFeatures(ISODataUtilities.collection(newFeature));
 
         // retrieve it back
         try(SimpleFeatureIterator fi = fs.getFeatures(FF.id(new HashSet<FeatureId>(fids))).features()) {
             assertTrue(fi.hasNext());
             SimpleFeature f = fi.next();
-            assertTrue(ls.equalsExact((Geometry) f.getDefaultGeometry()));
-        }*/
+            assertTrue(c.equals((Geometry) f.getDefaultGeometry()));
+        }
     }
 
     public void testCreateSchemaAndInsertPolyTriangle() throws Exception {

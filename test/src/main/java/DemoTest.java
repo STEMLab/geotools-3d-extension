@@ -136,6 +136,11 @@ public class DemoTest extends JFrame{
 				connect(new CSVDataStoreFactory());
 			}
 		});
+		fileMenu.add(new SafeAction("Open shapefile...") {
+			public void action(ActionEvent e) throws Throwable {
+				connect(new CSVDataStoreFactory());
+			}
+		});
 		fileMenu.add(new SafeAction("Connect to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());

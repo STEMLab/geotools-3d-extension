@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.data.csv.CSVFileState;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.opengis.feature.Property;

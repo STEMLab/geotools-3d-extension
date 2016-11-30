@@ -27,6 +27,7 @@ import java.util.Map;
 import org.geotools.data.csv.CSVFileState;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.GeometryBuilder;

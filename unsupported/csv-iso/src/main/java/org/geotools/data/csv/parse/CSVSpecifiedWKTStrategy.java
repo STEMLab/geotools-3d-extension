@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.geotools.data.csv.CSVFileState;
 import org.geotools.factory.GeoTools;
-import org.geotools.feature.AttributeTypeBuilder;
+import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.iso.io.wkt.ParseException;
@@ -59,7 +59,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
         // For WKT strategy, we need to make sure the wktField is recognized as a Geometry
         AttributeDescriptor descriptor = featureBuilder.get(wktField);
         if( descriptor != null ){
-            AttributeTypeBuilder attributeBuilder = new AttributeTypeBuilder();
+            ISOAttributeTypeBuilder attributeBuilder = new ISOAttributeTypeBuilder();
             attributeBuilder.init(descriptor);
             attributeBuilder.setCRS(DefaultGeographicCRS.WGS84);
             attributeBuilder.binding(Geometry.class);
@@ -122,7 +122,8 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
             if (i < csvRecord.length) {
                 String value = csvRecord[i].trim();
                 if (geometryDescriptor != null && header.equals(wktField)) {
-                    WKTReader wktReader = new WKTReader(GeoTools.getDefaultHints());
+                	//TODO WKTReader wktReader = new WKTReader(GeoTools.getDefaultHints());
+                    WKTReader wktReader = new WKTReader(DefaultGeographicCRS.WGS84_3D);
                     Geometry geometry;
                     try {
                         geometry = wktReader.read(value);

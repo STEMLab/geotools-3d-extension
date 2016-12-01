@@ -685,9 +685,9 @@ public class DemoTest extends JFrame{
 		
 			Filter filter = CQL.toFilter(text.getText());
 
-			Query query = new Query(typeName, filter, new String[] { "*geom" });
+			Query query = new Query(typeName, filter, new String[] { "geom" });
 
-			SimpleFeatureCollection features = source.getFeatures(query);
+			SimpleFeatureCollection features = source.getFeatures();
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);

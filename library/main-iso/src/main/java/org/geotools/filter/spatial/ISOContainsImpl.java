@@ -17,6 +17,7 @@
 package org.geotools.filter.spatial;
 
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Contains;
@@ -66,11 +67,13 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 	protected boolean basicEvaluate(Geometry left, Geometry right) {
 		//Envelope envLeft = left.getEnvelopeInternal();
 		//Envelope envRight = right.getEnvelopeInternal();
-		ReferencedEnvelope envLeft = new ReferencedEnvelope(left.getEnvelope());
-		ReferencedEnvelope envRight = new ReferencedEnvelope(right.getEnvelope());
+		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
+		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
-		if(envLeft.contains((BoundingBox)envRight))
-            return left.contains(right);
+		if(envLeft.contains((BoundingBox)envRight)) {
+            //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
+			return true;
+		}
         
         return false;
 	}

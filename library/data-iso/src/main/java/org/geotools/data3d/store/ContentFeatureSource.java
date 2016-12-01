@@ -938,12 +938,12 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
      * where the datastore can only handle part of the filter natively. In these
      * cases it is up to the subclass to apply a decorator to the reader it returns
      * which will handle any part of the filter can was not applied natively. See
-     * {@link FilteringFeatureReader}. 
+     * {@link ISOFilteringFeatureReader}. 
      * </p>
      * <p>
      * Not overriding this method or returning <code>false</code> will cause the
      * feature reader created by the subclass to be wrapped in a filtering feature
-     * reader when the query specifies a filter. See {@link FilteringFeatureReader}.
+     * reader when the query specifies a filter. See {@link ISOFilteringFeatureReader}.
      * </p>
      */
     protected boolean canFilter() {

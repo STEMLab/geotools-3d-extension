@@ -43,6 +43,7 @@ import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.filter.FilterFactory2Impl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
@@ -51,6 +52,8 @@ import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
@@ -65,6 +68,8 @@ import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -86,9 +91,13 @@ public class DemoTest extends JFrame{
 	private JTextField text;
 	private static Hints hints = null;
 
-	private static GeometryBuilder builder = null;
+	private static GeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
+		Hints h = new Hints();
+		h.put(Hints.GEOMETRY_VALIDATE, false);
+		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		builder = new GeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
 		/*File file = new File("example.shp");
@@ -131,12 +140,7 @@ public class DemoTest extends JFrame{
 		JMenu dataMenu = new JMenu("Data");
 		menubar.add(dataMenu);
 		pack();
-		fileMenu.add(new SafeAction("Open shapefile...") {
-			public void action(ActionEvent e) throws Throwable {
-				connect(new CSVDataStoreFactory());
-			}
-		});
-		fileMenu.add(new SafeAction("Open shapefile...") {
+		fileMenu.add(new SafeAction("Open csvfile...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
 			}
@@ -152,9 +156,9 @@ public class DemoTest extends JFrame{
 				insertTable();
 			}
 		});
-		fileMenu.add(new SafeAction("solidtoBox...") {
+		fileMenu.add(new SafeAction("pointToTable...") {
 			public void action(ActionEvent e) throws Throwable {
-				solidtoBox();
+				pointToTable();
 			}
 		});
 		fileMenu.add(new SafeAction("boxToSolid...") {
@@ -296,8 +300,9 @@ public class DemoTest extends JFrame{
 		orientableCurves6.add(curve6);
 
 		// create the interior ring and a list of empty interior rings (holes)
+		
 		PrimitiveFactoryImpl pmFF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
-
+		
 		Ring extRing1 = pmFF.createRing(orientableCurves1);
 		Ring extRing2 = pmFF.createRing(orientableCurves2);
 		Ring extRing3 = pmFF.createRing(orientableCurves3);
@@ -525,7 +530,7 @@ public class DemoTest extends JFrame{
 
 		return solidPoints;
 	}
-	private void solidtoBox() {
+	private void pointToTable() {
 		String typeName = "Flag";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
@@ -683,15 +688,24 @@ public class DemoTest extends JFrame{
    			FeatureType schema = source.getSchema();
 			//String name = schema.getGeometryDescriptor().getLocalName();
 		
-			Filter filter = CQL.toFilter(text.getText());
-
+			//Filter filter = CQL.toFilter(text.getText());
+   			Hints h = new Hints();
+   			h.put(Hints.FILTER_FACTORY, FilterFactory2Impl.class);
+   			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
+   		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
+   			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+   			/*DirectPosition lowercorner = gb.createDirectPosition(new double[] {-1,-1,-1} );
+   			DirectPosition uppercorner = gb.createDirectPosition(new double[] {1,1,1} );
+   			Envelope ev = gb.createEnvelope(lowercorner, uppercorner);*/
+   			ArrayList<Solid> al = getSolids(builder);
+   		    Filter filter = ff.contains("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
 
-			SimpleFeatureCollection features = source.getFeatures();
+			SimpleFeatureCollection features = source.getFeatures(query);
 
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-		} catch (IOException | CQLException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();

@@ -72,12 +72,12 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
 
     @Override
     public String getDisplayName() {
-        return FILE_TYPE.toUpperCase();
+        return FILE_TYPE.toUpperCase() + " 3D";
     }
 
     @Override
     public String getDescription() {
-        return "Comma delimited text file";
+        return "Comma delimited text file for 3D Geometry";
     }
 
     @Override

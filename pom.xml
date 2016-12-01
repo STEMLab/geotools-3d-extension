@@ -1246,6 +1246,8 @@
 		<module>plugin/jdbc3d-plugin</module>
 		
 		<module>test</module>
+		
+		<module>unsupported/csv-iso</module>
 	</modules>
 </project>
 

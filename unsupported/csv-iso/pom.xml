@@ -7,8 +7,9 @@
 
   <parent>
     <groupId>org.geotools</groupId>
-    <artifactId>unsupported</artifactId>
+    <artifactId>geotools-iso</artifactId>
     <version>15-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
   </parent>
 
   <!-- =========================================================== -->
@@ -31,6 +32,16 @@
       <id>hgryoo</id>
       <name>Hyung-Gyo Ryoo</name>
       <email>hyunggyu.ryoo@gmail.com</email>
+      <organization>Pusan National University</organization>
+      <roles>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>sjkim</id>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
       <organization>Pusan National University</organization>
       <roles>
         <role>Module Maintainer</role>

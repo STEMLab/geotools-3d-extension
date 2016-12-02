@@ -32,6 +32,7 @@ import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.primitive.RingImpl;
+import org.geotools.geometry.iso.primitive.RingImplUnsafe;
 import org.geotools.geometry.iso.primitive.ShellImpl;
 import org.geotools.geometry.iso.primitive.SolidBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SolidImpl;
@@ -459,7 +460,7 @@ public class WKTReader {
 		if(this.primitiveFactory != null) {
 		        return this.primitiveFactory.createRing(curves);
 		}
-		return new RingImpl(curves); //this.primitiveFactory.createRing(curves);
+		return new RingImplUnsafe(curves); //this.primitiveFactory.createRing(curves);
 
 	}
 

@@ -183,6 +183,11 @@ public class DemoTest extends JFrame{
 				filterFeatures();
 			}
 		});
+		dataMenu.add(new SafeAction("contains solid") {
+			public void action(ActionEvent e) throws Throwable {
+				constainsfilter();
+			}
+		});
 		dataMenu.add(new SafeAction("Count") {
 			public void action(ActionEvent e) throws Throwable {
 				countFeatures();
@@ -680,7 +685,7 @@ public class DemoTest extends JFrame{
 		} 
 
 	}
-	private void boxToSolid() {
+	private void constainsfilter() {
 		String typeName = "Flag";
 		SimpleFeatureSource source;
 		try {
@@ -694,9 +699,6 @@ public class DemoTest extends JFrame{
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
-   			/*DirectPosition lowercorner = gb.createDirectPosition(new double[] {-1,-1,-1} );
-   			DirectPosition uppercorner = gb.createDirectPosition(new double[] {1,1,1} );
-   			Envelope ev = gb.createEnvelope(lowercorner, uppercorner);*/
    			ArrayList<Solid> al = getSolids(builder);
    		    Filter filter = ff.contains("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
@@ -706,6 +708,27 @@ public class DemoTest extends JFrame{
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} 
+	}
+	private void boxToSolid() {
+		String typeName = "Flag";
+		SimpleFeatureSource source;
+		try {
+			source = dataStore.getFeatureSource(typeName);
+   			FeatureType schema = source.getSchema();
+			//String name = schema.getGeometryDescriptor().getLocalName();
+		
+			Filter filter = CQL.toFilter(text.getText());
+			Query query = new Query(typeName, filter, new String[] { "geom" });
+
+			SimpleFeatureCollection features = source.getFeatures(query);
+
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+			table.setModel(model);
+		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();

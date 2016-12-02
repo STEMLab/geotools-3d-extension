@@ -62,7 +62,7 @@ import org.geotools.filter.spatial.EqualsImpl;
 import org.geotools.filter.spatial.IntersectsImpl;
 import org.geotools.filter.spatial.OverlapsImpl;
 import org.geotools.filter.spatial.TouchesImpl;
-import org.geotools.filter.spatial.WithinImpl;
+import org.geotools.filter.spatial.ISOWithinImpl;
 import org.geotools.filter.temporal.AfterImpl;
 import org.geotools.filter.temporal.AnyInteractsImpl;
 import org.geotools.filter.temporal.BeforeImpl;
@@ -727,11 +727,11 @@ public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFac
     }
 
     public Within within(Expression geometry1, Expression geometry2) {
-        return new WithinImpl(geometry1, geometry2 );
+        return new ISOWithinImpl(geometry1, geometry2 );
     }
     
     public Within within(Expression geometry1, Expression geometry2, MatchAction matchAction) {
-        return new WithinImpl(geometry1, geometry2, matchAction );
+        return new ISOWithinImpl(geometry1, geometry2, matchAction );
     }
     
     public Add add(Expression expr1, Expression expr2) {

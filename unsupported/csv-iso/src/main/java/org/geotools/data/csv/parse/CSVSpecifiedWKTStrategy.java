@@ -42,7 +42,8 @@ import com.csvreader.CsvWriter;
 //import com.vividsolutions.jts.geom.Geometry;
 //import com.vividsolutions.jts.io.ParseException;
 //import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
+//import com.vividsolutions.jts.io.WKTWriter;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 
 public class CSVSpecifiedWKTStrategy extends CSVStrategy {
 
@@ -100,8 +101,8 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
             if (value == null) {
                 csvRecord.add("");
             } else if (name.compareTo(wktField) == 0) {
-                WKTWriter wkt = new WKTWriter();
-                String txt = wkt.write((com.vividsolutions.jts.geom.Geometry)value);
+                GeometryToWKTString wkt = new GeometryToWKTString(false);
+                String txt = wkt.getString((Geometry)value);
                 csvRecord.add(txt);
             } else {
                 String txt = Converters.convert(value, String.class);

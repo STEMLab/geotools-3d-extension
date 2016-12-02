@@ -536,7 +536,7 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void pointToTable() {
-		String typeName = "Flag";
+		String typeName = "newFlag";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		//hints.put(Hints.GEOMETRY_VALIDATE, false);
@@ -554,43 +554,27 @@ public class DemoTest extends JFrame{
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
 		b.add("loc", Point.class);
-
-		//build the type
 		SimpleFeatureType schema = b.buildFeatureType();
-		//create the builder
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);
-
-		//add the values
 		builder.add( al );
-
-		//build the feature with provided ID
 		SimpleFeature feature = builder.buildFeature( "fid.1" );
 		try {
-
 			//source = dataStore.getFeatureSource(typeName);
-
-
 			//DataStore dataStore1;
 			//JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
-
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
-
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
-
 				if (dataStore == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
 				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				//jds.setDatabaseSchema(null);
-
 				dataStore.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
-
-				// insert the feature
 				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 						schema.getTypeName(), Transaction.AUTO_COMMIT);
 				//SimpleFeature f = fw.next();
@@ -605,7 +589,7 @@ public class DemoTest extends JFrame{
 				//}
 				//fw.write();
 				fw.close();
-				updateUI();
+				/*updateUI();
 				String name = schema.getGeometryDescriptor().getLocalName();
 				FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2( GeoTools.getDefaultHints() );
 				Filter filter = ff.contains( ff.property( "loc"), ff.literal( feature.getDefaultGeometry() ) );
@@ -614,7 +598,7 @@ public class DemoTest extends JFrame{
 				SimpleFeatureCollection features = source.getFeatures(query);
 
 				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
-				table.setModel(model);
+				table.setModel(model);*/
 			}
 
 		} catch (IOException e) {

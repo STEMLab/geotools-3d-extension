@@ -700,7 +700,7 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
-   		    Filter filter = ff.contains("geom", (Geometry)al.get(0));
+   		    Filter filter = ff.within("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);

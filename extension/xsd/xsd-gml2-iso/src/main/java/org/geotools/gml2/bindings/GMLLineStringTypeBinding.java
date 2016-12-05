@@ -28,6 +28,7 @@ import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
 
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.LineString;
@@ -132,10 +133,17 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        LineString lineString = (LineString) object;
+    	Curve lineString = (Curve) object;
 
         if (GML.coordinates.equals(name)) {
-            return lineString.getCoordinateSequence();
+        	PointArray pa = gBuilder.createPointArray();
+        	List<? extends CurveSegment> segments = lineString.getSegments();
+        	
+        	for(CurveSegment cs : segments) {
+        		pa.add(cs.getStartPoint());
+        	}
+        	pa.add( segments.get(segments.size() - 1).getEndPoint() );
+        	return pa;
         }
 
         return null;

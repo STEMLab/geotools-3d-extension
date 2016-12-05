@@ -20,10 +20,13 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
@@ -58,10 +61,10 @@ import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
  * @source $URL$
  */
 public class GMLCoordTypeBinding extends AbstractComplexBinding {
-    CoordinateSequenceFactory csFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLCoordTypeBinding(CoordinateSequenceFactory csFactory) {
-        this.csFactory = csFactory;
+    public GMLCoordTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -78,7 +81,7 @@ public class GMLCoordTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Coordinate.class;
+        return DirectPosition.class;
     }
 
     /**
@@ -97,34 +100,42 @@ public class GMLCoordTypeBinding extends AbstractComplexBinding {
         x = y = z = Double.NaN;
 
         x = ((BigDecimal) node.getChild("X").getValue()).doubleValue();
-
+        
+        
         if (!node.getChildren("Y").isEmpty()) {
             dimension++;
             y = ((BigDecimal) node.getChild("Y").getValue()).doubleValue();
         }
 
+        DirectPosition p = null;
         if (!node.getChildren("Z").isEmpty()) {
             dimension++;
             z = ((BigDecimal) node.getChild("Z").getValue()).doubleValue();
         }
-
-        return new Coordinate(x, y, z);
+        
+        if(dimension == 3) {
+        	p = gBuilder.createDirectPosition(new double[] {x, y, z});
+        } else {
+        	p = gBuilder.createDirectPosition(new double[] {x, y});
+        }
+        
+        return p;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        Coordinate c = (Coordinate) object;
+    	DirectPosition c = (DirectPosition) object;
 
         if ("X".equals(name.getLocalPart())) {
-            return new Double(c.x);
+            return new Double(c.getOrdinate(0));
         }
 
         if ("Y".equals(name.getLocalPart())) {
-            return new Double(c.y);
+            return new Double(c.getOrdinate(1));
         }
 
-        if ("Z".equals(name.getLocalPart()) && !new Double(c.z).isNaN()) {
-            return new Double(c.z);
+        if ("Z".equals(name.getLocalPart()) && !new Double(c.getOrdinate(2)).isNaN()) {
+            return new Double(c.getOrdinate(2));
         }
 
         return null;

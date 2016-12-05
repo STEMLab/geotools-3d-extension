@@ -20,14 +20,16 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 
@@ -66,12 +68,10 @@ import com.vividsolutions.jts.geom.LineString;
  * @source $URL$
  */
 public class GMLLineStringTypeBinding extends AbstractComplexBinding {
-    CoordinateSequenceFactory csFactory;
-    GeometryFactory gFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLLineStringTypeBinding(CoordinateSequenceFactory csFactory, GeometryFactory gFactory) {
-        this.csFactory = csFactory;
-        this.gFactory = gFactory;
+    public GMLLineStringTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -92,7 +92,7 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LineString.class;
+        return Curve.class;
     }
 
     /**
@@ -110,29 +110,21 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
         }
 
         if (!coordinates.isEmpty()) {
-            Node cnode = (Node) coordinates.get(0);
-            CoordinateSequence seq = (CoordinateSequence) cnode.getValue();
-            int dimension = GMLUtil.getDimension(seq);
-
-            CoordinateSequence lineSeq = csFactory.create(coordinates.size(), dimension);
-
+            PointArray pArr = gBuilder.createPointArray();
             for (int i = 0; i < coordinates.size(); i++) {
-                cnode = (Node) coordinates.get(i);
-                seq = (CoordinateSequence) cnode.getValue();
-
-                for (int j = 0; j < dimension; j++) {
-                    lineSeq.setOrdinate(i, j, seq.getOrdinate(0, j));
-                }
+                Node cnode = (Node) coordinates.get(i);
+                DirectPosition dp = (DirectPosition) cnode.getValue();
+                pArr.add(dp);
             }
 
-            return gFactory.createLineString(lineSeq);
+            return gBuilder.createCurve(pArr);
         }
 
         if (node.getChild("coordinates") != null) {
             Node cnode = (Node) node.getChild("coordinates");
-            CoordinateSequence lineSeq = (CoordinateSequence) cnode.getValue();
+            PointArray pArr = (PointArray) cnode.getValue();
 
-            return gFactory.createLineString(lineSeq);
+            return gBuilder.createCurve(pArr);
         }
 
         throw new RuntimeException("Could not find coordinates to build linestring");

@@ -112,12 +112,7 @@ public class GMLCoordTypeBinding extends AbstractComplexBinding {
             dimension++;
             z = ((BigDecimal) node.getChild("Z").getValue()).doubleValue();
         }
-        
-        if(dimension == 3) {
-        	p = gBuilder.createDirectPosition(new double[] {x, y, z});
-        } else {
-        	p = gBuilder.createDirectPosition(new double[] {x, y});
-        }
+        p = gBuilder.createDirectPosition(new double[] {x, y, z});
         
         return p;
     }

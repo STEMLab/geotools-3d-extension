@@ -31,6 +31,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.FeatureTypeCache;
 import org.geotools.gml2.GML;
@@ -49,20 +50,14 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.FeatureType;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
 
 /**
  * Utility methods used by gml2 bindings when parsing.
@@ -419,17 +414,17 @@ public class GML2ParsingUtils {
     /**
      * Wraps the elements of a geometry collection in a normal collection.
      */
-    public static Collection asCollection(GeometryCollection gc) {
+    public static Collection asCollection(Aggregate gc) {
         ArrayList members = new ArrayList();
 
-        for (int i = 0; i < gc.getNumGeometries(); i++) {
-            members.add(gc.getGeometryN(i));
+        for(Geometry g : gc.getElements()) {
+        	members.add(g);
         }
 
         return members;
     }
     
-    static GeometryCollection GeometryCollectionType_parse(Node node, Class clazz, GeometryFactory gFactory) {
+    static Aggregate GeometryCollectionType_parse(Node node, Class clazz, GeometryBuilder gBuilder) {
         //round up children that are geometries, since this type is often 
         // extended by multi geometries, dont reference members by element name
         List geoms = new ArrayList();
@@ -442,37 +437,38 @@ public class GML2ParsingUtils {
             }
         }
 
-        GeometryCollection gc = null;
+        Aggregate gc = null;
         
         if (MultiPoint.class.isAssignableFrom(clazz)) {
-            gc = gFactory.createMultiPoint((Point[]) geoms.toArray(new Point[geoms.size()]));
+            //gc = gFactory.createMultiPoint((Point[]) geoms.toArray(new Point[geoms.size()]));
         }
-        else if (MultiLineString.class.isAssignableFrom(clazz)) {
-            gc = gFactory.createMultiLineString(
-                (LineString[]) geoms.toArray(new LineString[geoms.size()]));
+        else if (MultiCurve.class.isAssignableFrom(clazz)) {
+            //gc = gFactory.createMultiLineString(
+            //    (LineString[]) geoms.toArray(new LineString[geoms.size()]));
         }
-        else if (MultiPolygon.class.isAssignableFrom(clazz)) {
-            gc = gFactory.createMultiPolygon((Polygon[]) geoms.toArray(new Polygon[geoms.size()]));
+        else if (MultiSurface.class.isAssignableFrom(clazz)) {
+            //gc = gFactory.createMultiPolygon((Polygon[]) geoms.toArray(new Polygon[geoms.size()]));
         }
-        
         else {
-            gc = gFactory.createGeometryCollection((Geometry[]) geoms.toArray(
-                new Geometry[geoms.size()]));
+            //gc = gFactory.createGeometryCollection((Geometry[]) geoms.toArray(
+            //    new Geometry[geoms.size()]));
         }
         
         //set an srs if there is one
         CoordinateReferenceSystem crs = crs(node);
 
         if (crs != null) {
-            gc.setUserData(crs);
+            //gc.setUserData(crs);
 
             // since we're setting the CRS on the UserData object, might as well set the SRID for the geom
             // collection
+        	/*
             try {
                 gc.setSRID(CRS.lookupEpsgCode(crs, true));
             } catch (FactoryException e) {
                 // as long as the provided CRS is valid, this block will be unreachable
             }
+            */
         }
         
         return gc;
@@ -480,7 +476,7 @@ public class GML2ParsingUtils {
     
     static Object GeometryCollectionType_getProperty(Object object, QName name) {
         if ( "srsName".equals( name.getLocalPart() ) ) {
-            CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((GeometryCollection)object );
+            CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((Aggregate)object );
             if ( crs != null ) {
                 return GML2EncodingUtils.toURI(crs,true);
             }

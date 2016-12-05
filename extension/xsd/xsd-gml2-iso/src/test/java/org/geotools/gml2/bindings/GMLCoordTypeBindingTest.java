@@ -22,6 +22,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.geotools.xs.XS;
+import org.opengis.geometry.DirectPosition;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -60,9 +61,9 @@ public class GMLCoordTypeBindingTest extends AbstractGMLBindingTest {
 
         GMLCoordTypeBinding strategy = (GMLCoordTypeBinding) container.getComponentInstanceOfType(GMLCoordTypeBinding.class);
 
-        Coordinate c = (Coordinate) strategy.parse(coordinate, node, null);
-        assertNotNull(c);
-        assertEquals(c.x, 12.34, 0d);
+        DirectPosition dp = (DirectPosition) strategy.parse(coordinate, node, null);
+        assertNotNull(dp);
+        assertEquals(dp.getOrdinate(0), 12.34, 0d);
     }
 
     public void testParse2D() throws Exception {
@@ -71,10 +72,10 @@ public class GMLCoordTypeBindingTest extends AbstractGMLBindingTest {
 
         GMLCoordTypeBinding strategy = (GMLCoordTypeBinding) container.getComponentInstanceOfType(GMLCoordTypeBinding.class);
 
-        Coordinate c = (Coordinate) strategy.parse(coordinate, node, null);
-        assertNotNull(c);
-        assertEquals(c.x, 12.34, 0d);
-        assertEquals(c.y, 56.78, 0d);
+        DirectPosition dp = (DirectPosition) strategy.parse(coordinate, node, null);
+        assertNotNull(dp);
+        assertEquals(dp.getOrdinate(0), 12.34, 0d);
+        assertEquals(dp.getOrdinate(1), 56.78, 0d);
     }
 
     public void testParse3D() throws Exception {
@@ -83,10 +84,10 @@ public class GMLCoordTypeBindingTest extends AbstractGMLBindingTest {
                 null, null);
         GMLCoordTypeBinding strategy = (GMLCoordTypeBinding) container.getComponentInstanceOfType(GMLCoordTypeBinding.class);
 
-        Coordinate c = (Coordinate) strategy.parse(coordinate, node, null);
-        assertNotNull(c);
-        assertEquals(c.x, 12.34, 0d);
-        assertEquals(c.y, 56.78, 0d);
-        assertEquals(c.z, 910.11, 0d);
+        DirectPosition dp = (DirectPosition) strategy.parse(coordinate, node, null);
+        assertNotNull(dp);
+        assertEquals(dp.getOrdinate(0), 12.34, 0d);
+        assertEquals(dp.getOrdinate(1), 56.78, 0d);
+        assertEquals(dp.getOrdinate(2), 910.11, 0d);
     }
 }

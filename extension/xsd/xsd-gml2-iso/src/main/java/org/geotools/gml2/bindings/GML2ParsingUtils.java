@@ -20,8 +20,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -427,7 +429,7 @@ public class GML2ParsingUtils {
     static Aggregate GeometryCollectionType_parse(Node node, Class clazz, GeometryBuilder gBuilder) {
         //round up children that are geometries, since this type is often 
         // extended by multi geometries, dont reference members by element name
-        List geoms = new ArrayList();
+        Set geoms = new HashSet();
 
         for (Iterator itr = node.getChildren().iterator(); itr.hasNext();) {
             Node cnode = (Node) itr.next();
@@ -440,7 +442,7 @@ public class GML2ParsingUtils {
         Aggregate gc = null;
         
         if (MultiPoint.class.isAssignableFrom(clazz)) {
-            //gc = gFactory.createMultiPoint((Point[]) geoms.toArray(new Point[geoms.size()]));
+            gc = gBuilder.createMultiPoint(geoms);
         }
         else if (MultiCurve.class.isAssignableFrom(clazz)) {
             //gc = gFactory.createMultiLineString(

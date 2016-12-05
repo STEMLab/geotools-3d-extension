@@ -24,8 +24,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.LineString;
+import org.opengis.geometry.primitive.Curve;
 
 
 /**
@@ -75,7 +74,7 @@ public class GMLLineStringPropertyTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LineString.class;
+        return Curve.class;
     }
 
     /**
@@ -87,14 +86,14 @@ public class GMLLineStringPropertyTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return node.getChildValue( LineString.class );
+        return node.getChildValue( Curve.class );
     }
     
     public Object getProperty(Object object, QName name) {
-        return GML2EncodingUtils.GeometryPropertyType_getProperty( (LineString) object, name, false );
+        return GML2EncodingUtils.GeometryPropertyType_getProperty( (Curve) object, name, false );
     }
     
     public List getProperties(Object object) throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperties( (LineString) object );
+        return GML2EncodingUtils.GeometryPropertyType_getProperties( (Curve) object );
     }
 }

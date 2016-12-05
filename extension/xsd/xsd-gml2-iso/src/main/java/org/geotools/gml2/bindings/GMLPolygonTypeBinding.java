@@ -16,19 +16,19 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
 
 /**
@@ -64,10 +64,10 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class GMLPolygonTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLPolygonTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public GMLPolygonTypeBinding(GeometryBuilder gFactory) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -88,7 +88,7 @@ public class GMLPolygonTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
     /**
@@ -99,35 +99,38 @@ public class GMLPolygonTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        LinearRing shell = (LinearRing) node.getChild("outerBoundaryIs").getValue();
+        Ring shell = (Ring) node.getChild("outerBoundaryIs").getValue();
 
         List innerRings = node.getChildren("innerBoundaryIs");
-        LinearRing[] holes = new LinearRing[innerRings.size()];
+        List holes = new ArrayList();
 
         for (int i = 0; i < innerRings.size(); i++) {
             Node inode = (Node) innerRings.get(i);
-            holes[i] = (LinearRing) inode.getValue();
+            holes.add(inode.getValue());
         }
-
-        return gFactory.createPolygon(shell, holes);
+        
+        SurfaceBoundary sb = gBuilder.createSurfaceBoundary(shell, holes);
+        return gBuilder.createSurface(sb);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        Polygon polygon = (Polygon) object;
+        Surface polygon = (Surface) object;
 
+        SurfaceBoundary sb = polygon.getBoundary();
         if (GML.outerBoundaryIs.equals(name)) {
-            return polygon.getExteriorRing();
+            return sb.getExterior();
         }
 
         if (GML.innerBoundaryIs.equals(name)) {
-            int n = polygon.getNumInteriorRing();
+        	List<Ring> interiors = sb.getInteriors();
+            int n = interiors.size();
 
             if (n > 0) {
-                LineString[] interior = new LineString[n];
+                Ring[] interior = new Ring[n];
 
                 for (int i = 0; i < n; i++) {
-                    interior[i] = polygon.getInteriorRingN(i);
+                    interior[i] = interiors.get(i);
                 }
 
                 return interior;

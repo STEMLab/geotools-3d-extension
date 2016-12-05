@@ -31,8 +31,6 @@ import org.opengis.geometry.coordinate.Position;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
-
 
 /**
  * Binding object for the type http://www.opengis.net/gml:CoordinatesType.

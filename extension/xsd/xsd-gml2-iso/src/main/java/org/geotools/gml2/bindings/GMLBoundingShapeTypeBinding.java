@@ -18,12 +18,14 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Envelope;
 
-import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Envelope;
 
 
 /**
@@ -84,8 +86,10 @@ public class GMLBoundingShapeTypeBinding extends AbstractComplexBinding {
         //do the null check
         if (node.getChild("null") != null) {
             //ignore the description as to why its null
-            Envelope e = new Envelope();
-            e.setToNull();
+        	//TODO make null geometry..
+            Envelope e = new ReferencedEnvelope();
+           
+            //e.setToNull();
 
             return e;
         }
@@ -97,12 +101,12 @@ public class GMLBoundingShapeTypeBinding extends AbstractComplexBinding {
     public Object getProperty(Object object, QName name)
         throws Exception {
         Envelope e = (Envelope) object;
-
-        if (GML.Box.equals(name) && !e.isNull()) {
+        //TODO Geometry always is not null
+        if (GML.Box.equals(name)) { //&& !e.isNull()) {
             return e;
         }
 
-        if ("null".equals(name.getLocalPart()) && e.isNull()) {
+        if ("null".equals(name.getLocalPart()) ) { //&& e.isNull()) {
             return e;
         }
 

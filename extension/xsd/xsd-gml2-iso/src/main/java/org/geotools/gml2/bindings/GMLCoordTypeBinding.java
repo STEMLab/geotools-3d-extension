@@ -28,9 +28,6 @@ import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-
 
 /**
  * Binding object for the type http://www.opengis.net/gml:CoordType.

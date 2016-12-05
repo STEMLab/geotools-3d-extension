@@ -20,16 +20,18 @@ import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
 
 
 /**
@@ -68,10 +70,10 @@ import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
  * @source $URL$
  */
 public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
-    CoordinateSequenceFactory csFactory;
+	GeometryBuilder gBuilder;
 
-    public GMLCoordinatesTypeBinding(CoordinateSequenceFactory csFactory) {
-        this.csFactory = csFactory;
+    public GMLCoordinatesTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -88,7 +90,7 @@ public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return CoordinateSequence.class;
+        return PointArray.class;
     }
 
     /**
@@ -128,13 +130,12 @@ public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
 
         //first tokenize by tuple seperators
         StringTokenizer tuples = new StringTokenizer(text, ts);
-        CoordinateSequence seq = null;
-        int i = 0;
+        PointArray pArr = gBuilder.createPointArray();
         int ncoords = tuples.countTokens(); //number of coordinates
         if(cs.equals(ts)) {
             ncoords = ncoords/2;
         }
-
+        
         while (tuples.hasMoreTokens()) {
             String tuple = tuples.nextToken();
 
@@ -157,9 +158,9 @@ public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
             //next tokenize by decimal
             String z = null;
 
-            //must be at least 1D			
+            //must be at least 1D
             x = ".".equals(decimal) ? oords[0] : oords[0].replaceAll(decimal, ".");
-
+            
             //check for 2 and 3 D
             if (oords.length > 1) {
                 y = ".".equals(decimal) ? oords[1] : oords[1].replaceAll(decimal, ".");
@@ -168,46 +169,48 @@ public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
             if (oords.length > 2) {
                 z = ".".equals(decimal) ? oords[2] : oords[2].replaceAll(decimal, ".");
             }
-
-            if (seq == null) {
-                seq = csFactory.create(ncoords, oords.length);
-            }
-
-            seq.setOrdinate(i, CoordinateSequence.X, Double.parseDouble(x));
-
+            
+            //seq.setOrdinate(i, CoordinateSequence.X, Double.parseDouble(x));
+            double xv = Double.parseDouble(x);
+            double yv = Double.NaN;
+            double zv = Double.NaN;
             if (y != null) {
-                seq.setOrdinate(i, CoordinateSequence.Y, Double.parseDouble(y));
+            	yv = Double.parseDouble(y);
+                //seq.setOrdinate(i, CoordinateSequence.Y, Double.parseDouble(y));
             }
 
             if (z != null) {
-                seq.setOrdinate(i, CoordinateSequence.Z, Double.parseDouble(z));
+            	zv = Double.parseDouble(z);
+                //seq.setOrdinate(i, CoordinateSequence.Z, Double.parseDouble(z));
             }
-
-            i++;
+            
+            DirectPosition dp = gBuilder.createDirectPosition(new double[] {xv, yv, zv});
+            pArr.add(dp);
         }
 
-        return seq;
+        return pArr;
     }
 
     public Element encode(Object object, Document document, Element value)
         throws Exception {
-        CoordinateSequence coordinates = (CoordinateSequence) object;
+        PointArray coordinates = (PointArray) object;
         StringBuffer buf = new StringBuffer();
 
         for (int i = 0; i < coordinates.size(); i++) {
-            Coordinate c = coordinates.getCoordinate(i);
-            buf.append(c.x);
+            Position c = coordinates.get(i);
+            DirectPosition dp = c.getDirectPosition();
+            buf.append(dp.getOrdinate(0));
 
-            boolean y = (coordinates.getDimension() > 1) && !new Double(c.y).isNaN();
+            boolean y = (coordinates.getDimension() > 1) && !new Double(dp.getOrdinate(1)).isNaN();
 
             if (y) {
-                buf.append("," + c.y);
+                buf.append("," + dp.getOrdinate(1));
             }
 
-            boolean z = y && (coordinates.getDimension() > 2) && !new Double(c.z).isNaN();
+            boolean z = y && (coordinates.getDimension() > 2) && !new Double(dp.getOrdinate(2)).isNaN();
 
             if (z) {
-                buf.append("," + c.z);
+                buf.append("," + dp.getOrdinate(2));
             }
 
             if (i < (coordinates.size() - 1)) {

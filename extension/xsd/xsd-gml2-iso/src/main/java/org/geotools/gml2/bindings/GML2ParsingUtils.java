@@ -478,7 +478,9 @@ public class GML2ParsingUtils {
     
     static Object GeometryCollectionType_getProperty(Object object, QName name) {
         if ( "srsName".equals( name.getLocalPart() ) ) {
-            CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((Aggregate)object );
+            //CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((GeometryCollection)object );
+        	CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((Aggregate)object );
+
             if ( crs != null ) {
                 return GML2EncodingUtils.toURI(crs,true);
             }

@@ -22,9 +22,10 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.Aggregate;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.GeometryCollection;
+//import com.vividsolutions.jts.geom.GeometryCollection;
 
 
 /**
@@ -73,7 +74,7 @@ public class GMLAbstractGeometryCollectionBaseTypeBinding extends AbstractComple
      * @generated modifiable
      */
     public Class getType() {
-        return GeometryCollection.class;
+        return Aggregate.class;
     }
 
     /**

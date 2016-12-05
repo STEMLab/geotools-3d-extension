@@ -26,9 +26,10 @@ import org.geotools.referencing.CRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -113,7 +114,8 @@ public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
                 CoordinateReferenceSystem crs = CRS.decode(srs.toString());
 
                 if (crs != null) {
-                    geometry.setUserData(crs);
+                	//TODO CRS must be set before building geometry
+                    //geometry.setUserData(crs);
                 } else {
                     logger.warning("Could not create Coordinate Reference System for " + srs);
                 }
@@ -130,9 +132,9 @@ public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
         if ("srsName".equals(name.getLocalPart())) {
             Geometry geometry = (Geometry) object;
 
-            if (geometry.getUserData() instanceof CoordinateReferenceSystem) {
-                return GML2EncodingUtils.crs((CoordinateReferenceSystem) geometry.getUserData());
-            }
+            //if (geometry.getUserData() instanceof CoordinateReferenceSystem) {
+                return GML2EncodingUtils.crs(geometry.getCoordinateReferenceSystem());
+            //}
         }
 
         return null;

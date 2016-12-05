@@ -25,8 +25,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.primitive.Surface;
 
 
 /**
@@ -75,7 +74,7 @@ public class GMLPolygonMemberTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
     /**
@@ -86,17 +85,17 @@ public class GMLPolygonMemberTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return node.getChildValue(Polygon.class);
+        return node.getChildValue(Surface.class);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperty((Polygon)object,name,false);
+        return GML2EncodingUtils.GeometryPropertyType_getProperty((Surface)object,name,false);
     }
     
     @Override
     public List getProperties(Object object, XSDElementDeclaration element)
             throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperties((Polygon)object);
+        return GML2EncodingUtils.GeometryPropertyType_getProperties((Surface)object);
     }
 }

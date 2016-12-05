@@ -18,13 +18,12 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPoint;
 
 
 /**
@@ -60,10 +59,10 @@ import com.vividsolutions.jts.geom.MultiPoint;
  * @source $URL$
  */
 public class GMLMultiPointTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLMultiPointTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public GMLMultiPointTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -95,7 +94,7 @@ public class GMLMultiPointTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiPoint.class, gFactory);
+        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiPoint.class, gBuilder);
     }
 
     public Object getProperty(Object object, QName name)

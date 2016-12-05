@@ -25,9 +25,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.MultiPoint;
-
+import org.opengis.geometry.aggregate.MultiPoint;
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiPointPropertyType.
  *

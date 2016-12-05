@@ -200,14 +200,14 @@ public class GMLEncodingUtils {
                 // get the value
                 Object attributeValue = ((SimpleFeature) feature).getAttribute(attribute.getName());
                 if (attributeValue != null && attributeValue instanceof Geometry) {
-                    Object obj = ((Geometry) attributeValue).getUserData();
+                    /*Object obj = ((Geometry) attributeValue).getUserData();
                     Map<Object, Object> userData = new HashMap<Object, Object>();
                     if (obj != null && obj instanceof Map) {
                         userData.putAll((Map) obj);
                     }
                     userData.put(CoordinateReferenceSystem.class, featureType
                             .getCoordinateReferenceSystem());
-                    ((Geometry) attributeValue).setUserData(userData);
+                    ((Geometry) attributeValue).setUserData(userData);*/
                 }
                 properties.add(new Object[] { particle, attributeValue });
             } else {
@@ -232,13 +232,14 @@ public class GMLEncodingUtils {
                             Geometry geometry = (Geometry) value;
                             CoordinateReferenceSystem crs = ((GeometryAttribute) property)
                                     .getDescriptor().getCoordinateReferenceSystem();
-                            Map<Object, Object> userData = new HashMap<Object, Object>();
+                            /*Map<Object, Object> userData = new HashMap<Object, Object>();
                             Object obj = geometry.getUserData();
                             if (obj != null && obj instanceof Map) {
                                 userData.putAll((Map) obj);
                             }
                             userData.put(CoordinateReferenceSystem.class, crs);
-                            geometry.setUserData(userData);
+                            geometry.setUserData(userData);*/
+                            //coordinatesystem of geometry can not change
                         }
                     } else {
                         // non-complex bindings are unpacked as for simple feature case
@@ -415,15 +416,15 @@ public class GMLEncodingUtils {
 
             return geometry;
         }
-
-        if (geometry.getUserData() instanceof Map) {
+        //TODO ISO Geometry do not use userData
+        /*if (geometry.getUserData() instanceof Map) {
             Map<Name, Object> clientProperties = (Map<Name, Object>) ((Map) geometry.getUserData())
                     .get(Attributes.class);
 
             Name cname = toTypeName(name);
             if (clientProperties != null && clientProperties.keySet().contains(cname))
                 return clientProperties.get(cname);
-        }
+        }*/
 
         if (XLINK.HREF.equals(name)) {
             // only process if geometry is empty and ID exists
@@ -456,16 +457,16 @@ public class GMLEncodingUtils {
     }
     
     public static boolean isEmpty( Geometry geometry ) {
-        if ( geometry.isEmpty() ) {
+        //if ( geometry.isEmpty() ) {
             //check for case of multi geometry, if it has > 0 goemetries 
             // we consider this to be not empty
             if ( geometry instanceof Aggregate ) {
-                if ( ((Aggregate) geometry).getElements().size() != 0 ) {
-                    return false;
+                if ( ((Aggregate) geometry).getElements().size() == 0 ) {
+                    return true;
                 }
             }
-            return true;
-        }
+            //return true;
+        //}
         
         return false;
     }
@@ -544,21 +545,23 @@ public class GMLEncodingUtils {
     
     @SuppressWarnings("rawtypes")
     String getMetadata(Geometry g, String metadata) {
-        if (g.getUserData() instanceof Map) {
+    	//TODO Nothing
+        /*if (g.getUserData() instanceof Map) {
             Map userData = (Map) g.getUserData();
             return (String) userData.get(metadata);
-        }
+        }*/
         return null;
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     void setMetadata(Geometry g, String metadata, String value) {
-        if (g.getUserData() == null) {
+    	//TODO 
+        /*if (g.getUserData() == null) {
             g.setUserData(new HashMap());
         }
         if (g.getUserData() instanceof Map) {
             ((Map) g.getUserData()).put(metadata, value);
-        }
+        }*/
     }
 
     /**

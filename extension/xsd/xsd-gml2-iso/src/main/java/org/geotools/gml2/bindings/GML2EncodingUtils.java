@@ -42,12 +42,11 @@ import org.geotools.xml.SchemaIndex;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
+import org.opengis.geometry.Geometry;
 import org.opengis.metadata.Identifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Utility methods used by gml2 bindigns when encodding.
@@ -152,7 +151,7 @@ public class GML2EncodingUtils {
      * </p>
      */
     public static CoordinateReferenceSystem getCRS(Geometry g) {
-        if (g.getUserData() == null) {
+        /*if (g.getUserData() == null) {
             return null;
         }
 
@@ -166,7 +165,8 @@ public class GML2EncodingUtils {
             return (CoordinateReferenceSystem) userData.get(CoordinateReferenceSystem.class);
         }
 
-        return null;
+        return null;*/
+    	return g.getCoordinateReferenceSystem();
     }
 
     /**
@@ -300,7 +300,8 @@ public class GML2EncodingUtils {
          * For the dimension, use the actual dimension of the geometry. Using the dimension of the
          * CRS is not sufficient, since currently CRSes don't support 3D.
          */
-        return CoordinateSequences.coordinateDimension(geometry);
+        //return CoordinateSequences.coordinateDimension(geometry);
+        return geometry.getCoordinateDimension();
     }
 
     public static Integer getEnvelopeDimension(ReferencedEnvelope e, Configuration configuration) {

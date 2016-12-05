@@ -702,13 +702,16 @@ public class DemoTest extends JFrame{
         o = parser.parse();//linestring
         o = parser.parse();//polygon
         */
-        InputStream in = getClass().getResourceAsStream("feature.xml");
-
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-
-        Document document;
 		try {
+			File initialFile = new File("feature.xml");
+		    InputStream in = new FileInputStream(initialFile);
+	        //InputStream in = getClass().getResourceAsStream("feature.xml");
+	
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        factory.setNamespaceAware(true);
+	
+	        Document document;
+		
 			document = factory.newDocumentBuilder().parse(in);
 		
 

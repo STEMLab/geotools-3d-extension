@@ -151,7 +151,7 @@ public class GML2EncodingUtils {
      * </p>
      */
     public static CoordinateReferenceSystem getCRS(Geometry g) {
-        if (g.getUserData() == null) {
+        /*if (g.getUserData() == null) {
             return null;
         }
 
@@ -165,7 +165,8 @@ public class GML2EncodingUtils {
             return (CoordinateReferenceSystem) userData.get(CoordinateReferenceSystem.class);
         }
 
-        return null;
+        return null;*/
+    	return g.getCoordinateReferenceSystem();
     }
 
     /**
@@ -299,7 +300,8 @@ public class GML2EncodingUtils {
          * For the dimension, use the actual dimension of the geometry. Using the dimension of the
          * CRS is not sufficient, since currently CRSes don't support 3D.
          */
-        return CoordinateSequences.coordinateDimension(geometry);
+        //return CoordinateSequences.coordinateDimension(geometry);
+        return geometry.getCoordinateDimension();
     }
 
     public static Integer getEnvelopeDimension(ReferencedEnvelope e, Configuration configuration) {

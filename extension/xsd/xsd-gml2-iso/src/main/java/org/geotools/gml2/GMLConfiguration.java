@@ -220,6 +220,7 @@ public class GMLConfiguration extends Configuration {
         
         container.registerComponentInstance(CoordinateSequenceFactory.class,
             CoordinateArraySequenceFactory.instance());
+
         container.registerComponentImplementation(GeometryBuilder.class);
         container.registerComponentImplementation(DefaultFeatureCollections.class);
 

@@ -25,8 +25,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.primitive.Point;
 
 
 /**

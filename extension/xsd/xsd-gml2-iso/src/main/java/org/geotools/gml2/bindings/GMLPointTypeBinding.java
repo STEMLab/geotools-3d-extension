@@ -18,14 +18,15 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 
@@ -63,10 +64,10 @@ import com.vividsolutions.jts.geom.Point;
  * @source $URL$
  */
 public class GMLPointTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLPointTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public GMLPointTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     public int getExecutionMode() {
@@ -99,16 +100,19 @@ public class GMLPointTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         if (node.getChild("coord") != null) {
-            Coordinate c = (Coordinate) node.getChild("coord").getValue();
+            DirectPosition p = (DirectPosition) node.getChild("coord").getValue();
 
-            return gFactory.createPoint(c);
+            return gBuilder.createPoint(p);
         }
 
+        //TODO
+        /*
         if (node.getChild("coordinates") != null) {
             CoordinateSequence seq = (CoordinateSequence) node.getChild("coordinates").getValue();
 
-            return gFactory.createPoint(seq);
+            return gBuilder.createPoint(seq);
         }
+        */
 
         throw new RuntimeException("Could not find a coordinate");
     }

@@ -19,7 +19,6 @@ package org.geotools.gml2;
 import javax.xml.namespace.QName;
 
 import org.geotools.feature.DefaultFeatureCollections;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.bindings.GMLAbstractFeatureCollectionBaseTypeBinding;
 import org.geotools.gml2.bindings.GMLAbstractFeatureCollectionTypeBinding;
 import org.geotools.gml2.bindings.GMLAbstractFeatureTypeBinding;
@@ -58,7 +57,7 @@ import org.geotools.xml.Parser;
 import org.picocontainer.MutablePicoContainer;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-//import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
 
 
@@ -220,8 +219,7 @@ public class GMLConfiguration extends Configuration {
         
         container.registerComponentInstance(CoordinateSequenceFactory.class,
             CoordinateArraySequenceFactory.instance());
-
-        container.registerComponentImplementation(GeometryBuilder.class);
+        container.registerComponentImplementation(GeometryFactory.class);
         container.registerComponentImplementation(DefaultFeatureCollections.class);
 
         container.registerComponentInstance(srsSyntax);

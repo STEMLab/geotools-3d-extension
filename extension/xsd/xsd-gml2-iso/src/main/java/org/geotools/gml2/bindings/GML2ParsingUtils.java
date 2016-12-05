@@ -478,6 +478,7 @@ public class GML2ParsingUtils {
         if ( "srsName".equals( name.getLocalPart() ) ) {
             //CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((GeometryCollection)object );
         	CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((Aggregate)object );
+
             if ( crs != null ) {
                 return GML2EncodingUtils.toURI(crs,true);
             }

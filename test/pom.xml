@@ -25,16 +25,6 @@
   		<artifactId>gt-csv-iso</artifactId>
   		<version>${project.version}</version>
   	</dependency> 
-  	<dependency>
-  	  	<groupId>org.geotools.xsd</groupId>
-  		<artifactId>gt-xsd-gml2-iso</artifactId>
-  		<version>${project.version}</version>
-  	</dependency> 
-  	<dependency>
-  	  	<groupId>org.geotools.xsd</groupId>
-  		<artifactId>gt-xsd-core</artifactId>
-  		<version>${project.version}</version>
-  	</dependency> 
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>

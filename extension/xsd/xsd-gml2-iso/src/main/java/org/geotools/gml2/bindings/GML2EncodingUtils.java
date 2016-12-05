@@ -48,6 +48,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+//import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * Utility methods used by gml2 bindigns when encodding.
  *

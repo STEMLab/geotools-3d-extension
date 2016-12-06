@@ -123,18 +123,7 @@ public class GMLPolygonTypeBinding extends AbstractComplexBinding {
         }
 
         if (GML.innerBoundaryIs.equals(name)) {
-        	List<Ring> interiors = sb.getInteriors();
-            int n = interiors.size();
-
-            if (n > 0) {
-                Ring[] interior = new Ring[n];
-
-                for (int i = 0; i < n; i++) {
-                    interior[i] = interiors.get(i);
-                }
-
-                return interior;
-            }
+        	return sb.getInteriors();
         }
 
         return null;

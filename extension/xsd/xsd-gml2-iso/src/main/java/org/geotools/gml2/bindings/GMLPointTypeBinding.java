@@ -24,10 +24,8 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Point;
 
 
 /**
@@ -105,24 +103,21 @@ public class GMLPointTypeBinding extends AbstractComplexBinding {
             return gBuilder.createPoint(p);
         }
 
-        //TODO
-        /*
         if (node.getChild("coordinates") != null) {
-            CoordinateSequence seq = (CoordinateSequence) node.getChild("coordinates").getValue();
+            PointArray seq = (PointArray) node.getChild("coordinates").getValue();
 
-            return gBuilder.createPoint(seq);
+            return gBuilder.createPoint(seq.get(0));
         }
-        */
 
         throw new RuntimeException("Could not find a coordinate");
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        Point point = (Point) object;
+    	DirectPosition point = (DirectPosition) object;
 
         if (GML.coord.equals(name)) {
-            return point.getCoordinate();
+            return point.getDirectPosition();
         }
 
         return null;

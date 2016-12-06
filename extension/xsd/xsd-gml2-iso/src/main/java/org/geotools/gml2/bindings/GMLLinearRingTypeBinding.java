@@ -16,18 +16,24 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Ring;
 
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 
 
@@ -67,12 +73,10 @@ import com.vividsolutions.jts.geom.LinearRing;
  * @source $URL$
  */
 public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
-    CoordinateSequenceFactory csFactory;
-    GeometryFactory gFactory;
+    GeometryBuilder gBuilder;
 
-    public GMLLinearRingTypeBinding(CoordinateSequenceFactory csFactory, GeometryFactory gFactory) {
-        this.csFactory = csFactory;
-        this.gFactory = gFactory;
+    public GMLLinearRingTypeBinding(GeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -93,7 +97,7 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LinearRing.class;
+        return Ring.class;
     }
 
     /**
@@ -111,29 +115,27 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
         }
 
         if (!coordinates.isEmpty()) {
-            Node cnode = (Node) coordinates.get(0);
-            CoordinateSequence seq = (CoordinateSequence) cnode.getValue();
-            int dimension = GMLUtil.getDimension(seq);
-
-            CoordinateSequence lineSeq = csFactory.create(coordinates.size(), dimension);
-
+            PointArray pArr = gBuilder.createPointArray();
             for (int i = 0; i < coordinates.size(); i++) {
-                cnode = (Node) coordinates.get(i);
-                seq = (CoordinateSequence) cnode.getValue();
-
-                for (int j = 0; j < dimension; j++) {
-                    lineSeq.setOrdinate(i, j, seq.getOrdinate(0, j));
-                }
+                Node cnode = (Node) coordinates.get(i);
+                DirectPosition dp = (DirectPosition) cnode.getValue();
+                pArr.add(dp);
             }
 
-            return gFactory.createLinearRing(lineSeq);
+            Curve c = gBuilder.createCurve(pArr);
+            List<OrientableCurve> curves = new ArrayList<OrientableCurve>();
+            curves.add(c);
+            return gBuilder.createRing(curves);
         }
 
         if (node.getChild("coordinates") != null) {
             Node cnode = (Node) node.getChild("coordinates");
-            CoordinateSequence lineSeq = (CoordinateSequence) cnode.getValue();
+            PointArray pArr = (PointArray) cnode.getValue();
 
-            return gFactory.createLinearRing(lineSeq);
+            Curve c = gBuilder.createCurve(pArr);
+            List<OrientableCurve> curves = new ArrayList<OrientableCurve>();
+            curves.add(c);
+            return gBuilder.createRing(curves);
         }
 
         throw new RuntimeException("Could not find coordinates to build linestring");
@@ -141,10 +143,18 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        LinearRing linearRing = (LinearRing) object;
+    	Ring linearRing = (Ring) object;
 
         if (GML.coordinates.equals(name)) {
-            return linearRing.getCoordinateSequence();
+        	PointArray pa = gBuilder.createPointArray();
+        	Curve curve = linearRing.getPrimitive();
+        	List<? extends CurveSegment> segments = curve.getSegments();
+        	
+        	for(CurveSegment cs : segments) {
+        		pa.add(cs.getStartPoint());
+        	}
+        	pa.add( segments.get(segments.size() - 1).getEndPoint() );
+        	return pa;
         }
 
         return null;

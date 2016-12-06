@@ -34,6 +34,7 @@ import org.opengis.feature.Feature;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
+import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.Aggregate;
 import org.opengis.geometry.aggregate.MultiCurve;
@@ -41,15 +42,16 @@ import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Envelope;
 //import com.vividsolutions.jts.geom.Geometry;
 //import com.vividsolutions.jts.geom.GeometryCollection;
 //import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
+//import com.vividsolutions.jts.geom.LinearRing;
 //import com.vividsolutions.jts.geom.MultiLineString;
 //import com.vividsolutions.jts.geom.MultiPoint;
 //import com.vividsolutions.jts.geom.MultiPolygon;
@@ -279,7 +281,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType LINEARRINGTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "LinearRingType"), LinearRing.class, false, false,
+                "http://www.opengis.net/gml", "LinearRingType"), Ring.class, false, false,
             Collections.EMPTY_LIST, ABSTRACTGEOMETRYTYPE_TYPE, null);
 
     /**
@@ -308,7 +310,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType LINEARRINGMEMBERTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "LinearRingMemberType"), LinearRing.class, false,
+                "http://www.opengis.net/gml", "LinearRingMemberType"), Ring.class, false,
             false, Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**

@@ -34,19 +34,27 @@ import org.opengis.feature.Feature;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryCollection;
+//import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.geom.MultiLineString;
+//import com.vividsolutions.jts.geom.MultiPoint;
+//import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Polygon;
 
 
 /**
@@ -112,7 +120,7 @@ public class GMLSchema extends SchemaImpl {
      */
     public static final AttributeType ABSTRACTGEOMETRYCOLLECTIONBASETYPE_TYPE = new AttributeTypeImpl(new NameImpl(
                 "http://www.opengis.net/gml", "AbstractGeometryCollectionBaseType"),
-            GeometryCollection.class, false, true, Collections.EMPTY_LIST,
+            Aggregate.class, false, true, Collections.EMPTY_LIST,
             ABSTRACTGEOMETRYTYPE_TYPE, null);
 
     /**
@@ -177,7 +185,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType GEOMETRYCOLLECTIONTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "GeometryCollectionType"), GeometryCollection.class,
+                "http://www.opengis.net/gml", "GeometryCollectionType"), Aggregate.class,
             false, false, Collections.EMPTY_LIST, ABSTRACTGEOMETRYCOLLECTIONBASETYPE_TYPE, null);
 
     /**
@@ -331,7 +339,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType POLYGONTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "PolygonType"), Polygon.class, false, false,
+                "http://www.opengis.net/gml", "PolygonType"), Surface.class, false, false,
             Collections.EMPTY_LIST, ABSTRACTGEOMETRYTYPE_TYPE, null);
 
     /**
@@ -359,7 +367,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType POLYGONMEMBERTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "PolygonMemberType"), Polygon.class, false, false,
+                "http://www.opengis.net/gml", "PolygonMemberType"), Surface.class, false, false,
             Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -391,7 +399,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType MULTIPOLYGONTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "MultiPolygonType"), MultiPolygon.class, false,
+                "http://www.opengis.net/gml", "MultiPolygonType"), MultiSurface.class, false,
             false, Collections.EMPTY_LIST, GEOMETRYCOLLECTIONTYPE_TYPE, null);
 
     /**
@@ -423,7 +431,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType MULTIPOLYGONPROPERTYTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "MultiPolygonPropertyType"), MultiPolygon.class,
+                "http://www.opengis.net/gml", "MultiPolygonPropertyType"), MultiSurface.class,
             false, false, Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -452,7 +460,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType MULTIGEOMETRYPROPERTYTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "MultiGeometryPropertyType"), MultiPolygon.class,
+                "http://www.opengis.net/gml", "MultiGeometryPropertyType"), MultiSurface.class,
             false, false, Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -485,7 +493,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType LINESTRINGTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "LineStringType"), LineString.class, false, false,
+                "http://www.opengis.net/gml", "LineStringType"), Curve.class, false, false,
             Collections.EMPTY_LIST, ABSTRACTGEOMETRYTYPE_TYPE, null);
 
     /**
@@ -513,7 +521,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType LINESTRINGMEMBERTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "LineStringMemberType"), LineString.class, false,
+                "http://www.opengis.net/gml", "LineStringMemberType"), Curve.class, false,
             false, Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -545,7 +553,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType MULTILINESTRINGTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "MultiLineStringType"), MultiLineString.class, false,
+                "http://www.opengis.net/gml", "MultiLineStringType"), MultiCurve.class, false,
             false, Collections.EMPTY_LIST, GEOMETRYCOLLECTIONTYPE_TYPE, null);
 
     /**
@@ -578,7 +586,7 @@ public class GMLSchema extends SchemaImpl {
      */
     public static final AttributeType MULTILINESTRINGPROPERTYTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
                 "http://www.opengis.net/gml", "MultiLineStringPropertyType"),
-            MultiLineString.class, false, false, Collections.EMPTY_LIST,
+            MultiCurve.class, false, false, Collections.EMPTY_LIST,
             GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -905,7 +913,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType POLYGONPROPERTYTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "PolygonPropertyType"), Polygon.class, false, false,
+                "http://www.opengis.net/gml", "PolygonPropertyType"), Surface.class, false, false,
             Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     /**
@@ -1094,7 +1102,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType LINESTRINGPROPERTYTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "LineStringPropertyType"), LineString.class, false,
+                "http://www.opengis.net/gml", "LineStringPropertyType"), Curve.class, false,
             false, Collections.EMPTY_LIST, GEOMETRYASSOCIATIONTYPE_TYPE, null);
 
     public GMLSchema() {

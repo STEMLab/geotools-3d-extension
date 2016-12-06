@@ -61,16 +61,22 @@ import org.opengis.feature.type.Name;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.geom.LineString;
+//import com.vividsolutions.jts.geom.MultiLineString;
+//import com.vividsolutions.jts.geom.MultiPoint;
+//import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.Point;
+//import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * 
@@ -291,25 +297,25 @@ public class GMLEncodingUtils {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
                             .qName("PointPropertyType")));
                 }
-                else if ( LineString.class.isAssignableFrom( binding ) ) {
+                else if ( Curve.class.isAssignableFrom( binding ) ) {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
-                            .qName("LineStringPropertyType")));
+                            .qName("CurvePropertyType")));
                 }
-                else if ( Polygon.class.isAssignableFrom( binding) ) {
+                else if ( Surface.class.isAssignableFrom( binding) ) {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
-                            .qName("PolygonPropertyType")));
+                            .qName("SurfacePropertyType")));
                 }
                 else if ( MultiPoint.class.isAssignableFrom( binding ) ) {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
                             .qName("MultiPointPropertyType")));
                 }
-                else if ( MultiLineString.class.isAssignableFrom( binding ) ) {
+                else if ( MultiCurve.class.isAssignableFrom( binding ) ) {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
-                            .qName("MultiLineStringPropertyType")));
+                            .qName("MultiCurvePropertyType")));
                 }
-                else if ( MultiPolygon.class.isAssignableFrom( binding) ) {
+                else if ( MultiSurface.class.isAssignableFrom( binding) ) {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml
-                            .qName("MultiPolygonPropertyType")));
+                            .qName("MultiSurfacePropertyType")));
                 }
                 else {
                     element.setTypeDefinition(schemaIndex.getTypeDefinition(gml

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.referencing.CRS;
 import org.geotools.xml.AbstractComplexBinding;
@@ -116,6 +117,7 @@ public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
                 if (crs != null) {
                 	//TODO CRS must be set before building geometry
                     //geometry.setUserData(crs);
+                	GeometryBuilder gb = new GeometryBuilder(crs);
                 } else {
                     logger.warning("Could not create Coordinate Reference System for " + srs);
                 }

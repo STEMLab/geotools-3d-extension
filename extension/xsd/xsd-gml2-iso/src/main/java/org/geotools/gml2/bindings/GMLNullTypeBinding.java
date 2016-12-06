@@ -21,8 +21,9 @@ import javax.xml.namespace.QName;
 import org.geotools.gml2.GML;
 import org.geotools.xml.InstanceComponent;
 import org.geotools.xml.SimpleBinding;
+import org.opengis.geometry.Envelope;
 
-import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Envelope;
 
 
 /**

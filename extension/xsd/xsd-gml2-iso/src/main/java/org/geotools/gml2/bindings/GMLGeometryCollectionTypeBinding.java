@@ -18,13 +18,15 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.Aggregate;
 
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryCollection;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 
 
 /**
@@ -61,9 +63,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @source $URL$
  */
 public class GMLGeometryCollectionTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gFactory;
 
-    public GMLGeometryCollectionTypeBinding(GeometryFactory gFactory) {
+    public GMLGeometryCollectionTypeBinding(GeometryBuilder gFactory) {
         this.gFactory = gFactory;
     }
 
@@ -85,7 +87,7 @@ public class GMLGeometryCollectionTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return GeometryCollection.class;
+        return Aggregate.class;
     }
 
     /**
@@ -97,13 +99,13 @@ public class GMLGeometryCollectionTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML2ParsingUtils.GeometryCollectionType_parse(node, GeometryCollection.class, gFactory);
+        return GML2ParsingUtils.GeometryCollectionType_parse(node, Aggregate.class, gFactory);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
         if (GML.geometryMember.equals(name)) {
-            return GML2ParsingUtils.asCollection((GeometryCollection) object);
+            return GML2ParsingUtils.asCollection((Aggregate) object);
         }
         
         return GML2ParsingUtils.GeometryCollectionType_getProperty(object, name);

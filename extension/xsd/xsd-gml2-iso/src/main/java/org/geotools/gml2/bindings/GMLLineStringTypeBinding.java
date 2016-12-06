@@ -30,9 +30,6 @@ import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.LineString;
-
 
 /**
  * Binding object for the type http://www.opengis.net/gml:LineStringType.

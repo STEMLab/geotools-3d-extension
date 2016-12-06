@@ -18,13 +18,15 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiCurve;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiLineString;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.MultiLineString;
 
 
 /**
@@ -61,9 +63,9 @@ import com.vividsolutions.jts.geom.MultiLineString;
  * @source $URL$
  */
 public class GMLMultiLineStringTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gFactory;
 
-    public GMLMultiLineStringTypeBinding(GeometryFactory gFactory) {
+    public GMLMultiLineStringTypeBinding(GeometryBuilder gFactory) {
         this.gFactory = gFactory;
     }
 
@@ -91,7 +93,7 @@ public class GMLMultiLineStringTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiLineString.class;
+        return MultiCurve.class;
     }
 
     /**
@@ -102,13 +104,13 @@ public class GMLMultiLineStringTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiLineString.class, gFactory);
+        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiCurve.class, gFactory);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if (GML.lineStringMember.equals(name)) {
-            return GML2ParsingUtils.asCollection((MultiLineString) object);
+            return GML2ParsingUtils.asCollection((MultiCurve) object);
         }
 
         return GML2ParsingUtils.GeometryCollectionType_getProperty(object, name);

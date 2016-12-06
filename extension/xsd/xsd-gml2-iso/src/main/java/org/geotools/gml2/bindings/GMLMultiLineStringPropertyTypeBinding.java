@@ -25,8 +25,9 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiCurve;
 
-import com.vividsolutions.jts.geom.MultiLineString;
+//import com.vividsolutions.jts.geom.MultiLineString;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiLineStringPropertyType.
@@ -76,7 +77,7 @@ public class GMLMultiLineStringPropertyTypeBinding extends AbstractComplexBindin
      * @generated modifiable
      */
     public Class getType() {
-        return MultiLineString.class;
+        return MultiCurve.class;
     }
 
     /**
@@ -87,17 +88,17 @@ public class GMLMultiLineStringPropertyTypeBinding extends AbstractComplexBindin
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return node.getChildValue(MultiLineString.class);
+        return node.getChildValue(MultiCurve.class);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperty((MultiLineString)object,name,false);
+        return GML2EncodingUtils.GeometryPropertyType_getProperty((MultiCurve)object,name,false);
     }
     
     @Override
     public List getProperties(Object object, XSDElementDeclaration element)
             throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperties((MultiLineString)object);
+        return GML2EncodingUtils.GeometryPropertyType_getProperties((MultiCurve)object);
     }
 }

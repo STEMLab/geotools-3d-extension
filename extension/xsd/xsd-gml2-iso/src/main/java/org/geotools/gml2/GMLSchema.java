@@ -28,36 +28,23 @@ import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.FeatureTypeImpl;
 import org.geotools.feature.type.ProfileImpl;
 import org.geotools.feature.type.SchemaImpl;
-import org.geotools.gml2.GML;
 import org.geotools.xs.XSSchema;
 import org.opengis.feature.Feature;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
+import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.Aggregate;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-//import com.vividsolutions.jts.geom.Envelope;
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.geom.GeometryCollection;
-//import com.vividsolutions.jts.geom.LineString;
-//import com.vividsolutions.jts.geom.LinearRing;
-//import com.vividsolutions.jts.geom.MultiLineString;
-//import com.vividsolutions.jts.geom.MultiPoint;
-//import com.vividsolutions.jts.geom.MultiPolygon;
-//import com.vividsolutions.jts.geom.Point;
-//import com.vividsolutions.jts.geom.Polygon;
-
 
 /**
  * 
@@ -214,7 +201,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType COORDTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "CoordType"), Coordinate.class, false, false,
+                "http://www.opengis.net/gml", "CoordType"), DirectPosition.class, false, false,
             Collections.EMPTY_LIST, XSSchema.ANYTYPE_TYPE, null);
 
     /**
@@ -247,7 +234,7 @@ public class GMLSchema extends SchemaImpl {
      * @generated
      */
     public static final AttributeType COORDINATESTYPE_TYPE = new AttributeTypeImpl(new NameImpl(
-                "http://www.opengis.net/gml", "CoordinatesType"), CoordinateSequence.class, false,
+                "http://www.opengis.net/gml", "CoordinatesType"), PointArray.class, false,
             false, Collections.EMPTY_LIST, XSSchema.STRING_TYPE, null);
 
     /**

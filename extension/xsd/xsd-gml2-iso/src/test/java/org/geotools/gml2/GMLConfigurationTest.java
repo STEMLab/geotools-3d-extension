@@ -19,6 +19,10 @@ package org.geotools.gml2;
 import junit.framework.TestCase;
 
 import org.geotools.feature.FeatureCollections;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.gml2.FeatureTypeCache;
+import org.geotools.gml2.GML;
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xs.XSConfiguration;
 import org.picocontainer.MutablePicoContainer;
@@ -71,8 +75,7 @@ public class GMLConfigurationTest extends TestCase {
         configuration.configureContext(container);
 
         assertNotNull(container.getComponentInstanceOfType(FeatureTypeCache.class));
-        assertNotNull(container.getComponentAdapter(CoordinateSequenceFactory.class));
-        assertNotNull(container.getComponentAdapterOfType(GeometryFactory.class));
+        assertNotNull(container.getComponentInstanceOfType(GeometryBuilder.class));
         assertNotNull(container.getComponentAdapterOfType(FeatureCollections.class));
     }
 }

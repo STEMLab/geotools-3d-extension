@@ -18,18 +18,15 @@ package org.geotools.gml2.bindings;
 
 import java.math.BigDecimal;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.geotools.xs.XS;
 import org.opengis.geometry.DirectPosition;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
-
-
 /**
  * 
  *
@@ -51,7 +48,7 @@ public class GMLCoordTypeBindingTest extends AbstractGMLBindingTest {
         coordinate = createElement(GML.NAMESPACE, "myCoordinate", GML.COORDTYPE, null);
 
         container = new DefaultPicoContainer();
-        container.registerComponentInstance(CoordinateArraySequenceFactory.instance());
+        container.registerComponentInstance(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         container.registerComponentImplementation(GMLCoordTypeBinding.class);
     }
 

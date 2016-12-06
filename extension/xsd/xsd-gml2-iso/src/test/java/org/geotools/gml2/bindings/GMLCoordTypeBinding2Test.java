@@ -18,6 +18,7 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.DirectPosition;
 import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -30,7 +31,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class GMLCoordTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(Coordinate.class, binding(GML.CoordType).getType());
+        assertEquals(DirectPosition.class, binding(GML.CoordType).getType());
     }
 
     public void testExecutionMode() {
@@ -40,10 +41,11 @@ public class GMLCoordTypeBinding2Test extends GMLTestSupport {
     public void testParse() throws Exception {
         GML2MockData.coordinate(document, document);
 
-        Coordinate c = (Coordinate) parse();
+        DirectPosition c = (DirectPosition) parse();
 
-        assertEquals(1.0, c.x, 0.0);
-        assertEquals(2.0, c.y, 0.0);
+        assertEquals(1.0, c.getOrdinate(0), 0.0);
+        assertEquals(2.0, c.getOrdinate(1), 0.0);
+        assertEquals(3.0, c.getOrdinate(2), 0.0);
     }
 
     public void testEncode() throws Exception {
@@ -51,5 +53,6 @@ public class GMLCoordTypeBinding2Test extends GMLTestSupport {
 
         assertEquals(1, doc.getElementsByTagNameNS(GML.NAMESPACE, "X").getLength());
         assertEquals(1, doc.getElementsByTagNameNS(GML.NAMESPACE, "Y").getLength());
+        assertEquals(1, doc.getElementsByTagNameNS(GML.NAMESPACE, "Z").getLength());
     }
 }

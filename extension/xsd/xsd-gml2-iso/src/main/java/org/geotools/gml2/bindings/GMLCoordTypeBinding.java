@@ -26,7 +26,6 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.coordinate.PointArray;
 
 
 /**

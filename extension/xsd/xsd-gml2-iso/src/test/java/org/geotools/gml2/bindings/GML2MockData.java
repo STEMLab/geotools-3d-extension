@@ -16,35 +16,39 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.gml2.TEST;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 
 /**
@@ -59,13 +63,13 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
  */
 public class GML2MockData {
     /** factory used to create geometries */
-    static GeometryFactory gf = new GeometryFactory();
+    static GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
     //
     //Geometries
     //
-    static Coordinate coordinate() {
-        return new Coordinate(1, 2);
+    static DirectPosition coordinate() {
+        return gb.createDirectPosition(new double[] {1, 2, 3});
     }
 
     static Element coordinate(Document document, Node parent) {
@@ -76,19 +80,25 @@ public class GML2MockData {
 
         Element y = element(new QName(GML.NAMESPACE, "Y"), document, coord);
         y.appendChild(document.createTextNode("2.0"));
+        
+        Element z = element(new QName(GML.NAMESPACE, "Z"), document, coord);
+        y.appendChild(document.createTextNode("3.0"));
 
         return coord;
     }
 
-    static CoordinateSequence coordinates() {
-        return new CoordinateArraySequence(new Coordinate[] {
-                new Coordinate(1, 2), new Coordinate(3, 4)
-            });
+    static PointArray coordinates() {
+    	PointArray pa = gb.createPointArray();
+    	pa.add(
+    			gb.createDirectPosition( new double[] {1, 2, 3}));
+    	pa.add(
+    			gb.createDirectPosition( new double[] {3, 4, 5}));
+    	return pa;
     }
 
     static Element coordinates(Document document, Node parent) {
         Element coordinates = element(GML.coordinates, document, parent);
-        coordinates.appendChild(document.createTextNode("1.0,2.0 3.0,4.0"));
+        coordinates.appendChild(document.createTextNode("1.0,2.0,3.0 3.0,4.0,5.0"));
 
         return coordinates;
     }
@@ -123,7 +133,7 @@ public class GML2MockData {
     }
 
     static Point point() {
-        return gf.createPoint(coordinate());
+        return gb.createPoint(coordinate());
     }
 
     static Element point(Document document, Node parent) {
@@ -142,8 +152,8 @@ public class GML2MockData {
         return pointProperty;
     }
 
-    static LineString lineString() {
-        return gf.createLineString(coordinates());
+    static Curve lineString() {
+        return gb.createCurve(coordinates());
     }
 
     static Element lineString(Document document, Node parent) {
@@ -154,11 +164,18 @@ public class GML2MockData {
         return lineString;
     }
 
-    static LinearRing linearRing() {
-        return gf.createLinearRing(new Coordinate[] {
-                new Coordinate(1, 1), new Coordinate(2, 2), new Coordinate(3, 3),
-                new Coordinate(1, 1)
-            });
+    static Ring linearRing() {
+    	PointArray pa = gb.createPointArray();
+    	pa.add(
+    			gb.createDirectPosition( new double[] {1, 1, 1}));
+    	pa.add(
+    			gb.createDirectPosition( new double[] {2, 2, 2}));
+    	pa.add(
+    			gb.createDirectPosition( new double[] {3, 3, 3}));
+    	pa.add(
+    			gb.createDirectPosition( new double[] {1, 1, 1}));
+    	Curve c = gb.createCurve(pa);
+    	return gb.createRing(Arrays.asList(c));
     }
 
     static Element lineStringProperty(Document document, Node parent) {
@@ -173,13 +190,14 @@ public class GML2MockData {
         Element linearRing = element(GML.LinearRing, document, parent);
 
         Element coordinates = element(GML.coordinates, document, linearRing);
-        coordinates.appendChild(document.createTextNode("1.0,2.0 3.0,4.0 5.0,6.0 1.0,2.0"));
+        coordinates.appendChild(document.createTextNode("1.0,2.0,3.0 3.0,4.0,5.0 5.0,6.0,7.0 1.0,2.0,3.0"));
 
         return linearRing;
     }
 
-    static Polygon polygon() {
-        return gf.createPolygon(linearRing(), null);
+    static Surface polygon() {
+    	SurfaceBoundary sb = gb.createSurfaceBoundary(linearRing());
+        return gb.createSurface(sb);
     }
 
     static Element polygon(Document document, Node parent) {
@@ -200,7 +218,11 @@ public class GML2MockData {
     }
 
     static MultiPoint multiPoint() {
-        return setCRS(gf.createMultiPoint(new Coordinate[] { new Coordinate(1, 1), new Coordinate(2, 2) }));
+    	Set<Point> pSet = new HashSet<Point>(Arrays.asList(
+    			gb.createPoint(1, 1, 1),
+    			gb.createPoint(2, 2, 2)
+    			));
+        return gb.createMultiPoint(pSet);
     }
 
     static Element multiPoint(Document document, Node parent) {
@@ -214,11 +236,6 @@ public class GML2MockData {
         point(document, pointMember);
 
         return multiPoint;
-    }
-    
-    static <G extends Geometry> G setCRS( G geometry ) {
-        geometry.setUserData( crs("4326") );
-        return geometry;
     }
 
     static CoordinateReferenceSystem crs( String srid ) {
@@ -237,8 +254,12 @@ public class GML2MockData {
         return multiPointProperty;
     }
 
-    static MultiLineString multiLineString() {
-        return gf.createMultiLineString(new LineString[] { lineString(), lineString() });
+    static MultiCurve multiLineString() {
+    	Set<Curve> lSet = new HashSet<Curve>(Arrays.asList(
+    			lineString(), 
+    			lineString()
+    			));
+        return gb.createMultiCurve(lSet);
     }
 
     static Element multiLineString(Document document, Node parent) {
@@ -260,8 +281,12 @@ public class GML2MockData {
         return multiLineStringProperty;
     }
 
-    static MultiPolygon multiPolygon() {
-        return gf.createMultiPolygon(new Polygon[] { polygon(), polygon() });
+    static MultiSurface multiPolygon() {
+    	Set<Surface> sSet = new HashSet<Surface>(Arrays.asList(
+    			polygon(), 
+    			polygon()
+    			));
+        return gb.createMultiSurface(sSet);
     }
 
     static Element multiPolygon(Document document, Node parent) {
@@ -283,8 +308,13 @@ public class GML2MockData {
         return multiPolygonProperty;
     }
 
-    static GeometryCollection multiGeometry() {
-        return gf.createGeometryCollection(new Geometry[]{point(), lineString(), polygon()});
+    static MultiPrimitive multiGeometry() {
+    	Set<Primitive> pSet = new HashSet<Primitive>(Arrays.asList(
+    			point(), 
+    			lineString(), 
+    			polygon()
+    			));
+    	return gb.createMultiPrimitive(pSet);
     }
     //
     // features

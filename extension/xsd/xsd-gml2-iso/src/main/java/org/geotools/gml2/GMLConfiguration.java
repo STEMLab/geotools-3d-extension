@@ -19,6 +19,7 @@ package org.geotools.gml2;
 import javax.xml.namespace.QName;
 
 import org.geotools.feature.DefaultFeatureCollections;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.bindings.GMLAbstractFeatureCollectionBaseTypeBinding;
 import org.geotools.gml2.bindings.GMLAbstractFeatureCollectionTypeBinding;
 import org.geotools.gml2.bindings.GMLAbstractFeatureTypeBinding;
@@ -51,13 +52,14 @@ import org.geotools.gml2.bindings.GMLPointTypeBinding;
 import org.geotools.gml2.bindings.GMLPolygonMemberTypeBinding;
 import org.geotools.gml2.bindings.GMLPolygonPropertyTypeBinding;
 import org.geotools.gml2.bindings.GMLPolygonTypeBinding;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.picocontainer.MutablePicoContainer;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
 
 
@@ -99,7 +101,7 @@ public class GMLConfiguration extends Configuration {
      * Srs name style to encode srsName URI's with
      */
     protected SrsSyntax srsSyntax = SrsSyntax.OGC_HTTP_URL;
-
+    
     /**
      * Number of decimals in the output
      */
@@ -216,10 +218,7 @@ public class GMLConfiguration extends Configuration {
         super.configureContext(container);
 
         container.registerComponentInstance(new FeatureTypeCache());
-        
-        container.registerComponentInstance(CoordinateSequenceFactory.class,
-            CoordinateArraySequenceFactory.instance());
-        container.registerComponentImplementation(GeometryFactory.class);
+        container.registerComponentInstance(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         container.registerComponentImplementation(DefaultFeatureCollections.class);
 
         container.registerComponentInstance(srsSyntax);

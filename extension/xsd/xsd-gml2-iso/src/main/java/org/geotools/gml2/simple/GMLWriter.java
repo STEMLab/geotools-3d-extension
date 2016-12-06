@@ -20,18 +20,16 @@ import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.gml2.GML;
 import org.geotools.xml.XMLUtils;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.NamespaceSupport;
-
-import com.vividsolutions.jts.geom.CoordinateSequence;
-
 /**
  * Helper class writing out GML elements and coordinates. Geared towards efficiency, write out
  * elements and ordinate lists with the minimim amount of garbage generation
@@ -274,9 +272,9 @@ public class GMLWriter {
      * @param cs
      * @throws SAXException
      */
-    public void coordinates(CoordinateSequence cs) throws SAXException {
+    public void coordinates(PointArray pa) throws SAXException {
         startElement(coordinates, null);
-        coordinates(cs, ',', ' ', sb);
+        coordinates(pa, ',', ' ', sb);
         characters(sb);
         endElement(coordinates);
     }
@@ -306,20 +304,21 @@ public class GMLWriter {
         }
     }
 
-    void positions(CoordinateSequence coordinates) {
+    void positions(PointArray coordinates) {
         coordinates(coordinates, ' ', ' ', sb);
     }
 
-    void coordinates(CoordinateSequence coordinates, char cs, char ts, StringBuffer sb) {
+    void coordinates(PointArray coordinates, char cs, char ts, StringBuffer sb) {
         sb.setLength(0);
         int n = coordinates.size();
-        int dim = CoordinateSequences.coordinateDimension(coordinates);
+        int dim = coordinates.getDimension();
         for (int i = 0; i < n; i++) {
-            appendDecimal(coordinates.getX(i)).append(cs);
-            appendDecimal(coordinates.getY(i));
+        	DirectPosition dp = coordinates.get(i).getDirectPosition();
+            appendDecimal(dp.getOrdinate(0)).append(cs);
+            appendDecimal(dp.getOrdinate(1));
             if(dim == 3) {
                 sb.append(cs);
-                appendDecimal(coordinates.getOrdinate(i, 2));
+                appendDecimal(dp.getOrdinate(2));
             }
             sb.append(ts);
         }
@@ -367,7 +366,7 @@ public class GMLWriter {
      * @param coordinateSequence
      * @throws SAXException
      */
-    public void posList(CoordinateSequence coordinateSequence) throws SAXException {
+    public void posList(PointArray coordinateSequence) throws SAXException {
         startElement(posList, null);
         positions(coordinateSequence);
         characters(sb);

@@ -56,6 +56,7 @@ import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.Aggregate;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
@@ -438,28 +439,11 @@ public class GML2ParsingUtils {
                 geoms.add(cnode.getValue());
             }
         }
-
-        Aggregate gc = null;
-        
-        if (MultiPoint.class.isAssignableFrom(clazz)) {
-            gc = gBuilder.createMultiPoint(geoms);
-        }
-        else if (MultiCurve.class.isAssignableFrom(clazz)) {
-            //gc = gFactory.createMultiLineString(
-            //    (LineString[]) geoms.toArray(new LineString[geoms.size()]));
-        }
-        else if (MultiSurface.class.isAssignableFrom(clazz)) {
-            //gc = gFactory.createMultiPolygon((Polygon[]) geoms.toArray(new Polygon[geoms.size()]));
-        }
-        else {
-            //gc = gFactory.createGeometryCollection((Geometry[]) geoms.toArray(
-            //    new Geometry[geoms.size()]));
-        }
-        
         //set an srs if there is one
         CoordinateReferenceSystem crs = crs(node);
 
         if (crs != null) {
+        	gBuilder.setCoordinateReferenceSystem(crs);
             //gc.setUserData(crs);
 
             // since we're setting the CRS on the UserData object, might as well set the SRID for the geom
@@ -472,6 +456,27 @@ public class GML2ParsingUtils {
             }
             */
         }
+        Aggregate gc = null;
+        
+        if (MultiPoint.class.isAssignableFrom(clazz)) {
+            gc = gBuilder.createMultiPoint(geoms);
+        }
+        else if (MultiCurve.class.isAssignableFrom(clazz)) {
+        	gc = gBuilder.createMultiCurve(geoms);
+            //gc = gFactory.createMultiLineString(
+            //    (LineString[]) geoms.toArray(new LineString[geoms.size()]));
+        }
+        else if (MultiSurface.class.isAssignableFrom(clazz)) {
+        	gc = gBuilder.createMultiSurface(geoms);
+            //gc = gFactory.createMultiPolygon((Polygon[]) geoms.toArray(new Polygon[geoms.size()]));
+        }
+        else {
+        	gc = gBuilder.createMultiPrimitive(geoms);
+            //gc = gFactory.createGeometryCollection((Geometry[]) geoms.toArray(
+            //    new Geometry[geoms.size()]));
+        }
+        
+        
         
         return gc;
     }
@@ -479,7 +484,7 @@ public class GML2ParsingUtils {
     static Object GeometryCollectionType_getProperty(Object object, QName name) {
         if ( "srsName".equals( name.getLocalPart() ) ) {
             //CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((GeometryCollection)object );
-        	CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((Aggregate)object );
+        	CoordinateReferenceSystem crs = GML2EncodingUtils.getCRS((MultiPrimitive)object );
 
             if ( crs != null ) {
                 return GML2EncodingUtils.toURI(crs,true);

@@ -25,8 +25,9 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiSurface;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.MultiPolygon;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiPolygonPropertyType.
@@ -76,7 +77,7 @@ public class GMLMultiPolygonPropertyTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     /**
@@ -87,17 +88,17 @@ public class GMLMultiPolygonPropertyTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return node.getChildValue((MultiPolygon.class));
+        return node.getChildValue((MultiSurface.class));
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperty((MultiPolygon)object,name,false);
+        return GML2EncodingUtils.GeometryPropertyType_getProperty((MultiSurface)object,name,false);
     }
     
     @Override
     public List getProperties(Object object, XSDElementDeclaration element)
             throws Exception {
-        return GML2EncodingUtils.GeometryPropertyType_getProperties((MultiPolygon)object);
+        return GML2EncodingUtils.GeometryPropertyType_getProperties((MultiSurface)object);
     }
 }

@@ -18,13 +18,15 @@ package org.geotools.gml2.bindings;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiSurface;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.MultiPolygon;
 
 
 /**
@@ -61,9 +63,9 @@ import com.vividsolutions.jts.geom.MultiPolygon;
  * @source $URL$
  */
 public class GMLMultiPolygonTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    GeometryBuilder gFactory;
 
-    public GMLMultiPolygonTypeBinding(GeometryFactory gFactory) {
+    public GMLMultiPolygonTypeBinding(GeometryBuilder gFactory) {
         this.gFactory = gFactory;
     }
 
@@ -92,7 +94,7 @@ public class GMLMultiPolygonTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     /**
@@ -103,13 +105,13 @@ public class GMLMultiPolygonTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiPolygon.class, gFactory);
+        return GML2ParsingUtils.GeometryCollectionType_parse(node, MultiSurface.class, gFactory);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if (GML.polygonMember.equals(name)) {
-            return GML2ParsingUtils.asCollection((MultiPolygon) object);
+            return GML2ParsingUtils.asCollection((MultiSurface) object);
         }
 
         return GML2ParsingUtils.GeometryCollectionType_getProperty(object, name);

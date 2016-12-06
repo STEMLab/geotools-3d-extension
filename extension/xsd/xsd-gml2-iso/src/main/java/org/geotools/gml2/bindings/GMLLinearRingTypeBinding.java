@@ -33,9 +33,6 @@ import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.Ring;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.LinearRing;
-
 
 /**
  * Binding object for the type http://www.opengis.net/gml:LinearRingType.

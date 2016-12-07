@@ -67,8 +67,10 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
     Logger logger;
 
-    public GMLAbstractGeometryTypeBinding(Logger logger) {
+    GeometryBuilder builder;
+    public GMLAbstractGeometryTypeBinding(Logger logger, GeometryBuilder builder) {
         this.logger = logger;
+        this.builder = builder;
     }
 
     /**
@@ -106,37 +108,28 @@ public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        if (value instanceof Geometry) {
-            Geometry geometry = (Geometry) value;
-
-            //&lt;attribute name="srsName" type="anyURI" use="optional"/&gt;
-            if (node.hasAttribute("srsName")) {
-                URI srs = (URI) node.getAttributeValue("srsName");
-                CoordinateReferenceSystem crs = CRS.decode(srs.toString());
-
-                if (crs != null) {
-                	//TODO CRS must be set before building geometry
-                    //geometry.setUserData(crs);
-                	GeometryBuilder gb = new GeometryBuilder(crs);
-                } else {
-                    logger.warning("Could not create Coordinate Reference System for " + srs);
+        if (node.hasAttribute("srsName")) {
+            URI srs = (URI) node.getAttributeValue("srsName");
+            CoordinateReferenceSystem crs = CRS.decode(srs.toString());
+            
+            if (crs != null) {
+                if(!builder.getCoordinateReferenceSystem().equals(crs)) {
+                	builder.setCoordinateReferenceSystem(crs);
                 }
+            } else {
+                logger.warning("Could not create Coordinate Reference System for " + srs);
             }
-
-            //TODO: process the ID attribute
+            return crs;
         }
-
-        return value;
+        return null;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("srsName".equals(name.getLocalPart())) {
-            Geometry geometry = (Geometry) object;
-
-            //if (geometry.getUserData() instanceof CoordinateReferenceSystem) {
-                return GML2EncodingUtils.crs(geometry.getCoordinateReferenceSystem());
-            //}
+        	Geometry geometry = (Geometry) object;
+        	CoordinateReferenceSystem crs = geometry.getCoordinateReferenceSystem();
+        	return GML2EncodingUtils.toURI(crs);
         }
 
         return null;

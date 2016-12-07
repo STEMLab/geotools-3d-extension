@@ -18,12 +18,12 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 
 
 /**
@@ -42,18 +42,17 @@ public class GMLAbstractGeometryTypeBindingTest extends GMLTestSupport {
 
     public void testParse() throws Exception {
         GML2MockData.point(document, document);
-        document.getDocumentElement().setAttribute("srsName", "EPSG:4326");
+        document.getDocumentElement().setAttribute("srsName", "EPSG:4329");
 
         Point p = (Point) parse();
-        assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        assertNotNull(p.getCoordinateReferenceSystem());
     }
 
     public void testEncode() throws Exception {
         Point p = GML2MockData.point();
-        p.setUserData(CRS.decode("EPSG:4326", true));
-
+        
         Document doc = encode(p, GML.Point);
-        assertEquals("http://www.opengis.net/gml/srs/epsg.xml#4326",
+        assertEquals("WGS84(DD)",
             doc.getDocumentElement().getAttribute("srsName"));
     }
 }

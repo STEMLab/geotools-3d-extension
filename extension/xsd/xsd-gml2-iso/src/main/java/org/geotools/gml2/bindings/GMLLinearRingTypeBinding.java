@@ -17,6 +17,7 @@
 package org.geotools.gml2.bindings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -84,7 +85,7 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -120,9 +121,7 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
             }
 
             Curve c = gBuilder.createCurve(pArr);
-            List<OrientableCurve> curves = new ArrayList<OrientableCurve>();
-            curves.add(c);
-            return gBuilder.createRing(curves);
+            return gBuilder.createRing(Arrays.asList(c));
         }
 
         if (node.getChild("coordinates") != null) {
@@ -130,9 +129,7 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
             PointArray pArr = (PointArray) cnode.getValue();
 
             Curve c = gBuilder.createCurve(pArr);
-            List<OrientableCurve> curves = new ArrayList<OrientableCurve>();
-            curves.add(c);
-            return gBuilder.createRing(curves);
+            return gBuilder.createRing(Arrays.asList(c));
         }
 
         throw new RuntimeException("Could not find coordinates to build linestring");
@@ -146,7 +143,6 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
         	PointArray pa = gBuilder.createPointArray();
         	Curve curve = linearRing.getPrimitive();
         	List<? extends CurveSegment> segments = curve.getSegments();
-        	
         	for(CurveSegment cs : segments) {
         		pa.add(cs.getStartPoint());
         	}

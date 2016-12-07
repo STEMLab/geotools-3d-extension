@@ -82,7 +82,7 @@ public class GML2MockData {
         y.appendChild(document.createTextNode("2.0"));
         
         Element z = element(new QName(GML.NAMESPACE, "Z"), document, coord);
-        y.appendChild(document.createTextNode("3.0"));
+        z.appendChild(document.createTextNode("3.0"));
 
         return coord;
     }

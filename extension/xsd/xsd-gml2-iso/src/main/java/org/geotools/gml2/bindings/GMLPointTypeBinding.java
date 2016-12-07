@@ -27,6 +27,8 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Point;
 
+import com.vividsolutions.jts.util.Assert;
+
 
 /**
  * Binding object for the type http://www.opengis.net/gml:PointType.
@@ -69,7 +71,7 @@ public class GMLPointTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -105,7 +107,7 @@ public class GMLPointTypeBinding extends AbstractComplexBinding {
 
         if (node.getChild("coordinates") != null) {
             PointArray seq = (PointArray) node.getChild("coordinates").getValue();
-
+            Assert.isTrue(seq.size() == 1);
             return gBuilder.createPoint(seq.get(0));
         }
 
@@ -114,7 +116,7 @@ public class GMLPointTypeBinding extends AbstractComplexBinding {
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-    	DirectPosition point = (DirectPosition) object;
+    	Point point = (Point) object;
 
         if (GML.coord.equals(name)) {
             return point.getDirectPosition();

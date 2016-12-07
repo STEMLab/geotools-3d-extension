@@ -18,9 +18,9 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.primitive.Point;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Point;
 
 
 /**
@@ -34,16 +34,17 @@ public class GMLPointTypeBinding2Test extends GMLTestSupport {
     }
 
     public void testExecutionMode() {
-        assertEquals(Binding.BEFORE, binding(GML.PointType).getExecutionMode());
+        assertEquals(Binding.AFTER, binding(GML.PointType).getExecutionMode());
     }
 
     public void testParse() throws Exception {
         GML2MockData.point(document, document);
 
         Point p = (Point) parse();
-
-        assertEquals(1.0, p.getX(), 0.0);
-        assertEquals(2.0, p.getY(), 0.0);
+        DirectPosition dp = p.getDirectPosition();
+        assertEquals(1.0, dp.getOrdinate(0), 0.0);
+        assertEquals(2.0, dp.getOrdinate(1), 0.0);
+        assertEquals(3.0, dp.getOrdinate(2), 0.0);
     }
 
     public void testEncode() throws Exception {

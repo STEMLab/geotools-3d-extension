@@ -18,9 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.LineString;
 
 
 /**
@@ -30,19 +29,19 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class GMLLineStringTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(LineString.class, binding(GML.LineStringType).getType());
+        assertEquals(Curve.class, binding(GML.LineStringType).getType());
     }
 
     public void testExecutionMode() {
-        assertEquals(Binding.BEFORE, binding(GML.LineStringType).getExecutionMode());
+        assertEquals(Binding.AFTER, binding(GML.LineStringType).getExecutionMode());
     }
 
     public void testParse() throws Exception {
         GML2MockData.lineString(document, document);
 
-        LineString l = (LineString) parse();
+        Curve l = (Curve) parse();
 
-        assertEquals(2, l.getCoordinates().length);
+        assertEquals(2, l.getSegments().size());
     }
 
     public void testEncode() throws Exception {

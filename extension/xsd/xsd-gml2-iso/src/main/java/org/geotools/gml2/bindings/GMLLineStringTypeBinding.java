@@ -80,7 +80,7 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -121,7 +121,11 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
         if (node.getChild("coordinates") != null) {
             Node cnode = (Node) node.getChild("coordinates");
             PointArray pArr = (PointArray) cnode.getValue();
-
+            
+            if(pArr.size() == 1) {
+            	throw new RuntimeException("Linestring must have at least 2 coordinates");
+            }
+            
             return gBuilder.createCurve(pArr);
         }
 

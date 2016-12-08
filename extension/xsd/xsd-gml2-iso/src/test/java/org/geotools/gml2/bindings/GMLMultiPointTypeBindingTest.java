@@ -16,16 +16,14 @@
  */
 package org.geotools.gml2.bindings;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Point;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
-
 
 /**
  * 
@@ -36,8 +34,8 @@ public class GMLMultiPointTypeBindingTest extends AbstractGMLBindingTest {
     ElementInstance mp;
     ElementInstance point1;
     ElementInstance point2;
-    GeometryFactory gf;
-
+    
+    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -46,16 +44,18 @@ public class GMLMultiPointTypeBindingTest extends AbstractGMLBindingTest {
         mp = createElement(GML.NAMESPACE, "myMultiPoint", GML.MULTIPOINTTYPE, null);
 
         container = new DefaultPicoContainer();
-        container.registerComponentImplementation(GeometryFactory.class);
+        container.registerComponentInstance(builder);
         container.registerComponentImplementation(GMLGeometryCollectionTypeBinding.class);
         container.registerComponentImplementation(GMLMultiPointTypeBinding.class);
     }
 
     public void test() throws Exception {
+    	Point p1 = builder.createPoint(new double[] {0, 0, 0});
+    	Point p2 = builder.createPoint(new double[] {1, 1, 1});
         Node node = createNode(mp, new ElementInstance[] { point1, point2 },
                 new Object[] {
-                    new GeometryFactory().createPoint(new Coordinate(0, 0)),
-                    new GeometryFactory().createPoint(new Coordinate(1, 1))
+                	p1,
+                	p2
                 }, null, null);
 
         GMLGeometryCollectionTypeBinding s1 = (GMLGeometryCollectionTypeBinding) container
@@ -66,11 +66,8 @@ public class GMLMultiPointTypeBindingTest extends AbstractGMLBindingTest {
         MultiPoint mpoint = (MultiPoint) s2.parse(mp, node, s1.parse(mp, node, null));
 
         assertNotNull(mpoint);
-        assertEquals(mpoint.getNumGeometries(), 2);
-
-        assertEquals(((Point) mpoint.getGeometryN(0)).getX(), 0d, 0d);
-        assertEquals(((Point) mpoint.getGeometryN(0)).getY(), 0d, 0d);
-        assertEquals(((Point) mpoint.getGeometryN(1)).getX(), 1d, 0d);
-        assertEquals(((Point) mpoint.getGeometryN(1)).getY(), 1d, 0d);
+        assertEquals(mpoint.getElements().size(), 2);
+        assertTrue(mpoint.getElements().contains(p1));
+        assertTrue(mpoint.getElements().contains(p2));
     }
 }

@@ -18,9 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.aggregate.MultiPoint;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.MultiPoint;
 
 
 /**
@@ -41,7 +40,7 @@ public class GMLMultiPointTypeBinding2Test extends GMLTestSupport {
         GML2MockData.multiPoint(document, document);
 
         MultiPoint mp = (MultiPoint) parse();
-        assertEquals(2, mp.getNumGeometries());
+        assertEquals(2, mp.getElements().size());
     }
 
     public void testEncode() throws Exception {
@@ -53,6 +52,6 @@ public class GMLMultiPointTypeBinding2Test extends GMLTestSupport {
         assertEquals(2,
                 doc.getElementsByTagNameNS(GML.NAMESPACE, GML.Point.getLocalPart()).getLength());
         
-        assertEquals("http://www.opengis.net/gml/srs/epsg.xml#4326", doc.getDocumentElement().getAttribute("srsName"));
+        assertEquals("WGS84(DD)", doc.getDocumentElement().getAttribute("srsName"));
     }
 }

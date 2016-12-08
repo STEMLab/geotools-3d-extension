@@ -16,16 +16,17 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Point;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
-
 
 /**
  * 
@@ -36,6 +37,7 @@ public class GMLMultiPointPropertyTypeBindingTest extends AbstractGMLBindingTest
     ElementInstance association;
     ElementInstance geometry;
 
+    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -44,17 +46,17 @@ public class GMLMultiPointPropertyTypeBindingTest extends AbstractGMLBindingTest
         geometry = createElement(GML.NAMESPACE, "myMultiPoint", GML.MULTIPOINTTYPE, null);
 
         container = new DefaultPicoContainer();
-        container.registerComponentImplementation(GeometryFactory.class);
+        container.registerComponentInstance(builder);
         container.registerComponentImplementation(GMLGeometryAssociationTypeBinding.class);
         container.registerComponentImplementation(GMLMultiPointPropertyTypeBinding.class);
     }
 
     public void testWithGeometry() throws Exception {
-        Point p1 = new GeometryFactory().createPoint(new Coordinate(0, 0));
-        Point p2 = new GeometryFactory().createPoint(new Coordinate(1, 1));
+    	Point p1 = builder.createPoint(new double[] {0, 0, 0});
+    	Point p2 = builder.createPoint(new double[] {1, 1, 1});
 
         Node node = createNode(association, new ElementInstance[] { geometry },
-                new Object[] { new GeometryFactory().createMultiPoint(new Point[] { p1, p2 }) },
+                new Object[] { builder.createMultiPoint(new HashSet(Arrays.asList(p1, p2))) },
                 null, null);
 
         GMLGeometryAssociationTypeBinding s = (GMLGeometryAssociationTypeBinding) container

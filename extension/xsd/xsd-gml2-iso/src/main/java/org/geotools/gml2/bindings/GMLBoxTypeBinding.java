@@ -20,16 +20,16 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Envelope;
 
 
 /**
@@ -66,6 +66,12 @@ import com.vividsolutions.jts.geom.Envelope;
  * @source $URL$
  */
 public class GMLBoxTypeBinding extends AbstractComplexBinding {
+	
+	GeometryBuilder gBuilder;
+	public GMLBoxTypeBinding(GeometryBuilder gBuilder) {
+		this.gBuilder = gBuilder;
+	}
+	
     /**
      * @generated
      */
@@ -98,10 +104,10 @@ public class GMLBoxTypeBinding extends AbstractComplexBinding {
         if (!coordinates.isEmpty() && (coordinates.size() == 2)) {
             Node n1 = (Node) coordinates.get(0);
             Node n2 = (Node) coordinates.get(1);
-            Coordinate c1 = (Coordinate) n1.getValue();
-            Coordinate c2 = (Coordinate) n2.getValue();
+            DirectPosition c1 = (DirectPosition) n1.getValue();
+            DirectPosition c2 = (DirectPosition) n2.getValue();
 
-            return new Envelope(c1.x, c2.x, c1.y, c2.y);
+            return gBuilder.createEnvelope(c1, c2);
         }
 
         if (!coordinates.isEmpty()) {
@@ -109,13 +115,16 @@ public class GMLBoxTypeBinding extends AbstractComplexBinding {
         }
 
         if (node.getChild("coordinates") != null) {
-            CoordinateSequence cs = (CoordinateSequence) node.getChild("coordinates").getValue();
+            PointArray pa = (PointArray) node.getChild("coordinates").getValue();
 
-            if (cs.size() != 2) {
+            if (pa.size() != 2) {
                 throw new RuntimeException("Envelope can have only two coordinates");
             }
 
-            return new Envelope(cs.getX(0), cs.getX(1), cs.getY(0), cs.getY(1));
+            DirectPosition c1 = (DirectPosition) pa.get(0);
+            DirectPosition c2 = (DirectPosition) pa.get(1);
+
+            return gBuilder.createEnvelope(c1, c2);
         }
 
         throw new RuntimeException("Could not find coordinates for envelope");
@@ -124,15 +133,13 @@ public class GMLBoxTypeBinding extends AbstractComplexBinding {
     public Object getProperty(Object object, QName name)
         throws Exception {
         Envelope e = (Envelope) object;
-
         if (GML.coord.equals(name)) {
-            return new Coordinate[] {
-                new Coordinate(e.getMinX(), e.getMinY()), new Coordinate(e.getMaxX(), e.getMaxY())
+            return new DirectPosition[] {
+                e.getLowerCorner(), e.getUpperCorner()
             };
         } else if("srsName".equals(name.getLocalPart()) && e instanceof ReferencedEnvelope) {
             return GML2EncodingUtils.toURI(((ReferencedEnvelope) e).getCoordinateReferenceSystem());
         }
-
         return null;
     }
 }

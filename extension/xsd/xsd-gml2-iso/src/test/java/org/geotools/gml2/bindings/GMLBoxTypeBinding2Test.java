@@ -16,11 +16,13 @@
  */
 package org.geotools.gml2.bindings;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Envelope;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 
 /**
@@ -41,14 +43,21 @@ public class GMLBoxTypeBinding2Test extends GMLTestSupport {
         GML2MockData.box(document, document);
 
         Envelope box = (Envelope) parse();
-        assertEquals(1.0, box.getMinX(), 0.0);
-        assertEquals(2.0, box.getMinY(), 0.0);
-        assertEquals(1.0, box.getMaxX(), 0.0);
-        assertEquals(2.0, box.getMaxY(), 0.0);
+        assertEquals(box.getLowerCorner().getOrdinate(0), 1d, 0d);
+        assertEquals(box.getLowerCorner().getOrdinate(1), 2d, 0d);
+        assertEquals(box.getLowerCorner().getOrdinate(2), 3d, 0d);
+        
+        assertEquals(box.getUpperCorner().getOrdinate(0), 1d, 0d);
+        assertEquals(box.getUpperCorner().getOrdinate(1), 2d, 0d);
+        assertEquals(box.getUpperCorner().getOrdinate(2), 3d, 0d);
     }
 
     public void testEncode() throws Exception {
-        Document doc = encode(new Envelope(1, 2, 3, 4), GML.Box);
+    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {4.0, 5.0, 6.0});
+    	
+        Document doc = encode(builder.createEnvelope(dp1, dp2), GML.Box);
 
         assertEquals(2,
             doc.getElementsByTagNameNS(GML.NAMESPACE, GML.coord.getLocalPart()).getLength());

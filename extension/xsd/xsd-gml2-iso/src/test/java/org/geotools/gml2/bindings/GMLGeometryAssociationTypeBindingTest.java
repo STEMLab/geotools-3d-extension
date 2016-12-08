@@ -16,15 +16,13 @@
  */
 package org.geotools.gml2.bindings;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 
 /**
  * 
@@ -44,8 +42,9 @@ public class GMLGeometryAssociationTypeBindingTest extends AbstractGMLBindingTes
     }
 
     public void testWithGeometry() throws Exception {
+    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         Node node = createNode(association, new ElementInstance[] { geometry },
-                new Object[] { new GeometryFactory().createPoint(new Coordinate(0, 0)) }, null, null);
+                new Object[] { builder.createPoint(new double[] {0, 0, 0}) }, null, null);
         GMLGeometryAssociationTypeBinding s = (GMLGeometryAssociationTypeBinding) getBinding(GML.GEOMETRYASSOCIATIONTYPE);
         Geometry g = (Geometry) s.parse(association, node, null);
         assertNotNull(g);

@@ -22,7 +22,7 @@ import org.geotools.gml2.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Ring;
 
 //import com.vividsolutions.jts.geom.LinearRing;
 
@@ -83,7 +83,7 @@ public class GMLLinearRingMemberTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Curve.class;
+        return Ring.class;
     }
 
     /**

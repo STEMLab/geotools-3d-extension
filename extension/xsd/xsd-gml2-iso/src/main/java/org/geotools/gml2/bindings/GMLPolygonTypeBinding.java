@@ -66,7 +66,7 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
 public class GMLPolygonTypeBinding extends AbstractComplexBinding {
     GeometryBuilder gBuilder;
 
-    public GMLPolygonTypeBinding(GeometryBuilder gFactory) {
+    public GMLPolygonTypeBinding(GeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
     }
 
@@ -78,7 +78,7 @@ public class GMLPolygonTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**

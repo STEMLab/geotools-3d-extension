@@ -16,18 +16,17 @@
  */
 package org.geotools.gml2.simple;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
 import org.geotools.gml2.simple.GMLWriter;
 import org.geotools.gml2.simple.GeometryEncoder;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -58,32 +57,32 @@ public class GenericGeometryEncoder extends GeometryEncoder<Geometry> {
 
     @Override
     public void encode(Geometry geometry, AttributesImpl atts, GMLWriter handler) throws Exception {
-        if (geometry instanceof LineString) {
+        if (geometry instanceof Curve) {
             LineStringEncoder lineString = new LineStringEncoder(encoder,
                 LineStringEncoder.LINE_STRING);
-            lineString.encode((LineString) geometry, atts, handler);
+            lineString.encode((Curve) geometry, atts, handler);
         } else if (geometry instanceof Point) {
             PointEncoder pt = new PointEncoder(encoder, gmlPrefix == null? "gml": gmlPrefix);
             pt.encode((Point) geometry, atts, handler);
-        } else if (geometry instanceof Polygon) {
+        } else if (geometry instanceof Surface) {
             PolygonEncoder polygon = new PolygonEncoder(encoder, gmlPrefix);
-            polygon.encode((Polygon) geometry, atts, handler);
-        } else if (geometry instanceof MultiLineString) {
+            polygon.encode((Surface) geometry, atts, handler);
+        } else if (geometry instanceof MultiCurve) {
             MultiLineStringEncoder multiLineString = new MultiLineStringEncoder(
                                                         encoder, gmlPrefix);
-            multiLineString.encode((MultiLineString) geometry, atts, handler);
+            multiLineString.encode((MultiCurve) geometry, atts, handler);
         } else if (geometry instanceof MultiPoint) {
             MultiPointEncoder multiPoint = new MultiPointEncoder(encoder,
                                             gmlPrefix);
             multiPoint.encode((MultiPoint) geometry, atts, handler);
-        } else if (geometry instanceof MultiPolygon) {
+        } else if (geometry instanceof MultiSurface) {
             MultiPolygonEncoder multiPolygon = new MultiPolygonEncoder(encoder,
                                                 gmlPrefix);
-            multiPolygon.encode((MultiPolygon) geometry, atts, handler);
-        } else if (geometry instanceof LinearRing) {
+            multiPolygon.encode((MultiSurface) geometry, atts, handler);
+        } else if (geometry instanceof Ring) {
             LinearRingEncoder linearRing = new LinearRingEncoder(encoder,
                                                 gmlPrefix);
-            linearRing.encode((LinearRing) geometry, atts, handler);
+            linearRing.encode((Ring) geometry, atts, handler);
         } else {
             throw new Exception("Unsupported geometry " + geometry.toString());
         }

@@ -18,18 +18,17 @@ package org.geotools.gml2.simple;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Surface;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-
 /**
  * Encodes a GML2 multi polygon
  * 
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class MultiPolygonEncoder extends GeometryEncoder<MultiPolygon> {
+class MultiPolygonEncoder extends GeometryEncoder<MultiSurface> {
 
     static final QualifiedName MULTI_POLYGON = new QualifiedName(GML.NAMESPACE, "MultiPolygon",
             "gml");
@@ -51,13 +50,13 @@ class MultiPolygonEncoder extends GeometryEncoder<MultiPolygon> {
     }
 
     @Override
-    public void encode(MultiPolygon geometry, AttributesImpl atts, GMLWriter handler)
+    public void encode(MultiSurface geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(multiPolygon, atts);
 
-        for (int i = 0; i < geometry.getNumGeometries(); i++) {
+        for (OrientableSurface s : geometry.getElements()) {
             handler.startElement(polygonMember, null);
-            pe.encode((Polygon) geometry.getGeometryN(i), null, handler);
+            pe.encode((Surface) s, null, handler);
             handler.endElement(polygonMember);
         }
 

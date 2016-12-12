@@ -70,14 +70,6 @@ import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
-
-//import com.vividsolutions.jts.geom.LineString;
-//import com.vividsolutions.jts.geom.MultiLineString;
-//import com.vividsolutions.jts.geom.MultiPoint;
-//import com.vividsolutions.jts.geom.MultiPolygon;
-//import com.vividsolutions.jts.geom.Point;
-//import com.vividsolutions.jts.geom.Polygon;
-
 /**
  * 
  *

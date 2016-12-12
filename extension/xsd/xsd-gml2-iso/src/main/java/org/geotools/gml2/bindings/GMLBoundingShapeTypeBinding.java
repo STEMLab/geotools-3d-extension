@@ -88,12 +88,10 @@ public class GMLBoundingShapeTypeBinding extends AbstractComplexBinding {
             //ignore the description as to why its null
         	//TODO make null geometry..
             Envelope e = new ReferencedEnvelope();
-           
             //e.setToNull();
 
             return e;
         }
-
         //has to be a valid bounding box
         return (Envelope) node.getChildValue(0);
     }

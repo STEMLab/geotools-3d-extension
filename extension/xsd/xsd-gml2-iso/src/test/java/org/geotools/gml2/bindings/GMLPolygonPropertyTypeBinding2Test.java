@@ -18,10 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.primitive.Surface;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Polygon;
-
 
 /**
  * 
@@ -30,7 +28,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class GMLPolygonPropertyTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(Polygon.class, binding(GML.PolygonPropertyType).getType());
+        assertEquals(Surface.class, binding(GML.PolygonPropertyType).getType());
     }
 
     public void testExecutionMode() {
@@ -40,7 +38,7 @@ public class GMLPolygonPropertyTypeBinding2Test extends GMLTestSupport {
     public void testParse() throws Exception {
         GML2MockData.polygonProperty(document, document);
 
-        Polygon poly = (Polygon) parse();
+        Surface poly = (Surface) parse();
         assertNotNull(poly);
     }
 

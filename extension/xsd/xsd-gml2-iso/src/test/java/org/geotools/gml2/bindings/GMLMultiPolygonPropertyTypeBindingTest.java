@@ -16,16 +16,20 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.junit.Before;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Surface;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-
 
 /**
  * 
@@ -36,33 +40,37 @@ public class GMLMultiPolygonPropertyTypeBindingTest extends AbstractGMLBindingTe
     ElementInstance association;
     ElementInstance geometry;
 
+    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    @Before
     protected void setUp() throws Exception {
         super.setUp();
 
         association = createElement(GML.NAMESPACE, "myMultiPolygonProperty",
                 GML.MULTIPOLYGONPROPERTYTYPE, null);
         geometry = createElement(GML.NAMESPACE, "myMultiPolygon", GML.MULTIPOINTTYPE, null);
-
+        
         container = new DefaultPicoContainer();
-        container.registerComponentImplementation(GeometryFactory.class);
+        container.registerComponentInstance(builder);
         container.registerComponentImplementation(GMLGeometryAssociationTypeBinding.class);
         container.registerComponentImplementation(GMLMultiPolygonPropertyTypeBinding.class);
     }
 
     public void testWithGeometry() throws Exception {
-        Polygon p1 = new GeometryFactory().createPolygon(new GeometryFactory().createLinearRing(
-                    new Coordinate[] {
-                        new Coordinate(0, 0), new Coordinate(1, 1), new Coordinate(2, 2),
-                        new Coordinate(0, 0)
-                    }), null);
-        Polygon p2 = new GeometryFactory().createPolygon(new GeometryFactory().createLinearRing(
-                    new Coordinate[] {
-                        new Coordinate(2, 2), new Coordinate(3, 3), new Coordinate(4, 4),
-                        new Coordinate(2, 2)
-                    }), null);
+        DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});
+    	DirectPosition dp3 = builder.createDirectPosition(new double[] {5.0, 2.0, 3.0});
+    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3});
+    	
+    	DirectPosition dp4 = builder.createDirectPosition(new double[] {3.0, 5.0, 5.0});
+    	DirectPosition dp5 = builder.createDirectPosition(new double[] {5.0, 6.0, 6.0});
+    	DirectPosition dp6 = builder.createDirectPosition(new double[] {7.0, 4.0, 5.0});
+    	PointArray pa2 = createPointArray(builder, new DirectPosition[] {dp4, dp5, dp6});
+    	
+    	Surface p1 = builder.createSurface(builder.createSurfaceBoundary(pa1));
+    	Surface p2 = builder.createSurface(builder.createSurfaceBoundary(pa2));
 
         Node node = createNode(association, new ElementInstance[] { geometry },
-                new Object[] { new GeometryFactory().createMultiPolygon(new Polygon[] { p1, p2 }) },
+                new Object[] { builder.createMultiSurface(new HashSet(Arrays.asList(p1, p2)))},
                 null, null);
 
         GMLGeometryAssociationTypeBinding s = (GMLGeometryAssociationTypeBinding) container
@@ -71,7 +79,7 @@ public class GMLMultiPolygonPropertyTypeBindingTest extends AbstractGMLBindingTe
         GMLMultiPolygonPropertyTypeBinding s1 = (GMLMultiPolygonPropertyTypeBinding) container
             .getComponentInstanceOfType(GMLMultiPolygonPropertyTypeBinding.class);
 
-        MultiPolygon p = (MultiPolygon) s1.parse(association, node, s.parse(association, node, null));
+        MultiSurface p = (MultiSurface) s1.parse(association, node, s.parse(association, node, null));
         assertNotNull(p);
     }
 }

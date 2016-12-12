@@ -29,12 +29,13 @@ import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
 
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.primitive.Point;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Point;
 
 
 /**
@@ -118,8 +119,9 @@ public class GMLApplicationSchemaParsingTest extends TestCase {
             Point p = (Point) parser.parse();
 
             assertNotNull(p);
-            assertEquals(i, p.getX(), 0d);
-            assertEquals(i, p.getY(), 0d);
+            DirectPosition dp = p.getDirectPosition();
+            assertEquals(i, dp.getOrdinate(0), 0d);
+            assertEquals(i, dp.getOrdinate(1), 0d);
         }
 
         assertNull(parser.parse());
@@ -159,9 +161,12 @@ public class GMLApplicationSchemaParsingTest extends TestCase {
             SimpleFeature f = (SimpleFeature) parser.parse();
             assertNotNull(f);
 
+            Point p = (Point) f.getDefaultGeometry();
+            DirectPosition dp = p.getDirectPosition();
+            
             assertEquals(i + "", f.getID());
-            assertEquals(i, ((Point) f.getDefaultGeometry()).getX(), 0d);
-            assertEquals(i, ((Point) f.getDefaultGeometry()).getY(), 0d);
+            assertEquals(i, dp.getOrdinate(0), 0d);
+            assertEquals(i, dp.getOrdinate(1), 0d);
             assertEquals(i, ((Integer) f.getAttribute("count")).intValue());
         }
 

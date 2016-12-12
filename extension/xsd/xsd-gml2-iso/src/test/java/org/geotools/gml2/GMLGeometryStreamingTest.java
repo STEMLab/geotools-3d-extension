@@ -18,15 +18,13 @@ package org.geotools.gml2;
 
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.geotools.xml.Configuration;
 import org.geotools.xml.StreamingParser;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Surface;
 
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
+import junit.framework.TestCase;
 
 /**
  * 
@@ -59,11 +57,11 @@ public class GMLGeometryStreamingTest extends TestCase {
 
         o = parser.parse();
         assertNotNull(o);
-        assertTrue(o instanceof LineString);
+        assertTrue(o instanceof Curve);
 
         o = parser.parse();
         assertNotNull(o);
-        assertTrue(o instanceof Polygon);
+        assertTrue(o instanceof Surface);
 
         o = parser.parse();
         assertNull(o);

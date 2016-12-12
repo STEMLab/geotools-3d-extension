@@ -16,15 +16,15 @@
  */
 package org.geotools.gml2.bindings;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 
 /**
  * 
@@ -43,10 +43,17 @@ public class GMLLineStringMemberTypeBindingTest extends AbstractGMLBindingTest {
     }
 
     public void testWithGeometry() throws Exception {
+    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	
+    	DirectPosition dp1 = builder.createDirectPosition(new double[] {0, 0, 0});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {1, 1, 1});
+    	PointArray pa = builder.createPointArray();
+    	pa.add(dp1);
+    	pa.add(dp2);
+    	
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] {
-                    new GeometryFactory().createLineString(
-                        new Coordinate[] { new Coordinate(0, 0), new Coordinate(1, 1) })
+                	builder.createCurve(pa)
                 }, null, null);
         GMLGeometryAssociationTypeBinding s1 = (GMLGeometryAssociationTypeBinding) getBinding(GML.GEOMETRYASSOCIATIONTYPE);
         Geometry g = (Geometry) s1.parse(association, node, null);
@@ -55,6 +62,6 @@ public class GMLLineStringMemberTypeBindingTest extends AbstractGMLBindingTest {
         g = (Geometry) s2.parse(association, node, g);
 
         assertNotNull(g);
-        assertTrue(g instanceof LineString);
+        assertTrue(g instanceof Curve);
     }
 }

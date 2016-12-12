@@ -18,11 +18,9 @@ package org.geotools.gml2.simple;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Point;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
-
 /**
  * Encodes a GML2 multipoint
  * 
@@ -53,9 +51,9 @@ class MultiPointEncoder extends GeometryEncoder<MultiPoint> {
             throws Exception {
         handler.startElement(multiPoint, atts);
 
-        for (int i = 0; i < geometry.getNumGeometries(); i++) {
+        for (Point p : geometry.getElements()) {
             handler.startElement(pointMember, null);
-            pe.encode((Point) geometry.getGeometryN(i), null, handler);
+            pe.encode((Point) p, null, handler);
             handler.endElement(pointMember);
         }
 

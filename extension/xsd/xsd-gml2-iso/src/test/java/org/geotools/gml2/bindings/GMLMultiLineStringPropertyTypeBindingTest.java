@@ -16,16 +16,19 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 import org.picocontainer.defaults.DefaultPicoContainer;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-
 
 /**
  * 
@@ -36,6 +39,7 @@ public class GMLMultiLineStringPropertyTypeBindingTest extends AbstractGMLBindin
     ElementInstance association;
     ElementInstance geometry;
 
+    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -44,22 +48,29 @@ public class GMLMultiLineStringPropertyTypeBindingTest extends AbstractGMLBindin
         geometry = createElement(GML.NAMESPACE, "myMultiLineString", GML.MULTILINESTRINGTYPE, null);
 
         container = new DefaultPicoContainer();
-        container.registerComponentImplementation(GeometryFactory.class);
+        container.registerComponentInstance(builder);
         container.registerComponentImplementation(GMLGeometryAssociationTypeBinding.class);
         container.registerComponentImplementation(GMLMultiLineStringPropertyTypeBinding.class);
     }
 
     public void testWithGeometry() throws Exception {
-        LineString p1 = new GeometryFactory().createLineString(new Coordinate[] {
-                    new Coordinate(0, 0), new Coordinate(1, 1)
-                });
-        LineString p2 = new GeometryFactory().createLineString(new Coordinate[] {
-                    new Coordinate(2, 2), new Coordinate(3, 3)
-                });
-
+    	DirectPosition dp1 = builder.createDirectPosition(new double[] {0, 0, 0});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {1, 1, 1});
+    	PointArray pa1 = builder.createPointArray();
+    	pa1.add(dp1);
+    	pa1.add(dp2);
+    	
+    	DirectPosition dp3 = builder.createDirectPosition(new double[] {2, 2, 0});
+    	DirectPosition dp4 = builder.createDirectPosition(new double[] {3, 3, 1});
+    	PointArray pa2 = builder.createPointArray();
+    	pa2.add(dp3);
+    	pa2.add(dp4);
+    	
+    	Curve c1 = builder.createCurve(pa1);
+    	Curve c2 = builder.createCurve(pa2);
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] {
-                    new GeometryFactory().createMultiLineString(new LineString[] { p1, p2 })
+                    builder.createMultiCurve(new HashSet(Arrays.asList(c1, c2)))
                 }, null, null);
 
         GMLGeometryAssociationTypeBinding s = (GMLGeometryAssociationTypeBinding) container
@@ -68,7 +79,7 @@ public class GMLMultiLineStringPropertyTypeBindingTest extends AbstractGMLBindin
         GMLMultiLineStringPropertyTypeBinding s1 = (GMLMultiLineStringPropertyTypeBinding) container
             .getComponentInstanceOfType(GMLMultiLineStringPropertyTypeBinding.class);
 
-        MultiLineString p = (MultiLineString) s1.parse(association, node,
+        MultiCurve p = (MultiCurve) s1.parse(association, node,
                 s.parse(association, node, null));
         assertNotNull(p);
     }

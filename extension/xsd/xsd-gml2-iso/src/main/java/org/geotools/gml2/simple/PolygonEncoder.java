@@ -18,6 +18,9 @@ package org.geotools.gml2.simple;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -28,7 +31,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class PolygonEncoder extends GeometryEncoder<Polygon> {
+class PolygonEncoder extends GeometryEncoder<Surface> {
 
     static final QualifiedName POLYGON = new QualifiedName(GML.NAMESPACE, "Polygon", "gml");
 
@@ -55,16 +58,17 @@ class PolygonEncoder extends GeometryEncoder<Polygon> {
     }
 
     @Override
-    public void encode(Polygon geometry, AttributesImpl atts, GMLWriter handler) throws Exception {
+    public void encode(Surface geometry, AttributesImpl atts, GMLWriter handler) throws Exception {
         handler.startElement(polygon, atts);
 
         handler.startElement(outerBoundary, null);
-        lre.encode(geometry.getExteriorRing(), null, handler);
+        SurfaceBoundary sb = geometry.getBoundary();
+        lre.encode(sb.getExterior(), null, handler);
         handler.endElement(outerBoundary);
 
-        for (int i = 0; i < geometry.getNumInteriorRing(); i++) {
+        for (Ring r: sb.getInteriors()) {
             handler.startElement(innerBoundary, null);
-            lre.encode(geometry.getInteriorRingN(i), null, handler);
+            lre.encode(r, null, handler);
             handler.endElement(innerBoundary);
         }
 

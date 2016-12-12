@@ -16,12 +16,10 @@
  */
 package org.geotools.gml2.simple;
 
-import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.Envelope;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Encodes a GML2 Envelope
@@ -44,8 +42,9 @@ class EnvelopeEncoder extends ObjectEncoder<Envelope> {
     public void encode(Envelope e, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(box, atts);
-        handler.coordinates(new LiteCoordinateSequence(e.getMinX(), e.getMinY(), e.getMaxX(), e
-                .getMaxY()));
+        //TODO
+        //handler.coordinates(new LiteCoordinateSequence(e.getMinX(), e.getMinY(), e.getMaxX(), e
+        //        .getMaxY()));
         handler.endElement(box);
     }
 

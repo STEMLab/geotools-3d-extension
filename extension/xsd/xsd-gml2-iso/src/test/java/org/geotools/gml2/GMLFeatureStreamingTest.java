@@ -20,13 +20,12 @@ import java.io.InputStream;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
-
 import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.primitive.Point;
 
-import com.vividsolutions.jts.geom.Point;
-
+import junit.framework.TestCase;
 
 /**
  * 
@@ -59,9 +58,12 @@ public class GMLFeatureStreamingTest extends TestCase {
             SimpleFeature f = (SimpleFeature) parser.parse();
             assertNotNull(f);
 
+            Point p = (Point) f.getDefaultGeometry();
+            DirectPosition dp = p.getDirectPosition();
+            
             assertEquals(i + "", f.getID());
-            assertEquals(i, ((Point) f.getDefaultGeometry()).getX(), 0d);
-            assertEquals(i, ((Point) f.getDefaultGeometry()).getY(), 0d);
+            assertEquals(i, dp.getOrdinate(0), 0d);
+            assertEquals(i, dp.getOrdinate(1), 0d);
             assertEquals(i, ((Integer) f.getAttribute("count")).intValue());
         }
 

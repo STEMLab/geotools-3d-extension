@@ -18,8 +18,7 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
-
-import com.vividsolutions.jts.geom.GeometryCollection;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 
 
 /**
@@ -29,7 +28,7 @@ import com.vividsolutions.jts.geom.GeometryCollection;
  */
 public class GMLMultiGeometryPropertyTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(GeometryCollection.class, binding(GML.MultiGeometryPropertyType).getType());
+        assertEquals(MultiPrimitive.class, binding(GML.MultiGeometryPropertyType).getType());
     }
 
     public void testExecutionMode() {

@@ -21,8 +21,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
-
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
@@ -31,6 +29,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.AttributeInstance;
 import org.geotools.xml.Binding;
@@ -42,6 +41,8 @@ import org.geotools.xml.impl.ElementImpl;
 import org.geotools.xml.impl.NodeImpl;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.coordinate.PointArray;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -49,6 +50,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
+
+import junit.framework.TestCase;
 
 
 /**
@@ -131,6 +134,20 @@ public class AbstractGMLBindingTest extends TestCase {
 
     public CoordinateSequence createCoordinateSequence(Coordinate c) {
         return createCoordinateSequence(new Coordinate[] { c });
+    }
+    
+    public PointArray createPointArray(GeometryBuilder builder, DirectPosition c) {
+    	PointArray pa = builder.createPointArray();
+    	pa.add(c);
+    	return pa;
+    }
+    
+    public PointArray createPointArray(GeometryBuilder builder, DirectPosition[] c) {
+    	PointArray pa = builder.createPointArray();
+    	for(DirectPosition dp : c) {
+    		pa.add(dp);
+    	}
+    	return pa;
     }
 
     public CoordinateSequence createCoordinateSequence(Coordinate[] c) {

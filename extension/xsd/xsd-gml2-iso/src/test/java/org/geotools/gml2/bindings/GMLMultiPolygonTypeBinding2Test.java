@@ -18,9 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.aggregate.MultiSurface;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.MultiPolygon;
 
 
 /**
@@ -30,7 +29,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
  */
 public class GMLMultiPolygonTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(MultiPolygon.class, binding(GML.MultiPolygonType).getType());
+        assertEquals(MultiSurface.class, binding(GML.MultiPolygonType).getType());
     }
 
     public void testExecutionMode() {
@@ -40,8 +39,8 @@ public class GMLMultiPolygonTypeBinding2Test extends GMLTestSupport {
     public void testParse() throws Exception {
         GML2MockData.multiPolygon(document, document);
 
-        MultiPolygon mp = (MultiPolygon) parse();
-        assertEquals(2, mp.getNumGeometries());
+        MultiSurface mp = (MultiSurface) parse();
+        assertEquals(2, mp.getElements().size());
     }
 
     public void testEncode() throws Exception {

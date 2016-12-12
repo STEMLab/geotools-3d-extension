@@ -17,9 +17,8 @@
 package org.geotools.gml2.simple;
 
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.Geometry;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Base class for all encoders writing a Geometry

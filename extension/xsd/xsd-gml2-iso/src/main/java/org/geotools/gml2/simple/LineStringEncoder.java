@@ -18,17 +18,15 @@ package org.geotools.gml2.simple;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.primitive.Curve;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.LineString;
-
 /**
  * Encodes a GML2 linestring
  * 
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class LineStringEncoder extends GeometryEncoder<LineString> {
+class LineStringEncoder extends GeometryEncoder<Curve> {
 
     static final QualifiedName LINE_STRING = new QualifiedName(GML.NAMESPACE, "LineString", "gml");
 
@@ -43,10 +41,11 @@ class LineStringEncoder extends GeometryEncoder<LineString> {
         this.element = element;
     }
 
-    public void encode(LineString geometry, AttributesImpl atts, GMLWriter handler)
+    public void encode(Curve geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(element, atts);
-        handler.coordinates(geometry.getCoordinateSequence());
+        //TODO
+        //handler.coordinates(geometry.getSegments());
         handler.endElement(element);
     }
 

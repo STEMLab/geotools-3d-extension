@@ -18,9 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.aggregate.MultiCurve;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.MultiLineString;
 
 
 /**
@@ -30,7 +29,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
  */
 public class GMLMultiLineStringTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(MultiLineString.class, binding(GML.MultiLineStringType).getType());
+        assertEquals(MultiCurve.class, binding(GML.MultiLineStringType).getType());
     }
 
     public void testExecutionMode() {
@@ -40,8 +39,8 @@ public class GMLMultiLineStringTypeBinding2Test extends GMLTestSupport {
     public void testParse() throws Exception {
         GML2MockData.multiLineString(document, document);
 
-        MultiLineString mp = (MultiLineString) parse();
-        assertEquals(2, mp.getNumGeometries());
+        MultiCurve mp = (MultiCurve) parse();
+        assertEquals(2, mp.getElements().size());
     }
 
     public void testEncode() throws Exception {

@@ -16,17 +16,16 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-
-
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.primitive.Point;
 /**
  * 
  *
@@ -46,18 +45,19 @@ public class GMLMultiGeometryPropertyTypeBindingTest extends AbstractGMLBindingT
     }
 
     public void testWithGeometry() throws Exception {
-        Point p1 = new GeometryFactory().createPoint(new Coordinate(0, 0));
-        Point p2 = new GeometryFactory().createPoint(new Coordinate(1, 1));
+    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+        Point p1 = builder.createPoint(new double[] {0, 0, 0});
+        Point p2 = builder.createPoint(new double[] {1, 1, 1});
 
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] {
-                    new GeometryFactory().createGeometryCollection(new Geometry[] { p1, p2 })
+                	builder.createMultiPrimitive(new HashSet(Arrays.asList(p1, p2)))
                 }, null, null);
 
         GMLGeometryAssociationTypeBinding s = (GMLGeometryAssociationTypeBinding) getBinding(GML.GEOMETRYASSOCIATIONTYPE);
         GMLMultiGeometryPropertyTypeBinding s1 = (GMLMultiGeometryPropertyTypeBinding) getBinding(GML.MULTIGEOMETRYPROPERTYTYPE);
 
-        GeometryCollection p = (GeometryCollection) s1.parse(association, node,
+        MultiPrimitive p = (MultiPrimitive) s1.parse(association, node,
                 s.parse(association, node, null));
         assertNotNull(p);
     }

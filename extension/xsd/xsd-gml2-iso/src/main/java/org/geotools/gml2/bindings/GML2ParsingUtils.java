@@ -456,7 +456,7 @@ public class GML2ParsingUtils {
             }
             */
         }
-        Aggregate gc = null;
+        MultiPrimitive gc = null;
         
         if (MultiPoint.class.isAssignableFrom(clazz)) {
             gc = gBuilder.createMultiPoint(geoms);

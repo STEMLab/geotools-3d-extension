@@ -18,9 +18,8 @@ package org.geotools.gml2.bindings;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.LineString;
 
 
 /**
@@ -30,7 +29,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class GMLLineStringPropertyTypeBinding2Test extends GMLTestSupport {
     public void testType() {
-        assertEquals(LineString.class, binding(GML.LineStringPropertyType).getType());
+        assertEquals(Curve.class, binding(GML.LineStringPropertyType).getType());
     }
 
     public void testExecutionMode() {
@@ -40,7 +39,7 @@ public class GMLLineStringPropertyTypeBinding2Test extends GMLTestSupport {
     public void testParse() throws Exception {
         GML2MockData.lineStringProperty(document, document);
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
         assertNotNull(line);
     }
 

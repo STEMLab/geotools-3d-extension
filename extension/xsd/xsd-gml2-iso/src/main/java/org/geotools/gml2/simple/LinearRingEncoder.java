@@ -18,6 +18,8 @@ package org.geotools.gml2.simple;
 
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.primitive.Ring;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Encodes a GML2 linear ring
@@ -26,11 +28,26 @@ import org.geotools.xml.Encoder;
  * @author Andrea Aime - GeoSolutions
  */
 
-class LinearRingEncoder extends LineStringEncoder {
+class LinearRingEncoder extends GeometryEncoder<Ring> {
 
     static final QualifiedName LINEAR_RING = new QualifiedName(GML.NAMESPACE, "LinearRing", "gml");
 
+    QualifiedName element;
+    
     protected LinearRingEncoder(Encoder encoder, String gmlPrefix) {
-        super(encoder, LINEAR_RING.derive(gmlPrefix));
+       this(encoder, LINEAR_RING.derive(gmlPrefix));
+    }
+    
+    protected LinearRingEncoder(Encoder encoder, QualifiedName element) {
+        super(encoder);
+        this.element = element;
+    }
+    
+    public void encode(Ring geometry, AttributesImpl atts, GMLWriter handler)
+            throws Exception {
+        handler.startElement(element, atts);
+        //TODO
+        //handler.coordinates(geometry.getSegments());
+        handler.endElement(element);
     }
 }

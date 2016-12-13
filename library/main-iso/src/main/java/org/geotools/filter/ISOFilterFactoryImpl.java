@@ -173,17 +173,17 @@ import com.vividsolutions.jts.geom.Envelope;
  * @source $URL$
  * @version $Id$
  */
-public class FilterFactory2Impl implements Factory, org.opengis.filter.FilterFactory2 {
+public class ISOFilterFactoryImpl implements Factory, org.opengis.filter.FilterFactory2 {
         
     private FunctionFinder functionFinder;
 
     /**
      * Creates a new instance of FilterFactoryImpl
      */
-    public FilterFactory2Impl() {
+    public ISOFilterFactoryImpl() {
         this( null );
     }
-    public FilterFactory2Impl( Hints hints ){
+    public ISOFilterFactoryImpl( Hints hints ){
         functionFinder = new FunctionFinder( null );
     }
 

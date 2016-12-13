@@ -31,8 +31,6 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.geometry.jts.MultiCurve;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.GML;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.bindings.GML2EncodingUtils;
@@ -48,15 +46,14 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.NamespaceSupport;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiLineString;
 
 /**
  * Base class for feature collection optimized GML encoder delegates
@@ -187,16 +184,15 @@ public abstract class FeatureCollectionEncoderDelegate implements EncoderDelegat
 
         if (value instanceof Geometry) {
             Geometry g = (Geometry) value;
-            Integer dimension = g.getDimension();
+            Integer dimension = g.getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
             AttributesImpl atts = buildSrsAttributes(
                     ((GeometryDescriptor) attribute.descriptor).getCoordinateReferenceSystem(),
                     dimension);
             GeometryEncoder geometryEncoder = getGeometryEncoder(value, attribute);
             geometryEncoder.encode(g, atts, output);
         } else if (value instanceof Envelope) {
-            ReferencedEnvelope e = (ReferencedEnvelope) value;
-            Integer dimension = GML2EncodingUtils.getEnvelopeDimension(e,
-                    encoder.getConfiguration());
+            Envelope e = (Envelope) value;
+            Integer dimension = e.getDimension();
             AttributesImpl atts = buildSrsAttributes(e.getCoordinateReferenceSystem(), dimension);
             ee.encode(e, atts, output);
         } else if (attribute.binding instanceof SimpleBinding) {
@@ -211,7 +207,7 @@ public abstract class FeatureCollectionEncoderDelegate implements EncoderDelegat
 
     private GeometryEncoder getGeometryEncoder(Object value, AttributeContext attribute) {
         Class<? extends Object> clazz = value.getClass();
-        if(MultiLineString.class.equals(clazz)) {
+        if(MultiCurve.class.equals(clazz)) {
             // we have a wrinkle with curve support, were we supposed to encode the
             // multi line string as a curve or not?
             if(attribute.binding.getTarget().getLocalPart().startsWith("MultiCurve")) {

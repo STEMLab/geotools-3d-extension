@@ -22,16 +22,17 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.PositionFactoryImpl;
+import org.geotools.geometry.iso.aggregate.MultiPrimitiveImpl;
 import org.geotools.geometry.iso.coordinate.LineStringImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.iso.primitive.RingImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
 import org.geotools.geometry.iso.primitive.ShellImpl;
 import org.geotools.geometry.iso.primitive.SolidBoundaryImpl;
@@ -41,6 +42,7 @@ import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.util.AssertionFailedException;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.PositionFactory;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
@@ -48,6 +50,7 @@ import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
@@ -395,7 +398,9 @@ public class WKTReader {
 				type.equalsIgnoreCase(WKTConstants.WKT_POLYGON) ) {
 			return readPolygonText();
 		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_SOLID)) {
-		        return readSolidText();
+		    return readSolidText();
+		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_MULTIPRIMITIVE)) {
+			return readMultiPrimitiveText();
 		}
 		throw new ParseException("Unknown geometry type: " + type);
 	}
@@ -591,4 +596,35 @@ public class WKTReader {
 	        return new SolidImpl(sb);
 	}
 	
+	/**
+     * Creates a <code>MultiPoint</code> using the next token in the stream.
+     * 
+     * @param tokenizer
+     *            tokenizer over a stream of text in Well-known Text format. The
+     *            next tokens must form a &lt;Solid Text&gt;.
+     * @return a <code>Polygon</code> specified by the next token in the
+     *         stream
+     * @throws ParseException
+     *             if the coordinates used to create the <code>Solid</code>
+     *             shell and holes do not form closed surfaces, or if an
+     *             unexpected token was encountered.
+     * @throws IOException
+     *             if an I/O error occurs
+     */
+	private MultiPrimitive readMultiPrimitiveText() throws IOException, ParseException {
+        
+        String nextToken = getNextEmptyOrOpener();
+        
+        if(nextToken.equals(EMPTY)) {
+                return new MultiPrimitiveImpl(crs, null);
+        }
+        
+        HashSet<Primitive> primitives = new HashSet<Primitive>();
+		do {
+			primitives.add((Primitive) readGeometryTaggedText());
+			nextToken = getNextCloserOrComma();
+		} while(nextToken.equals(COMMA));
+		
+        return new MultiPrimitiveImpl(crs, primitives);
+	} 
 }

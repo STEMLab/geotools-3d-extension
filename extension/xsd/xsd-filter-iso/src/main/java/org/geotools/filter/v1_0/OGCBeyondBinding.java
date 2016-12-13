@@ -17,13 +17,14 @@
 package org.geotools.filter.v1_0;
 
 import javax.xml.namespace.QName;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Expression;
-import org.opengis.filter.spatial.Beyond;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.spatial.Beyond;
 
 
 /**
@@ -46,11 +47,11 @@ import org.geotools.xml.Node;
  */
 public class OGCBeyondBinding extends AbstractComplexBinding {
     FilterFactory2 filterFactory;
-    GeometryFactory geometryFactory;
+    GeometryBuilder gBuilder;
 
-    public OGCBeyondBinding(FilterFactory2 filterFactory, GeometryFactory geometryFactory) {
+    public OGCBeyondBinding(FilterFactory2 filterFactory, GeometryBuilder gBuilder) {
         this.filterFactory = filterFactory;
-        this.geometryFactory = geometryFactory;
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -83,7 +84,7 @@ public class OGCBeyondBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
 
-        Expression[] operands = OGCUtils.spatial(node, filterFactory, geometryFactory);
+        Expression[] operands = OGCUtils.spatial(node, filterFactory, gBuilder);
         double distance = ((Double) node.getChildValue(Double.class)).doubleValue();
         Object units = node.getChild("Distance").getAttributeValue("units");
         return filterFactory.beyond(operands[0], operands[1], distance, units==null? null : units.toString());

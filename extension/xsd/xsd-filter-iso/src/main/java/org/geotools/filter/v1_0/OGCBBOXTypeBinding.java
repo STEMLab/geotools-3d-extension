@@ -166,7 +166,8 @@ public class OGCBBOXTypeBinding extends AbstractComplexBinding {
             } catch(Throwable t) {
                 // never mind
             }
-            return new Envelope(box.getMinX(), box.getMaxX(), box.getMinY(), box.getMaxY());
+            //TODO? HACK we assume that there is no case without crs.
+            //return new Envelope(box.getMinX(), box.getMaxX(), box.getMinY(), box.getMaxY());
         }
 
         return null;

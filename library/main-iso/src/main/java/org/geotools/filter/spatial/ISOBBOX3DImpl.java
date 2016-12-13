@@ -117,22 +117,22 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// coordinate.
 
 		// Coordinate[] coords = new Coordinate[5];
-		double[] coords = new double[5];
+		double[] coords = new double[4];
 		coords[0] = envelope.getMinX();
 		coords[1] = envelope.getMinY();
 		coords[2] = envelope.getMinX();
 		coords[3] = envelope.getMaxY();
 		coords[4] = envelope.getMaxX();
-		coords[5] = envelope.getMaxY();
+		coords[5] = envelope.getMaxZ();
 		coords[6] = envelope.getMaxX();
 		coords[7] = envelope.getMinY();
 		coords[8] = envelope.getMinX();
 		coords[9] = envelope.getMinY();
-
+		
 		// LinearRing ring = null;
 		Curve curve = null;
 
-		GeometryBuilder gfac = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		GeometryBuilder gfac = new GeometryBuilder(envelope.getCoordinateReferenceSystem());
 		try {
 			curve = gfac.createCurve(gfac.createPointArray(coords));// createLinearRing(coords);
 		} catch (TopologyException tex) {

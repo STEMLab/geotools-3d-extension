@@ -106,7 +106,7 @@ public class GMLWriterTest extends GMLTestSupport{
         
     	Curve geometry = builder.createCurve(pa);
         Document doc = encode(encoder, geometry);
-         print(doc);
+        // print(doc);
         assertEquals("0,0,50 120,0,100", xpath.evaluate("//gml:coordinates", doc));
     }
     
@@ -114,7 +114,7 @@ public class GMLWriterTest extends GMLTestSupport{
         PointEncoder encoder = new PointEncoder(gtEncoder, "gml");
         Geometry geometry = new WKTReader(DefaultGeographicCRS.WGS84_3D).read("POINT(0 0 50)");
         Document doc = encode(encoder, geometry);
-         print(doc);
+        // print(doc);
         assertEquals("0,0,50", xpath.evaluate("//gml:coordinates", doc));
     }
 

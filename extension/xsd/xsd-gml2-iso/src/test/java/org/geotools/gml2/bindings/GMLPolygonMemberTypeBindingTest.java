@@ -46,7 +46,7 @@ public class GMLPolygonMemberTypeBindingTest extends AbstractGMLBindingTest {
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});
     	DirectPosition dp3 = builder.createDirectPosition(new double[] {5.0, 2.0, 3.0});
-    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3});
+    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp1});
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] {
                 		builder.createSurface(builder.createSurfaceBoundary(pa1)),

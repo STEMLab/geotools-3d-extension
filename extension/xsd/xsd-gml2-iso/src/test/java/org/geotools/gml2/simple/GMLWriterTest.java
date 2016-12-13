@@ -36,19 +36,20 @@ import javax.xml.transform.stream.StreamSource;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
-import org.geotools.geometry.jts.LiteCoordinateSequence;
-import org.geotools.geometry.jts.WKTReader2;
+import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.gml2.GML;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.bindings.GMLTestSupport;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 
 public class GMLWriterTest extends GMLTestSupport{
 
@@ -73,11 +74,11 @@ public class GMLWriterTest extends GMLTestSupport{
     public void testGeometryCollectionEncoder() throws Exception {
         GeometryCollectionEncoder gce = new GeometryCollectionEncoder(gtEncoder,
             "gml");
-        Geometry geometry = new WKTReader2().read(
-            "GEOMETRYCOLLECTION (LINESTRING"
-            + " (180 200, 160 180), POINT (19 19), POINT (20 10))");
+        Geometry geometry = new WKTReader(DefaultGeographicCRS.WGS84_3D).read(
+            "MULTIPRIMITIVE (CURVE"
+            + " (180 200 50, 160 180 30), POINT (19 19 10), POINT (20 10 10))");
         Document doc = encode(gce, geometry);
-        print(doc);
+        // print(doc);
         assertEquals(1,
             xpath.getMatchingNodes("//gml:LineString", doc).getLength());
         assertEquals(2, xpath.getMatchingNodes("//gml:Point", doc).getLength());
@@ -87,7 +88,7 @@ public class GMLWriterTest extends GMLTestSupport{
     
     public void testEncode3DLine() throws Exception {
         LineStringEncoder encoder = new LineStringEncoder(gtEncoder, "gml");
-        Geometry geometry = new WKTReader2().read("LINESTRING(0 0 50, 120 0 100)");
+        Geometry geometry = new WKTReader(DefaultGeographicCRS.WGS84_3D).read("CURVE(0 0 50, 120 0 100)");
         Document doc = encode(encoder, geometry);
         // print(doc);
         assertEquals("0,0,50 120,0,100", xpath.evaluate("//gml:coordinates", doc));
@@ -95,18 +96,25 @@ public class GMLWriterTest extends GMLTestSupport{
     
     public void testEncode3DLineFromLiteCS() throws Exception {
         LineStringEncoder encoder = new LineStringEncoder(gtEncoder, "gml");
-        LiteCoordinateSequence cs = new LiteCoordinateSequence(new double[] {0, 0, 50, 120, 0, 100}, 3);
-        LineString geometry = new GeometryFactory().createLineString(cs);
+        
+        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	DirectPosition dp1 = builder.createDirectPosition(new double[] {0, 0, 50});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {120, 0, 100});
+    	PointArray pa = builder.createPointArray();
+    	pa.add(dp1);
+    	pa.add(dp2);
+        
+    	Curve geometry = builder.createCurve(pa);
         Document doc = encode(encoder, geometry);
-        // print(doc);
+         print(doc);
         assertEquals("0,0,50 120,0,100", xpath.evaluate("//gml:coordinates", doc));
     }
     
     public void testEncode3DPoint() throws Exception {
         PointEncoder encoder = new PointEncoder(gtEncoder, "gml");
-        Geometry geometry = new WKTReader2().read("POINT(0 0 50)");
+        Geometry geometry = new WKTReader(DefaultGeographicCRS.WGS84_3D).read("POINT(0 0 50)");
         Document doc = encode(encoder, geometry);
-        // print(doc);
+         print(doc);
         assertEquals("0,0,50", xpath.evaluate("//gml:coordinates", doc));
     }
 

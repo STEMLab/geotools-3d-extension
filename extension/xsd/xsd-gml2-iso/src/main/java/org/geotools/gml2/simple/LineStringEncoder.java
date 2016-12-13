@@ -16,9 +16,13 @@
  */
 package org.geotools.gml2.simple;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
 import org.xml.sax.helpers.AttributesImpl;
 /**
  * Encodes a GML2 linestring
@@ -44,8 +48,18 @@ class LineStringEncoder extends GeometryEncoder<Curve> {
     public void encode(Curve geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(element, atts);
-        //TODO
-        //handler.coordinates(geometry.getSegments());
+        
+        GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+        PointArray pa = builder.createPointArray();
+        
+        for(CurveSegment cs : geometry.getSegments()) {
+        	for(Position p : cs.getSamplePoints()) {
+        		if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+        			pa.add(p);
+        		}
+        	}
+        }
+        handler.coordinates(pa);
         handler.endElement(element);
     }
 

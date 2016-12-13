@@ -16,8 +16,13 @@
  */
 package org.geotools.gml2.simple;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.Ring;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -46,8 +51,18 @@ class LinearRingEncoder extends GeometryEncoder<Ring> {
     public void encode(Ring geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(element, atts);
-        //TODO
-        //handler.coordinates(geometry.getSegments());
+        GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+        PointArray pa = builder.createPointArray();
+        //TODO HACK!! we assume that first geometry is curve
+        Curve primitive = (Curve) geometry.getElements().iterator();
+        for(CurveSegment cs : primitive.getSegments()) {
+        	for(Position p : cs.getSamplePoints()) {
+        		if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+        			pa.add(p);
+        		}
+        	}
+        }
+        handler.coordinates(pa);
         handler.endElement(element);
     }
 }

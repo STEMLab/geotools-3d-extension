@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.geotools.gml2.GML;
+import org.geotools.gml2.bindings.GMLUtil;
 import org.geotools.xml.XMLUtils;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
@@ -311,7 +312,7 @@ public class GMLWriter {
     void coordinates(PointArray coordinates, char cs, char ts, StringBuffer sb) {
         sb.setLength(0);
         int n = coordinates.size();
-        int dim = coordinates.getDimension();
+        int dim = GMLUtil.getDimension(coordinates);
         for (int i = 0; i < n; i++) {
         	DirectPosition dp = coordinates.get(i).getDirectPosition();
             appendDecimal(dp.getOrdinate(0)).append(cs);

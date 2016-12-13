@@ -18,6 +18,7 @@ package org.geotools.gml2.bindings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -29,9 +30,11 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
 
 
@@ -141,12 +144,18 @@ public class GMLLinearRingTypeBinding extends AbstractComplexBinding {
 
         if (GML.coordinates.equals(name)) {
         	PointArray pa = gBuilder.createPointArray();
-        	Curve curve = linearRing.getPrimitive();
+        	
+        	//assuming that first element is Curve
+        	Collection<? extends Primitive> elements = linearRing.getElements();
+        	Curve curve = (Curve) elements.iterator().next();
         	List<? extends CurveSegment> segments = curve.getSegments();
         	for(CurveSegment cs : segments) {
-        		pa.add(cs.getStartPoint());
+        		for(Position p : cs.getSamplePoints()) {
+        			if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+        				pa.add(p);
+        			}
+        		}
         	}
-        	pa.add( segments.get(segments.size() - 1).getEndPoint() );
         	return pa;
         }
 

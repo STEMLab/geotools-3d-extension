@@ -98,16 +98,17 @@ public class GMLBoundingShapeTypeBinding extends AbstractComplexBinding {
 
     public Object getProperty(Object object, QName name)
         throws Exception {
+
         Envelope e = (Envelope) object;
-        //TODO Geometry always is not null
         if (GML.Box.equals(name)) { //&& !e.isNull()) {
             return e;
         }
-
-        if ("null".equals(name.getLocalPart()) ) { //&& e.isNull()) {
-            return e;
+        
+        //TODO Geometry always is not null
+        if ("null".equalsIgnoreCase(name.getLocalPart()) && object == null ) { //&& e.isNull()) {
+            return null;
         }
-
+        
         return null;
     }
 }

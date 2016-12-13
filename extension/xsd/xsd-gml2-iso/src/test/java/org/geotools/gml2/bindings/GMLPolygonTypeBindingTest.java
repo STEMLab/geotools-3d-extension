@@ -58,7 +58,7 @@ public class GMLPolygonTypeBindingTest extends AbstractGMLBindingTest {
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});
     	DirectPosition dp3 = builder.createDirectPosition(new double[] {5.0, 2.0, 3.0});
-    	PointArray pa = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3});
+    	PointArray pa = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp1});
     	
         Node node = createNode(poly, new ElementInstance[] { oring },
                 new Object[] {
@@ -86,13 +86,13 @@ public class GMLPolygonTypeBindingTest extends AbstractGMLBindingTest {
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {10, 0, 3});
     	DirectPosition dp3 = builder.createDirectPosition(new double[] {10, 10, 3});
     	DirectPosition dp4 = builder.createDirectPosition(new double[] {0, 10, 3});
-    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp4});
+    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp4, dp1});
     	
     	DirectPosition dp5 = builder.createDirectPosition(new double[] {1, 1, 3});
     	DirectPosition dp6 = builder.createDirectPosition(new double[] {8, 1, 3});
     	DirectPosition dp7 = builder.createDirectPosition(new double[] {8, 8, 3});
     	DirectPosition dp8 = builder.createDirectPosition(new double[] {1, 8, 3});
-    	PointArray pa2 = createPointArray(builder, new DirectPosition[] {dp5, dp6, dp7, dp8});
+    	PointArray pa2 = createPointArray(builder, new DirectPosition[] {dp5, dp6, dp7, dp8, dp5});
         Node node = createNode(poly, new ElementInstance[] { oring, iring },
                 new Object[] {
                 		builder.createRing(Arrays.asList(builder.createCurve(pa1))),

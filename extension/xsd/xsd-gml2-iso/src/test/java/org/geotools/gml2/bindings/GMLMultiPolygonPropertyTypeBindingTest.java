@@ -59,12 +59,12 @@ public class GMLMultiPolygonPropertyTypeBindingTest extends AbstractGMLBindingTe
         DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});
     	DirectPosition dp3 = builder.createDirectPosition(new double[] {5.0, 2.0, 3.0});
-    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3});
+    	PointArray pa1 = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp1});
     	
     	DirectPosition dp4 = builder.createDirectPosition(new double[] {3.0, 5.0, 5.0});
     	DirectPosition dp5 = builder.createDirectPosition(new double[] {5.0, 6.0, 6.0});
     	DirectPosition dp6 = builder.createDirectPosition(new double[] {7.0, 4.0, 5.0});
-    	PointArray pa2 = createPointArray(builder, new DirectPosition[] {dp4, dp5, dp6});
+    	PointArray pa2 = createPointArray(builder, new DirectPosition[] {dp4, dp5, dp6, dp4});
     	
     	Surface p1 = builder.createSurface(builder.createSurfaceBoundary(pa1));
     	Surface p2 = builder.createSurface(builder.createSurfaceBoundary(pa2));

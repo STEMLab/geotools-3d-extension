@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.bindings;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
+import org.opengis.geometry.coordinate.PointArray;
 
 
 /**
@@ -33,7 +33,7 @@ public class GMLUtil {
      *
      * @return The best guess at a dimension, -1 if it can not be determined.
      */
-    public static int getDimension(CoordinateSequence seq) {
+    public static int getDimension(PointArray seq) {
         int dimension = 0;
 
         if (seq.size() == 0) {
@@ -42,7 +42,7 @@ public class GMLUtil {
 
         for (; dimension < 100; dimension++) {
             try {
-                double d = seq.getOrdinate(0, dimension);
+                double d = seq.get(0).getDirectPosition().getOrdinate(dimension);
 
                 if (Double.isNaN(d)) {
                     return dimension;

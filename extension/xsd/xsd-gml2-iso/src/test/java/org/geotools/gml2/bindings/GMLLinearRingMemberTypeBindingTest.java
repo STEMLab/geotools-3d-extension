@@ -16,16 +16,17 @@
  */
 package org.geotools.gml2.bindings;
 
+import java.util.Arrays;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-
-
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Ring;
 /**
  * 
  *
@@ -43,13 +44,15 @@ public class GMLLinearRingMemberTypeBindingTest extends AbstractGMLBindingTest {
     }
 
     public void testWithGeometry() throws Exception {
+        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
+    	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});
+    	DirectPosition dp3 = builder.createDirectPosition(new double[] {5.0, 2.0, 3.0});
+    	PointArray pa = createPointArray(builder, new DirectPosition[] {dp1, dp2, dp3, dp1});
+    	
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] {
-                    new GeometryFactory().createLinearRing(
-                        new Coordinate[] {
-                            new Coordinate(0, 0), new Coordinate(1, 1), new Coordinate(2, 2),
-                            new Coordinate(0, 0)
-                        })
+                	builder.createRing(Arrays.asList(builder.createCurve(pa)))
                 }, null, null);
         GMLGeometryAssociationTypeBinding s1 = (GMLGeometryAssociationTypeBinding) getBinding(GML.GEOMETRYASSOCIATIONTYPE);
         Geometry g = (Geometry) s1.parse(association, node, null);
@@ -58,6 +61,6 @@ public class GMLLinearRingMemberTypeBindingTest extends AbstractGMLBindingTest {
         g = (Geometry) s2.parse(association, node, g);
 
         assertNotNull(g);
-        assertTrue(g instanceof LinearRing);
+        assertTrue(g instanceof Ring);
     }
 }

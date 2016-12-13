@@ -1248,6 +1248,7 @@
 		<module>test</module>
 		
 		<module>unsupported/csv-iso</module>
+		<module>extension/xsd</module>
 	</modules>
 </project>
 

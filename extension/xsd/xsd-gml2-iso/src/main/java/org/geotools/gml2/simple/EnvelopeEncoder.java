@@ -16,9 +16,11 @@
  */
 package org.geotools.gml2.simple;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
 import org.opengis.geometry.Envelope;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -42,6 +44,9 @@ class EnvelopeEncoder extends ObjectEncoder<Envelope> {
     public void encode(Envelope e, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(box, atts);
+        CoordinateReferenceSystem crs = e.getCoordinateReferenceSystem();
+        GeometryBuilder builder = new GeometryBuilder(crs);
+        
         //TODO
         //handler.coordinates(new LiteCoordinateSequence(e.getMinX(), e.getMinY(), e.getMaxX(), e
         //        .getMaxY()));

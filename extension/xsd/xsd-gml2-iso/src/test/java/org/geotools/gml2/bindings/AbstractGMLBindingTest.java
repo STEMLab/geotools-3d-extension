@@ -46,11 +46,6 @@ import org.opengis.geometry.coordinate.PointArray;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
-
 import junit.framework.TestCase;
 
 
@@ -132,10 +127,6 @@ public class AbstractGMLBindingTest extends TestCase {
         return element;
     }
 
-    public CoordinateSequence createCoordinateSequence(Coordinate c) {
-        return createCoordinateSequence(new Coordinate[] { c });
-    }
-    
     public PointArray createPointArray(GeometryBuilder builder, DirectPosition c) {
     	PointArray pa = builder.createPointArray();
     	pa.add(c);
@@ -148,12 +139,6 @@ public class AbstractGMLBindingTest extends TestCase {
     		pa.add(dp);
     	}
     	return pa;
-    }
-
-    public CoordinateSequence createCoordinateSequence(Coordinate[] c) {
-        CoordinateSequenceFactory csFactory = CoordinateArraySequenceFactory.instance();
-
-        return csFactory.create(c);
     }
 
     public SimpleFeature createFeature(String[] names, Class[] types, Object[] values) {

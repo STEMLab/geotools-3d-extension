@@ -40,8 +40,7 @@ public class GMLLineStringTypeBinding2Test extends GMLTestSupport {
         GML2MockData.lineString(document, document);
 
         Curve l = (Curve) parse();
-
-        assertEquals(2, l.getSegments().size());
+        assertEquals(1, l.getSegments().size());
     }
 
     public void testEncode() throws Exception {

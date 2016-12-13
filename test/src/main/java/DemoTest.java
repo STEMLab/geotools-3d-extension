@@ -1,7 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
@@ -54,12 +66,15 @@ import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
 import org.geotools.swing.table.FeatureCollectionTableModel;
 import org.geotools.swing.wizard.JWizard;
+import org.geotools.xml.Parser;
+import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
@@ -82,6 +97,8 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 
 public class DemoTest extends JFrame{
@@ -169,6 +186,11 @@ public class DemoTest extends JFrame{
 		fileMenu.add(new SafeAction("memorycollection...") {
 			public void action(ActionEvent e) throws Throwable {
 				memorycollection();
+			}
+		});
+		fileMenu.add(new SafeAction("gmlToGeometry...") {
+			public void action(ActionEvent e) throws Throwable {
+				gmlToGeometry();
 			}
 		});
 
@@ -536,7 +558,7 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void pointToTable() {
-		String typeName = "Flag";
+		String typeName = "newFlag";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		//hints.put(Hints.GEOMETRY_VALIDATE, false);
@@ -554,43 +576,27 @@ public class DemoTest extends JFrame{
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
 		b.add("loc", Point.class);
-
-		//build the type
 		SimpleFeatureType schema = b.buildFeatureType();
-		//create the builder
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);
-
-		//add the values
 		builder.add( al );
-
-		//build the feature with provided ID
 		SimpleFeature feature = builder.buildFeature( "fid.1" );
 		try {
-
 			//source = dataStore.getFeatureSource(typeName);
-
-
 			//DataStore dataStore1;
 			//JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
-
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
-
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
-
 				if (dataStore == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
 				}
 				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				//jds.setDatabaseSchema(null);
-
 				dataStore.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
-
-				// insert the feature
 				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 						schema.getTypeName(), Transaction.AUTO_COMMIT);
 				//SimpleFeature f = fw.next();
@@ -605,7 +611,7 @@ public class DemoTest extends JFrame{
 				//}
 				//fw.write();
 				fw.close();
-				updateUI();
+				/*updateUI();
 				String name = schema.getGeometryDescriptor().getLocalName();
 				FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2( GeoTools.getDefaultHints() );
 				Filter filter = ff.contains( ff.property( "loc"), ff.literal( feature.getDefaultGeometry() ) );
@@ -614,7 +620,7 @@ public class DemoTest extends JFrame{
 				SimpleFeatureCollection features = source.getFeatures(query);
 
 				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
-				table.setModel(model);
+				table.setModel(model);*/
 			}
 
 		} catch (IOException e) {
@@ -685,6 +691,57 @@ public class DemoTest extends JFrame{
 		} 
 
 	}
+	private void gmlToGeometry() {
+		/*GMLConfiguration configuration = new GMLConfiguration();
+		InputStream input = getClass().getResourceAsStream("geometry.xml");
+        String xpath = "/pointMember | /lineStringMember | /polygonMember";
+
+        //String xpath = "/child::*";
+        StreamingParser parser = new StreamingParser(configuration, input, xpath);
+        Object o = parser.parse();//point
+        o = parser.parse();//linestring
+        o = parser.parse();//polygon
+        */
+		try {
+			File initialFile = new File("feature.xml");
+		    InputStream in = new FileInputStream(initialFile);
+	        //InputStream in = getClass().getResourceAsStream("feature.xml");
+	
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        factory.setNamespaceAware(true);
+	
+	        Document document;
+		
+			document = factory.newDocumentBuilder().parse(in);
+		
+
+	        //update hte schema location
+	        document.getDocumentElement().removeAttribute("xsi:schemaLocation");
+	
+	        //reserialize the document
+	        File schemaFile = File.createTempFile("test", "xsd");
+	        schemaFile.deleteOnExit();
+	
+	        Transformer tx = TransformerFactory.newInstance().newTransformer();
+	        tx.transform(new DOMSource(document), new StreamResult(schemaFile));
+	
+	        in.close();
+	        in = new FileInputStream(schemaFile);
+			
+	        GMLConfiguration configuration = new GMLConfiguration();
+	        configuration.getProperties().add(Parser.Properties.IGNORE_SCHEMA_LOCATION);
+	        configuration.getProperties().add(Parser.Properties.PARSE_UNKNOWN_ELEMENTS);
+	
+	        StreamingParser parser = new StreamingParser(configuration, in, "//TestFeature");
+	
+	        for (int i = 0; i < 3; i++) {
+	            SimpleFeature f = (SimpleFeature) parser.parse();
+	        }
+		} catch (SAXException | IOException | ParserConfigurationException | TransformerFactoryConfigurationError | TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private void constainsfilter() {
 		String typeName = "Flag";
 		SimpleFeatureSource source;
@@ -714,7 +771,7 @@ public class DemoTest extends JFrame{
 		} 
 	}
 	private void boxToSolid() {
-		String typeName = "Flag";
+		String typeName = "newFlag";
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -722,7 +779,7 @@ public class DemoTest extends JFrame{
 			//String name = schema.getGeometryDescriptor().getLocalName();
 		
 			Filter filter = CQL.toFilter(text.getText());
-			Query query = new Query(typeName, filter, new String[] { "geom" });
+			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 

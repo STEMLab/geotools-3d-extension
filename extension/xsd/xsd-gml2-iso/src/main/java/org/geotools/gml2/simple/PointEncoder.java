@@ -16,8 +16,10 @@
  */
 package org.geotools.gml2.simple;
 
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Point;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -48,8 +50,10 @@ class PointEncoder extends GeometryEncoder<Point> {
     @Override
     public void encode(Point geometry, AttributesImpl atts, GMLWriter handler) throws Exception {
         handler.startElement(point, atts);
-        //TODO
-        //handler.coordinates(geometry.getCoordinateSequence());
+        GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+        PointArray pa = builder.createPointArray();
+        pa.add(geometry.getDirectPosition());
+        handler.coordinates(pa);
         handler.endElement(point);
     }
 }

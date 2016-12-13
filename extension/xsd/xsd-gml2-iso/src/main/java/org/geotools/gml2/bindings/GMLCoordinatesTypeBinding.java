@@ -194,18 +194,19 @@ public class GMLCoordinatesTypeBinding extends AbstractComplexBinding {
         PointArray coordinates = (PointArray) object;
         StringBuffer buf = new StringBuffer();
 
+        //TODO substitute GMLUtil.getDimension()
         for (int i = 0; i < coordinates.size(); i++) {
             Position c = coordinates.get(i);
             DirectPosition dp = c.getDirectPosition();
             buf.append(dp.getOrdinate(0));
 
-            boolean y = (coordinates.getDimension() > 1) && !new Double(dp.getOrdinate(1)).isNaN();
+            boolean y = (GMLUtil.getDimension(coordinates) > 1) && !new Double(dp.getOrdinate(1)).isNaN();
 
             if (y) {
                 buf.append("," + dp.getOrdinate(1));
             }
 
-            boolean z = y && (coordinates.getDimension() > 2) && !new Double(dp.getOrdinate(2)).isNaN();
+            boolean z = y && (GMLUtil.getDimension(coordinates) > 2) && !new Double(dp.getOrdinate(2)).isNaN();
 
             if (z) {
                 buf.append("," + dp.getOrdinate(2));

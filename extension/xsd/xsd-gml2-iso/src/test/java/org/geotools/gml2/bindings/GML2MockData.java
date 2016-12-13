@@ -171,7 +171,7 @@ public class GML2MockData {
     	pa.add(
     			gb.createDirectPosition( new double[] {2, 2, 2}));
     	pa.add(
-    			gb.createDirectPosition( new double[] {3, 3, 3}));
+    			gb.createDirectPosition( new double[] {3, 2, 2}));
     	pa.add(
     			gb.createDirectPosition( new double[] {1, 1, 1}));
     	Curve c = gb.createCurve(pa);
@@ -190,7 +190,7 @@ public class GML2MockData {
         Element linearRing = element(GML.LinearRing, document, parent);
 
         Element coordinates = element(GML.coordinates, document, linearRing);
-        coordinates.appendChild(document.createTextNode("1.0,2.0,3.0 3.0,4.0,5.0 5.0,6.0,7.0 1.0,2.0,3.0"));
+        coordinates.appendChild(document.createTextNode("1.0,2.0,3.0 3.0,4.0,5.0 5.0,3.0,5.0 1.0,2.0,3.0"));
 
         return linearRing;
     }

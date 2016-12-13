@@ -190,7 +190,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
             store.setNamespaceURI(namespace.toString());
         }
         store.setDataStoreFactory(this);
-        store.setGeometryFactory(new GeometryBuilder(DefaultGeographicCRS.WGS84));
+        store.setGeometryFactory(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         store.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
         store.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
         return store;

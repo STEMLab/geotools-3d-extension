@@ -48,12 +48,12 @@ import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
-import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.geometry.primitive.SurfacePatch;
+import org.opengis.geometry.primitive.PrimitiveFactory2;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.cs.AxisDirection;
 import org.opengis.referencing.cs.CoordinateSystemAxis;
@@ -67,7 +67,7 @@ import org.opengis.referencing.cs.CoordinateSystemAxis;
  *
  * @source $URL$
  */
-public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFactory {
+public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFactory2 {
 
 	/**
 	 * 
@@ -428,7 +428,7 @@ public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFac
          * @throws MismatchedReferenceSystemException
          * @throws MismatchedDimensionException
          */
-        public SolidBoundaryImpl createSolidBoundary(Shell exterior, List<Shell> interiors)
+        public SolidBoundary createSolidBoundary(Shell exterior, List<Shell> interiors)
                 throws MismatchedReferenceSystemException, MismatchedDimensionException {
             // TODO test
             if (interiors == null && exterior == null)

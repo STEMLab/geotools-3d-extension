@@ -117,7 +117,7 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// coordinate.
 
 		// Coordinate[] coords = new Coordinate[5];
-		double[] coords = new double[5];
+		double[] coords = new double[10];
 		coords[0] = envelope.getMinX();
 		coords[1] = envelope.getMinY();
 		coords[2] = envelope.getMinX();

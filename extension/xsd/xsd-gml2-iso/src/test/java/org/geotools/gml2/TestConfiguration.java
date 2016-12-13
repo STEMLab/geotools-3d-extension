@@ -16,6 +16,7 @@
  */
 package org.geotools.gml2;
 
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Configuration;
 import org.picocontainer.MutablePicoContainer;
 

@@ -21,12 +21,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
-import com.vividsolutions.jts.geom.Envelope;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BBOX;
+import org.opengis.geometry.Envelope;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -140,9 +140,8 @@ public class OGCBBOXTypeBinding extends AbstractComplexBinding {
             if ((srs == null) && (crs != null)) {
                 srs = GML2EncodingUtils.crs(crs);
             }          
-            
-        	return factory.bbox(name, box.getMinX(), box.getMinY(),
-        			box.getMaxX(), box.getMaxY(), srs);
+             
+        	return factory.bbox(factory.literal(name), ReferencedEnvelope.create(box, crs));
         }
     }
 
@@ -161,6 +160,7 @@ public class OGCBBOXTypeBinding extends AbstractComplexBinding {
                 String srs = box.getSRS();
                 if(srs != null) {
                     CoordinateReferenceSystem crs = CRS.decode(srs);
+                    int dimension = crs.getCoordinateSystem().getDimension();
                     return new ReferencedEnvelope(box.getMinX(), box.getMaxX(), box.getMinY(), box.getMaxY(), crs);
                 }
             } catch(Throwable t) {

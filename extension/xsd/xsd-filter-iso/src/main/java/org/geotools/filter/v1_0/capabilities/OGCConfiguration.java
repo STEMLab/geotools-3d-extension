@@ -16,10 +16,10 @@
  */
 package org.geotools.filter.v1_0.capabilities;
 
-import org.picocontainer.MutablePicoContainer;
-import org.opengis.filter.FilterFactory;
-import org.geotools.filter.FilterFactoryImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.xml.Configuration;
+import org.opengis.filter.FilterFactory;
+import org.picocontainer.MutablePicoContainer;
 
 
 /**
@@ -88,6 +88,6 @@ public class OGCConfiguration extends Configuration {
     protected void configureContext(MutablePicoContainer container) {
         super.configureContext(container);
 
-        container.registerComponentImplementation(FilterFactory.class, FilterFactoryImpl.class);
+        container.registerComponentImplementation(FilterFactory.class, ISOFilterFactoryImpl.class);
     }
 }

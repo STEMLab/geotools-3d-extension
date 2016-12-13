@@ -21,6 +21,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Contains;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
@@ -46,11 +47,11 @@ import org.geotools.xml.Node;
  */
 public class OGCContainsBinding extends AbstractComplexBinding {
     FilterFactory2 filterFactory;
-    GeometryFactory geometryFactory;
+    GeometryBuilder gBuilder;
 
-    public OGCContainsBinding(FilterFactory2 filterFactory, GeometryFactory geometryFactory) {
+    public OGCContainsBinding(FilterFactory2 filterFactory, GeometryBuilder gBuilder) {
         this.filterFactory = filterFactory;
-        this.geometryFactory = geometryFactory;
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -82,7 +83,7 @@ public class OGCContainsBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        Expression[] operands = OGCUtils.spatial(node, filterFactory, geometryFactory);
+        Expression[] operands = OGCUtils.spatial(node, filterFactory, gBuilder);
 
         return filterFactory.contains(operands[0], operands[1]);
     }

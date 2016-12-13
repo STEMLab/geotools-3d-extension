@@ -20,19 +20,22 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Expression;
-import org.opengis.filter.expression.Function;
-import org.opengis.filter.expression.Literal;
-import org.opengis.filter.expression.PropertyName;
+
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.GML;
 import org.geotools.xml.Node;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Literal;
+import org.opengis.filter.expression.PropertyName;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.SolidBoundary;
+import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 
 /**
@@ -108,7 +111,7 @@ public class OGCUtils {
      *
      * @return A two element array of expressions for a BinarySpatialOp type.
      */
-    static Expression[] spatial(Node node, FilterFactory2 ff, GeometryFactory gf) {
+    static Expression[] spatial(Node node, FilterFactory2 ff, GeometryBuilder gb) {
         List names = node.getChildValues(PropertyName.class);
         if (names.size() == 2) {
             //join
@@ -124,20 +127,43 @@ public class OGCUtils {
             //JD: creating an envelope here would break a lot of our code, for instance alot of 
             // code that encodes a filter into sql will choke on this
             Envelope envelope = (Envelope) node.getChildValue(Envelope.class);
-            Polygon polygon = gf.createPolygon(gf.createLinearRing(
-                        new Coordinate[] {
-                            new Coordinate(envelope.getMinX(), envelope.getMinY()),
-                            new Coordinate(envelope.getMaxX(), envelope.getMinY()),
-                            new Coordinate(envelope.getMaxX(), envelope.getMaxY()),
-                            new Coordinate(envelope.getMinX(), envelope.getMaxY()),
-                            new Coordinate(envelope.getMinX(), envelope.getMinY())
-                        }), null);
-
-            if (envelope instanceof ReferencedEnvelope) {
-                polygon.setUserData(((ReferencedEnvelope) envelope).getCoordinateReferenceSystem());
+            
+            CoordinateReferenceSystem crs = envelope.getCoordinateReferenceSystem();
+            int dimension = crs.getCoordinateSystem().getDimension();
+            
+            Geometry geom = null;
+            if(dimension == 3) {
+            	
+            	//SolidBoundary boundary = gb.create
+            	
+            	//TODO
+            	geom = null;//gb.createSolid(boundary);
+            	
+            	
+            } else {
+                /*Surface surface = gb.createSurface(boundary);
+                            new Coordinate[] {
+                                new Coordinate(envelope.getMinX(), envelope.getMinY()),
+                                new Coordinate(envelope.getMaxX(), envelope.getMinY()),
+                                new Coordinate(envelope.getMaxX(), envelope.getMaxY()),
+                                new Coordinate(envelope.getMinX(), envelope.getMaxY()),
+                                new Coordinate(envelope.getMinX(), envelope.getMinY())
+                            }), null);*/
+                DirectPosition lower = envelope.getLowerCorner();
+                DirectPosition upper = envelope.getUpperCorner();
+                PointArray pa = gb.createPointArray();
+                
+                pa.add(gb.createDirectPosition(new double[] {lower.getOrdinate(0), lower.getOrdinate(1)}));
+                pa.add(gb.createDirectPosition(new double[] {upper.getOrdinate(0), lower.getOrdinate(1)}));
+                pa.add(gb.createDirectPosition(new double[] {upper.getOrdinate(0), upper.getOrdinate(1)}));
+                pa.add(gb.createDirectPosition(new double[] {lower.getOrdinate(0), upper.getOrdinate(1)}));
+                pa.add(gb.createDirectPosition(new double[] {lower.getOrdinate(0), lower.getOrdinate(1)}));
+                
+                SurfaceBoundary boundary = gb.createSurfaceBoundary(pa);
+                geom = gb.createSurface(boundary);
             }
 
-            spatial = ff.literal(polygon);
+            spatial = ff.literal(geom);
         }
         else {
             //look for an expression that is not a property name

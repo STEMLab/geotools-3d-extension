@@ -25,6 +25,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Function;
 import org.opengis.filter.spatial.BinarySpatialOperator;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
@@ -62,11 +63,11 @@ import org.geotools.xml.Node;
  */
 public class OGCBinarySpatialOpTypeBinding extends AbstractComplexBinding {
     private FilterFactory2 factory;
-    private GeometryFactory gFactory;
+    private GeometryBuilder gBuilder;
 
-    public OGCBinarySpatialOpTypeBinding(FilterFactory2 factory, GeometryFactory gFactory) {
+    public OGCBinarySpatialOpTypeBinding(FilterFactory2 factory, GeometryBuilder gBuilder) {
         this.factory = factory;
-        this.gFactory = gFactory;
+        this.gBuilder = gBuilder;
     }
 
     /**

@@ -84,7 +84,6 @@ import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
 import org.geotools.filter.visitor.SimplifyingFilterVisitor;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -797,16 +796,20 @@ public class ISODataUtilities {
         if (type == java.util.Date.class)
             return new java.util.Date(0);
 
-        GeometryBuilder fac = new GeometryBuilder(DefaultGeographicCRS.WGS84);
-        DirectPosition ds = fac.createDirectPosition();
-
-        //TODO : set the default value of ISO Geometry
-        Point point = fac.createPoint(ds);
-        if (type == Point.class) {
-            return point;
-        }
-        if (type == MultiPoint.class) {
-            return fac.createMultiPoint(new HashSet(Arrays.asList(new Point[] {point})));
+        if(type.isAssignableFrom(Geometry.class)) {
+	        GeometryBuilder fac = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+	        DirectPosition ds = fac.createDirectPosition();
+	        
+	        //TODO : set the default value of ISO Geometry
+	        Point point = fac.createPoint(ds);
+	        if (type == Point.class) {
+	            return point;
+	        }
+	        if (type == MultiPoint.class) {
+	            return fac.createMultiPoint(new HashSet(Arrays.asList(new Point[] {point})));
+	        }
+	        
+	        throw new UnsupportedOperationException("default values of ISO Geometry are not fully implemented");
         }
         
 

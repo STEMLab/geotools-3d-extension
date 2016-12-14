@@ -171,11 +171,6 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-main-iso</artifactId>
-      <version>${project.version}</version>  
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
       <artifactId>gt-sample-data</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

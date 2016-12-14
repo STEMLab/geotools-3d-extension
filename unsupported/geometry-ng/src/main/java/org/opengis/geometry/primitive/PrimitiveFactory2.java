@@ -23,18 +23,11 @@ import static org.opengis.annotation.Specification.*;
 
 
 /**
- * A factory of {@linkplain Primitive primitive} geometric objects.
- * All primitives created through this interface will use the
- * {@linkplain #getCoordinateReferenceSystem factory's coordinate reference system}.
- * Creating primitives in a different CRS may requires a different instance of
- * {@code PrimitiveFactory}.
- *
- *
+ * A extension factory interface of {@linkplain PrimitiveFactory} creating {@linkplain SolidBoundary} geometric objects.
  *
  * @source $URL$
  * @version <A HREF="http://www.opengeospatial.org/standards/as">ISO 19107</A>
- * @author Martin Desruisseaux (IRD)
- * @since GeoAPI 1.0
+ * @author Soojin Kim
  */
 public interface PrimitiveFactory2 extends PrimitiveFactory{
   

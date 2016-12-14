@@ -22,10 +22,8 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.GeometryType;
 import org.opengis.filter.identity.Identifier;
 import org.opengis.geometry.BoundingBox;
-import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * The GeometryAttribute Implementation providing geometry model based on ISO19107 specification.
@@ -52,10 +50,7 @@ public class ISOGeometryAttributeImpl extends AttributeImpl implements GeometryA
     
     @Override
     public void setValue(Object newValue) throws IllegalArgumentException, IllegalStateException {
-        if(newValue instanceof Solid) {
-            super.setValue( (Solid) newValue );
-        }
-        else if(newValue instanceof Geometry) {
+        if(newValue instanceof Geometry) {
             super.setValue( (Geometry) newValue );
         } else {
             throw new IllegalArgumentException();
@@ -173,7 +168,7 @@ public class ISOGeometryAttributeImpl extends AttributeImpl implements GeometryA
 
     public synchronized BoundingBox getBounds() {
         if(bounds == null) {
-            //TODO
+        	
         }
         return bounds;
     }

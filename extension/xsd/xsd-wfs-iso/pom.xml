@@ -82,7 +82,12 @@
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-filter-iso</artifactId>
       <version>${project.version}</version>
-    </dependency>    
+    </dependency> 
+    <dependency>
+      <groupId>org.geotools.xsd</groupId>
+      <artifactId>gt-xsd-wfs</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-fes</artifactId>

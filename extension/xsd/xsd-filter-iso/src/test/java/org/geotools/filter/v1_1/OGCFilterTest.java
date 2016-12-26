@@ -57,7 +57,7 @@ public class OGCFilterTest extends TestCase {
         file.deleteOnExit();
 
         OutputStream output = new BufferedOutputStream(new FileOutputStream(file));
-        Encoder encoder = new Encoder(new OGCConfiguration());
+        Encoder encoder = new Encoder(new OGCConfiguration_ISO());
 
         encoder.encode(filter, OGC.PropertyIsEqualTo, output);
         output.flush();
@@ -80,7 +80,7 @@ public class OGCFilterTest extends TestCase {
     }
 
     public void testParse() throws Exception {
-        Parser parser = new Parser(new OGCConfiguration());
+        Parser parser = new Parser(new OGCConfiguration_ISO());
         InputStream in = getClass().getResourceAsStream("test1.xml");
 
         if (in == null) {
@@ -116,7 +116,7 @@ public class OGCFilterTest extends TestCase {
              "</DWithin>" +
            "</Filter>";
         
-        OGCConfiguration configuration = new OGCConfiguration();
+        OGCConfiguration_ISO configuration = new OGCConfiguration_ISO();
         configuration.getProperties().add(Properties.IGNORE_SCHEMA_LOCATION);
 
         Parser parser = new Parser(configuration);
@@ -156,7 +156,7 @@ public class OGCFilterTest extends TestCase {
                  "</ogc:BBOX>" +
                "</ogc:Filter>";
 
-        Parser p = new Parser(new OGCConfiguration());
+        Parser p = new Parser(new OGCConfiguration_ISO());
         p.validate(new StringReader(xml));
 
         assertTrue(p.getValidationErrors().isEmpty());

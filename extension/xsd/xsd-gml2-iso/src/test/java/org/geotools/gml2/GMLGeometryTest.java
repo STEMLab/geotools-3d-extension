@@ -20,7 +20,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.TestCase;
 
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.opengis.geometry.aggregate.MultiPrimitive;
@@ -38,7 +38,7 @@ public class GMLGeometryTest extends TestCase {
 
         spf.setNamespaceAware(true);
 
-        Configuration configuration = new GMLConfiguration();
+        Configuration configuration = new GMLConfiguration_ISO();
 
         parser = new Parser(configuration, getClass().getResourceAsStream("geometry.xml"));
     }

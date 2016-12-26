@@ -22,7 +22,7 @@ import org.geotools.feature.FeatureCollections;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.FeatureTypeCache;
 import org.geotools.gml2.GML;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xs.XSConfiguration;
 import org.picocontainer.MutablePicoContainer;
@@ -38,12 +38,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @source $URL$
  */
 public class GMLConfigurationTest extends TestCase {
-    GMLConfiguration configuration;
+    GMLConfiguration_ISO configuration;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        configuration = new GMLConfiguration();
+        configuration = new GMLConfiguration_ISO();
     }
 
     public void testGetNamespaceURI() {
@@ -51,7 +51,7 @@ public class GMLConfigurationTest extends TestCase {
     }
 
     public void testGetSchemaLocation() {
-        assertEquals(GMLConfiguration.class.getResource("feature.xsd").toString(),
+        assertEquals(GMLConfiguration_ISO.class.getResource("feature.xsd").toString(),
             configuration.getSchemaFileURL());
     }
 
@@ -62,10 +62,10 @@ public class GMLConfigurationTest extends TestCase {
     }
 
     public void testSchemaLocationResolver() {
-        assertEquals(GMLConfiguration.class.getResource("feature.xsd").toString(),
+        assertEquals(GMLConfiguration_ISO.class.getResource("feature.xsd").toString(),
             configuration.getSchemaLocationResolver()
                          .resolveSchemaLocation(null, GML.NAMESPACE, "feature.xsd"));
-        assertEquals(GMLConfiguration.class.getResource("geometry.xsd").toString(),
+        assertEquals(GMLConfiguration_ISO.class.getResource("geometry.xsd").toString(),
             configuration.getSchemaLocationResolver()
                          .resolveSchemaLocation(null, GML.NAMESPACE, "geometry.xsd"));
     }

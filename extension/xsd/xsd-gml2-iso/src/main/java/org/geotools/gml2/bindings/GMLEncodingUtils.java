@@ -39,7 +39,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.geotools.feature.NameImpl;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.util.logging.Logging;
 import org.geotools.xlink.XLINK;
 import org.geotools.xml.Configuration;
@@ -365,7 +365,7 @@ public class GMLEncodingUtils {
      */
     private BoundingBox getBoundedBy(Feature feature, Configuration configuration) {
         // check for flag not to include bounds
-        if (configuration.hasProperty(GMLConfiguration.NO_FEATURE_BOUNDS)) {
+        if (configuration.hasProperty(GMLConfiguration_ISO.NO_FEATURE_BOUNDS)) {
             return null;
         } else {
             BoundingBox bounds = feature.getBounds();

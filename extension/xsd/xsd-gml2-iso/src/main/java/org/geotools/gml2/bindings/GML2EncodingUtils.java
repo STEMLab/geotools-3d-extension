@@ -30,7 +30,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.GML;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
@@ -291,7 +291,7 @@ public class GML2EncodingUtils {
         }
 
         // check if srsDimension is turned off
-        if (config.hasProperty(GMLConfiguration.NO_SRS_DIMENSION)) {
+        if (config.hasProperty(GMLConfiguration_ISO.NO_SRS_DIMENSION)) {
             return null;
         }
 
@@ -309,7 +309,7 @@ public class GML2EncodingUtils {
         }
 
         // check if srsDimension is turned off
-        if (configuration.hasProperty(GMLConfiguration.NO_SRS_DIMENSION)) {
+        if (configuration.hasProperty(GMLConfiguration_ISO.NO_SRS_DIMENSION)) {
             return null;
         }
 

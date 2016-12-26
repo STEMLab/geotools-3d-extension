@@ -16,7 +16,7 @@
  */
 package org.geotools.filter.v1_1.capabilities;
 
-import org.geotools.filter.v1_1.OGCConfiguration;
+import org.geotools.filter.v1_1.OGCConfiguration_ISO;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.test.XMLTestSupport;
 
@@ -32,6 +32,6 @@ import org.geotools.xml.test.XMLTestSupport;
  */
 public abstract class OGCTestSupport extends XMLTestSupport {
     protected Configuration createConfiguration() {
-        return new OGCConfiguration();
+        return new OGCConfiguration_ISO();
     }
 }

@@ -32,7 +32,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.gml2.GML;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.gml2.bindings.GML2EncodingUtils;
 import org.geotools.gml2.bindings.GMLEncodingUtils;
 import org.geotools.util.Converters;
@@ -95,7 +95,7 @@ public abstract class FeatureCollectionEncoderDelegate implements EncoderDelegat
                 gml.forceDecimalEncoding(),
                 gml.getGmlPrefix());
         boolean featureBounds = !encoder.getConfiguration().hasProperty(
-                GMLConfiguration.NO_FEATURE_BOUNDS);
+                GMLConfiguration_ISO.NO_FEATURE_BOUNDS);
 
         try (SimpleFeatureIterator fi = features.features()) {
             if (!fi.hasNext()) {

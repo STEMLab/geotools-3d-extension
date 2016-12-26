@@ -89,11 +89,11 @@ import org.geotools.xml.Configuration;
  *
  * @source $URL$
  */
-public class OGCConfiguration extends Configuration {
+public class OGCConfiguration_ISO extends Configuration {
     /**
      * Adds a dependency on {@link GMLConfiguration}
      */
-    public OGCConfiguration() {
+    public OGCConfiguration_ISO() {
         super(OGC.getInstance());
 
         addDependency(new GMLConfiguration());

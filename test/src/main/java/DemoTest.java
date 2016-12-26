@@ -55,7 +55,7 @@ import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.filter.FilterFactory2Impl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
@@ -752,7 +752,7 @@ public class DemoTest extends JFrame{
 		
 			//Filter filter = CQL.toFilter(text.getText());
    			Hints h = new Hints();
-   			h.put(Hints.FILTER_FACTORY, FilterFactory2Impl.class);
+   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);

@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.bindings;
 
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.test.XMLTestSupport;
 
@@ -33,6 +33,6 @@ import org.geotools.xml.test.XMLTestSupport;
  */
 public class GMLTestSupport extends XMLTestSupport {
     protected Configuration createConfiguration() {
-        return new GMLConfiguration();
+        return new GMLConfiguration_ISO();
     }
 }

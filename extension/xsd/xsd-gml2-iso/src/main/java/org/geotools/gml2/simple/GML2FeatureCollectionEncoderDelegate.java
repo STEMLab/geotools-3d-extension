@@ -25,7 +25,7 @@ import java.util.Map;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.gml2.GML;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.gml2.bindings.GML2EncodingUtils;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
@@ -75,11 +75,11 @@ public class GML2FeatureCollectionEncoderDelegate extends FeatureCollectionEncod
         }
 
         private int getNumDecimals(Configuration configuration) {
-            GMLConfiguration config;
-            if (configuration instanceof GMLConfiguration) {
-                config = (GMLConfiguration) configuration;
+            GMLConfiguration_ISO config;
+            if (configuration instanceof GMLConfiguration_ISO) {
+                config = (GMLConfiguration_ISO) configuration;
             } else {
-                config = configuration.getDependency(GMLConfiguration.class);
+                config = configuration.getDependency(GMLConfiguration_ISO.class);
             }
 
             if (config == null) {

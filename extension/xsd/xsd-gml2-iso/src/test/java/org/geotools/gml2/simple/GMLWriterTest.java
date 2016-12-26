@@ -39,7 +39,7 @@ import org.custommonkey.xmlunit.XpathEngine;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.gml2.GML;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.gml2.bindings.GMLTestSupport;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Configuration;
@@ -119,7 +119,7 @@ public class GMLWriterTest extends GMLTestSupport{
     }
 
     protected Configuration createConfiguration() {
-        return new GMLConfiguration();
+        return new GMLConfiguration_ISO();
     }
 
     protected Document encode(GeometryEncoder encoder, Geometry geometry) throws Exception {

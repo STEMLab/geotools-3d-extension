@@ -29,7 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
 
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.Parser;
 import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
@@ -66,7 +66,7 @@ public class GMLApplicationSchemaParsingTest extends TestCase {
         in.close();
         in = new FileInputStream(schemaFile);
 
-        GMLConfiguration configuration = new GMLConfiguration();
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
         configuration.getProperties().add(Parser.Properties.IGNORE_SCHEMA_LOCATION);
         configuration.getProperties().add(Parser.Properties.PARSE_UNKNOWN_ELEMENTS);
 
@@ -109,7 +109,7 @@ public class GMLApplicationSchemaParsingTest extends TestCase {
         in.close();
         in = new FileInputStream(schemaFile);
 
-        GMLConfiguration configuration = new GMLConfiguration();
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
         configuration.getProperties().add(Parser.Properties.IGNORE_SCHEMA_LOCATION);
         configuration.getProperties().add(Parser.Properties.PARSE_UNKNOWN_ELEMENTS);
 
@@ -155,7 +155,7 @@ public class GMLApplicationSchemaParsingTest extends TestCase {
         in.close();
         in = new FileInputStream(schemaFile);
 
-        StreamingParser parser = new StreamingParser(new GMLConfiguration(), in, "//TestFeature");
+        StreamingParser parser = new StreamingParser(new GMLConfiguration_ISO(), in, "//TestFeature");
 
         for (int i = 0; i < 3; i++) {
             SimpleFeature f = (SimpleFeature) parser.parse();

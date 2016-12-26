@@ -31,7 +31,7 @@ import org.geotools.xml.XSDParserDelegate;
 public class GMLParserDelegate extends XSDParserDelegate {
 
     public GMLParserDelegate() {
-        super(new GMLConfiguration());
+        super(new GMLConfiguration_ISO());
     }
 
 }

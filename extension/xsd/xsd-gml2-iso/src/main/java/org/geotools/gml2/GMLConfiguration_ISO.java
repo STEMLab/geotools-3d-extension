@@ -73,7 +73,7 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
  *
  * @source $URL$
  */
-public class GMLConfiguration extends Configuration {
+public class GMLConfiguration_ISO extends Configuration {
     /**
      * Property which controls whether encoded features should include bounds.
      */
@@ -111,7 +111,7 @@ public class GMLConfiguration extends Configuration {
      * Creates the new gml configuration, with a depenendency
      * on {@link XLINKConfiguration}
      */
-    public GMLConfiguration() {
+    public GMLConfiguration_ISO() {
         super(GML.getInstance());
 
         //add xlink cdependency

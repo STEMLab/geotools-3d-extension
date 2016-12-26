@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  */
 public class GMLGeometryStreamingTest extends TestCase {
     public void testStreamByXpath() throws Exception {
-        Configuration configuration = new GMLConfiguration();
+        Configuration configuration = new GMLConfiguration_ISO();
         InputStream input = getClass().getResourceAsStream("geometry.xml");
         String xpath = "/pointMember | /lineStringMember | /polygonMember";
 

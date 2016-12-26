@@ -27,7 +27,7 @@ import org.geotools.xml.XSDParserDelegate;
 public class FilterParserDelegate extends XSDParserDelegate {
 
     public FilterParserDelegate() {
-        super(new OGCConfiguration());
+        super(new OGCConfiguration_ISO());
     }
 
 }

@@ -21,7 +21,7 @@ import org.picocontainer.MutablePicoContainer;
 import org.opengis.filter.FilterFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.FilterFactoryImpl;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
 
 
@@ -35,13 +35,13 @@ import org.geotools.xml.Configuration;
  *
  * @source $URL$
  */
-public class OGCConfiguration extends Configuration {
+public class OGCConfiguration_ISO extends Configuration {
     /**
-     * Adds a dependency on {@link GMLConfiguration}
+     * Adds a dependency on {@link GMLConfiguration_ISO}
      */
-    public OGCConfiguration() {
+    public OGCConfiguration_ISO() {
         super(OGC.getInstance());
-        addDependency(new GMLConfiguration());
+        addDependency(new GMLConfiguration_ISO());
     }
 
     protected void registerBindings(MutablePicoContainer container) {

@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2;
 
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
 import org.picocontainer.MutablePicoContainer;
 
@@ -29,7 +29,7 @@ import org.picocontainer.MutablePicoContainer;
 public class TestConfiguration extends Configuration {
     public TestConfiguration() {
         super(TEST.getInstance());
-        addDependency(new GMLConfiguration());
+        addDependency(new GMLConfiguration_ISO());
     }
 
     protected void registerBindings(MutablePicoContainer container) {

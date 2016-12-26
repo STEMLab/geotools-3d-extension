@@ -39,7 +39,7 @@ public class OGCFilterTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        Configuration configuration = new OGCConfiguration();
+        Configuration configuration = new OGCConfiguration_ISO();
         parser = new Parser(configuration);
     }
 
@@ -63,7 +63,7 @@ public class OGCFilterTest extends TestCase {
         String xml = "<Filter>" + "  <PropertyIsEqualTo>" + "    <PropertyName>foo</PropertyName>"
             + "    <Literal>bar</Literal>" + "  </PropertyIsEqualTo>" + "</Filter>";
 
-        OGCConfiguration configuration = new OGCConfiguration();
+        OGCConfiguration_ISO configuration = new OGCConfiguration_ISO();
         configuration.getProperties().add(Properties.IGNORE_SCHEMA_LOCATION);
 
         Parser parser = new Parser(configuration);
@@ -84,7 +84,7 @@ public class OGCFilterTest extends TestCase {
             "</DWithin>" +
           "</Filter>";
        
-       OGCConfiguration configuration = new OGCConfiguration();
+       OGCConfiguration_ISO configuration = new OGCConfiguration_ISO();
        configuration.getProperties().add(Properties.IGNORE_SCHEMA_LOCATION);
 
        Parser parser = new Parser(configuration);

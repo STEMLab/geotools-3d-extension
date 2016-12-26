@@ -30,7 +30,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.GeometryBuilder;
-import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.xml.AttributeInstance;
 import org.geotools.xml.Binding;
 import org.geotools.xml.ElementInstance;
@@ -60,9 +60,9 @@ public class AbstractGMLBindingTest extends TestCase {
     SimpleFeatureTypeBuilder ftBuilder;
 
     protected void setUp() throws Exception {
-        String loc = GMLConfiguration.class.getResource("feature.xsd").toString();
+        String loc = GMLConfiguration_ISO.class.getResource("feature.xsd").toString();
 
-        GMLConfiguration configuration = new GMLConfiguration();
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
         schema = configuration.schema();
         container = new DefaultPicoContainer();
 

@@ -74,8 +74,8 @@ import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
@@ -1263,7 +1263,7 @@ public class ISODataUtilities {
                 simpleFeatureType = ISODataUtilities.createSubType((SimpleFeatureType) featureType,
                         properties);
             } else {
-                SimpleFeatureTypeBuilder build = new SimpleFeatureTypeBuilder();
+            	ISOSimpleFeatureTypeBuilder build = new ISOSimpleFeatureTypeBuilder();
                 build.setName(featureType.getName());
                 build.setAttributes(simpleAttributes);
                 build.setDefaultGeometry(featureType.getGeometryDescriptor().getLocalName());
@@ -1617,7 +1617,7 @@ public class ISODataUtilities {
                 throw new RuntimeException(e);
             }
 
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName(typeName);
         tb.setNamespaceURI(namespace);
         tb.setCRS(null); // not interested in warnings from this simple method
@@ -1656,7 +1656,7 @@ public class ISODataUtilities {
             return featureType;
         }
 
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName(featureType.getName());
         tb.setCRS(null); // not interested in warnings from this simple method
         for (int i = 0; i < properties.length; i++) {
@@ -1666,7 +1666,7 @@ public class ISODataUtilities {
         return tb.buildFeatureType();
     }
 
-    private static void setDefaultGeometry(SimpleFeatureTypeBuilder typeBuilder, String[] properties,
+    private static void setDefaultGeometry(ISOSimpleFeatureTypeBuilder typeBuilder, String[] properties,
             SimpleFeatureType featureType) {
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
         if (geometryDescriptor != null) {
@@ -1748,7 +1748,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeatureType createType(String namespace, String name, String typeSpec)
             throws SchemaException {
-        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+    	ISOSimpleFeatureTypeBuilder builder = new ISOSimpleFeatureTypeBuilder();
         builder.setName(name);
         builder.setNamespaceURI(namespace);
 

@@ -32,7 +32,7 @@ import org.geotools.gml2.simple.GMLWriter;
 import org.geotools.gml2.simple.GeometryEncoder;
 import org.geotools.gml2.simple.QualifiedName;
 import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.gml3.bindings.GML3EncodingUtils;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
@@ -97,7 +97,7 @@ public class GML3FeatureCollectionEncoderDelegate extends
                     SrsSyntax.class);
             this.numDecimals = getNumDecimals(encoder.getConfiguration());
             this.encodeSeparateMember = encoder.getConfiguration().hasProperty(
-                    GMLConfiguration.ENCODE_FEATURE_MEMBER);
+                    GMLConfiguration_ISO.ENCODE_FEATURE_MEMBER);
         }
 
         String findGMLPrefix(Encoder encoder) {
@@ -116,11 +116,11 @@ public class GML3FeatureCollectionEncoderDelegate extends
         }
 
         private int getNumDecimals(Configuration configuration) {
-            GMLConfiguration config;
-            if (configuration instanceof GMLConfiguration) {
-                config = (GMLConfiguration) configuration;
+            GMLConfiguration_ISO config;
+            if (configuration instanceof GMLConfiguration_ISO) {
+                config = (GMLConfiguration_ISO) configuration;
             } else {
-                config = configuration.getDependency(GMLConfiguration.class);
+                config = configuration.getDependency(GMLConfiguration_ISO.class);
             }
 
             if (config == null) {

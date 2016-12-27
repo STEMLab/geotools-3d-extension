@@ -16,9 +16,6 @@
  */
 package org.geotools.filter.v1_1;
 
-import org.eclipse.xsd.util.XSDSchemaLocationResolver;
-import org.picocontainer.MutablePicoContainer;
-import org.opengis.filter.FilterFactory;
 import org.geotools.filter.FilterFactoryImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.v1_0.OGCAddBinding;
@@ -75,8 +72,10 @@ import org.geotools.filter.v1_1.capabilities.SpatialOperatorTypeBinding;
 import org.geotools.filter.v1_1.capabilities.SpatialOperatorsTypeBinding;
 import org.geotools.filter.v1_1.capabilities.Spatial_CapabilitiesTypeBinding;
 import org.geotools.filter.v1_1.capabilities._Filter_CapabilitiesBinding;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
+import org.opengis.filter.FilterFactory;
+import org.picocontainer.MutablePicoContainer;
 
 
 /**
@@ -96,7 +95,7 @@ public class OGCConfiguration_ISO extends Configuration {
     public OGCConfiguration_ISO() {
         super(OGC.getInstance());
 
-        addDependency(new GMLConfiguration());
+        addDependency(new GMLConfiguration_ISO());
     }
 
     protected void registerBindings(MutablePicoContainer container) {

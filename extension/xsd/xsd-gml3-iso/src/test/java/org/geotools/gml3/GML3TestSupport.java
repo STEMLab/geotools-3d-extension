@@ -100,7 +100,7 @@ public abstract class GML3TestSupport extends XMLTestSupport {
      * i.e. this is a GML3 specific binding configuration. 
      */
     protected Configuration createConfiguration() {
-        return new GMLConfiguration(enableExtendedArcSurfaceSupport());
+        return new GMLConfiguration_ISO(enableExtendedArcSurfaceSupport());
     }
 
     protected void checkPosOrdinates(Document doc,  int expectedNumOrdinates) 

@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class GML32CompositeCurveParsingTest extends GML32TestSupport {
 
     public void testCompositeCurve() throws Exception {
-        GMLConfiguration gml = new GMLConfiguration(true);
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
         Parser p = new Parser(gml);
         Object compositeCurve = p.parse(getClass().getResourceAsStream("gml_compositecurve_1.xml"));
         assertFalse(compositeCurve instanceof String);

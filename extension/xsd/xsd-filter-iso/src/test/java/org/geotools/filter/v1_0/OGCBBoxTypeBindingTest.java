@@ -18,7 +18,7 @@ package org.geotools.filter.v1_0;
 
 import org.w3c.dom.Document;
 import org.opengis.filter.spatial.BBOX;
-import org.geotools.gml2.GML;
+import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Binding;
 
 

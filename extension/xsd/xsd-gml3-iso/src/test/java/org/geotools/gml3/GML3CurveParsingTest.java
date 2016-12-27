@@ -43,7 +43,7 @@ public class GML3CurveParsingTest extends GML3TestSupport {
     protected Configuration gml;
 
     protected void setUp() throws Exception {
-        GMLConfiguration configuration = new GMLConfiguration(true);
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO(true);
         configuration.setGeometryFactory(new CurvedGeometryFactory(TOLERANCE));
         this.gml = configuration;
     }

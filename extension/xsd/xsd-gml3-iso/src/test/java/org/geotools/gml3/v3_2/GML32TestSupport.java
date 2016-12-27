@@ -28,7 +28,7 @@ public abstract class GML32TestSupport extends XMLTestSupport {
     }
 
     protected Configuration createConfiguration() {
-        return new GMLConfiguration(enableArcSurfaceSupport());
+        return new GMLConfiguration_ISO(enableArcSurfaceSupport());
     }
     
     /*

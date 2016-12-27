@@ -23,11 +23,11 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.xml.Binding;
 
 /**
- * Test {@link GMLConfiguration}.
+ * Test {@link GMLConfiguration_ISO}.
  *
  *
  * @source $URL$
@@ -40,7 +40,7 @@ public class GMLConfigurationTest extends TestCase {
      */
     @SuppressWarnings("unchecked")
     public void testBindingTypes() throws Exception {
-        GMLConfiguration configuration = new GMLConfiguration();
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
         assertEquals(GML.NAMESPACE, configuration.getNamespaceURI());
         Map bindings = configuration.setupBindings();
         for (Object object : bindings.values()) {

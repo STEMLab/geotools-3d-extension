@@ -29,7 +29,7 @@ import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.ComplexTypeImpl;
 import org.geotools.gml3.GML3TestSupport;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.SchemaLocator;
 import org.geotools.xml.XSD;
@@ -110,7 +110,7 @@ public class XSAnyTypeBindingTest extends GML3TestSupport {
 
         public MyConfiguration() {
             super(ANYTYPETEST.getInstance());
-            addDependency(new GMLConfiguration());
+            addDependency(new GMLConfiguration_ISO());
         }
         
     }

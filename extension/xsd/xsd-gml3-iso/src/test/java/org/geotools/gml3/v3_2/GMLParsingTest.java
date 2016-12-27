@@ -75,7 +75,7 @@ public class GMLParsingTest extends TestCase {
         TransformerFactory.newInstance().newTransformer().transform( 
             new DOMSource( dom ), new StreamResult( out ) );
         
-        GMLConfiguration config = new GMLConfiguration();
+        GMLConfiguration_ISO config = new GMLConfiguration_ISO();
         Parser p = new Parser( config );
         Object o = p.parse( new ByteArrayInputStream( out.toByteArray() ) );
         assertTrue( o instanceof FeatureCollection );
@@ -110,7 +110,7 @@ public class GMLParsingTest extends TestCase {
      * @return the parsed CoordinateReferenceSystem
      */
     private static CoordinateReferenceSystem parsePointSrsname(String srsName) {
-        Parser parser = new Parser(new GMLConfiguration());
+        Parser parser = new Parser(new GMLConfiguration_ISO());
         String text = "<gml:Point " //
                 + "xmlns:gml=\"http://www.opengis.net/gml/3.2\" " //
                 + "srsName=\"" + srsName + "\">" //
@@ -162,7 +162,7 @@ public class GMLParsingTest extends TestCase {
     }
 
     public void testCoordinateList() throws IOException, SAXException, ParserConfigurationException{
-        GMLConfiguration gml = new GMLConfiguration(true);
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
         Parser p = new Parser(gml);
         Object multiSurface = p.parse(getClass().getResourceAsStream("surfacePatches.xml"));
         assertFalse(multiSurface instanceof String);
@@ -173,7 +173,7 @@ public class GMLParsingTest extends TestCase {
     }
 
     public void testSurfacememberPatches() throws IOException, SAXException, ParserConfigurationException{
-        GMLConfiguration gml = new GMLConfiguration(true);
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
         Parser p = new Parser(gml);
         Object multiSurface = p.parse(getClass().getResourceAsStream("surfacememberPatches.xml"));
         assertFalse(multiSurface instanceof String);
@@ -184,7 +184,7 @@ public class GMLParsingTest extends TestCase {
     }
 
     public void testNestedInteriors() throws IOException, SAXException, ParserConfigurationException{
-        GMLConfiguration gml = new GMLConfiguration(true);
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
         Parser p = new Parser(gml);
         Object multiSurface = p.parse(getClass().getResourceAsStream("nestedInteriors.xml"));
         assertFalse(multiSurface instanceof String);

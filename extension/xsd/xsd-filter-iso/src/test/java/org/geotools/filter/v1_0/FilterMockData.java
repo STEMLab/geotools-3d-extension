@@ -56,7 +56,7 @@ import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.gml2.GML;
+import org.geotools.gml2.iso.GML;
 
 
 /**

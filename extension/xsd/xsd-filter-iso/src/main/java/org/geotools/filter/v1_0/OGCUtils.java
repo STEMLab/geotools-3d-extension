@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.gml2.GML;
+import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Node;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;

@@ -90,7 +90,7 @@ public class GML32FeatureCollectionEncoderDelegate extends
 
         private int getNumDecimals(Configuration configuration) {
             GMLConfiguration config;
-            if (configuration instanceof org.geotools.gml3.v3_2.GMLConfiguration) {
+            if (configuration instanceof org.geotools.gml3.v3_2.GMLConfiguration_ISO) {
                 config = (GMLConfiguration) configuration;
             } else {
                 config = configuration.getDependency(GMLConfiguration.class);

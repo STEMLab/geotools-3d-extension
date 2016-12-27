@@ -15,7 +15,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,8 +27,8 @@ import java.net.URI;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.referencing.CRS;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.csvreader.CsvReader;
 

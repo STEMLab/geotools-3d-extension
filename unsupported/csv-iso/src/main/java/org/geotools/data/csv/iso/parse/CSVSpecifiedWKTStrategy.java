@@ -15,16 +15,17 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.csv.CSVFileState;
+import org.geotools.data.csv.iso.CSVFileState;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.ISOAttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.iso.io.wkt.ParseException;
@@ -62,7 +63,9 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
         if( descriptor != null ){
             ISOAttributeTypeBuilder attributeBuilder = new ISOAttributeTypeBuilder();
             attributeBuilder.init(descriptor);
-            attributeBuilder.setCRS(DefaultGeographicCRS.WGS84);
+            
+            //TODO HACK!! HACK!! we should specify CRS from file
+            attributeBuilder.setCRS(DefaultGeographicCRS.WGS84_3D);
             attributeBuilder.binding(Geometry.class);
             
             AttributeDescriptor modified = attributeBuilder.buildDescriptor(wktField);
@@ -115,7 +118,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
     @Override
     public SimpleFeature decode(String recordId, String[] csvRecord) {
         SimpleFeatureType featureType = getFeatureType();
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
         String[] headers = csvFileState.getCSVHeaders();
         for (int i = 0; i < headers.length; i++) {

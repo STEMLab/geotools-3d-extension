@@ -15,7 +15,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.awt.RenderingHints.Key;
 import java.io.File;
@@ -28,13 +28,13 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.data.DataStore;
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFactorySpi;
-import org.geotools.data.csv.parse.CSVAttributesOnlyStrategy;
-import org.geotools.data.csv.parse.CSVLatLonStrategy;
-import org.geotools.data.csv.parse.CSVSpecifiedWKTStrategy;
-import org.geotools.data.csv.parse.CSVStrategy;
+import org.geotools.data.csv.iso.parse.CSVAttributesOnlyStrategy;
+import org.geotools.data.csv.iso.parse.CSVLatLonStrategy;
+import org.geotools.data.csv.iso.parse.CSVSpecifiedWKTStrategy;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.geometry.GeometryBuilder;
@@ -97,7 +97,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
         }
         URL url = (URL) URL_PARAM.lookUp(params);
         if (url != null) {
-            return DataUtilities.urlToFile(url);
+            return ISODataUtilities.urlToFile(url);
         }
         return null;
     }
@@ -203,7 +203,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
 
     @Override
     public FileDataStore createDataStore(URL url) throws IOException {
-        File file = DataUtilities.urlToFile(url);
+        File file = ISODataUtilities.urlToFile(url);
         return createDataStoreFromFile(file);
     }
 
@@ -214,7 +214,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
 
     @Override
     public boolean canProcess(URL url) {
-        return canProcessExtension(DataUtilities.urlToFile(url).toString());
+        return canProcessExtension(ISODataUtilities.urlToFile(url).toString());
     }
 
     @Override

@@ -48,7 +48,7 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometry;
  * 
  *
  * @source $URL$
- * @author Soojin Kim, Pusan National University
+ * @author Soojin Kim, Pusan National University 
  */
 public class ISOBBOXImpl extends ISOAbstractPreparedGeometryFilter implements BBOX {
     

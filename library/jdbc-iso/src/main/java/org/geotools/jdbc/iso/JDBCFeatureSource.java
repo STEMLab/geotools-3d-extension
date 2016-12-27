@@ -39,7 +39,7 @@ import org.geotools.data.FilteringFeatureReader;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ReTypeFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.Transaction;
 import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data3d.store.ContentState;
@@ -675,7 +675,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         if (postFilterRequired) {
             reader = new FilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
             if(!returnedSchema.equals(querySchema)) {
-                reader = new ReTypeFeatureReader(reader, returnedSchema);
+                reader = new ISOReTypeFeatureReader(reader, returnedSchema);
             }
 
             // offset

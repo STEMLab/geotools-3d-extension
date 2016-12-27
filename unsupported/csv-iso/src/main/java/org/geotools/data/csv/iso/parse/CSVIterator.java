@@ -15,13 +15,13 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.geotools.data.csv.CSVFileState;
+import org.geotools.data.csv.iso.CSVFileState;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.csvreader.CsvReader;

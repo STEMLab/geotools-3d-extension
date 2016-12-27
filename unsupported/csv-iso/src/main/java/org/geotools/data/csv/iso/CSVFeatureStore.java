@@ -6,7 +6,7 @@
  * This file is hereby placed into the Public Domain. This means anyone is
  * free to do whatever they wish with this file. Use it well and enjoy!
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
 import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
-import org.geotools.data.csv.parse.CSVStrategy;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data3d.store.ContentState;

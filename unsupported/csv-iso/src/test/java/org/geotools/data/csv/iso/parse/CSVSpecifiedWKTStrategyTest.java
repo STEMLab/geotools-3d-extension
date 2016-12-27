@@ -3,7 +3,7 @@
  * This code is licensed under the GPL 2.0 license, available at the root
  * application directory.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,10 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 
-import org.geotools.data.csv.CSVFileState;
+import org.geotools.data.csv.iso.CSVFileState;
+import org.geotools.data.csv.iso.parse.CSVIterator;
+import org.geotools.data.csv.iso.parse.CSVSpecifiedWKTStrategy;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

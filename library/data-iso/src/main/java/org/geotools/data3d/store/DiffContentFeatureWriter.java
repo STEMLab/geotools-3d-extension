@@ -25,6 +25,7 @@ import org.geotools.data.Diff;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureWriter;
 import org.geotools.factory.Hints;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeature;
@@ -63,7 +64,7 @@ public class DiffContentFeatureWriter implements FeatureWriter<SimpleFeatureType
 
     ContentFeatureStore store;
     
-    SimpleFeatureBuilder builder;
+    ISOSimpleFeatureBuilder builder;
 
     /**
      * DiffFeatureWriter construction.
@@ -74,7 +75,7 @@ public class DiffContentFeatureWriter implements FeatureWriter<SimpleFeatureType
      */
     public DiffContentFeatureWriter(ContentFeatureStore store, Diff diff,
             FeatureReader<SimpleFeatureType, SimpleFeature> reader) {
-        this(store,diff,reader,new SimpleFeatureBuilder(reader.getFeatureType()));
+        this(store,diff,reader,new ISOSimpleFeatureBuilder(reader.getFeatureType()));
     }
     
     /**
@@ -85,7 +86,7 @@ public class DiffContentFeatureWriter implements FeatureWriter<SimpleFeatureType
      * @param filter
      */
     public DiffContentFeatureWriter(ContentFeatureStore store, Diff diff,
-            FeatureReader<SimpleFeatureType, SimpleFeature> reader, SimpleFeatureBuilder builder) {
+            FeatureReader<SimpleFeatureType, SimpleFeature> reader, ISOSimpleFeatureBuilder builder) {
         this.store = store;
         this.reader = reader;
         this.state = store.getState();
@@ -114,7 +115,7 @@ public class DiffContentFeatureWriter implements FeatureWriter<SimpleFeatureType
             // any modifications to current
             live = next; // update live value
             next = null; // hasNext will need to search again
-            current = SimpleFeatureBuilder.copy(live);
+            current = ISOSimpleFeatureBuilder.copy(live);
 
             return current;
         } else {
@@ -176,7 +177,7 @@ public class DiffContentFeatureWriter implements FeatureWriter<SimpleFeatureType
                 if (current.getUserData().containsKey(Hints.PROVIDED_FID)) {
                     fid = (String) current.getUserData().get(Hints.PROVIDED_FID);
                     Map<Object, Object> userData = current.getUserData();
-                    current = SimpleFeatureBuilder.build(current.getFeatureType(),
+                    current = ISOSimpleFeatureBuilder.build(current.getFeatureType(),
                             current.getAttributes(), fid);
                     current.getUserData().putAll(userData);
                 }

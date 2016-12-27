@@ -14,12 +14,12 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import static org.junit.Assert.assertEquals;
 
-import org.geotools.data.csv.CSVFileState;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.data.csv.iso.CSVFileState;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class CSVWriteStrategyTest {
     	assertEquals("TEST", featureType.getName().getLocalPart());
     	assertEquals(3, featureType.getAttributeCount());
     	
-    	SimpleFeature feature = SimpleFeatureBuilder.build(featureType,
+    	SimpleFeature feature = ISOSimpleFeatureBuilder.build(featureType,
     			new Object[] {"Trento", 140, 2002}, "TEST-fid1");
     	String[] csvRecord = new String[] {"Trento", "140", "2002"};
     	SimpleFeature parsed = strategy.decode("fid1", csvRecord);
@@ -73,7 +73,7 @@ public class CSVWriteStrategyTest {
     	
         GeometryFactory gf = JTSFactoryFinder.getGeometryFactory();
         Point trento = gf.createPoint(new Coordinate(46.066667, 11.116667));
-    	SimpleFeature feature = SimpleFeatureBuilder.build(featureType,
+    	SimpleFeature feature = ISOSimpleFeatureBuilder.build(featureType,
     			new Object[] {trento, "Trento", 140, 2002}, "TEST-fid1");
     	String[] csvRecord = new String[] {"11.116667", "46.066667", "Trento", "140", "2002"};
     	SimpleFeature parsed = strategy.decode("fid1", csvRecord);
@@ -100,7 +100,7 @@ public class CSVWriteStrategyTest {
     	
         GeometryFactory gf = JTSFactoryFinder.getGeometryFactory();
         Point trento = gf.createPoint(new Coordinate(46.066667, 11.116667));
-    	SimpleFeature feature = SimpleFeatureBuilder.build(featureType,
+    	SimpleFeature feature = ISOSimpleFeatureBuilder.build(featureType,
     			new Object[] {trento, "Trento", 140, 2002}, "TEST-fid1");
     	String[] csvRecord = new String[] {"11.116667", "46.066667", "Trento", "140", "2002"};
     	SimpleFeature parsed = strategy.decode("fid1", csvRecord);
@@ -126,7 +126,7 @@ public class CSVWriteStrategyTest {
     	
     	WKTReader2 wktReader = new WKTReader2();
     	Geometry geom = wktReader.read("POINT (1 1)");
-    	SimpleFeature feature = SimpleFeatureBuilder.build(featureType,
+    	SimpleFeature feature = ISOSimpleFeatureBuilder.build(featureType,
     			new Object[] {geom, "Trento", 140, 2002}, "TEST-fid1");
     	String[] csvRecord = new String[] {"POINT (1 1)", "Trento", "140", "2002"};
     	SimpleFeature parsed = strategy.decode("fid1", csvRecord);

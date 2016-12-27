@@ -6,7 +6,7 @@
  * This file is hereby placed into the Public Domain. This means anyone is
  * free to do whatever they wish with this file. Use it well and enjoy!
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,11 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.NoSuchElementException;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
-import org.geotools.data.csv.parse.CSVIterator;
-import org.geotools.data.csv.parse.CSVStrategy;
+import org.geotools.data.csv.iso.parse.CSVIterator;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -115,9 +116,9 @@ public class CSVFeatureWriter implements FeatureWriter<SimpleFeatureType, Simple
                 }
             }
             String fid = featureType.getTypeName()+"-fid"+nextRow;
-            Object values[] = DataUtilities.defaultValues( featureType );
+            Object values[] = ISODataUtilities.defaultValues( featureType );
             
-            this.currentFeature = SimpleFeatureBuilder.build( featureType, values, fid );
+            this.currentFeature = ISOSimpleFeatureBuilder.build( featureType, values, fid );
             return this.currentFeature;
         }
         catch (IllegalArgumentException invalid ){

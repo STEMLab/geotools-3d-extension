@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.geotools.factory.Hints;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.jdbc.iso.JoinInfo.JoinPart;
@@ -42,7 +43,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
 
     List<JDBCFeatureReader> joinReaders;
-    SimpleFeatureBuilder joinFeatureBuilder;
+    ISOSimpleFeatureBuilder joinFeatureBuilder;
     
     public JDBCJoiningFeatureReader(String sql, Connection cx, JDBCFeatureSource featureSource,
         SimpleFeatureType featureType, JoinInfo join, Hints hints) 
@@ -89,7 +90,7 @@ public class JDBCJoiningFeatureReader extends JDBCFeatureReader {
         }
 
         //builder for the final joined feature
-        joinFeatureBuilder = new SimpleFeatureBuilder(retype(featureType, join));
+        joinFeatureBuilder = new ISOSimpleFeatureBuilder(retype(featureType, join));
     }
 
     private int getPrimaryKeyOffset(JDBCFeatureSource featureSource, PrimaryKey pk,

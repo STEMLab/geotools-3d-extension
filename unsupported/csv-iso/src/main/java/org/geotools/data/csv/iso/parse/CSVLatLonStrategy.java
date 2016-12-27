@@ -15,7 +15,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,11 +24,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.geotools.data.csv.CSVFileState;
+import org.geotools.data.csv.iso.CSVFileState;
 import org.geotools.factory.GeoTools;
-import org.geotools.feature.AttributeTypeBuilder;
-import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.ISOAttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
@@ -42,9 +41,6 @@ import org.opengis.geometry.primitive.Point;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-//import com.vividsolutions.jts.geom.Coordinate;
-//import com.vividsolutions.jts.geom.GeometryFactory;
-//import com.vividsolutions.jts.geom.Point;
 
 public class CSVLatLonStrategy extends CSVStrategy {
 
@@ -108,8 +104,8 @@ public class CSVLatLonStrategy extends CSVStrategy {
         if (isNumeric(latClass) && isNumeric(lngClass)) {
             List<String> csvHeaders = Arrays.asList(headers);
             int index = csvHeaders.indexOf(latField);
-            AttributeTypeBuilder builder2 = new AttributeTypeBuilder();
-            builder2.setCRS(DefaultGeographicCRS.WGS84);
+            ISOAttributeTypeBuilder builder2 = new ISOAttributeTypeBuilder();
+            builder2.setCRS(DefaultGeographicCRS.WGS84_3D);
             builder2.binding(Point.class);
             AttributeDescriptor descriptor = builder2.buildDescriptor(pointField);
             builder.add(index, descriptor);
@@ -166,7 +162,7 @@ public class CSVLatLonStrategy extends CSVStrategy {
     @Override
     public SimpleFeature decode(String recordId, String[] csvRecord) {
         SimpleFeatureType featureType = getFeatureType();
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
         //GeometryFactory geometryFactory = new GeometryFactory();
         GeometryBuilder geometryFactory = new GeometryBuilder(GeoTools.getDefaultHints());

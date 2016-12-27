@@ -15,16 +15,15 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv.parse;
+package org.geotools.data.csv.iso.parse;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.csv.CSVFileState;
-import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.data.csv.iso.CSVFileState;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
@@ -83,7 +82,7 @@ public class CSVAttributesOnlyStrategy extends CSVStrategy {
     @Override
     public SimpleFeature decode(String recordId, String[] csvRecord) {
         SimpleFeatureType featureType = getFeatureType();
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         String[] headers;
         headers = csvFileState.getCSVHeaders();
         for (int i = 0; i < headers.length; i++) {

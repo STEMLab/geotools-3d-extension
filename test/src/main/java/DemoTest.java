@@ -36,7 +36,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.csv.CSVDataStoreFactory;
+import org.geotools.data.csv.iso.CSVDataStoreFactory;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.memory.MemoryFeatureCollection;

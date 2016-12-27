@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDParticle;
 import org.geotools.feature.NameImpl;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -335,7 +335,7 @@ public class GML2ParsingUtils {
 
     public static SimpleFeature feature(SimpleFeatureType fType, String fid, Node node)
         throws Exception {
-        SimpleFeatureBuilder b = new SimpleFeatureBuilder(fType);
+    	ISOSimpleFeatureBuilder b = new ISOSimpleFeatureBuilder(fType);
 
         int attributeCount = fType.getAttributeCount();
         for (int i = 0; i < attributeCount; i++) {

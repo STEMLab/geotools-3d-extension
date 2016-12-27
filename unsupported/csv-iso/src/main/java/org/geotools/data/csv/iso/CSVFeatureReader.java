@@ -15,15 +15,15 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
-import org.geotools.data.csv.parse.CSVIterator;
-import org.geotools.data.csv.parse.CSVStrategy;
+import org.geotools.data.csv.iso.parse.CSVIterator;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 

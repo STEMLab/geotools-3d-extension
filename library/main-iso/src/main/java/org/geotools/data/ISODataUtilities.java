@@ -61,7 +61,6 @@ import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.data.view.DefaultView;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.AttributeImpl;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -75,15 +74,17 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
 import org.geotools.feature.type.GeometryTypeImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
 import org.geotools.filter.visitor.SimplifyingFilterVisitor;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -192,7 +193,7 @@ public class ISODataUtilities {
     /** Reverse type map used by {@link #encodeType(FeatureType)} */
     static Map<Class, String> typeEncode = new HashMap<Class, String>();
 
-    static FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+    static FilterFactory2 ff = new ISOFilterFactoryImpl();
     
     static final boolean IS_WINDOWS_OS;
 
@@ -546,7 +547,7 @@ public class ISODataUtilities {
 
         if (src instanceof SimpleFeature) {
             SimpleFeature feature = (SimpleFeature) src;
-            return SimpleFeatureBuilder.copy(feature);
+            return ISOSimpleFeatureBuilder.copy(feature);
         }
 
         //
@@ -624,7 +625,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeature template(SimpleFeatureType featureType)
             throws IllegalAttributeException {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType), null);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType), null);
     }
 
     /**
@@ -638,7 +639,7 @@ public class ISODataUtilities {
      * @return Craeted feature
      */
     public static SimpleFeature template(SimpleFeatureType featureType, String featureID) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType), featureID);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType), featureID);
     }
 
     /**
@@ -661,7 +662,7 @@ public class ISODataUtilities {
      * @throws ArrayIndexOutOfBoundsException  If the number of provided values does not match the featureType
      */
     public static SimpleFeature template(SimpleFeatureType featureType, Object[] providedValues) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), null);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), null);
     }
 
     /**
@@ -678,7 +679,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeature template(SimpleFeatureType featureType, String featureID,
             Object[] providedValues) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), featureID);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), featureID);
     }
 
     /**
@@ -1921,7 +1922,7 @@ public class ISODataUtilities {
             Object value = createValue( descriptor, text[i] );
             values[i] = value;
         }
-        SimpleFeature feature = SimpleFeatureBuilder.build( featureType, values, fid );
+        SimpleFeature feature = ISOSimpleFeatureBuilder.build( featureType, values, fid );
         
         return feature;
     }
@@ -2091,7 +2092,7 @@ public class ISODataUtilities {
             AttributeType attType = type.getDescriptor(i).getType();
             attributes[i] = Converters.convert(text[i], attType.getBinding());
         }
-        return SimpleFeatureBuilder.build(type, attributes, fid);
+        return ISOSimpleFeatureBuilder.build(type, attributes, fid);
     }
 
     //
@@ -2962,7 +2963,7 @@ public class ISODataUtilities {
     		}                
         }
     	
-    	return ff.createFeature(value, (FeatureType)  schema, SimpleFeatureBuilder.createDefaultFeatureId());    		
+    	return ff.createFeature(value, (FeatureType)  schema, ISOSimpleFeatureBuilder.createDefaultFeatureId());    		
     }
 
 }

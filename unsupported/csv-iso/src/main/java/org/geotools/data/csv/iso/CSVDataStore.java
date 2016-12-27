@@ -15,7 +15,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.csv;
+package org.geotools.data.csv.iso;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.csv.parse.CSVStrategy;
+import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.data3d.store.ContentEntry;

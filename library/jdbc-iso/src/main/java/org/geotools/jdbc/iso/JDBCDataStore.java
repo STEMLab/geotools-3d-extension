@@ -68,6 +68,7 @@ import org.geotools.data3d.store.ContentState;
 import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.Hints;
 import org.geotools.feature.NameImpl;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.visitor.CountVisitor;
 import org.geotools.feature.visitor.GroupByVisitor;
@@ -2145,7 +2146,7 @@ public final class JDBCDataStore extends ContentDataStore
     protected String encodeFID( PrimaryKey pkey, ResultSet rs, int offset ) throws SQLException, IOException {
         // no pk columns
         if(pkey.getColumns().isEmpty()) {
-            return SimpleFeatureBuilder.createDefaultFeatureId();
+            return ISOSimpleFeatureBuilder.createDefaultFeatureId();
         } 
         
         // just one, no need to build support structures

@@ -81,7 +81,7 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
         return geometryBuilder;
     }
 
-    public void setGeometryBuilder(GeometryBuilder geometryFactory) {
+    public void setGeometryBuilder(GeometryBuilder geometryBuilder) {
         this.geometryBuilder = geometryBuilder;
     }
 

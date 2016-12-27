@@ -44,7 +44,7 @@ import org.geotools.data.InProcessLockingManager;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ReTypeFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.crs.ForceCoordinateSystemFeatureReader;
@@ -670,7 +670,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
                 // do an equals check because we may have needlessly retyped (that is,
                 // the subclass might be able to only partially retype)
                 if ( !target.equals( reader.getFeatureType() ) ) {
-                    reader = new ReTypeFeatureReader( reader, target, false );    
+                    reader = new ISOReTypeFeatureReader( reader, target, false );    
                 }
             }
         }
@@ -966,7 +966,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
      * feature reader created by the subclass to be wrapped in a retyping feature
      * reader when the query specifies a retype.
      * </p>
-     * @see ReTypeFeatureReader
+     * @see ISOReTypeFeatureReader
      */
     protected boolean canRetype() {
         return false;

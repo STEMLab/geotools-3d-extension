@@ -51,7 +51,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * coordinates including a minimum and maximum for the z-axis.
  * 
  * @author Niels Charlier
- *
+ * @author Soojin Kim, Pusan National University
  */
 
 public class ISOBBOX3DImpl implements BBOX3D {

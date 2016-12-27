@@ -86,7 +86,7 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
  * </p>
  * 
  * @author jesse
- *
+ * @author Soojin Kim, Pusan National University
  *
  *
  * @source $URL$

@@ -27,6 +27,7 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 
@@ -141,9 +142,12 @@ public class GMLLineStringTypeBinding extends AbstractComplexBinding {
         	List<? extends CurveSegment> segments = lineString.getSegments();
         	
         	for(CurveSegment cs : segments) {
-        		pa.add(cs.getStartPoint());
+        		for(Position p : cs.getSamplePoints()) {
+        			if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+        				pa.add(p);
+        			}
+        		}
         	}
-        	pa.add( segments.get(segments.size() - 1).getEndPoint() );
         	return pa;
         }
 

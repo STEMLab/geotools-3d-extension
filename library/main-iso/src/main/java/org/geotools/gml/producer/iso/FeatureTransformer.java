@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.FeatureReader;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
@@ -510,7 +510,7 @@ public class FeatureTransformer extends TransformerBase {
                     }
                    
                     for (int i = 0; i < results.length; i++) {
-                        handleFeatureIterator(DataUtilities.simple(results[i]).features());
+                        handleFeatureIterator(ISODataUtilities.simple(results[i]).features());
                     }
                     endFeatureCollection();
                 } else if (o instanceof FeatureReader) {

@@ -22,6 +22,8 @@
  */
 package org.geotools.gml.producer.iso;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.geotools.geometry.GeometryBuilder;
@@ -34,7 +36,15 @@ import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -139,7 +149,8 @@ public class GeometryTransformer extends TransformerBase {
         public void encode(Object o, String srsName)
         throws IllegalArgumentException {
             if (o instanceof Geometry) {
-                encode((Geometry) o, srsName);
+            	Geometry geom = (Geometry) o;
+                encode(geom, srsName, geom.getCoordinateDimension());
             } else {
                 throw new IllegalArgumentException("Unable to encode " + o);
             }
@@ -279,8 +290,15 @@ public class GeometryTransformer extends TransformerBase {
                         throw new RuntimeException(e);
                     }
                     break;
-                /*case GMLUtils.LINESTRING:
-                    coordSeq = ((Curve) geometry).get
+                case GMLUtils.LINESTRING:
+                    List<? extends CurveSegment> segments = ((Curve) geometry).getSegments();
+            		for(CurveSegment cs : segments) {
+                		for(Position p : cs.getSamplePoints()) {
+                			if(coordSeq.size() == 0 || !coordSeq.get(coordSeq.size() - 1).equals(p)) {
+                				coordSeq.add(p);
+                			}
+                		}
+                	}
                     try {
                         coordWriter.writeCoordinates(coordSeq, contentHandler);
                     } catch (SAXException s) {
@@ -291,9 +309,7 @@ public class GeometryTransformer extends TransformerBase {
                     
                 case GMLUtils.POLYGON:
                     writePolygon((Surface) geometry);
-                    
                     break;
-                  */  
                 case GMLUtils.MULTIPOINT:
                 case GMLUtils.MULTILINESTRING:
                 case GMLUtils.MULTIPOLYGON:
@@ -306,7 +322,8 @@ public class GeometryTransformer extends TransformerBase {
             
             end(geomName);
         }
-        /*private void writePolygon(Surface geometry) {
+        
+		private void writePolygon(Surface geometry) {
             String outBound = "outerBoundaryIs";
             String lineRing = "LinearRing";
             String inBound = "innerBoundaryIs";
@@ -316,10 +333,26 @@ public class GeometryTransformer extends TransformerBase {
 
             SurfaceBoundary boundary = geometry.getBoundary();
             
-            PointArray coordSeq;
+            GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+            
             try {
+            	PointArray pa = builder.createPointArray();
             	Ring exterior = boundary.getExterior();
-                coordWriter.writeCoordinates(coordSeq, contentHandler);
+            	
+            	//TODO assuming that only one element
+            	Collection<? extends Primitive> elements = exterior.getElements();
+            	Curve c = (Curve) elements.iterator().next();
+            	
+            	List<? extends CurveSegment> segments = c.getSegments();
+            	
+            	for(CurveSegment cs : segments) {
+            		for(Position p : cs.getSamplePoints()) {
+            			if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+            				pa.add(p);
+            			}
+            		}
+            	}
+                coordWriter.writeCoordinates(pa, contentHandler);
             } catch (SAXException s) {
                 throw new RuntimeException(s);
             }
@@ -327,13 +360,26 @@ public class GeometryTransformer extends TransformerBase {
             end(lineRing);
             end(outBound);
             
-            for (int i = 0, ii = geometry.getNumInteriorRing(); i < ii; i++) {
+            for (Ring r : boundary.getInteriors()) {
                 start(inBound);
                 start(lineRing);
                 
                 try {
-                    coordSeq = geometry.getInteriorRingN(i).getCoordinateSequence();
-                    coordWriter.writeCoordinates(coordSeq, contentHandler);
+                	PointArray pa = builder.createPointArray();
+                	//TODO assuming that only one element
+                	Collection<? extends Primitive> elements = r.getElements();
+                	Curve c = (Curve) elements.iterator().next();
+                	
+                	List<? extends CurveSegment> segments = c.getSegments();
+                	
+                	for(CurveSegment cs : segments) {
+                		for(Position p : cs.getSamplePoints()) {
+                			if(pa.size() == 0 || !pa.get(pa.size() - 1).equals(p)) {
+                				pa.add(p);
+                			}
+                		}
+                	}
+                    coordWriter.writeCoordinates(pa, contentHandler);
                 } catch (SAXException s) {
                     throw new RuntimeException(s);
                 }
@@ -341,7 +387,7 @@ public class GeometryTransformer extends TransformerBase {
                 end(lineRing);
                 end(inBound);
             }
-        }*/
+        }
         
         private void writeMulti(MultiPrimitive geometry, String member) {
             for (Geometry p : geometry.getElements()) {

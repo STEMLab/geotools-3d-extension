@@ -64,9 +64,6 @@ final class GMLUtils {
     /** Internal representation of OGC SF MultiGeometry */
     protected static final int MULTIGEOMETRY = 7;
     
-    /** Internal representation of OGC SF MultiGeometry */
-    protected static final int SOLID = 8;
-    
     /**
      * private constructor so default is not used.
      */
@@ -99,8 +96,6 @@ final class GMLUtils {
             returnValue = "MultiPolygon";
         } else if (geometry instanceof MultiPrimitive) {
             returnValue = "GeometryCollection";
-        } else if (geometry instanceof Solid) {
-        	returnValue = "Solid";
         } else {
             //HACK!!! throw exception
             returnValue = null;
@@ -141,8 +136,6 @@ final class GMLUtils {
             returnValue = MULTIPOLYGON;
         } else if (geometry instanceof MultiPrimitive) {
             returnValue = MULTIGEOMETRY;
-        } else if (geometry instanceof Solid) {
-        	returnValue = SOLID;
         } else {
             returnValue = -1;
             

@@ -197,8 +197,8 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
         reset();
         
         // optimize the case in which we just build
-        if(feature instanceof SimpleFeatureImpl) {
-            SimpleFeatureImpl impl = (SimpleFeatureImpl) feature;
+        if(feature instanceof ISOSimpleFeatureImpl) {
+        	ISOSimpleFeatureImpl impl = (ISOSimpleFeatureImpl) feature;
             System.arraycopy(impl.values, 0, values, 0, impl.values.length);
 
             if (impl.userData != null) {

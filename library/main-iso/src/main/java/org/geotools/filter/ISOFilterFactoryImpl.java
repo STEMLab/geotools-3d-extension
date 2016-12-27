@@ -168,7 +168,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * defaultcore.
  *
  * @author Ian Turton, CCG
- *
+ * @author Soojin Kim, Pusan National University
  *
  * @source $URL$
  * @version $Id$

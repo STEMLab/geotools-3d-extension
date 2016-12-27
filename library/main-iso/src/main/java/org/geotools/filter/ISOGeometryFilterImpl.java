@@ -53,7 +53,7 @@ import org.opengis.geometry.Geometry;
  * </p>
  *
  * @author Rob Hranac, TOPP
- *
+ * @author Soojin Kim, Pusan National University
  *
  * @source $URL$
  * @version $Id$

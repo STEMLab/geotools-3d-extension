@@ -46,12 +46,21 @@
   <!--     Developers and Contributors                             -->
   <!-- =========================================================== -->
   <developers>
-    <developer>
-      <name>Justin Deoliveira</name>
-      <id>jdeolive</id>
-      <email>jdeolive@openplans.org</email>
-      <organization>The Open Planning Project</organization>
+  	<developer>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
+      <organization>Pusan National University</organization>
       <roles>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Hyung-Gyu Ryoo</name>
+      <email>hgryoo@pnu.edu</email>
+      <organization>Pusan National University</organization>
+      <roles>
+        <role>Module Maintainer</role>
         <role>Java Developer</role>
       </roles>
     </developer>

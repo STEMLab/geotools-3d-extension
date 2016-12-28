@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.CRS.AxisOrder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.logging.Logging;
 import org.geotools.xml.transform.TransformerBase;
 import org.opengis.geometry.DirectPosition;
@@ -198,7 +199,14 @@ public class GeometryTransformer extends TransformerBase {
                 coords[2] = bounds.getMaxX();
                 coords[3] = bounds.getMaxY();
                 CoordinateSequence coordSeq = new PackedCoordinateSequence.Double(coords, 2);*/
-            	GeometryBuilder builder = new GeometryBuilder(bounds.getCoordinateReferenceSystem());
+            	CoordinateReferenceSystem crs = null;
+            	if(bounds.getCoordinateReferenceSystem() == null) {
+            		crs = DefaultGeographicCRS.WGS84_3D;
+            	} else {
+            		crs = bounds.getCoordinateReferenceSystem();
+            	}
+            	
+            	GeometryBuilder builder = new GeometryBuilder(crs);
             	PointArray pa = builder.createPointArray();
             	pa.add(lower);
             	pa.add(upper);

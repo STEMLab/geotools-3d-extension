@@ -51,32 +51,24 @@
   <!--     Developers and Contributors                             -->
   <!-- =========================================================== -->
   <developers>
-    <developer>
-      <name>Sanjay Jena</name>
-      <id>sanjayjena</id>
-      <email>sanjayjena@users.sourceforge.net</email>
-      <organization>Fachhochschule Koeln</organization>
-      <organizationUrl>www.fh-koeln.de</organizationUrl>
-      <timezone>(todo)</timezone>
+  	<developer>
+      <id>donguk.seo</id>
+      <name>DongUk Seo</name>
+      <email>donguk.seo@pnu.edu</email>
+      <organization>Pusan National University</organization>
       <roles>
         <role>Module Maintainer</role>
         <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
-      <name>Jackson Roehrig</name>
-      <organization>Fachhochschule Koeln</organization>
-      <organizationUrl>www.fh-koeln.de</organizationUrl>
+      <id>hgryoo</id>
+      <name>Hyung-Gyo Ryoo</name>
+      <email>hyunggyu.ryoo@gmail.com</email>
+      <organization>Pusan National University</organization>
       <roles>
-        <role>Java developper</role>
-      </roles>
-    </developer>
-     <developer>
-      <name>Graham Davis</name>
-      <organization>Refractions Research</organization>
-      <organizationUrl>www.refractions.net</organizationUrl>
-      <roles>
-        <role>Java developper</role>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
   </developers>

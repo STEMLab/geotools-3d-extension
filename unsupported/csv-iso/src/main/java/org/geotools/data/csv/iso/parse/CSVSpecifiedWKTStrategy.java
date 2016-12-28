@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.data.csv.iso.CSVFileState;
-import org.geotools.factory.GeoTools;
 import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -40,11 +39,6 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Geometry;
 
 import com.csvreader.CsvWriter;
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.io.ParseException;
-//import com.vividsolutions.jts.io.WKTReader;
-//import com.vividsolutions.jts.io.WKTWriter;
-import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 
 public class CSVSpecifiedWKTStrategy extends CSVStrategy {
 

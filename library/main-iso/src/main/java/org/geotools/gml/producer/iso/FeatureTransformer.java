@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import org.geotools.data.FeatureReader;
 import org.geotools.data.ISODataUtilities;
+import org.geotools.data.crs.ForceCoordinateSystemFeatureResults;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
@@ -496,7 +497,14 @@ public class FeatureTransformer extends TransformerBase {
                     if(collectionBounding) {
                         ReferencedEnvelope bounds = null;
                         for (int i = 0; i < results.length; i++) {
-                            ReferencedEnvelope more = results[i].getBounds();
+                            ReferencedEnvelope more = null;
+                            FeatureCollection fc = results[i];
+                            if(fc instanceof ForceCoordinateSystemFeatureResults) {
+                            	more = ((ForceCoordinateSystemFeatureResults)fc).getOrigin().getBounds();
+                            } else {
+                            	more = fc.getBounds();
+                            }
+                            
                             if( bounds == null ){
                                 bounds = ReferencedEnvelope.create( more );
                             }

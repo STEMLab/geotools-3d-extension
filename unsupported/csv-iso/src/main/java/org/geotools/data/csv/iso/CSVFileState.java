@@ -27,6 +27,7 @@ import java.net.URI;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -35,7 +36,7 @@ import com.csvreader.CsvReader;
 public class CSVFileState {
 
     private static CoordinateReferenceSystem DEFAULT_CRS() throws FactoryException {
-        return CRS.decode("EPSG:4329");
+        return DefaultGeographicCRS.WGS84_3D;
     };
 
     private final File file;

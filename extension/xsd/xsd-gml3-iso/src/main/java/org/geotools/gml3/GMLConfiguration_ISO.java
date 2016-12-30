@@ -72,6 +72,8 @@ import org.geotools.gml3.bindings.PolygonPropertyTypeBinding;
 import org.geotools.gml3.bindings.PolygonTypeBinding;
 import org.geotools.gml3.bindings.ReferenceTypeBinding;
 import org.geotools.gml3.bindings.RingTypeBinding;
+import org.geotools.gml3.bindings.SolidPropertyTypeBinding;
+import org.geotools.gml3.bindings.SolidTypeBinding;
 import org.geotools.gml3.bindings.SurfaceArrayPropertyTypeBinding;
 import org.geotools.gml3.bindings.SurfacePatchArrayPropertyTypeBinding;
 import org.geotools.gml3.bindings.SurfacePropertyTypeBinding;
@@ -285,6 +287,9 @@ public class GMLConfiguration_ISO extends Configuration {
             SurfacePropertyTypeBinding.class);
         container.registerComponentImplementation(GML.SurfaceType, SurfaceTypeBinding.class);
         
+        container.registerComponentImplementation(GML.SolidType, SolidTypeBinding.class);
+        container.registerComponentImplementation(GML.SolidPropertyType, SolidPropertyTypeBinding.class);
+        
         container.registerComponentImplementation(GML.TimeInstantType, TimeInstantTypeBinding.class);
         container.registerComponentImplementation(GML.TimeInstantPropertyType, TimeInstantPropertyTypeBinding.class);
         container.registerComponentImplementation(GML.TimePeriodType, TimePeriodTypeBinding.class);
@@ -306,6 +311,7 @@ public class GMLConfiguration_ISO extends Configuration {
                 org.geotools.gml3.bindings.ext.CurveTypeBinding.class);
         container.registerComponentImplementation(GML.MultiCurveType,
                 org.geotools.gml3.bindings.ext.MultiCurveTypeBinding.class);
+        
         
         //extended bindings for arc/surface support
         if (isExtendedArcSurfaceSupport()) {
@@ -336,8 +342,7 @@ public class GMLConfiguration_ISO extends Configuration {
      * <p>
      * The following factories are registered:
      * <ul>
-     * <li>{@link CoordinateArraySequenceFactory} under {@link CoordinateSequenceFactory}
-     * <li>{@link GeometryFactory}
+     * <li>{@link ISOGeometryBuilder}
      * </ul>
      * </p>
      */
@@ -378,7 +383,7 @@ public class GMLConfiguration_ISO extends Configuration {
     /**
      * Retrieves the geometry factory used to build geometries
      * 
-     * @return the geometryFactory
+     * @return the ISOGeometryBuilder
      */
     public ISOGeometryBuilder getGeometryFactory() {
         return geometryBuilder;
@@ -387,7 +392,7 @@ public class GMLConfiguration_ISO extends Configuration {
     /**
      * Sets the geometry factory used to build geometry
      * 
-     * @param geometryFactory the geometryFactory to set
+     * @param ISOGeometryBuilder the geometryFactory to set
      */
     public void setGeometryFactory(ISOGeometryBuilder geometryBuilder) {
         this.geometryBuilder = geometryBuilder;

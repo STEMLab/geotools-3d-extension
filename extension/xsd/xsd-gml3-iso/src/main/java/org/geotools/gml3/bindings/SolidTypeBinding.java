@@ -66,7 +66,7 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     
     @Override
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -96,6 +96,7 @@ public class SolidTypeBinding extends AbstractComplexBinding {
             List list = node.getChildValues("interior");
             interiors = (com.vividsolutions.jts.geom.MultiPolygon[]) list.toArray(new com.vividsolutions.jts.geom.MultiPolygon[list.size()]);
         }
+        
         
         CoordinateReferenceSystem crs = (CoordinateReferenceSystem) exterior.getUserData();
         if (crs == null || !(crs instanceof CoordinateReferenceSystem)) {

@@ -23,6 +23,7 @@ import org.geotools.factory.FactoryFinder;
 import org.geotools.factory.FactoryRegistry;
 import org.geotools.factory.FactoryRegistryException;
 import org.geotools.factory.Hints;
+import org.geotools.factory.Hints.Key;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.Precision;
 import org.opengis.geometry.aggregate.AggregateFactory;
@@ -48,6 +49,8 @@ public class ISOGeometryFactoryFinder extends FactoryFinder {
      */
     private static FactoryRegistry registry;
 
+    public static final Key PRIMITIVE_FACTORY2 = new Key(PrimitiveFactory2.class);
+    
     /**
      * Do not allows any instantiation of this class.
      */
@@ -107,7 +110,7 @@ public class ISOGeometryFactoryFinder extends FactoryFinder {
 
     public static synchronized PrimitiveFactory2 getPrimitiveFactory(Hints hints) throws FactoryRegistryException {
         hints = mergeSystemHints(hints);
-        return getServiceRegistry().getServiceProvider( PrimitiveFactory2.class, null, hints, Hints.PRIMITIVE_FACTORY );
+        return getServiceRegistry().getServiceProvider( PrimitiveFactory2.class, null, hints, PRIMITIVE_FACTORY2 );
     }
 
 }

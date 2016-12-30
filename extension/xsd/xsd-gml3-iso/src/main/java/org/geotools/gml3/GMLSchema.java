@@ -12,8 +12,6 @@ import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.ComplexTypeImpl;
 import org.geotools.feature.type.ProfileImpl;
 import org.geotools.feature.type.SchemaImpl;
-import org.geotools.geometry.jts.CurvedGeometry;
-import org.geotools.geometry.jts.MultiCurvedGeometry;
 import org.geotools.gml3.smil.SMIL20LANGSchema;
 import org.geotools.xlink.XLINKSchema;
 import org.geotools.xs.XSSchema;
@@ -22,6 +20,7 @@ import org.opengis.feature.type.ComplexType;
 import org.opengis.feature.type.Name;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
+import org.opengis.geometry.primitive.Curve;
 
 /**
  * 
@@ -9907,7 +9906,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_CURVEPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","CurvePropertyType"), CurvedGeometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","CurvePropertyType"), Curve.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;

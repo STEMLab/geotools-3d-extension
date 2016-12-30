@@ -22,6 +22,7 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.primitive.Ring;
 
 import com.vividsolutions.jts.geom.LinearRing;
 
@@ -46,7 +47,7 @@ import com.vividsolutions.jts.geom.LinearRing;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -66,7 +67,7 @@ public class AbstractRingPropertyTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LinearRing.class;
+        return Ring.class;
     }
 
     /**
@@ -77,7 +78,7 @@ public class AbstractRingPropertyTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return node.getChildValue(LinearRing.class);
+        return node.getChildValue(Ring.class);
     }
 
     public Object getProperty(Object object, QName name)

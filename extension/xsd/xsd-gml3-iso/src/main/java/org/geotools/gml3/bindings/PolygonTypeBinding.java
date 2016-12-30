@@ -80,7 +80,7 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**

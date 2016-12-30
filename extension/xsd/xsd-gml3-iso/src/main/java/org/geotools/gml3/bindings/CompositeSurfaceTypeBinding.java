@@ -70,7 +70,7 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**

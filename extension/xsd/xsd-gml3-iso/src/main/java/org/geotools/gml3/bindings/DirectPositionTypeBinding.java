@@ -18,20 +18,14 @@ package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.DirectPosition1D;
-import org.geotools.geometry.DirectPosition2D;
-import org.geotools.geometry.DirectPosition3D;
 import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 
 /**
@@ -59,16 +53,16 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class DirectPositionTypeBinding extends AbstractComplexBinding {
-    GeometryFactory factory;
+	ISOGeometryBuilder gBuilder;
 
-    public DirectPositionTypeBinding(GeometryFactory factory) {
-        this.factory = factory;
+    public DirectPositionTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -100,32 +94,16 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        CoordinateReferenceSystem crs = GML3ParsingUtils.crs(node);
-
-        //double[] position = (double[]) value;
-        Double[] position = (Double[]) value;
-        DirectPosition dp = null;
-
-        if (position.length < 2) {
-            dp = (crs != null) ? new DirectPosition1D(crs) : new DirectPosition1D();
-            dp.setOrdinate(0, position[0].doubleValue());
-        } else if (position.length < 3 ){
-            dp = (crs != null) ? new DirectPosition2D(crs) : new DirectPosition2D();
-            dp.setOrdinate(0, position[0].doubleValue());
-            dp.setOrdinate(1, position[1].doubleValue());
-        } else {
-        	dp = (crs != null) ? new DirectPosition3D(crs) : new DirectPosition3D();
-            dp.setOrdinate(0, position[0].doubleValue());
-            dp.setOrdinate(1, position[1].doubleValue());
-            dp.setOrdinate(2, position[2].doubleValue());
-        }
-
+        double[] position = (double[]) value;
+        DirectPosition dp = gBuilder.createDirectPosition(position);
         return dp;
     }
 
     public Element encode(Object object, Document document, Element value)
         throws Exception {
-        CoordinateSequence cs = (CoordinateSequence) object;
+    	
+    	//TODO
+        /*CoordinateSequence cs = (CoordinateSequence) object;
 
         StringBuffer sb = new StringBuffer();
 
@@ -147,7 +125,7 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
         }
 
         value.appendChild(document.createTextNode(sb.toString()));
-
+*/
         return value;
     }
 }

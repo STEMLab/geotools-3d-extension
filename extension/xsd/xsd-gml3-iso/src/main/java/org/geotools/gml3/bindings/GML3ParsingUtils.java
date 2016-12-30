@@ -227,35 +227,25 @@ public class GML3ParsingUtils {
 
         if (node.hasChild(Point.class)) {
             List points = node.getChildValues(Point.class);
-            Coordinate[] coordinates = new Coordinate[points.size()];
+            PointArray pa = gb.createPointArray();
 
             for (int i = 0; i < points.size(); i++) {
-                coordinates[i] = ((Point) points.get(0)).getCoordinate();
+            	pa.add(((Point) points.get(i)).getDirectPosition());
             }
 
-            return ring ? gf.createLinearRing(coordinates) : gf.createLineString(coordinates);
+            return gb.createCurve(pa);
         }
 
         if (node.hasChild(DirectPosition[].class)) {
             DirectPosition[] dps = (DirectPosition[]) node.getChildValue(DirectPosition[].class);
 
-            CoordinateSequence seq = null;
+            PointArray pa = gb.createPointArray();
 
-            if (dps.length == 0) {
-                seq = csf.create(0, 0);
-            } else {
-                seq = csf.create(dps.length, dps[0].getDimension());
-
-                for (int i = 0; i < dps.length; i++) {
-                    DirectPosition dp = dps[i];
-
-                    for (int j = 0; j < dp.getDimension(); j++) {
-                        seq.setOrdinate(i, j, dp.getOrdinate(j));
-                    }
-                }
+            for (DirectPosition dp : dps) {
+            	pa.add(dp);
             }
 
-            return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
+            return gb.createCurve(pa);
         }
 
         if (node.hasChild(PointArray.class)) {

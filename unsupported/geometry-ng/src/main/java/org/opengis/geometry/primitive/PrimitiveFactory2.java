@@ -31,6 +31,10 @@ import static org.opengis.annotation.Specification.*;
  */
 public interface PrimitiveFactory2 extends PrimitiveFactory{
   
+	@Extension
+    Shell createShell(List<OrientableSurface> orientableSurfaces) 
+    		throws MismatchedReferenceSystemException, MismatchedDimensionException;
+	
     @Extension
     SolidBoundary createSolidBoundary(Shell exterior, List<Shell> interiors)
             throws MismatchedReferenceSystemException, MismatchedDimensionException;

@@ -20,8 +20,8 @@ import javax.xml.namespace.QName;
 
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfacePropertyType.
@@ -72,7 +72,7 @@ public class SurfacePropertyTypeBinding extends GeometryPropertyTypeBindingBase 
     }
 
     public Class<? extends Geometry> getGeometryType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
 }

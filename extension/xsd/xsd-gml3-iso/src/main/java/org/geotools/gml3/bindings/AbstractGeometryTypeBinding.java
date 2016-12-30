@@ -17,6 +17,7 @@
 package org.geotools.gml3.bindings;
 
 import java.net.URI;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
@@ -29,6 +30,7 @@ import org.geotools.xml.Configuration;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 
@@ -71,10 +73,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * @source $URL$
  */
 public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
-    Configuration config;
+    ISOGeometryBuilder builder;
+	Configuration config;
     SrsSyntax srsSyntax;
 
-    public AbstractGeometryTypeBinding(Configuration config, SrsSyntax srsSyntax) {
+    public AbstractGeometryTypeBinding(ISOGeometryBuilder builder, Configuration config, SrsSyntax srsSyntax) {
+    	this.builder = builder;
         this.config = config;
         this.srsSyntax = srsSyntax;
     }
@@ -122,7 +126,7 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
             }
         }*/
 
-    	/*if (node.hasAttribute("srsName")) {
+    	if (node.hasAttribute("srsName")) {
             URI srs = (URI) node.getAttributeValue("srsName");
             CoordinateReferenceSystem crs = CRS.decode(srs.toString());
             
@@ -131,10 +135,10 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
                 	builder.setCoordinateReferenceSystem(crs);
                 }
             } else {
-                logger.warning("Could not create Coordinate Reference System for " + srs);
+                //logger.warning("Could not create Coordinate Reference System for " + srs);
             }
             return crs;
-        }*/
+        }
     	
         return value;
     }

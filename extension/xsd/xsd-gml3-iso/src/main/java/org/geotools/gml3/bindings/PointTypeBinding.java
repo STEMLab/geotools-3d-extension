@@ -91,7 +91,7 @@ public class PointTypeBinding extends AbstractComplexBinding {
     }
 
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**

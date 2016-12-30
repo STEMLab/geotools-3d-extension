@@ -29,6 +29,8 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,13 +68,17 @@ import com.vividsolutions.jts.geom.CoordinateSequence;
  * </p>
  * 
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class DirectPositionListTypeBinding extends AbstractComplexBinding {
+	ISOGeometryBuilder gBuilder;
 
+    public DirectPositionListTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
+    }
     /**
      * @generated
      */
@@ -90,7 +96,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return CoordinateSequence.class;
+        return PointArray.class;
     }
 
     /**
@@ -100,7 +106,6 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         int crsDimension = GML3ParsingUtils.dimensions(node);
-        CoordinateReferenceSystem crs = GML3ParsingUtils.crs(node);
 
         // double[] values = (double[]) value;
         Double[] values = (Double[]) value;
@@ -112,7 +117,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
 
         final int coordCount = coordinatesCount.intValue();
         if (coordCount == 0) {
-            return new DirectPosition[] {};
+            return gBuilder.createPointArray();
         }
 
         int dim = values.length / coordCount;
@@ -122,21 +127,27 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             throw new IllegalArgumentException("dimension must be greater or equal to 1");
         }
 
-        DirectPosition[] dps = new DirectPosition[coordCount];
-
+        PointArray pa = gBuilder.createPointArray();
+        
         if (dim == 1) {
             for (int i = 0; i < coordCount; i++) {
-                dps[i] = new DirectPosition1D(crs);
-                dps[i].setOrdinate(0, values[i].doubleValue());
+            	DirectPosition dp = gBuilder.createDirectPosition(
+            			new double[] { 
+            					values[i].doubleValue()}
+            			);
+            	pa.add(dp);
             }
         } else if(dim == 2){
             int ordinateIdx = 0;
             // HACK: not sure if its correct to assign ordinates 0 to 0 and 1 to
             // 1 or it should be inferred from the crs
             for (int coordIndex = 0; coordIndex < coordCount; coordIndex++) {
-                dps[coordIndex] = new DirectPosition2D(crs);
-                dps[coordIndex].setOrdinate(0, values[ordinateIdx].doubleValue());
-                dps[coordIndex].setOrdinate(1, values[ordinateIdx + 1].doubleValue());
+            	DirectPosition dp = gBuilder.createDirectPosition(
+            			new double[] { 
+            					values[ordinateIdx].doubleValue(), 
+            					values[ordinateIdx + 1].doubleValue()}
+            			);
+            	pa.add(dp);
                 ordinateIdx += crsDimension;
             }
         } else {
@@ -144,16 +155,19 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             // HACK: not sure if its correct to assign ordinates 0 to 0 and 1 to
             // 1 or it should be inferred from the crs
             for (int coordIndex = 0; coordIndex < coordCount; coordIndex++) {
-                dps[coordIndex] = new DirectPosition3D(crs); 
-                dps[coordIndex].setOrdinate(0, values[ordinateIdx].doubleValue());
-                dps[coordIndex].setOrdinate(1, values[ordinateIdx + 1].doubleValue());
-                dps[coordIndex].setOrdinate(2, values[ordinateIdx + 2].doubleValue());
+            	DirectPosition dp = gBuilder.createDirectPosition(
+            			new double[] { 
+            					values[ordinateIdx].doubleValue(), 
+            					values[ordinateIdx + 1].doubleValue(),
+            					values[ordinateIdx + 2].doubleValue()}
+            			);
+            	pa.add(dp);
                 ordinateIdx += crsDimension;
             }
 
         }
 
-        return dps;
+        return pa;
     }
 
     /**

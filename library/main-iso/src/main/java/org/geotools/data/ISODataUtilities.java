@@ -80,10 +80,10 @@ import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
 import org.geotools.feature.type.GeometryTypeImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
-import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
+import org.geotools.filter.visitor.ISOPropertyNameResolvingVisitor;
 import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -1895,7 +1895,7 @@ public class ISODataUtilities {
      * <li>
      * <li>Encoding of <i>FeatureId</i> followed by the attributes</li>
      * <li>Attributes are seperated using the bar character</li>
-     * <li>Geometry is handled using {@link WKTReader2}</li>
+     * <li>Geometry is handled using {@link WKTReader}</li>
      * <li>Support for common escaped characters</li>
      * <li>Multi-line support using escaped line-feed characters</li>
      * <ul>
@@ -2363,7 +2363,7 @@ public class ISODataUtilities {
         if (filter == null || filter == Filter.INCLUDE || filter == Filter.EXCLUDE) {
             return filter;
         }
-        return (Filter) filter.accept(new PropertyNameResolvingVisitor(schema), null);
+        return (Filter) filter.accept(new ISOPropertyNameResolvingVisitor(schema), null);
     }
 
     /**
@@ -2616,7 +2616,7 @@ public class ISODataUtilities {
         try {
             // Implementation taken from DefaultFeatureCollection implementation - thanks IanS
             CoordinateReferenceSystem crs = collection.getSchema().getCoordinateReferenceSystem();
-            ReferencedEnvelope bounds = new ReferencedEnvelope(crs);
+            ReferencedEnvelope bounds = ReferencedEnvelope.create(crs);
 
             while (i.hasNext()) {
                 Feature feature = i.next();

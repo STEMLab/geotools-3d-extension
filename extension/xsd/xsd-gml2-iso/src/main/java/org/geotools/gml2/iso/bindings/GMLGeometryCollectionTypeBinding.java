@@ -18,11 +18,11 @@ package org.geotools.gml2.iso.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPrimitive;
 
 //import com.vividsolutions.jts.geom.GeometryCollection;
@@ -63,9 +63,9 @@ import org.opengis.geometry.aggregate.MultiPrimitive;
  * @source $URL$
  */
 public class GMLGeometryCollectionTypeBinding extends AbstractComplexBinding {
-    GeometryBuilder gFactory;
+    ISOGeometryBuilder gFactory;
 
-    public GMLGeometryCollectionTypeBinding(GeometryBuilder gFactory) {
+    public GMLGeometryCollectionTypeBinding(ISOGeometryBuilder gFactory) {
         this.gFactory = gFactory;
     }
 

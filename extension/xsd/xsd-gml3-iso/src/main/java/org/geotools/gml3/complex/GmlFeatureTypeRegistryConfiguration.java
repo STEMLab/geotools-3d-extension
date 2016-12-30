@@ -32,7 +32,7 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration_ISO;
+import org.geotools.gml3.GMLConfiguration;
 import org.geotools.gml3.GMLSchema;
 import org.geotools.gml3.smil.SMIL20LANGSchema;
 import org.geotools.gml3.smil.SMIL20Schema;
@@ -85,8 +85,8 @@ public class GmlFeatureTypeRegistryConfiguration implements FeatureTypeRegistryC
     @Override
     public Collection<Configuration> getConfigurations() {
         ArrayList<Configuration> configurations = new ArrayList<Configuration>();
-        configurations.add(new GMLConfiguration_ISO());
-        configurations.add(new org.geotools.gml3.v3_2.GMLConfiguration_ISO());
+        configurations.add(new GMLConfiguration());
+        configurations.add(new org.geotools.gml3.v3_2.GMLConfiguration());
         return configurations;
     }
 
@@ -249,10 +249,10 @@ public class GmlFeatureTypeRegistryConfiguration implements FeatureTypeRegistryC
     = new LinkedHashMap<QName, Class<? extends Configuration>>() {
         {
             // GML 3.1
-            put(GML.AbstractFeatureType, GMLConfiguration_ISO.class);
+            put(GML.AbstractFeatureType, GMLConfiguration.class);
             // GML 3.2
             put(org.geotools.gml3.v3_2.GML.AbstractFeatureType,
-                    org.geotools.gml3.v3_2.GMLConfiguration_ISO.class);
+                    org.geotools.gml3.v3_2.GMLConfiguration.class);
         }
     };
 

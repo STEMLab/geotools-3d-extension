@@ -32,6 +32,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.xml.XSD;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -439,10 +440,10 @@ public class GML3MockData {
         }
 
         Element exterior = element(qName("exterior"), document, polygon);
-        linearRingWithPosList3D(document, exterior, false);
+        linearRingWithPosList3D(document, exterior, true);
         
         Element interior = element(qName("interior"), document, polygon);
-        linearRingWithPosList3D(document, interior, false);
+        linearRingWithPosList3D(document, interior, true);
 
         return polygon;
     }

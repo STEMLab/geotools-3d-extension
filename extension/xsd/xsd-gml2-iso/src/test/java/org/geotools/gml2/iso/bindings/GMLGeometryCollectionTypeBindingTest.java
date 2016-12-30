@@ -18,7 +18,7 @@ package org.geotools.gml2.iso.bindings;
 
 import java.util.Arrays;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryCollectionTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -42,7 +42,7 @@ public class GMLGeometryCollectionTypeBindingTest extends AbstractGMLBindingTest
     ElementInstance line1;
     ElementInstance ring1;
     ElementInstance poly1;
-    GeometryBuilder gb;
+    ISOGeometryBuilder gb;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -54,7 +54,7 @@ public class GMLGeometryCollectionTypeBindingTest extends AbstractGMLBindingTest
         poly1 = createElement(GML.NAMESPACE, "myPoly", GML.POLYGONMEMBERTYPE, null);
         gcol = createElement(GML.NAMESPACE, "myColl", GML.GEOMETRYCOLLECTIONTYPE, null);
         
-        gb = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+        gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         container = new DefaultPicoContainer();
         container.registerComponentInstance(gb);
         container.registerComponentImplementation(GMLGeometryCollectionTypeBinding.class);

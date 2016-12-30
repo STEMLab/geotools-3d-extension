@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryCollectionTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLMultiPointTypeBinding;
@@ -37,7 +37,7 @@ public class GMLMultiPointTypeBindingTest extends AbstractGMLBindingTest {
     ElementInstance point1;
     ElementInstance point2;
     
-    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 

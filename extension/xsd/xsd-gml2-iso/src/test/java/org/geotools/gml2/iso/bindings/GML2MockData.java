@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.TEST;
 import org.geotools.referencing.CRS;
@@ -63,7 +63,7 @@ import org.w3c.dom.Node;
  */
 public class GML2MockData {
     /** factory used to create geometries */
-    static GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    static ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
     //
     //Geometries

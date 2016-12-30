@@ -18,7 +18,7 @@ package org.geotools.geometry.iso.primitive;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
@@ -48,7 +48,7 @@ public class PointTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		
 		this._testPoint(builder);
 		
@@ -70,7 +70,7 @@ public class PointTest extends TestCase {
 		assertSame( crs, point.getCoordinateReferenceSystem() );		
 	}
 	
-	private void _testPoint(GeometryBuilder builder) {
+	private void _testPoint(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

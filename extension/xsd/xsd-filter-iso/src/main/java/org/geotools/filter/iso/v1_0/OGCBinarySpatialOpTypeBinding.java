@@ -19,18 +19,16 @@ package org.geotools.filter.iso.v1_0;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.picocontainer.MutablePicoContainer;
 import javax.xml.namespace.QName;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Function;
-import org.opengis.filter.spatial.BinarySpatialOperator;
-import org.geotools.filter.iso.v1_0.OGC;
-import org.geotools.filter.iso.v1_0.OGCUtils;
-import org.geotools.geometry.GeometryBuilder;
+
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Function;
+import org.opengis.filter.spatial.BinarySpatialOperator;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.picocontainer.MutablePicoContainer;
 
 
 /**
@@ -65,9 +63,9 @@ import org.geotools.xml.Node;
  */
 public class OGCBinarySpatialOpTypeBinding extends AbstractComplexBinding {
     private FilterFactory2 factory;
-    private GeometryBuilder gBuilder;
+    private ISOGeometryBuilder gBuilder;
 
-    public OGCBinarySpatialOpTypeBinding(FilterFactory2 factory, GeometryBuilder gBuilder) {
+    public OGCBinarySpatialOpTypeBinding(FilterFactory2 factory, ISOGeometryBuilder gBuilder) {
         this.factory = factory;
         this.gBuilder = gBuilder;
     }

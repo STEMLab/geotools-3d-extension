@@ -38,7 +38,7 @@ import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.After;
@@ -178,7 +178,7 @@ public class PropertyDataStore3DTest {
     
     
     private List<DirectPosition> getSolidPoint() {
-        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         DirectPosition p1 = builder.createDirectPosition(new double[] { 2, 0, 0 });
         DirectPosition p2 = builder.createDirectPosition(new double[] { 2, -2, 0 });
         DirectPosition p3 = builder.createDirectPosition(new double[] { 4, -2, 0 });
@@ -259,7 +259,7 @@ public class PropertyDataStore3DTest {
         Hints hints = GeoTools.getDefaultHints();
         hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
         hints.put(Hints.GEOMETRY_VALIDATE, false);
-        GeometryBuilder builder = new GeometryBuilder(hints);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(hints);
         
         // create linestring from directpositions
         LineString line1 = builder.createLineString(dps1);

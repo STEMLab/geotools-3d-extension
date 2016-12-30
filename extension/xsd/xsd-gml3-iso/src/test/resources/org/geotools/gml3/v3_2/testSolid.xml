@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test:TestFeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:test="http://www.geotools.org/test"
+	gml:id="testSolid" xsi:schemaLocation="testSolid.xsd">
+
+	<gml:featureMember>
+		<test:TestFeature gml:id="tests.1">
+			<test:the_geom>
+				<gml:Solid gml:id="SOLID1">
+					<gml:exterior>
+						<gml:Shell>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2788">
+									<gml:name>POLY2788</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-123.395 5.79999 3.0</gml:pos>
+											<gml:pos>-123.395 11.82499 3.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 3.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 3.0</gml:pos>
+											<gml:pos>-123.395 5.79999 3.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2789">
+									<gml:name>POLY2789</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-123.395 5.79999 0.0</gml:pos>
+											<gml:pos>-123.395 11.82499 0.0</gml:pos>
+											<gml:pos>-123.395 11.82499 3.0</gml:pos>
+											<gml:pos>-123.395 5.79999 3.0</gml:pos>
+											<gml:pos>-123.395 5.79999 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2790">
+									<gml:name>POLY2790</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-123.395 11.82499 0.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 0.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 3.0</gml:pos>
+											<gml:pos>-123.395 11.82499 3.0</gml:pos>
+											<gml:pos>-123.395 11.82499 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2791">
+									<gml:name>POLY2791</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-126.39502 11.82499 0.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 0.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 3.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 3.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2792">
+									<gml:name>POLY2792</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-126.39502 5.79999 0.0</gml:pos>
+											<gml:pos>-123.395 5.79999 0.0</gml:pos>
+											<gml:pos>-123.395 5.79999 3.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 3.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2793">
+									<gml:name>POLY2793</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-123.395 5.79999 0.0</gml:pos>
+											<gml:pos>-126.39502 5.79999 0.0</gml:pos>
+											<gml:pos>-126.39502 11.82499 0.0</gml:pos>
+											<gml:pos>-123.395 11.82499 0.0</gml:pos>
+											<gml:pos>-123.395 5.79999 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+						</gml:Shell>
+					</gml:exterior>
+				</gml:Solid>
+			</test:the_geom>
+		</test:TestFeature>
+	</gml:featureMember>
+	
+	<gml:featureMember>
+		<test:TestFeature gml:id="tests.2">
+			<test:the_geom>
+				<gml:Solid gml:id="SOLID21">
+					<gml:exterior>
+						<gml:Shell>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2930">
+									<gml:name>POLY2930</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-184.98098 14.5743 3.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 3.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 3.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 3.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 3.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 3.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 3.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2931">
+									<gml:name>POLY2931</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-184.98098 14.5743 0.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 0.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 3.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 3.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2932">
+									<gml:name>POLY2932</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-185.3959 16.00765 0.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 0.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 3.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 3.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2933">
+									<gml:name>POLY2933</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-187.79354 15.32487 0.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 0.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 3.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 3.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2934">
+									<gml:name>POLY2934</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-190.76849 14.27562 0.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 0.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 3.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 3.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2935">
+									<gml:name>POLY2935</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-190.22912 12.87764 0.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 0.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 3.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 3.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2936">
+									<gml:name>POLY2936</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-187.34963 13.86441 0.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 0.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 3.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 3.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+							<gml:surfaceMember>
+								<gml:Polygon gml:id="POLY2937">
+									<gml:name>POLY2937</gml:name>
+									<gml:exterior>
+										<gml:LinearRing>
+											<gml:pos>-184.98098 14.5743 0.0</gml:pos>
+											<gml:pos>-187.34963 13.86441 0.0</gml:pos>
+											<gml:pos>-190.22912 12.87764 0.0</gml:pos>
+											<gml:pos>-190.76849 14.27562 0.0</gml:pos>
+											<gml:pos>-187.79354 15.32487 0.0</gml:pos>
+											<gml:pos>-185.3959 16.00765 0.0</gml:pos>
+											<gml:pos>-184.98098 14.5743 0.0</gml:pos>
+										</gml:LinearRing>
+									</gml:exterior>
+								</gml:Polygon>
+							</gml:surfaceMember>
+						</gml:Shell>
+					</gml:exterior>
+				</gml:Solid>
+			</test:the_geom>
+		</test:TestFeature>
+	</gml:featureMember>
+	
+</test:TestFeatureCollection>

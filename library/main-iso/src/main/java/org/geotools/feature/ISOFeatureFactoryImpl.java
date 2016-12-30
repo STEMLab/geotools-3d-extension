@@ -20,7 +20,6 @@ import java.util.Collection;
 
 import org.geotools.feature.simple.ISOSimpleFeatureImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
-import org.geotools.geometry.GeometryBuilder;
 import org.opengis.feature.Association;
 import org.opengis.feature.Attribute;
 import org.opengis.feature.ComplexAttribute;
@@ -35,6 +34,7 @@ import org.opengis.feature.type.ComplexType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.FilterFactory2;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CRSFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -58,7 +58,7 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
     /**
      * Factory used to create geomtries
      */
-    GeometryBuilder geometryBuilder;
+    ISOGeometryBuilder geometryBuilder;
     
     //TODO use CommonFilterFactoryFinder
     FilterFactory2 ff = new ISOFilterFactoryImpl();
@@ -77,11 +77,11 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
         this.crsFactory = crsFactory;
     }
 
-    public GeometryBuilder getGeometryBuilder() {
+    public ISOGeometryBuilder getGeometryBuilder() {
         return geometryBuilder;
     }
 
-    public void setGeometryBuilder(GeometryBuilder geometryBuilder) {
+    public void setGeometryBuilder(ISOGeometryBuilder geometryBuilder) {
         this.geometryBuilder = geometryBuilder;
     }
 

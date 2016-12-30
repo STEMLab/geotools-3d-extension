@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLLineStringMemberTypeBinding;
@@ -45,7 +45,7 @@ public class GMLLineStringMemberTypeBindingTest extends AbstractGMLBindingTest {
     }
 
     public void testWithGeometry() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     	
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {0, 0, 0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {1, 1, 1});

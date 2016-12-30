@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class GML32SurfaceParsingTest extends GML32TestSupport {
 
     public void testMultiSurface() throws Exception {
-        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
+        GMLConfiguration gml = new GMLConfiguration(true);
         Parser p = new Parser(gml);
         Object multiSurface = p.parse(getClass().getResourceAsStream("multisurface.xml"));
         assertTrue(multiSurface instanceof MultiPolygon);

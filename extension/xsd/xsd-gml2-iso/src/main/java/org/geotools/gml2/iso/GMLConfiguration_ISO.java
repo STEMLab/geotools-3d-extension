@@ -19,10 +19,7 @@ package org.geotools.gml2.iso;
 import javax.xml.namespace.QName;
 
 import org.geotools.feature.DefaultFeatureCollections;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.iso.FeatureTypeCache;
-import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLAbstractFeatureCollectionBaseTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLAbstractFeatureCollectionTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLAbstractFeatureTypeBinding;
@@ -59,6 +56,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.picocontainer.MutablePicoContainer;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
@@ -211,7 +209,7 @@ public class GMLConfiguration_ISO extends Configuration {
      * The following classes are registered:
      * <ul>
      * <li>{@link CoordinateArraySequenceFactory} under {@link CoordinateSequenceFactory}
-     * <li>{@link GeometryFactory}
+     * <li>{@link ISOGeometryBuilder}
      * <li>{@link FeatureTypeCache}
      * <li>{@link DefaultFeatureCollections}
      * </ul>
@@ -221,7 +219,7 @@ public class GMLConfiguration_ISO extends Configuration {
         super.configureContext(container);
 
         container.registerComponentInstance(new FeatureTypeCache());
-        container.registerComponentInstance(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
+        container.registerComponentInstance(new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         container.registerComponentImplementation(DefaultFeatureCollections.class);
 
         container.registerComponentInstance(srsSyntax);

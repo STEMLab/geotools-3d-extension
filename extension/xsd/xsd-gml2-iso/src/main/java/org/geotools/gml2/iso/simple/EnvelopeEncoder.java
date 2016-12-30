@@ -16,10 +16,10 @@
  */
 package org.geotools.gml2.iso.simple;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Encoder;
 import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -45,7 +45,7 @@ class EnvelopeEncoder extends ObjectEncoder<Envelope> {
             throws Exception {
         handler.startElement(box, atts);
         CoordinateReferenceSystem crs = e.getCoordinateReferenceSystem();
-        GeometryBuilder builder = new GeometryBuilder(crs);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
         
         //TODO
         //handler.coordinates(new LiteCoordinateSequence(e.getMinX(), e.getMinY(), e.getMaxX(), e

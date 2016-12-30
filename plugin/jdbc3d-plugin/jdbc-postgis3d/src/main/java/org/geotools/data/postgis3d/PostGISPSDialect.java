@@ -25,7 +25,6 @@ import java.sql.Types;
 import java.util.Map;
 
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.jdbc.iso.ColumnMetadata;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.jdbc.iso.PreparedFilterToSQL;
@@ -34,6 +33,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /*import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -75,13 +75,13 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
     
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryBuilder factory, Connection cx) throws IOException, SQLException {
+            ISOGeometryBuilder factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
 
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, String column, GeometryBuilder factory, Connection cx)
+            ResultSet rs, String column, ISOGeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         return delegate
                 .decodeGeometryValue(descriptor, rs, column, factory, cx);

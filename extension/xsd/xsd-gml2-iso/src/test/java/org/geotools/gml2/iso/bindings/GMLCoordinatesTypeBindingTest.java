@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLCoordinatesTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -47,7 +47,7 @@ public class GMLCoordinatesTypeBindingTest extends AbstractGMLBindingTest {
         cs = createAtribute(GML.NAMESPACE, "cs", XS.STRING, null);
         coordinates = createElement(GML.NAMESPACE, "myCoordinates", GML.COORDTYPE, null);
         container = new DefaultPicoContainer();
-        container.registerComponentInstance(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
+        container.registerComponentInstance(new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         container.registerComponentImplementation(GMLCoordinatesTypeBinding.class);
     }
 

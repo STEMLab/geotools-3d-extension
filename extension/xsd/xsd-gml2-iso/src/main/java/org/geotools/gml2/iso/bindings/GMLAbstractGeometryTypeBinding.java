@@ -21,13 +21,13 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.referencing.CRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -64,8 +64,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 public class GMLAbstractGeometryTypeBinding extends AbstractComplexBinding {
     Logger logger;
 
-    GeometryBuilder builder;
-    public GMLAbstractGeometryTypeBinding(Logger logger, GeometryBuilder builder) {
+    ISOGeometryBuilder builder;
+    public GMLAbstractGeometryTypeBinding(Logger logger, ISOGeometryBuilder builder) {
         this.logger = logger;
         this.builder = builder;
     }

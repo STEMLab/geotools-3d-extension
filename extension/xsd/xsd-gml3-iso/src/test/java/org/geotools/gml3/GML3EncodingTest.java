@@ -196,17 +196,17 @@ public class GML3EncodingTest extends TestCase {
     }
 
     public void testEncodeWithNoSrsDimension() throws Exception {
-        GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
+        GMLConfiguration gml = new GMLConfiguration();
         Document dom = new Encoder(gml).encodeAsDOM(GML3MockData.point(), GML.Point);
         assertTrue(dom.getDocumentElement().hasAttribute("srsDimension"));
 
-        gml.getProperties().add(GMLConfiguration_ISO.NO_SRS_DIMENSION);
+        gml.getProperties().add(GMLConfiguration.NO_SRS_DIMENSION);
         dom = new Encoder(gml).encodeAsDOM(GML3MockData.point(), GML.Point);
         assertFalse(dom.getDocumentElement().hasAttribute("srsDimension"));
     }
 
     public void testEncodeSrsSyntax() throws Exception {
-        GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
+        GMLConfiguration gml = new GMLConfiguration();
         Document dom = new Encoder(gml).encodeAsDOM(GML3MockData.point(), GML.Point);
         assertTrue(dom.getDocumentElement().getAttribute("srsName")
                 .startsWith("urn:x-ogc:def:crs:EPSG:"));

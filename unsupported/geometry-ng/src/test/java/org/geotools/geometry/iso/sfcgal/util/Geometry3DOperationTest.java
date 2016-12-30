@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.CurveImpl;
@@ -56,13 +56,13 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
 public class Geometry3DOperationTest extends TestCase {
         private static Hints hints = null;
 
-        private static GeometryBuilder builder = null;
+        private static ISOGeometryBuilder builder = null;
 
         public void testMain() {
                 hints = GeoTools.getDefaultHints();
                 hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
                 hints.put(Hints.GEOMETRY_VALIDATE, false);
-                builder = new GeometryBuilder(hints);
+                builder = new ISOGeometryBuilder(hints);
 
                 // _testPointPoint();
                 // _testPointCurve();
@@ -241,7 +241,7 @@ public class Geometry3DOperationTest extends TestCase {
                  */
         }
 
-        public static Curve makeCurve(GeometryBuilder builder, DirectPosition position1,
+        public static Curve makeCurve(ISOGeometryBuilder builder, DirectPosition position1,
                         DirectPosition position2) {
                 PrimitiveFactoryImpl pmF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
 
@@ -253,7 +253,7 @@ public class Geometry3DOperationTest extends TestCase {
                 return curve;
         }
 
-        public static Curve makeCurve(GeometryBuilder builder, List<DirectPosition> positions) {
+        public static Curve makeCurve(ISOGeometryBuilder builder, List<DirectPosition> positions) {
                 PrimitiveFactoryImpl pmF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
 
                 Curve curve = pmF.createCurveByDirectPositions(positions);
@@ -261,7 +261,7 @@ public class Geometry3DOperationTest extends TestCase {
                 return curve;
         }
 
-        public static ArrayList<Curve> getCurves(GeometryBuilder builder) {
+        public static ArrayList<Curve> getCurves(ISOGeometryBuilder builder) {
                 ArrayList<Curve> curves = new ArrayList<Curve>();
                 PrimitiveFactoryImpl pmF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
 
@@ -493,14 +493,14 @@ public class Geometry3DOperationTest extends TestCase {
                 return curves;
         }
 
-        public static Surface makeSurface(GeometryBuilder builder, List<DirectPosition> positions) {
+        public static Surface makeSurface(ISOGeometryBuilder builder, List<DirectPosition> positions) {
                 PrimitiveFactoryImpl pmF = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
                 SurfaceImpl surf = pmF.createSurfaceByDirectPositions(positions);
 
                 return surf;
         }
 
-        public static ArrayList<Surface> getSurfaces(GeometryBuilder builder) {
+        public static ArrayList<Surface> getSurfaces(ISOGeometryBuilder builder) {
                 // 1. P1
                 ArrayList<DirectPosition> positions1 = new ArrayList<DirectPosition>();
                 positions1.add(builder.createDirectPosition(new double[] { 1, 0, 3 }));
@@ -1012,7 +1012,7 @@ public class Geometry3DOperationTest extends TestCase {
                 return surfaces;
         }
 
-        public static ArrayList<ArrayList<DirectPosition>> getSolidPoints(GeometryBuilder builder) {
+        public static ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
                 ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
                 DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 });
@@ -1201,7 +1201,7 @@ public class Geometry3DOperationTest extends TestCase {
                 return solidPoints;
         }
 
-        public static Solid makeSolid(GeometryBuilder builder, ArrayList<DirectPosition> points) {
+        public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPosition> points) {
                 DirectPosition position1 = points.get(0);
                 DirectPosition position2 = points.get(1);
                 DirectPosition position3 = points.get(2);
@@ -1339,7 +1339,7 @@ public class Geometry3DOperationTest extends TestCase {
                 return solid;
         }
 
-        public static ArrayList<Solid> getSolids(GeometryBuilder builder) {
+        public static ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
                 ArrayList<Solid> solids = new ArrayList<Solid>();
                 ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
 

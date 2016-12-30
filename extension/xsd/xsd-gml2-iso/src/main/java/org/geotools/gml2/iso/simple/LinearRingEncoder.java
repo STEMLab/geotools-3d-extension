@@ -16,9 +16,9 @@
  */
 package org.geotools.gml2.iso.simple;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
@@ -51,7 +51,7 @@ class LinearRingEncoder extends GeometryEncoder<Ring> {
     public void encode(Ring geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(element, atts);
-        GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(geometry.getCoordinateReferenceSystem());
         PointArray pa = builder.createPointArray();
         //TODO HACK!! we assume that first geometry is curve
         Curve primitive = (Curve) geometry.getElements().iterator();

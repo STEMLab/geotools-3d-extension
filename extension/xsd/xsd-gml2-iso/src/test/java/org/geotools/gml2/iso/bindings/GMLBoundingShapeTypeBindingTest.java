@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Binding;
@@ -54,7 +54,7 @@ public class GMLBoundingShapeTypeBindingTest extends GMLTestSupport {
     }
 
     public void testEncodeWithBox() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         Envelope envelope = builder.createEnvelope(
         		builder.createDirectPosition(new double[] {0, 0, 0}), 
         		builder.createDirectPosition(new double[] {1, 1, 1}));

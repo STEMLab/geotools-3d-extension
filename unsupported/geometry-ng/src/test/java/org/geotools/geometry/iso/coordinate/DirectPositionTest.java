@@ -18,7 +18,7 @@ package org.geotools.geometry.iso.coordinate;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.util.Cloneable;
 import org.opengis.geometry.DirectPosition;
@@ -40,7 +40,7 @@ public class DirectPositionTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         
-        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84); 
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84); 
         gf2D = builder.getGeometryFactory();
         builder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
         gf3D = builder.getGeometryFactory();

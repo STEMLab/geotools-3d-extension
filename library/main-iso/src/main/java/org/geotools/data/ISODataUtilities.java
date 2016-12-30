@@ -73,8 +73,8 @@ import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
-import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
@@ -82,7 +82,6 @@ import org.geotools.feature.type.GeometryTypeImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
 import org.geotools.filter.visitor.SimplifyingFilterVisitor;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
@@ -118,6 +117,7 @@ import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiSurface;
@@ -798,7 +798,7 @@ public class ISODataUtilities {
             return new java.util.Date(0);
 
         if(type.isAssignableFrom(Geometry.class)) {
-	        GeometryBuilder fac = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+	        ISOGeometryBuilder fac = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 	        DirectPosition ds = fac.createDirectPosition();
 	        
 	        //TODO : set the default value of ISO Geometry

@@ -16,13 +16,14 @@
  */
 package org.geotools.gml3.bindings;
 
+import java.util.Map;
+
 import org.geotools.gml3.GML;
 import org.geotools.gml3.GML3TestSupport;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 
@@ -40,7 +41,9 @@ public class PointTypeBindingTest extends GML3TestSupport {
         assertNotNull(p);
         assertEquals(new Coordinate(1d, 2d), p.getCoordinate());
 
-        assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        //assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        assertTrue(p.getUserData() instanceof Map);
+        assertTrue(((Map) p.getUserData()).get(CoordinateReferenceSystem.class) instanceof CoordinateReferenceSystem);
     }
     
     public void testPos3D() throws Exception {
@@ -50,7 +53,9 @@ public class PointTypeBindingTest extends GML3TestSupport {
         assertNotNull(p);
         assertTrue(new Coordinate(1d, 2d, 10d).equals3D(p.getCoordinate()));
 
-        assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+      //assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        assertTrue(p.getUserData() instanceof Map);
+        assertTrue(((Map) p.getUserData()).get(CoordinateReferenceSystem.class) instanceof CoordinateReferenceSystem);
     }
 
     public void testEncode() throws Exception {

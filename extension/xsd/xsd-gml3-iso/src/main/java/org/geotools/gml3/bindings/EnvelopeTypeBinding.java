@@ -25,7 +25,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration_ISO;
+import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.ElementInstance;
@@ -207,7 +207,7 @@ public class EnvelopeTypeBinding extends AbstractComplexBinding {
                         .getCoordinateReferenceSystem(), srsSyntax);
             } else if (localName.equals("srsDimension")) {
                 //check if srsDimension is turned off
-                if (config.hasProperty(GMLConfiguration_ISO.NO_SRS_DIMENSION)) {
+                if (config.hasProperty(GMLConfiguration.NO_SRS_DIMENSION)) {
                     return null;
                 }
 

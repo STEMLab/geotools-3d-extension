@@ -18,11 +18,11 @@ package org.geotools.gml2.iso.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 
 //import com.vividsolutions.jts.geom.GeometryFactory;
@@ -63,9 +63,9 @@ import org.opengis.geometry.aggregate.MultiCurve;
  * @source $URL$
  */
 public class GMLMultiLineStringTypeBinding extends AbstractComplexBinding {
-    GeometryBuilder gFactory;
+    ISOGeometryBuilder gFactory;
 
-    public GMLMultiLineStringTypeBinding(GeometryBuilder gFactory) {
+    public GMLMultiLineStringTypeBinding(ISOGeometryBuilder gFactory) {
         this.gFactory = gFactory;
     }
 

@@ -18,11 +18,11 @@ package org.geotools.gml2.iso.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPoint;
 
 
@@ -59,9 +59,9 @@ import org.opengis.geometry.aggregate.MultiPoint;
  * @source $URL$
  */
 public class GMLMultiPointTypeBinding extends AbstractComplexBinding {
-    GeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
-    public GMLMultiPointTypeBinding(GeometryBuilder gBuilder) {
+    public GMLMultiPointTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
     }
 

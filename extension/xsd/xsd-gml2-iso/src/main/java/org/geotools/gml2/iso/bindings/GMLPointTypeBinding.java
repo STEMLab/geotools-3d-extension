@@ -18,12 +18,12 @@ package org.geotools.gml2.iso.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Point;
 
@@ -64,9 +64,9 @@ import com.vividsolutions.jts.util.Assert;
  * @source $URL$
  */
 public class GMLPointTypeBinding extends AbstractComplexBinding {
-    GeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
-    public GMLPointTypeBinding(GeometryBuilder gBuilder) {
+    public GMLPointTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
     }
 

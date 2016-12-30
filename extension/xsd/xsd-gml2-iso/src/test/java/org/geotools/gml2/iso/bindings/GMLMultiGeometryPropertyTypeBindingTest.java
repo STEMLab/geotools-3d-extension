@@ -19,7 +19,7 @@ package org.geotools.gml2.iso.bindings;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLMultiGeometryPropertyTypeBinding;
@@ -47,7 +47,7 @@ public class GMLMultiGeometryPropertyTypeBindingTest extends AbstractGMLBindingT
     }
 
     public void testWithGeometry() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         Point p1 = builder.createPoint(new double[] {0, 0, 0});
         Point p2 = builder.createPoint(new double[] {1, 1, 1});
 

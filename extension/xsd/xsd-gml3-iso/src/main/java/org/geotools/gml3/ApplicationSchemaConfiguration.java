@@ -43,7 +43,7 @@ public class ApplicationSchemaConfiguration extends Configuration {
     public ApplicationSchemaConfiguration(String namespace, String schemaLocation) {
         super(new ApplicationSchemaXSD(namespace, schemaLocation));
         addDependency(new XSConfiguration());
-        addDependency(new GMLConfiguration_ISO());
+        addDependency(new GMLConfiguration());
     }
 
     protected void registerBindings(MutablePicoContainer container) {

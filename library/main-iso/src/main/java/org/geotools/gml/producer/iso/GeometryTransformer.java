@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.CRS.AxisOrder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -35,6 +34,7 @@ import org.geotools.xml.transform.TransformerBase;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
@@ -43,7 +43,6 @@ import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
-import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -206,7 +205,7 @@ public class GeometryTransformer extends TransformerBase {
             		crs = bounds.getCoordinateReferenceSystem();
             	}
             	
-            	GeometryBuilder builder = new GeometryBuilder(crs);
+            	ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
             	PointArray pa = builder.createPointArray();
             	pa.add(lower);
             	pa.add(upper);
@@ -286,7 +285,7 @@ public class GeometryTransformer extends TransformerBase {
             
             int geometryType = GMLUtils.getGeometryType(geometry);
             
-            GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+            ISOGeometryBuilder builder = new ISOGeometryBuilder(geometry.getCoordinateReferenceSystem());
             PointArray coordSeq = builder.createPointArray();
             switch (geometryType) {
                 case GMLUtils.POINT:
@@ -341,7 +340,7 @@ public class GeometryTransformer extends TransformerBase {
 
             SurfaceBoundary boundary = geometry.getBoundary();
             
-            GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+            ISOGeometryBuilder builder = new ISOGeometryBuilder(geometry.getCoordinateReferenceSystem());
             
             try {
             	PointArray pa = builder.createPointArray();

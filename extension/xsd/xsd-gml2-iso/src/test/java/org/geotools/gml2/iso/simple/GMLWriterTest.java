@@ -36,7 +36,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.GMLConfiguration_ISO;
@@ -100,7 +100,7 @@ public class GMLWriterTest extends GMLTestSupport{
     public void testEncode3DLineFromLiteCS() throws Exception {
         LineStringEncoder encoder = new LineStringEncoder(gtEncoder, "gml");
         
-        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {0, 0, 50});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {120, 0, 100});
     	PointArray pa = builder.createPointArray();

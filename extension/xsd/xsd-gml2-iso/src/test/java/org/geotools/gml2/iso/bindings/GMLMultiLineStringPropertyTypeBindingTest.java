@@ -19,7 +19,7 @@ package org.geotools.gml2.iso.bindings;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLMultiLineStringPropertyTypeBinding;
@@ -41,7 +41,7 @@ public class GMLMultiLineStringPropertyTypeBindingTest extends AbstractGMLBindin
     ElementInstance association;
     ElementInstance geometry;
 
-    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 

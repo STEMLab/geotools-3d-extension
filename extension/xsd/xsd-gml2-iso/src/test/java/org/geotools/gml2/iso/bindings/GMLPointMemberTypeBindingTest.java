@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLPointMemberTypeBinding;
@@ -42,7 +42,7 @@ public class GMLPointMemberTypeBindingTest extends AbstractGMLBindingTest {
     }
 
     public void testWithGeometry() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
         Node node = createNode(association, new ElementInstance[] { geometry },
                 new Object[] { builder.createPoint(new double[] {0, 0, 0}) }, null, null);
         GMLGeometryAssociationTypeBinding s1 = (GMLGeometryAssociationTypeBinding) getBinding(GML.GEOMETRYASSOCIATIONTYPE);

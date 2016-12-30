@@ -17,7 +17,7 @@
 package org.geotools.gml2.iso;
 
 import org.geotools.feature.FeatureCollections;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xs.XSConfiguration;
 import org.picocontainer.MutablePicoContainer;
@@ -69,7 +69,7 @@ public class GMLConfigurationTest extends TestCase {
         configuration.configureContext(container);
 
         assertNotNull(container.getComponentInstanceOfType(FeatureTypeCache.class));
-        assertNotNull(container.getComponentInstanceOfType(GeometryBuilder.class));
+        assertNotNull(container.getComponentInstanceOfType(ISOGeometryBuilder.class));
         assertNotNull(container.getComponentAdapterOfType(FeatureCollections.class));
     }
 }

@@ -79,7 +79,7 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-main</artifactId>
+      <artifactId>gt-main-iso</artifactId>
       <version>${project.version}</version>
     </dependency>    
     <dependency>
@@ -93,10 +93,15 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geotools.xsd</groupId>
-      <artifactId>gt-xsd-gml2</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    	<groupId>org.geotools</groupId>
+    	<artifactId>gt-jts-wrapper</artifactId>
+    	<version>${project.version}</version>
+   	</dependency>
+   	<dependency>
+    	<groupId>org.geotools</groupId>
+    	<artifactId>gt-geometry-ng</artifactId>
+    	<version>${project.version}</version>
+   	</dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>

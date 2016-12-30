@@ -39,6 +39,14 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
     public Class<? extends Geometry> getGeometryType() {
         return Geometry.class;
     }
+    
+    /**
+     * for Parsing ISOGeometry
+     * @return
+     */
+    public Class<? extends org.geotools.geometry.iso.root.GeometryImpl> getISOGeometryType() {
+        return org.geotools.geometry.iso.root.GeometryImpl.class;
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -46,7 +54,14 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return node.getChildValue(getGeometryType());
+        //return node.getChildValue(getGeometryType());
+        Object object = node.getChildValue(getGeometryType());
+        if (object != null) {
+            return object;
+        }
+        
+        object = node.getChildValue(getISOGeometryType());
+        return object;
     }
 
     /**
@@ -54,18 +69,29 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
      *      org.w3c.dom.Element)
      */
     @Override
-    public Element encode(Object object, Document document, Element value) throws Exception {
-        checkExistingId((Geometry) object);
+    public Element encode(Object object, Document document, Element value) throws Exception { 
+        // It is necessary to check whether object is instance of JTS or ISO
+        //checkExistingId((Geometry) object);
+        checkExistingId(object);
         return value;
     }
 
     public Object getProperty(Object object, QName name) throws Exception {
-
-        return encodingUtils.GeometryPropertyType_GetProperty((Geometry) object, name, makeEmpty);
+        // TODO: Move implementation to GML3EncodingUtils
+        if (object instanceof Geometry) {
+            return encodingUtils.GeometryPropertyType_GetProperty((Geometry) object, name, makeEmpty);
+        }
+        if (name.getLocalPart().equals("_Solid") || name.getLocalPart().equals("AbstractSolid")) { // 3.1(_Solid) and 3.2(AbstractSolid)
+            return object;
+        }
+        return null;
     }
 
     public List getProperties(Object object) throws Exception {
-        return encodingUtils.GeometryPropertyType_GetProperties((Geometry) object);
+        if (object instanceof Geometry) {
+            return encodingUtils.GeometryPropertyType_GetProperties((Geometry) object);
+        }
+        return null;
     }
 
     /**
@@ -91,6 +117,25 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
             }
         }
         return;
+    }
+    
+    private void checkExistingId(Object geom) {
+        if (geom instanceof Geometry) {
+            checkExistingId((Geometry) geom);
+        } else if (geom instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            if (geom != null) {
+                String id = GML3EncodingUtils.getID(geom);
+
+                if (id != null && idSet.idExists(id)) {
+                    // make geometry empty, href will added by getproperty
+                    makeEmpty = true;
+
+                } else if (id != null) {
+
+                    idSet.add(id);
+                }
+            }
+        }
     }
 
 }

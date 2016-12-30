@@ -21,7 +21,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.aggregate.MultiCurveImpl;
 import org.geotools.geometry.iso.aggregate.MultiPointImpl;
 import org.geotools.geometry.iso.aggregate.MultiSurfaceImpl;
@@ -43,13 +43,13 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 public class CentroidTest extends TestCase {
 	
-	private GeometryBuilder builder = null;
+	private ISOGeometryBuilder builder = null;
 	private CoordinateReferenceSystem crs = null;
 
 	public void testMain() {
 		
 		// === 2D ===
-		this.builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		this.builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		this.crs = DefaultGeographicCRS.WGS84;
 		
 		// Test Points and MultiPoints

@@ -28,18 +28,18 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.data.DataStore;
-import org.geotools.data.ISODataUtilities;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFactorySpi;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.csv.iso.parse.CSVAttributesOnlyStrategy;
 import org.geotools.data.csv.iso.parse.CSVLatLonStrategy;
 import org.geotools.data.csv.iso.parse.CSVSpecifiedWKTStrategy;
 import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.KVP;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 //import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -190,7 +190,7 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
             store.setNamespaceURI(namespace.toString());
         }
         store.setDataStoreFactory(this);
-        store.setGeometryFactory(new GeometryBuilder(DefaultGeographicCRS.WGS84_3D));
+        store.setGeometryFactory(new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D));
         store.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
         store.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
         return store;

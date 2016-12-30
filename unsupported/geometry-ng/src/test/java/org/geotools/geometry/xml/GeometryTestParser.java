@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.text.WKTParser;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -66,7 +66,7 @@ public class GeometryTestParser {
             throw new RuntimeException("", e);
         }
 
-        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
         GeometryFactory geomFact = builder.getGeometryFactory();
         PrimitiveFactory primFact = builder.getPrimitiveFactory();
         wktFactory = new WKTParser( geomFact, primFact, null, builder.getAggregateFactory() );

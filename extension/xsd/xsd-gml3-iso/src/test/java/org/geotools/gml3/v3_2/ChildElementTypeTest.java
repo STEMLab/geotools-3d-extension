@@ -47,7 +47,7 @@ public class ChildElementTypeTest {
      */
     @Test
     public void test_AbstractGMLType() {
-        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration_ISO(), new QName(
+        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration(), new QName(
                 org.geotools.gml3.v3_2.GML.NAMESPACE, "AbstractGMLType"));
     }
 
@@ -56,7 +56,7 @@ public class ChildElementTypeTest {
      */
     @Test
     public void test_TM_Primitive_PropertyType() {
-        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration_ISO(), new QName(
+        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration(), new QName(
                 "http://www.isotc211.org/2005/gts", "TM_Primitive_PropertyType"));
     }
 
@@ -65,7 +65,7 @@ public class ChildElementTypeTest {
      */
     @Test
     public void test_TM_PeriodDuration_PropertyType() {
-        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration_ISO(), new QName(
+        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration(), new QName(
                 "http://www.isotc211.org/2005/gts", "TM_PeriodDuration_PropertyType"));
     }
 
@@ -74,7 +74,7 @@ public class ChildElementTypeTest {
      */
     @Test
     public void test_CI_ResponsibleParty_Type() {
-        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration_ISO(), new QName(
+        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration(), new QName(
                 "http://www.isotc211.org/2005/gmd", "CI_ResponsibleParty_Type"));
     }
 
@@ -83,7 +83,7 @@ public class ChildElementTypeTest {
      */
     @Test
     public void test_GM_Point_PropertyType() {
-        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration_ISO(), new QName(
+        checkChildElementTypes(new org.geotools.gml3.v3_2.GMLConfiguration(), new QName(
                 "http://www.isotc211.org/2005/gss", "GM_Point_PropertyType"));
     }
 

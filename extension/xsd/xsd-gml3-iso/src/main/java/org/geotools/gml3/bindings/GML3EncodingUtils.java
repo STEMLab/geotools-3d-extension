@@ -30,6 +30,8 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.feature.NameImpl;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.geometry.jts.SingleCurvedGeometry;
+import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml2.bindings.GML2EncodingUtils;
 import org.geotools.gml2.bindings.GMLEncodingUtils;
@@ -179,6 +181,90 @@ public class GML3EncodingUtils {
     }
     
     /**
+     * 
+     */
+    public static CoordinateReferenceSystem getCRS(Object g) {
+        if (g instanceof Geometry) {
+            return getCRS((Geometry) g);
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = 
+                    (org.geotools.geometry.iso.root.GeometryImpl) g;
+            
+            return geometry.getCoordinateReferenceSystem();
+        }
+        
+        return null;
+    }
+    
+    public static Integer getGeometryDimension(Object g, Configuration config) {
+        if (g instanceof Geometry) {
+            return GML2EncodingUtils.getGeometryDimension((Geometry) g, config);
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = 
+                    (org.geotools.geometry.iso.root.GeometryImpl) g;
+            // do a check for the case when geometry is empty
+            //if (geometry) { 
+            //    return null;
+            //}
+    
+            // check if srsDimension is turned off
+            if (config.hasProperty(GMLConfiguration.NO_SRS_DIMENSION)) {
+                return null;
+            }
+            
+            return geometry.getDimension(null);
+        }
+        
+        return null;
+    }
+    
+    public static String getID(Object g) {
+        if (g instanceof Geometry) {
+            return getID((Geometry) g);
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = 
+                    (org.geotools.geometry.iso.root.GeometryImpl) g;
+            return getMetaData(geometry, "gml:id");
+        }
+        
+        return null;
+    }
+    
+    public static String getName(Object g) {
+        if (g instanceof Geometry) {
+            return getName((Geometry) g);
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = 
+                    (org.geotools.geometry.iso.root.GeometryImpl) g;
+            return getMetaData(geometry, "gml:name");
+        }
+        
+        return null;
+    }
+    
+    public static String getDescription(Object g) {
+        if (g instanceof Geometry) {
+            return getDescription((Geometry) g);
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = 
+                    (org.geotools.geometry.iso.root.GeometryImpl) g;
+            return getMetaData(geometry, "gml:description");
+        }
+        
+        return null;
+    }
+    
+    public static String getMetaData(org.geotools.geometry.iso.root.GeometryImpl g,
+            String metadata) {
+        if (g.getUserData() instanceof Map) {
+            Map userData = (Map) g.getUserData();
+            return (String) userData.get(metadata);
+        }        
+        return null;
+    }
+    
+    
+    /**
      * Set a synthetic gml:id on each child of a multigeometry. If the multigeometry has no gml:id,
      * this method has no effect. The synthetic gml:id of each child is constructed from that of the
      * parent by appending "." and then an integer starting from one for the first child.
@@ -224,6 +310,48 @@ public class GML3EncodingUtils {
      */
     public Object GeometryPropertyType_GetProperty(Geometry geometry, QName name, boolean makeEmpty) {
         return e.GeometryPropertyType_getProperty(geometry, name, true, makeEmpty);
+    }
+    
+    public Object GeometryPropertyType_getProperty(Object g, QName name,
+            boolean includeAbstractGeometry, boolean makeEmpty) {
+        if (g instanceof Geometry) {
+            GeometryPropertyType_GetProperty((Geometry) g, name, makeEmpty);
+        } else if (!(g instanceof org.geotools.geometry.iso.root.GeometryImpl)) {
+            return null;
+        }
+        
+        org.geotools.geometry.iso.root.GeometryImpl geometry =
+                (org.geotools.geometry.iso.root.GeometryImpl) g;
+        if (name.equals(gml.qName("_Solid")) || name.equals(gml.qName("AbstractSolid"))) {
+            // if the geometry is null, return null
+            if (makeEmpty) {
+                return null;
+            }
+
+            return geometry;
+        }
+
+        /*
+        if (geometry.getUserData() instanceof Map) {
+            Map<Name, Object> clientProperties = (Map<Name, Object>) ((Map) geometry.getUserData())
+                    .get(Attributes.class);
+
+            Name cname = e.toTypeName(name);
+            if (clientProperties != null && clientProperties.keySet().contains(cname))
+                return clientProperties.get(cname);
+        }
+        */
+
+        if (XLINK.HREF.equals(name)) {
+            // only process if geometry is empty and ID exists
+            String id = getID(geometry);
+            if ((makeEmpty) && id != null) {
+                return "#" + id;
+            }
+        }
+
+        return null;
+
     }
 
     /**

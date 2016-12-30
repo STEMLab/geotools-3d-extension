@@ -26,7 +26,7 @@ import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.text.WKTParser;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -300,7 +300,7 @@ public class Geometry3DConformanceTestCases extends TestCase {
                         	op.setExpectedResult( point );
                         }
                         else { // try parsing this thing as WKT
-                        	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+                        	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
                             GeometryFactory geomFact = builder.getGeometryFactory();
                             PrimitiveFactory primFact = builder.getPrimitiveFactory();
                             WKTParser wktFactory = new WKTParser(geomFact, primFact, null, builder.getAggregateFactory());

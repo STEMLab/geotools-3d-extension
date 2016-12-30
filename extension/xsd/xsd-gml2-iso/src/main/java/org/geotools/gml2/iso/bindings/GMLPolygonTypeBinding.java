@@ -21,11 +21,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
@@ -64,9 +64,9 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
  * @source $URL$
  */
 public class GMLPolygonTypeBinding extends AbstractComplexBinding {
-    GeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
-    public GMLPolygonTypeBinding(GeometryBuilder gBuilder) {
+    public GMLPolygonTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
     }
 

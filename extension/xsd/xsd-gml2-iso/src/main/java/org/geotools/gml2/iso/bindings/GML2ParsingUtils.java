@@ -33,7 +33,6 @@ import org.eclipse.xsd.XSDParticle;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.iso.FeatureTypeCache;
 import org.geotools.gml2.iso.GML;
@@ -53,6 +52,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.Aggregate;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
@@ -427,7 +427,7 @@ public class GML2ParsingUtils {
         return members;
     }
     
-    static Aggregate GeometryCollectionType_parse(Node node, Class clazz, GeometryBuilder gBuilder) {
+    static Aggregate GeometryCollectionType_parse(Node node, Class clazz, ISOGeometryBuilder gBuilder) {
         //round up children that are geometries, since this type is often 
         // extended by multi geometries, dont reference members by element name
         Set geoms = new HashSet();

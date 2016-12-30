@@ -29,7 +29,6 @@ import org.geotools.factory.GeoTools;
 import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
@@ -37,6 +36,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Point;
 
 import com.csvreader.CsvReader;
@@ -165,7 +165,7 @@ public class CSVLatLonStrategy extends CSVStrategy {
         ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
         //GeometryFactory geometryFactory = new GeometryFactory();
-        GeometryBuilder geometryFactory = new GeometryBuilder(GeoTools.getDefaultHints());
+        ISOGeometryBuilder geometryFactory = new ISOGeometryBuilder(GeoTools.getDefaultHints());
         Double lat = null, lng = null;
         String[] headers = csvFileState.getCSVHeaders();
         for (int i = 0; i < headers.length; i++) {

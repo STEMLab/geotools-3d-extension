@@ -38,7 +38,6 @@ import java.util.logging.Level;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
@@ -61,6 +60,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
@@ -275,7 +275,7 @@ public class PostGISDialect extends BasicSQLDialect {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, String column, GeometryBuilder factory, Connection cx)
+            ResultSet rs, String column, ISOGeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
@@ -283,14 +283,14 @@ public class PostGISDialect extends BasicSQLDialect {
     }
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor,
-            ResultSet rs, int column, GeometryBuilder factory, Connection cx)
+            ResultSet rs, int column, ISOGeometryBuilder factory, Connection cx)
             throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         
         return (Geometry) reader.read(rs, column);
     }
 
-    private WKBAttributeIO getWKBReader(GeometryBuilder factory) {
+    private WKBAttributeIO getWKBReader(ISOGeometryBuilder factory) {
         WKBAttributeIO reader = wkbReader.get();
         if(reader == null) {
             reader = new WKBAttributeIO(factory);

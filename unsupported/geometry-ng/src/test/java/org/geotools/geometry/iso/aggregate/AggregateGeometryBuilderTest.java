@@ -23,7 +23,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
@@ -46,11 +46,11 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 public class AggregateGeometryBuilderTest extends TestCase {
 
 	CoordinateReferenceSystem crs_WGS84;
-	GeometryBuilder builder;
+	ISOGeometryBuilder builder;
 	
 	public void setUp() {
 		crs_WGS84 = DefaultGeographicCRS.WGS84;
-		builder = new GeometryBuilder(crs_WGS84); 
+		builder = new ISOGeometryBuilder(crs_WGS84); 
 	}
 	
 	public void testBuildPoint() {

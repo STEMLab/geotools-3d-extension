@@ -27,7 +27,7 @@ import static org.opengis.annotation.Specification.*;
  *
  * @source $URL$
  * @version <A HREF="http://www.opengeospatial.org/standards/as">ISO 19107</A>
- * @author Soojin Kim
+ * @author Soojin Kim, Pusan National University
  */
 public interface PrimitiveFactory2 extends PrimitiveFactory{
   

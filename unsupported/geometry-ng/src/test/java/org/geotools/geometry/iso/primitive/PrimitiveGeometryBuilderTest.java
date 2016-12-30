@@ -16,7 +16,7 @@
  */
 package org.geotools.geometry.iso.primitive;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.PositionFactory;
@@ -34,11 +34,11 @@ import junit.framework.TestCase;
 public class PrimitiveGeometryBuilderTest extends TestCase {
 
 	CoordinateReferenceSystem crs_WGS84;
-	GeometryBuilder builder;
+	ISOGeometryBuilder builder;
 	
 	public void setUp() {
 		crs_WGS84 = DefaultGeographicCRS.WGS84;
-		builder = new GeometryBuilder(crs_WGS84); 
+		builder = new ISOGeometryBuilder(crs_WGS84); 
 	}
 	
 	public void testBuildPoint() {

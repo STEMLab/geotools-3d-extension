@@ -18,15 +18,13 @@ package org.geotools.filter.iso.v1_0;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.filter.iso.v1_0.OGC;
-import org.geotools.filter.iso.v1_0.OGCUtils;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Beyond;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 
 /**
@@ -49,9 +47,9 @@ import org.opengis.filter.spatial.Beyond;
  */
 public class OGCBeyondBinding extends AbstractComplexBinding {
     FilterFactory2 filterFactory;
-    GeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
-    public OGCBeyondBinding(FilterFactory2 filterFactory, GeometryBuilder gBuilder) {
+    public OGCBeyondBinding(FilterFactory2 filterFactory, ISOGeometryBuilder gBuilder) {
         this.filterFactory = filterFactory;
         this.gBuilder = gBuilder;
     }

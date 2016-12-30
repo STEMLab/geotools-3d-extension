@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
@@ -64,7 +64,7 @@ public abstract class AbstractGeometryTest extends TestCase {
      * @throws FactoryException
      */
     public void setUp() throws FactoryException {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);       
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);       
         gFact = builder.getGeometryFactory();
         pFact = builder.getPrimitiveFactory();
     }

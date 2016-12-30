@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
@@ -41,14 +41,14 @@ public class CompositeSurfaceTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84); 
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84); 
 		
 		this._testCompositeSurface(builder);
 		
 	}
 	
 	
-	private void _testCompositeSurface(GeometryBuilder builder) {
+	private void _testCompositeSurface(ISOGeometryBuilder builder) {
 		
 		ComplexFactory complf = builder.getComplexFactory();
 		PrimitiveFactoryImpl pf = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

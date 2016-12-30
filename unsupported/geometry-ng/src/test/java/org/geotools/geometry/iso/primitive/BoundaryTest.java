@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.EnvelopeImpl;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
@@ -54,7 +54,7 @@ public class BoundaryTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		this.crs = DefaultGeographicCRS.WGS84;
 		
 		this._testCurveBoundary1(builder);
@@ -62,7 +62,7 @@ public class BoundaryTest extends TestCase {
 		
 	}
 
-	private void _testCurveBoundary1(GeometryBuilder builder) {
+	private void _testCurveBoundary1(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimitiveFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
@@ -129,7 +129,7 @@ public class BoundaryTest extends TestCase {
 		assertFalse(b2.hashCode() == ((CurveBoundaryImpl) curveBoundary1).hashCode());
 	}
 
-	private void _testSurfaceBoundary1(GeometryBuilder builder) {
+	private void _testSurfaceBoundary1(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

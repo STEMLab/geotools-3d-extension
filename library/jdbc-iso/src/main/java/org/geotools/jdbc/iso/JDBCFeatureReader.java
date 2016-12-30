@@ -40,11 +40,9 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.GeometryAttributeImpl;
 import org.geotools.feature.IllegalAttributeException;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.filter.identity.FeatureIdImpl;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.Converters;
@@ -60,6 +58,7 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /**
  * Reader for jdbc datastore
@@ -95,7 +94,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * geometry factory used to create geometry objects
      */
-    protected GeometryBuilder geometryFactory;
+    protected ISOGeometryBuilder geometryFactory;
     /**
      * hints
      */
@@ -202,7 +201,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryFactory = (GeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
+        geometryFactory = (ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
         /*if (geometryFactory == null) {
             // look for a coordinate sequence factory
             CoordinateSequenceFactory csFactory = 

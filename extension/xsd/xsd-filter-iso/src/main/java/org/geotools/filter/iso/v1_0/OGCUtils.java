@@ -21,9 +21,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.filter.iso.v1_0.OGC;
-import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Node;
 import org.opengis.filter.FilterFactory2;
@@ -33,8 +30,8 @@ import org.opengis.filter.expression.PropertyName;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
-import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -112,7 +109,7 @@ public class OGCUtils {
      *
      * @return A two element array of expressions for a BinarySpatialOp type.
      */
-    static Expression[] spatial(Node node, FilterFactory2 ff, GeometryBuilder gb) {
+    static Expression[] spatial(Node node, FilterFactory2 ff, ISOGeometryBuilder gb) {
         List names = node.getChildValues(PropertyName.class);
         if (names.size() == 2) {
             //join

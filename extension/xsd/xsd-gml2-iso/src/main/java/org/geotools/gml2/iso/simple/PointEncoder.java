@@ -16,9 +16,9 @@
  */
 package org.geotools.gml2.iso.simple;
 
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Point;
 import org.xml.sax.helpers.AttributesImpl;
@@ -50,7 +50,7 @@ class PointEncoder extends GeometryEncoder<Point> {
     @Override
     public void encode(Point geometry, AttributesImpl atts, GMLWriter handler) throws Exception {
         handler.startElement(point, atts);
-        GeometryBuilder builder = new GeometryBuilder(geometry.getCoordinateReferenceSystem());
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(geometry.getCoordinateReferenceSystem());
         PointArray pa = builder.createPointArray();
         pa.add(geometry.getDirectPosition());
         handler.coordinates(pa);

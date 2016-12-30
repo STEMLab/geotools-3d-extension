@@ -18,7 +18,7 @@ package org.geotools.gml2.iso.bindings;
 
 import java.util.Arrays;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLPolygonTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -42,7 +42,7 @@ public class GMLPolygonTypeBindingTest extends AbstractGMLBindingTest {
     ElementInstance iring;
     MutablePicoContainer container;
 
-    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 

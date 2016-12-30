@@ -18,7 +18,7 @@ package org.geotools.gml2.iso.bindings;
 
 import java.util.Arrays;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLLineStringPropertyTypeBinding;
@@ -51,7 +51,7 @@ public class GMLLineStringPropertyTypeBindingTest extends AbstractGMLBindingTest
     }
 
     public void testWithGeometry() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     	
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {3.0, 4.0, 4.0});

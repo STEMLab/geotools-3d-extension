@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Binding;
@@ -53,7 +53,7 @@ public class GMLBoxTypeBinding2Test extends GMLTestSupport {
     }
 
     public void testEncode() throws Exception {
-    	GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    	ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     	DirectPosition dp1 = builder.createDirectPosition(new double[] {1.0, 2.0, 3.0});
     	DirectPosition dp2 = builder.createDirectPosition(new double[] {4.0, 5.0, 6.0});
     	

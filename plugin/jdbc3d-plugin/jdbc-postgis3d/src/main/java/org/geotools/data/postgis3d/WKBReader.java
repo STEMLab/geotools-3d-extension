@@ -40,10 +40,9 @@ package org.geotools.data.postgis3d;
 import java.io.IOException;
 
 import org.geotools.factory.GeoTools;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
@@ -108,7 +107,7 @@ public class WKBReader {
     private static final String INVALID_GEOM_TYPE_MSG = "Invalid geometry type encountered in ";
 
     //private CurvedGeometryFactory factory;
-    private GeometryBuilder builder;
+    private ISOGeometryBuilder builder;
 
     private CoordinateSequenceFactory csFactory;
 
@@ -132,10 +131,10 @@ public class WKBReader {
     private double[] ordValues;
 
     public WKBReader() {
-        this(new GeometryBuilder(GeoTools.getDefaultHints()));
+        this(new ISOGeometryBuilder(GeoTools.getDefaultHints()));
     }
 
-    public WKBReader(GeometryBuilder geometrybuilder) {
+    public WKBReader(ISOGeometryBuilder geometrybuilder) {
         this.builder = geometrybuilder;//getCurvedGeometryFactory(geometryFactory);
         //precisionModel = builder.getPrecisionModel();
         //csFactory = builder.getCoordinateSequenceFactory();

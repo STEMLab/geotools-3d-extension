@@ -29,7 +29,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -68,7 +68,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
     protected SimpleFeatureType line3DType;
 
-    protected GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    protected ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     
     protected CoordinateReferenceSystem crs;
 

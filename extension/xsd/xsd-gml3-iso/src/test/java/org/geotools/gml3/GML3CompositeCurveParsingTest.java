@@ -12,7 +12,7 @@ public class GML3CompositeCurveParsingTest extends GML3TestSupport {
     }
 
     public void testCompositeCurve() throws Exception {
-        GMLConfiguration_ISO gml = new GMLConfiguration_ISO(true);
+        GMLConfiguration gml = new GMLConfiguration(true);
         Parser p = new Parser(gml);
         Object compositeCurve = p.parse(getClass().getResourceAsStream("v3_2/gml_compositecurve_1.xml"));
         assertFalse(compositeCurve instanceof String);

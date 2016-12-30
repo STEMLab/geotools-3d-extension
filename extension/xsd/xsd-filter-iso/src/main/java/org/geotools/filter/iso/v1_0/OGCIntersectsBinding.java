@@ -17,16 +17,14 @@
 package org.geotools.filter.iso.v1_0;
 
 import javax.xml.namespace.QName;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Expression;
-import org.opengis.filter.spatial.Intersects;
-import org.geotools.filter.iso.v1_0.OGC;
-import org.geotools.filter.iso.v1_0.OGCUtils;
-import org.geotools.geometry.GeometryBuilder;
+
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.spatial.Intersects;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 
 /**
@@ -49,9 +47,9 @@ import org.geotools.xml.Node;
  */
 public class OGCIntersectsBinding extends AbstractComplexBinding {
     FilterFactory2 filterFactory;
-    GeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
-    public OGCIntersectsBinding(FilterFactory2 filterFactory, GeometryBuilder gBuilder) {
+    public OGCIntersectsBinding(FilterFactory2 filterFactory, ISOGeometryBuilder gBuilder) {
         this.filterFactory = filterFactory;
         this.gBuilder = gBuilder;
     }

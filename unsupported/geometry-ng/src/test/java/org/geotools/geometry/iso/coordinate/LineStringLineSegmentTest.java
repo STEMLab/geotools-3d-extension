@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.LineStringImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
@@ -51,14 +51,14 @@ public class LineStringLineSegmentTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		
 		this._testLineString1(builder);
 		
 	}
 	
 	
-	private void _testLineString1(GeometryBuilder builder) {
+	private void _testLineString1(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

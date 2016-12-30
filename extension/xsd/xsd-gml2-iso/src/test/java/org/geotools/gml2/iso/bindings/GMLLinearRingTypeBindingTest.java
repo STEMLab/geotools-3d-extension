@@ -16,7 +16,7 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.bindings.GMLLinearRingTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -42,7 +42,7 @@ public class GMLLinearRingTypeBindingTest extends AbstractGMLBindingTest {
     ElementInstance coords;
     MutablePicoContainer container;
 
-    GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     protected void setUp() throws Exception {
         super.setUp();
 

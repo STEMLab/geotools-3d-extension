@@ -29,7 +29,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GMLConfiguration_ISO;
 import org.geotools.xml.AttributeInstance;
 import org.geotools.xml.Binding;
@@ -127,13 +127,13 @@ public class AbstractGMLBindingTest extends TestCase {
         return element;
     }
 
-    public PointArray createPointArray(GeometryBuilder builder, DirectPosition c) {
+    public PointArray createPointArray(ISOGeometryBuilder builder, DirectPosition c) {
     	PointArray pa = builder.createPointArray();
     	pa.add(c);
     	return pa;
     }
     
-    public PointArray createPointArray(GeometryBuilder builder, DirectPosition[] c) {
+    public PointArray createPointArray(ISOGeometryBuilder builder, DirectPosition[] c) {
     	PointArray pa = builder.createPointArray();
     	for(DirectPosition dp : c) {
     		pa.add(dp);

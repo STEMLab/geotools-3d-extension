@@ -68,12 +68,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         Polygon[] patches = (Polygon[])node.getChildValue(Polygon[].class);
-        MultiPolygon mp = (MultiPolygon)node.getChildValue(MultiPolygon.class);
-       if(mp != null){
-            return mp;
-        }else{
-            return gf.createMultiPolygon(patches);
-        }
+        return gf.createMultiPolygon(patches);
     }
     
     @Override

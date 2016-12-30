@@ -18,7 +18,7 @@ package org.geotools.geometry.iso.coordinate;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.UnsupportedDimensionException;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
@@ -39,12 +39,12 @@ public class EnvelopeTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84); 
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84); 
 		this._testEnvelope1(builder);
 		
 	}	
 
-	private void _testEnvelope1(GeometryBuilder builder) {
+	private void _testEnvelope1(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 

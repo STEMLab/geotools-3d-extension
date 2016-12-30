@@ -33,18 +33,9 @@ import org.geotools.data.Parameter;
 import org.geotools.data.jdbc.datasource.DBCPDataSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
-import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
-import org.geotools.jdbc.iso.CompositePrimaryKeyFinder;
-import org.geotools.jdbc.iso.HeuristicPrimaryKeyFinder;
-import org.geotools.jdbc.iso.JDBCDataStore;
-import org.geotools.jdbc.iso.MetadataTablePrimaryKeyFinder;
-import org.geotools.jdbc.iso.PreparedStatementSQLDialect;
-import org.geotools.jdbc.iso.SQLDialect;
-import org.geotools.jdbc.iso.SessionCommandsListener;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
-import org.opengis.geometry.coordinate.GeometryFactory;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 //import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -279,7 +270,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
         /*Hints hints = GeoTools.getDefaultHints();
         hints.put( Hints.CRS, DefaultGeographicCRS.WGS84_3D );
         hints.put(Hints.GEOMETRY_FACTORY, value)*/
-        GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 		
         // factories
         dataStore.setFilterFactory(CommonFactoryFinder.getFilterFactory(null));

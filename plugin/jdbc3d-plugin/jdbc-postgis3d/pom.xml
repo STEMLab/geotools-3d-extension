@@ -39,6 +39,30 @@
     </license>
   </licenses>
 
+  <!-- =========================================================== -->
+  <!--     Developers and Contributors                             -->
+  <!-- =========================================================== -->
+  <developers>
+  	<developer>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
+      <organization>Pusan National University</organization>
+      <roles>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Hyung-Gyu Ryoo</name>
+      <email>hgryoo@pnu.edu</email>
+      <organization>Pusan National University</organization>
+      <roles>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
   <dependencies>
   	<dependency>
       <groupId>org.geotools.jdbc</groupId>

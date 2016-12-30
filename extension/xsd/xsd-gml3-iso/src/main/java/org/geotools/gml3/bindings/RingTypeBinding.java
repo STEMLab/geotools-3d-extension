@@ -25,14 +25,14 @@ import javax.xml.namespace.QName;
 import org.geotools.geometry.jts.CompoundCurvedGeometry;
 import org.geotools.geometry.jts.CurvedGeometry;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
-import org.geotools.geometry.jts.CurvedRing;
 import org.geotools.gml3.ArcParameters;
 import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Ring;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -43,12 +43,12 @@ import com.vividsolutions.jts.geom.LineString;
  * @source $URL$
  */
 public class RingTypeBinding extends AbstractComplexBinding implements Comparable {
-    protected GeometryFactory gf;
+	protected ISOGeometryBuilder gBuilder;
 
     protected ArcParameters arcParameters;
 
-    public RingTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    public RingTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -65,7 +65,7 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
      * @generated modifiable
      */
     public Class getType() {
-        return CurvedRing.class;
+        return Ring.class;
     }
 
     @Override
@@ -86,13 +86,7 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
         if (members.isEmpty()) {
             return null;
         } else if (members.size() == 1) {
-            Object o = members.get(0);
-            if (o.getClass() == LineString.class) {
-                LineString ls = (LineString)o;
-                return this.gf.createLinearRing(ls.getCoordinates());
-            }else{
-                return members.get(0);
-            }
+            return members.get(0);
         } else {
             LineString curved = null;
             List<LineString> components = new ArrayList<>();

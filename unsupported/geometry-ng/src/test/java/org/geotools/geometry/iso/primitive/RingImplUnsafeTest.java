@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -47,12 +47,12 @@ public class RingImplUnsafeTest extends TestCase {
 			Hints hints1 = GeoTools.getDefaultHints();
 	        hints1.put(Hints.CRS, DefaultGeographicCRS.WGS84 );
 	        hints1.put(Hints.GEOMETRY_VALIDATE, true);
-			GeometryBuilder builder_validate = new GeometryBuilder(hints1);
+			ISOGeometryBuilder builder_validate = new ISOGeometryBuilder(hints1);
 			
 			Hints hints2 = GeoTools.getDefaultHints();
 	        hints2.put(Hints.CRS, DefaultGeographicCRS.WGS84 );
 	        hints2.put(Hints.GEOMETRY_VALIDATE, false);
-			GeometryBuilder builder_novalid = new GeometryBuilder(hints2);
+			ISOGeometryBuilder builder_novalid = new ISOGeometryBuilder(hints2);
 			
 			Ring validated = createRing(builder_validate);
 			Ring not_validated = createRing(builder_novalid);
@@ -69,12 +69,12 @@ public class RingImplUnsafeTest extends TestCase {
 			Hints hints1 = GeoTools.getDefaultHints();
 	        hints1.put(Hints.CRS, DefaultGeographicCRS.WGS84 );
 	        hints1.put(Hints.GEOMETRY_VALIDATE, true);
-			GeometryBuilder builder_validate = new GeometryBuilder(hints1);
+			ISOGeometryBuilder builder_validate = new ISOGeometryBuilder(hints1);
 			
 			Hints hints2 = GeoTools.getDefaultHints();
 	        hints2.put(Hints.CRS, DefaultGeographicCRS.WGS84 );
 	        hints2.put(Hints.GEOMETRY_VALIDATE, false);
-			GeometryBuilder builder_novalid = new GeometryBuilder(hints2);
+			ISOGeometryBuilder builder_novalid = new ISOGeometryBuilder(hints2);
 			
 			Surface validated = createSurface(builder_validate);
 			Surface not_validated = createSurface(builder_novalid);
@@ -100,7 +100,7 @@ public class RingImplUnsafeTest extends TestCase {
 			}
 		}
 		
-		public Surface createSurface(GeometryBuilder builder) {
+		public Surface createSurface(ISOGeometryBuilder builder) {
 			
 			GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 			PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
@@ -123,7 +123,7 @@ public class RingImplUnsafeTest extends TestCase {
 			return surface2;
 		}
 
-		public Ring createRing(GeometryBuilder builder) {
+		public Ring createRing(ISOGeometryBuilder builder) {
 			
 			GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 			PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

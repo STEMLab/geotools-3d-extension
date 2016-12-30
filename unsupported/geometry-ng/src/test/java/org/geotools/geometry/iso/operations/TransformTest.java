@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.geotools.geometry.iso.root.GeometryImpl;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
@@ -282,7 +282,7 @@ public class TransformTest extends TestCase {
         MathTransform t = CRS.findMathTransform( wsg1, wsg2 );
         assertTrue( "WSG84 transformed to WSG84 should be Identity", t.isIdentity() );
         
-        GeometryBuilder builder = new GeometryBuilder( wsg1 );
+        ISOGeometryBuilder builder = new ISOGeometryBuilder( wsg1 );
         
         double array[] = new double[]{
                 -123.47009555832284,48.543261561072285,

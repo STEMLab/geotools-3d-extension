@@ -24,7 +24,6 @@ import java.util.Map;
 import org.geotools.factory.Factory;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryFactoryFinder;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.complex.ComplexFactory;

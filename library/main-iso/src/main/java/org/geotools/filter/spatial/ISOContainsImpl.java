@@ -30,7 +30,7 @@ import org.opengis.geometry.Geometry;
 
 /**
  * 
- *
+ * @author Soojin Kim, Pusan National University
  * @source $URL$
  */
 public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implements Contains {

@@ -18,7 +18,7 @@ package org.geotools.geometry.iso.coordinate;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
@@ -35,13 +35,13 @@ public class GeometryFactoryTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 		
 		this._testCoordinateObjects(builder);
 		
 	}	
 
-	private void _testCoordinateObjects(GeometryBuilder builder) {
+	private void _testCoordinateObjects(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl cf = (GeometryFactoryImpl) builder.getGeometryFactory();
 		

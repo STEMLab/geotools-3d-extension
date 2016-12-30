@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
@@ -45,14 +45,14 @@ public class RingTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		
 		//this._testTriangle1(tGeomFactory);
 		this._testRing1(builder);
 		
 	}
 
-	private void _testRing1(GeometryBuilder builder) {
+	private void _testRing1(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

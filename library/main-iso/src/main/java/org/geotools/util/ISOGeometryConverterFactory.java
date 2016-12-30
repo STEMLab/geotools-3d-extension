@@ -62,7 +62,7 @@ public class ISOGeometryConverterFactory implements ConverterFactory {
 						Envelope e = (Envelope) source;
 						//TODO
 						
-						return null;
+						throw new UnsupportedOperationException();
 						/*GeometryFactory factory = new GeometryFactory();
 						return factory.createPolygon(
 							factory.createLinearRing( 

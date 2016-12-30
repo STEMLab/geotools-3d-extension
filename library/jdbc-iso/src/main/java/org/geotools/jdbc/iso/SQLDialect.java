@@ -45,10 +45,6 @@ import org.geotools.feature.visitor.SumVisitor;
 import org.geotools.feature.visitor.UniqueVisitor;
 import org.geotools.filter.FilterCapabilities;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.iso.ColumnMetadata;
-import org.geotools.jdbc.iso.Index;
-import org.geotools.jdbc.iso.JDBCDataStore;
-import org.geotools.jdbc.iso.SQLDialect;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.FeatureVisitor;
@@ -67,7 +63,7 @@ import org.opengis.filter.expression.Multiply;
 import org.opengis.filter.expression.Subtract;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
-import org.geotools.geometry.GeometryBuilder;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 //import org.opengis.geometry.coordinate.GeometryFactory;
 //import com.vividsolutions.jts.geom.Envelope;
@@ -857,19 +853,19 @@ public abstract class SQLDialect {
      * </p>
      */
     public abstract Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
-        String column, GeometryBuilder factory, Connection cx ) throws IOException, SQLException;
+        String column, ISOGeometryBuilder factory, Connection cx ) throws IOException, SQLException;
     
     /**
      * Decodes a geometry value from the result of a query specifying the column 
      * as an index.
      * <p>
-     * See {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, GeometryFactory)} 
+     * See {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, ISOGeometryBuilder)} 
      * for a more in depth description.
      * </p>
-     * @see {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, GeometryFactory)}.
+     * @see {@link #decodeGeometryValue(GeometryDescriptor, ResultSet, String, ISOGeometryBuilder)}.
      */
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs,
-        int column, GeometryBuilder factory, Connection cx ) throws IOException, SQLException {
+        int column, ISOGeometryBuilder factory, Connection cx ) throws IOException, SQLException {
         
         String columnName = rs.getMetaData().getColumnName( column );
         return decodeGeometryValue(descriptor, rs, columnName, factory, cx);

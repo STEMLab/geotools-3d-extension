@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.geometry.iso.io.wkt.ParseException;
@@ -40,12 +40,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 public class IsSimpleOperationTest extends TestCase {
 
-	private GeometryBuilder builder = null;
+	private ISOGeometryBuilder builder = null;
 	private CoordinateReferenceSystem crs;
 
 	public void testMain() {
 		
-		this.builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		this.builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		this.crs = DefaultGeographicCRS.WGS84;
 		
 		// Test Curves
@@ -102,7 +102,7 @@ public class IsSimpleOperationTest extends TestCase {
 
 
 
-	private CurveImpl createCurveA(GeometryBuilder builder) {
+	private CurveImpl createCurveA(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
@@ -128,7 +128,7 @@ public class IsSimpleOperationTest extends TestCase {
 		
 	}
 
-	private CurveImpl createCurveB(GeometryBuilder builder) {
+	private CurveImpl createCurveB(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
@@ -197,12 +197,12 @@ public class IsSimpleOperationTest extends TestCase {
 		return this.createCurveFromWKT(wktCurve1);
 	}
 
-	private SurfaceImpl createSurfaceAHoleNotTouchesShell(GeometryBuilder builder) {
+	private SurfaceImpl createSurfaceAHoleNotTouchesShell(ISOGeometryBuilder builder) {
 		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90), (90 60, 110 100, 120 90, 100 60, 90 60))";
 		return this.createSurfaceFromWKT(crs, wktSurface1);
 	}
 
-	private SurfaceImpl createSurfaceAHoleTouchesShell(GeometryBuilder builder) {
+	private SurfaceImpl createSurfaceAHoleTouchesShell(ISOGeometryBuilder builder) {
 		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90), (30 140, 60 140, 60 130, 40 120, 30 140))";
 		return this.createSurfaceFromWKT(crs, wktSurface1);
 	}

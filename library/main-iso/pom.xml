@@ -46,9 +46,19 @@
   <!-- =========================================================== -->
   <developers>
     <developer>
-      <name>HyungGyu Ryoo</name>
       <id>hgryoo</id>
+      <name>Hyung-Gyo Ryoo</name>
       <email>hyunggyu.ryoo@gmail.com</email>
+      <organization>Pusan National University</organization>
+      <roles>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>sjkim</id>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
       <organization>Pusan National University</organization>
       <roles>
         <role>Module Maintainer</role>

@@ -52,10 +52,10 @@ public class CompatibleCRSBuilderTest extends TestCase {
 	public void testPrimFactCRS() throws UnsupportedOperationException,
 			FactoryException {
 		CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
-		GeometryBuilder builder = new GeometryBuilder(crs);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
 
 		CoordinateReferenceSystem crs2 = CRS.parseWKT(crs.toWKT());
-		GeometryBuilder builder2 = new GeometryBuilder(crs2);
+		ISOGeometryBuilder builder2 = new ISOGeometryBuilder(crs2);
 
 		// create a list of connected positions
 		List<Position> dps = new ArrayList<Position>();

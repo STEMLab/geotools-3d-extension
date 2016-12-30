@@ -32,7 +32,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -66,12 +66,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * @source $URL$
  */
 public class SurfaceTest extends TestCase {
-    GeometryBuilder builder;
+    ISOGeometryBuilder builder;
     
     protected void setUp() throws Exception {
         super.setUp();
         
-        builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);                
+        builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);                
     }
     /** We need to create a large surface with 7000 points */
     public void testLargeSurfaceFactory(){
@@ -143,7 +143,7 @@ public class SurfaceTest extends TestCase {
          Surface surface = builder.createSurface(boundary);         
     }
     
-	private List<Triangle> createTestTriangle1(GeometryBuilder builder) {		
+	private List<Triangle> createTestTriangle1(ISOGeometryBuilder builder) {		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
 
@@ -183,7 +183,7 @@ public class SurfaceTest extends TestCase {
 		this.testSurfaces((SurfaceImpl) surface1);
 	}
 
-	public Surface _testSurface2(GeometryBuilder builder) {
+	public Surface _testSurface2(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

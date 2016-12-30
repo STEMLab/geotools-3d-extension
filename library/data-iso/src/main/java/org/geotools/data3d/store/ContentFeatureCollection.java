@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.FeatureReader;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Join;
 import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureCollection;
@@ -39,7 +39,7 @@ import org.geotools.data.store.ContentState;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.SchemaException;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeature;
@@ -48,8 +48,6 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.primitive.Point;
-
-//import com.vividsolutions.jts.geom.Point;
 
 /**
  * A FeatureCollection that completely delegates to a backing FetaureSource#getReader
@@ -87,7 +85,7 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
         //retype feature type if necessary
         if ( query.getPropertyNames() != Query.ALL_NAMES ) {
             this.featureType = 
-                SimpleFeatureTypeBuilder.retype(this.featureType, query.getPropertyNames() );
+                ISOSimpleFeatureTypeBuilder.retype(this.featureType, query.getPropertyNames() );
         }
         // Check for change in coordinate reference system
         // (Even if featureSource.canReproject the feature reader, we will need to adjust the
@@ -105,7 +103,7 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
 
         //check for join and expand attributes as necessary
         if (!query.getJoins().isEmpty()) {
-            SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+            ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
             tb.init(this.featureType);
 
             for (Join join : query.getJoins()) {
@@ -345,7 +343,7 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
         Query query = new Query();
         query.setSortBy( new org.opengis.filter.sort.SortBy[]{sort});
 
-        query = DataUtilities.mixQueries( this.query, query, null );
+        query = ISODataUtilities.mixQueries( this.query, query, null );
         return new ContentFeatureCollection( featureSource, query );    
     }
     
@@ -353,7 +351,7 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
         Query query = new Query();
         query.setFilter( filter );
         
-        query = DataUtilities.mixQueries(this.query, query, null);
+        query = ISODataUtilities.mixQueries(this.query, query, null);
         return new ContentFeatureCollection( featureSource, query );    
     }
     

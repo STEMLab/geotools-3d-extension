@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.aggregate.AggregateFactoryImpl;
 import org.geotools.geometry.iso.aggregate.MultiCurveImpl;
 import org.geotools.geometry.iso.aggregate.MultiPointImpl;
@@ -62,6 +61,7 @@ import org.geotools.geometry.iso.sfcgal.wrapper.SFTriangulatedSurface;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.AggregateFactory;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
@@ -119,13 +119,13 @@ public class SFCGALConvertor {
 
         public static final int SFCGAL_MULTISOLID_ID = 102;
 
-        private static GeometryBuilder builder = null;
+        private static ISOGeometryBuilder builder = null;
 
         static {
                 Hints hints = GeoTools.getDefaultHints();
                 hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
                 hints.put(Hints.GEOMETRY_VALIDATE, false);
-                builder = new GeometryBuilder(hints);
+                builder = new ISOGeometryBuilder(hints);
         }
 
         /**

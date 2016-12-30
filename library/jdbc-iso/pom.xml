@@ -49,20 +49,23 @@
   <!-- =========================================================== -->
   <developers>
     <developer>
-      <name>Andrea Aime</name>
-      <id>aaime</id>
-      <email>aaime@users.sourceforge.net</email>
+      <id>hgryoo</id>
+      <name>Hyung-Gyo Ryoo</name>
+      <email>hyunggyu.ryoo@gmail.com</email>
+      <organization>Pusan National University</organization>
       <roles>
-        <role>Java Developer</role>
         <role>Module Maintainer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
-      <name>Cory Horner</name>
-      <email>cory.horner@gmail.com</email>
+      <id>sjkim</id>
+      <name>Soojin Kim</name>
+      <email>soojin.kim@pnu.edu</email>
+      <organization>Pusan National University</organization>
       <roles>
-        <role>Retired module Maintainer</role>
-        <role>Retired Java Developer</role>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
   </developers>

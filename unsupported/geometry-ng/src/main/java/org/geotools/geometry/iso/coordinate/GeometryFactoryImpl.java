@@ -28,7 +28,6 @@ import java.util.Set;
 import org.geotools.factory.Factory;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryFactoryFinder;
 import org.geotools.geometry.iso.aggregate.MultiPrimitiveImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.RingImpl;
@@ -38,6 +37,7 @@ import org.geotools.geometry.iso.util.Assert;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryFactoryFinder;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.geometry.MismatchedReferenceSystemException;
 import org.opengis.geometry.PositionFactory;
@@ -113,7 +113,7 @@ public class GeometryFactoryImpl implements Factory, GeometryFactory {
 			}
 		}
 		
-		this.positionFactory = GeometryFactoryFinder.getPositionFactory(hints);
+		this.positionFactory = ISOGeometryFactoryFinder.getPositionFactory(hints);
 		hintsWeCareAbout.put(Hints.CRS, crs );
 		hintsWeCareAbout.put(Hints.POSITION_FACTORY, positionFactory );
 	}

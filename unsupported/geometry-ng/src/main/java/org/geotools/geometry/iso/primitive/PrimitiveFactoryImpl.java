@@ -27,7 +27,6 @@ import java.util.Map;
 import org.geotools.factory.Factory;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.GeometryFactoryFinder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.LineSegmentImpl;
 import org.geotools.geometry.iso.coordinate.LineStringImpl;
@@ -38,6 +37,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryFactoryFinder;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.geometry.MismatchedReferenceSystemException;
 import org.opengis.geometry.PositionFactory;
@@ -105,7 +105,7 @@ public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFac
 			}
 		}
 		
-		this.positionFactory = GeometryFactoryFinder.getPositionFactory(hints);
+		this.positionFactory = ISOGeometryFactoryFinder.getPositionFactory(hints);
 		hintsWeCareAbout.put(Hints.CRS, crs );
 		hintsWeCareAbout.put(Hints.POSITION_FACTORY, positionFactory );
 		hintsWeCareAbout.put(Hints.GEOMETRY_VALIDATE, geomValidate );
@@ -122,7 +122,7 @@ public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFac
 		if (positionFactory == null) {
 			Hints hints = GeoTools.getDefaultHints();
 	        hints.put(Hints.CRS, crs );
-			this.positionFactory = GeometryFactoryFinder.getPositionFactory(hints);
+			this.positionFactory = ISOGeometryFactoryFinder.getPositionFactory(hints);
 		}
 		else {
 			this.positionFactory = positionFactory;

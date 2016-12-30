@@ -18,8 +18,8 @@ package org.geotools.feature;
 
 import java.util.Collection;
 
-import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.feature.simple.SimpleFeatureImpl;
+import org.geotools.feature.simple.ISOSimpleFeatureImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.opengis.feature.Association;
 import org.opengis.feature.Attribute;
 import org.opengis.feature.ComplexAttribute;
@@ -34,7 +34,7 @@ import org.opengis.feature.type.ComplexType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.FilterFactory2;
-import org.opengis.geometry.coordinate.GeometryFactory;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CRSFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -58,9 +58,10 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
     /**
      * Factory used to create geomtries
      */
-    GeometryFactory  geometryFactory;
+    ISOGeometryBuilder geometryBuilder;
     
-    FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(null);
+    //TODO use CommonFilterFactoryFinder
+    FilterFactory2 ff = new ISOFilterFactoryImpl();
     
     /**
      * Whether the features to be built should be self validating on construction and value setting, or not.
@@ -76,12 +77,12 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
         this.crsFactory = crsFactory;
     }
 
-    public GeometryFactory getGeometryFactory() {
-        return geometryFactory;
+    public ISOGeometryBuilder getGeometryBuilder() {
+        return geometryBuilder;
     }
 
-    public void setGeometryFactory(GeometryFactory geometryFactory) {
-        this.geometryFactory = geometryFactory;
+    public void setGeometryBuilder(ISOGeometryBuilder geometryBuilder) {
+        this.geometryBuilder = geometryBuilder;
     }
 
     public Association createAssociation(Attribute related, AssociationDescriptor descriptor) {
@@ -121,7 +122,7 @@ public class ISOFeatureFactoryImpl implements FeatureFactory {
         if( type.isAbstract() ){
             throw new IllegalArgumentException("Cannot create an feature of an abstract FeatureType "+type.getTypeName());
         }
-        return new SimpleFeatureImpl(array, type, ff.featureId(id), validating);
+        return new ISOSimpleFeatureImpl(array, type, ff.featureId(id), validating);
     }
 
     public SimpleFeature createSimpleFeautre(Object[] array,

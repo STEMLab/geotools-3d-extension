@@ -39,7 +39,7 @@ import org.geotools.data.FilteringFeatureReader;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ReTypeFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.Transaction;
 import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data3d.store.ContentState;
@@ -53,7 +53,7 @@ import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.NearestVisitor;
 import org.geotools.filter.FilterAttributeExtractor;
 import org.geotools.filter.visitor.PostPreProcessFilterSplittingVisitor;
-import org.geotools.filter.visitor.SimplifyingFilterVisitor;
+import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.iso.ColumnMetadata;
 import org.geotools.jdbc.iso.JDBCDataStore;
@@ -430,7 +430,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         NullHandlingVisitor nhv = new NullHandlingVisitor(source.getSchema());
         split[0] = (Filter) split[0].accept(nhv, null);
         
-        SimplifyingFilterVisitor visitor = new SimplifyingFilterVisitor();
+        ISOSimplifyingFilterVisitor visitor = new ISOSimplifyingFilterVisitor();
         visitor.setFIDValidator( new PrimaryKeyFIDValidator( featureSource ) );
         visitor.setFeatureType(getSchema());
         split[0] = (Filter) split[0].accept(visitor, null);
@@ -675,7 +675,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         if (postFilterRequired) {
             reader = new FilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
             if(!returnedSchema.equals(querySchema)) {
-                reader = new ReTypeFeatureReader(reader, returnedSchema);
+                reader = new ISOReTypeFeatureReader(reader, returnedSchema);
             }
 
             // offset

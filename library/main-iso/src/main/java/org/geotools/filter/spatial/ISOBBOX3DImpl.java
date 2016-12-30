@@ -17,13 +17,10 @@
  */
 package org.geotools.filter.spatial;
 
-import org.geotools.factory.GeoTools;
 import org.geotools.filter.IllegalFilterException;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.topograph2D.TopologyException;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.geotools.util.Util;
 import org.opengis.feature.simple.SimpleFeature;
@@ -34,6 +31,7 @@ import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BBOX3D;
 import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
@@ -51,7 +49,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * coordinates including a minimum and maximum for the z-axis.
  * 
  * @author Niels Charlier
- *
+ * @author Soojin Kim, Pusan National University
  */
 
 public class ISOBBOX3DImpl implements BBOX3D {
@@ -132,7 +130,7 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// LinearRing ring = null;
 		Curve curve = null;
 
-		GeometryBuilder gfac = new GeometryBuilder(envelope.getCoordinateReferenceSystem());
+		ISOGeometryBuilder gfac = new ISOGeometryBuilder(envelope.getCoordinateReferenceSystem());
 		try {
 			curve = gfac.createCurve(gfac.createPointArray(coords));// createLinearRing(coords);
 		} catch (TopologyException tex) {

@@ -22,11 +22,8 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Ring;
 
 
 /**
@@ -79,18 +76,16 @@ import com.vividsolutions.jts.geom.LinearRing;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class LinearRingTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
-    CoordinateSequenceFactory csFactory;
+	ISOGeometryBuilder gBuilder;
 
-    public LinearRingTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory) {
-        this.gFactory = gFactory;
-        this.csFactory = csFactory;
+    public LinearRingTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -107,7 +102,7 @@ public class LinearRingTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LinearRing.class;
+        return Ring.class;
     }
 
     public int getExecutionMode() {
@@ -122,13 +117,13 @@ public class LinearRingTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML3ParsingUtils.linearRing(node, gFactory, csFactory);
+        return GML3ParsingUtils.linearRing(node, gBuilder);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("posList".equals(name.getLocalPart())) {
-            return GML3EncodingUtils.positions((LineString) object);
+            return GML3EncodingUtils.positions((Ring) object);
         }
 
         return null;

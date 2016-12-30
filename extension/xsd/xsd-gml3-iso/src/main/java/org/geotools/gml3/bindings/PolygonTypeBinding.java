@@ -24,6 +24,10 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -56,16 +60,16 @@ import com.vividsolutions.jts.geom.Polygon;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class PolygonTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+	ISOGeometryBuilder gBuilder;
 
-    public PolygonTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public PolygonTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -86,7 +90,7 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
     /**
@@ -98,27 +102,30 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         //TODO: schema allows no exterior ring, but what the heck is that all about ?
-        LinearRing exterior = (LinearRing) node.getChildValue("exterior");
-        LinearRing[] interior = null;
+        Ring exterior = (Ring) node.getChildValue("exterior");
+        List<Ring> interiors = null;
 
         if (node.hasChild("interior")) {
             List list = node.getChildValues("interior");
-            interior = (LinearRing[]) list.toArray(new LinearRing[list.size()]);
+            interiors = list;
         }
 
-        return gFactory.createPolygon(exterior, interior);
+        SurfaceBoundary sb = gBuilder.createSurfaceBoundary(exterior, interiors);
+        return gBuilder.createSurface(sb);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        Polygon polygon = (Polygon) object;
-
+    	Surface polygon = (Surface) object;
+    	SurfaceBoundary sb = polygon.getBoundary();
+    	
         if ("exterior".equals(name.getLocalPart())) {
-            return polygon.getExteriorRing();
+            return sb.getExterior();
         }
 
         if ("interior".equals(name.getLocalPart())) {
-            int n = polygon.getNumInteriorRing();
+        	return sb.getInteriors();
+            /*int n = polygon.getNumInteriorRing();
 
             if (n > 0) {
                 LineString[] interior = new LineString[n];
@@ -128,7 +135,7 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
                 }
 
                 return interior;
-            }
+            }*/
         }
 
         return null;

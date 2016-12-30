@@ -18,7 +18,7 @@ package org.geotools.geometry.iso.primitive;
 
 import java.util.ArrayList;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
@@ -44,14 +44,14 @@ public class DisplayCurve {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 		
 		//this._testTriangle1(tGeomFactory);
 		_testRing1(builder);
 		
 	}
 
-	private static void _testRing1(GeometryBuilder builder) {
+	private static void _testRing1(ISOGeometryBuilder builder) {
 
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();

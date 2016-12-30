@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.geometry.iso.aggregate.AggregateFactoryImpl;
@@ -63,7 +63,7 @@ public class PicoCurveTest extends TestCase {
 	
 	public void testMain() {
 		
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		
 		this._testCurve(builder);
 		
@@ -117,7 +117,7 @@ public class PicoCurveTest extends TestCase {
 		return new CurveImpl( positionA.getCoordinateReferenceSystem(), segments );	
 	}
 	
-	private void _testCurve(GeometryBuilder builder) {
+	private void _testCurve(ISOGeometryBuilder builder) {
 		
 		GeometryFactoryImpl tCoordFactory = (GeometryFactoryImpl) builder.getGeometryFactory();
 		PrimitiveFactoryImpl tPrimFactory = (PrimitiveFactoryImpl) builder.getPrimitiveFactory();
@@ -363,7 +363,7 @@ public class PicoCurveTest extends TestCase {
 	
 	public void testCurveAgain() {
 
-		GeometryBuilder builder = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		PositionFactory posF = builder.getPositionFactory();
 		PrimitiveFactory primF = builder.getPrimitiveFactory();
 		GeometryFactory geomF = builder.getGeometryFactory();		

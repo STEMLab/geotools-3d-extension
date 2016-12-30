@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.Diff;
 import org.geotools.data.DiffFeatureReader;
 import org.geotools.data.FeatureListener;
@@ -40,22 +39,23 @@ import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.InProcessLockingManager;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ReTypeFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.crs.ForceCoordinateSystemFeatureReader;
 import org.geotools.data.crs.ReprojectFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.sort.SortedFeatureReader;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.function.Collection_AverageFunction;
 import org.geotools.filter.function.Collection_BoundsFunction;
 import org.geotools.filter.function.Collection_MaxFunction;
@@ -315,7 +315,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
         if ( query != null && query.getPropertyNames() != Query.ALL_NAMES) {
             synchronized ( this ) {
                 if ( schema == null ) {
-                    schema = SimpleFeatureTypeBuilder.retype(featureType, query.getPropertyNames() );
+                    schema = ISOSimpleFeatureTypeBuilder.retype(featureType, query.getPropertyNames() );
                 }
             }
             
@@ -391,7 +391,9 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
             
             // don't compute the bounds of the features that are modified or removed in the diff
             Iterator<String> i = diff.getModified().keySet().iterator();
-            FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+            
+            //TODO use commonfilterfactory finder
+            FilterFactory2 ff = new ISOFilterFactoryImpl();
             Set<FeatureId> modifiedFids = new HashSet<FeatureId>();
             while(i.hasNext()){
                 String featureId = i.next();
@@ -506,7 +508,8 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
                 
                 // consider removed features that satisfy the filter
                 it = diff.getModified().values().iterator();
-                FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+                //TODO use commonfilterfactory finder
+                FilterFactory2 ff = new ISOFilterFactoryImpl();
                 Set<FeatureId> modifiedFids = new HashSet<FeatureId>();
                 int modifiedPostCount = 0;
                 while(it.hasNext()){
@@ -653,7 +656,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
         // sorting
         if (query.getSortBy() != null && query.getSortBy().length != 0) {
             if (!canSort()) {
-                reader = new SortedFeatureReader(DataUtilities.simple(reader), query);
+                reader = new SortedFeatureReader(ISODataUtilities.simple(reader), query);
             }
         }
 
@@ -662,12 +665,12 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
             if ( query.getPropertyNames() != Query.ALL_NAMES ) {
                 //rebuild the type and wrap the reader
                 SimpleFeatureType target = 
-                    SimpleFeatureTypeBuilder.retype(reader.getFeatureType(), query.getPropertyNames());
+                    ISOSimpleFeatureTypeBuilder.retype(reader.getFeatureType(), query.getPropertyNames());
                 
                 // do an equals check because we may have needlessly retyped (that is,
                 // the subclass might be able to only partially retype)
                 if ( !target.equals( reader.getFeatureType() ) ) {
-                    reader = new ReTypeFeatureReader( reader, target, false );    
+                    reader = new ISOReTypeFeatureReader( reader, target, false );    
                 }
             }
         }
@@ -777,7 +780,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
     public void accepts( Query query, org.opengis.feature.FeatureVisitor visitor,
             org.opengis.util.ProgressListener progress) throws IOException {
         
-        query = DataUtilities.simplifyFilter(query);
+        query = ISODataUtilities.simplifyFilter(query);
         if( progress == null ) {
             progress = new NullProgressListener();
         }
@@ -963,7 +966,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
      * feature reader created by the subclass to be wrapped in a retyping feature
      * reader when the query specifies a retype.
      * </p>
-     * @see ReTypeFeatureReader
+     * @see ISOReTypeFeatureReader
      */
     protected boolean canRetype() {
         return false;
@@ -1121,7 +1124,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
      */
     protected Query joinQuery( Query query ) {
         // join the queries
-        return DataUtilities.mixQueries(this.query, query, null);
+        return ISODataUtilities.mixQueries(this.query, query, null);
     }
 
     /**
@@ -1133,12 +1136,12 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
      *</p>
      */
     protected Query resolvePropertyNames( Query query ) {
-        return DataUtilities.resolvePropertyNames(query, getSchema() );
+        return ISODataUtilities.resolvePropertyNames(query, getSchema() );
     }
     
     /** Transform provided filter; resolving property names */
     protected Filter resolvePropertyNames( Filter filter ) {
-        return DataUtilities.resolvePropertyNames(filter, getSchema() );
+        return ISODataUtilities.resolvePropertyNames(filter, getSchema() );
     }
     /**
      * Creates the feature type or schema for the feature source.

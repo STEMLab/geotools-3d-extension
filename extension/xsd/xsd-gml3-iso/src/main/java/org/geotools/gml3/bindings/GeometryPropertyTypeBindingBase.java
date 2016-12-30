@@ -4,19 +4,18 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.gml2.bindings.GML2EncodingUtils;
+import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 /**
  * 
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  * @source $URL$
  */
 public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBinding {
@@ -54,18 +53,26 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
      *      org.w3c.dom.Element)
      */
     @Override
-    public Element encode(Object object, Document document, Element value) throws Exception {
-        checkExistingId((Geometry) object);
+    public Element encode(Object object, Document document, Element value) throws Exception { 
+        // It is necessary to check whether object is instance of JTS or ISO
+        //checkExistingId((Geometry) object);
+        checkExistingId(object);
         return value;
     }
 
     public Object getProperty(Object object, QName name) throws Exception {
-
-        return encodingUtils.GeometryPropertyType_GetProperty((Geometry) object, name, makeEmpty);
+        // TODO: Move implementation to GML3EncodingUtils
+        if (object instanceof Geometry) {
+            return encodingUtils.GeometryPropertyType_GetProperty((Geometry) object, name, makeEmpty);
+        }
+        return null;
     }
 
     public List getProperties(Object object) throws Exception {
-        return encodingUtils.GeometryPropertyType_GetProperties((Geometry) object);
+        if (object instanceof Geometry) {
+            return encodingUtils.GeometryPropertyType_GetProperties((Geometry) object);
+        }
+        return null;
     }
 
     /**
@@ -91,6 +98,25 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
             }
         }
         return;
+    }
+    
+    private void checkExistingId(Object geom) {
+        if (geom instanceof Geometry) {
+            checkExistingId((Geometry) geom);
+        } else if (geom instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            if (geom != null) {
+                String id = GML3EncodingUtils.getID(geom);
+
+                if (id != null && idSet.idExists(id)) {
+                    // make geometry empty, href will added by getproperty
+                    makeEmpty = true;
+
+                } else if (id != null) {
+
+                    idSet.add(id);
+                }
+            }
+        }
     }
 
 }

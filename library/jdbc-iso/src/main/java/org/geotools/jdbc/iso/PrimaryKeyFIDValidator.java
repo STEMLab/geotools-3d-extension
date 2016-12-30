@@ -16,7 +16,7 @@
  */
 package org.geotools.jdbc.iso;
 
-import org.geotools.filter.visitor.SimplifyingFilterVisitor.FIDValidator;
+import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor.FIDValidator;
 
 /**
  * Fid validator which validates with respect to a primary key.

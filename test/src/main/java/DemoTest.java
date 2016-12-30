@@ -23,7 +23,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -36,37 +35,28 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.csv.CSVDataStoreFactory;
+import org.geotools.data.csv.iso.CSVDataStoreFactory;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
-import org.geotools.data.memory.MemoryFeatureCollection;
-import org.geotools.data.memory.MemoryFeatureSource;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
-import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.store.ContentFeatureSource;
-import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
-import org.geotools.geometry.DirectPosition3D;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.ReferencedEnvelope3D;
-import org.geotools.gml2.GMLConfiguration;
+//import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
@@ -79,12 +69,10 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Expression;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -108,13 +96,16 @@ public class DemoTest extends JFrame{
 	private JTextField text;
 	private static Hints hints = null;
 
-	private static GeometryBuilder builder;
+
+	private static ISOGeometryBuilder builder;
 	/*public static void main(String[] args) throws Exception {
+	private static ISOGeometryBuilder builder;
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		builder = new GeometryBuilder(h);
+		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
 	}*/
@@ -177,11 +168,11 @@ public class DemoTest extends JFrame{
 				memorycollection();
 			}
 		});
-		fileMenu.add(new SafeAction("gmlToGeometry...") {
+		/*fileMenu.add(new SafeAction("gmlToGeometry...") {
 			public void action(ActionEvent e) throws Throwable {
 				gmlToGeometry();
 			}
-		});
+		});*/
 
 		fileMenu.addSeparator();
 		fileMenu.add(new SafeAction("Exit") {
@@ -210,7 +201,7 @@ public class DemoTest extends JFrame{
 			}
 		});
 	}
-	public ArrayList<Solid> getSolids(GeometryBuilder builder) {
+	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
 		ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
 
@@ -220,7 +211,7 @@ public class DemoTest extends JFrame{
 
 		return solids;
 	}
-	public Solid makeSolid(GeometryBuilder builder, ArrayList<DirectPosition> points) {
+	public Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPosition> points) {
 		DirectPosition position1 = points.get(0);
 		DirectPosition position2 = points.get(1);
 		DirectPosition position3 = points.get(2);
@@ -358,7 +349,7 @@ public class DemoTest extends JFrame{
 
 		return solid;
 	}
-	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(GeometryBuilder builder) {
+	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
 		ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
 		DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 });
@@ -626,7 +617,7 @@ public class DemoTest extends JFrame{
 		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		hints.put(Hints.GEOMETRY_VALIDATE, false);
 		
-		builder = new GeometryBuilder(hints);
+		builder = new ISOGeometryBuilder(hints);
 		ArrayList<Solid> al = getSolids(builder);
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 
@@ -680,7 +671,7 @@ public class DemoTest extends JFrame{
 		} 
 
 	}
-	private void gmlToGeometry() {
+	/*private void gmlToGeometry() {
 		/*GMLConfiguration configuration = new GMLConfiguration();
 		InputStream input = getClass().getResourceAsStream("geometry.xml");
         String xpath = "/pointMember | /lineStringMember | /polygonMember";
@@ -690,7 +681,7 @@ public class DemoTest extends JFrame{
         Object o = parser.parse();//point
         o = parser.parse();//linestring
         o = parser.parse();//polygon
-        */
+        
 		try {
 			File initialFile = new File("feature.xml");
 		    InputStream in = new FileInputStream(initialFile);
@@ -717,7 +708,7 @@ public class DemoTest extends JFrame{
 	        in.close();
 	        in = new FileInputStream(schemaFile);
 			
-	        GMLConfiguration configuration = new GMLConfiguration();
+	        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
 	        configuration.getProperties().add(Parser.Properties.IGNORE_SCHEMA_LOCATION);
 	        configuration.getProperties().add(Parser.Properties.PARSE_UNKNOWN_ELEMENTS);
 	
@@ -730,7 +721,7 @@ public class DemoTest extends JFrame{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	private void constainsfilter() {
 		String typeName = "Flag";
 		SimpleFeatureSource source;
@@ -744,7 +735,7 @@ public class DemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-   			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
    		    Filter filter = ff.within("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });

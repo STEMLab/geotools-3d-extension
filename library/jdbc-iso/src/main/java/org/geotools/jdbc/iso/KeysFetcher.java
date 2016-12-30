@@ -16,6 +16,7 @@
  */
 package org.geotools.jdbc.iso;
 
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -385,7 +386,7 @@ abstract class KeysFetcher {
 
         @Override
         public Object getNext(Connection cx) {
-            return SimpleFeatureBuilder.createDefaultFeatureId();
+            return ISOSimpleFeatureBuilder.createDefaultFeatureId();
         }
     }
 

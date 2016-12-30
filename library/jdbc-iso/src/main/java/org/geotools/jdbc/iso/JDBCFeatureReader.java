@@ -39,23 +39,12 @@ import org.geotools.data.Transaction;
 import org.geotools.factory.Hints;
 import org.geotools.feature.GeometryAttributeImpl;
 import org.geotools.feature.IllegalAttributeException;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.filter.identity.FeatureIdImpl;
-import org.geotools.geometry.GeometryBuilder;
-import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
-import org.geotools.geometry.jts.CurvedGeometryFactory;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.ReferencedEnvelope3D;
-import org.geotools.jdbc.iso.BasicSQLDialect;
-import org.geotools.jdbc.iso.JDBCDataStore;
-import org.geotools.jdbc.iso.JDBCFeatureReader;
-import org.geotools.jdbc.iso.JDBCFeatureSource;
-import org.geotools.jdbc.iso.PreparedStatementSQLDialect;
-import org.geotools.jdbc.iso.PrimaryKey;
-import org.geotools.jdbc.iso.PrimaryKeyColumn;
 import org.geotools.util.Converters;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.FeatureFactory;
@@ -69,11 +58,7 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.GeometryFactory;
-
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.geom.GeometryFactory;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /**
  * Reader for jdbc datastore
@@ -109,7 +94,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * geometry factory used to create geometry objects
      */
-    protected GeometryBuilder geometryFactory;
+    protected ISOGeometryBuilder geometryFactory;
     /**
      * hints
      */
@@ -125,7 +110,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * feature builder
      */
-    protected SimpleFeatureBuilder builder;
+    protected ISOSimpleFeatureBuilder builder;
     /**
      * The primary key    
      */
@@ -216,7 +201,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryFactory = (GeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
+        geometryFactory = (ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
         /*if (geometryFactory == null) {
             // look for a coordinate sequence factory
             CoordinateSequenceFactory csFactory = 
@@ -242,7 +227,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         FeatureFactory ff = (FeatureFactory) hints.get(Hints.FEATURE_FACTORY);
         if(ff == null)
             ff = featureSource.getDataStore().getFeatureFactory();
-        builder = new SimpleFeatureBuilder(featureType, ff);
+        builder = new ISOSimpleFeatureBuilder(featureType, ff);
         
         // find the primary key
         try {
@@ -587,7 +572,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
                 dirty[i] = false;
             }
 
-            this.fid = SimpleFeatureBuilder.createDefaultFeatureIdentifier(fid);
+            this.fid = ISOSimpleFeatureBuilder.createDefaultFeatureIdentifier(fid);
         }
 
         public void init() throws SQLException, IOException {

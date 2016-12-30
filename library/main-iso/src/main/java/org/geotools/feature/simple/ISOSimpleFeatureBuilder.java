@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.geotools.data.ISODataUtilities;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureBuilder;
+import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.type.Types;
 import org.opengis.feature.Feature;
 import org.opengis.feature.FeatureFactory;
@@ -155,7 +155,8 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
     boolean validating;
     
     public ISOSimpleFeatureBuilder(SimpleFeatureType featureType) {
-        this(featureType, CommonFactoryFinder.getFeatureFactory(null));
+    	//TODO use FeatureFactoryFinder
+        this(featureType, new ISOFeatureFactoryImpl());
     }
     
     public ISOSimpleFeatureBuilder(SimpleFeatureType featureType, FeatureFactory factory) {
@@ -197,8 +198,8 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
         reset();
         
         // optimize the case in which we just build
-        if(feature instanceof SimpleFeatureImpl) {
-            SimpleFeatureImpl impl = (SimpleFeatureImpl) feature;
+        if(feature instanceof ISOSimpleFeatureImpl) {
+        	ISOSimpleFeatureImpl impl = (ISOSimpleFeatureImpl) feature;
             System.arraycopy(impl.values, 0, values, 0, impl.values.length);
 
             if (impl.userData != null) {
@@ -344,7 +345,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
     public SimpleFeature buildFeature(String id) {
         // ensure id
         if (id == null) {
-            id = SimpleFeatureBuilder.createDefaultFeatureId();
+            id = ISOSimpleFeatureBuilder.createDefaultFeatureId();
         }
 
         Object[] values = this.values;
@@ -396,7 +397,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
      * @param id FeatureID for the generated feature, use null to allow one to be supplied for you
      */
     public static SimpleFeature build( SimpleFeatureType type, Object[] values, String id ) {
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(type);
+    	ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(type);
         builder.addAll(values);
         return builder.buildFeature(id);
     }
@@ -429,7 +430,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
     public static SimpleFeature copy(SimpleFeature original) {
         if( original == null ) return null;
         
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(original.getFeatureType());
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(original.getFeatureType());
         builder.init(original); // this is a shallow copy
         return builder.buildFeature(original.getID());
     }
@@ -448,7 +449,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
         if (original == null)
             return null;
 
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(original.getFeatureType());
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(original.getFeatureType());
         for (Property property : original.getProperties()) {
             Object value = property.getValue();
             try {
@@ -473,7 +474,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
      * @return
      */
     public static SimpleFeature template(SimpleFeatureType featureType, String featureId) {
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
+    	ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         for (AttributeDescriptor ad : featureType.getAttributeDescriptors()) {
             builder.add(ad.getDefaultValue());
         }
@@ -486,7 +487,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
      * create its own SimpleFeatureBuilder, which will trigger a scan of the SPI looking for 
      * the current default feature factory, which is expensive and has scalability issues.<p>  
      * If you need good performance consider using 
-     * {@link SimpleFeatureBuilder#retype(SimpleFeature, SimpleFeatureBuilder)} instead.
+     * {@link ISOSimpleFeatureBuilder#retype(SimpleFeature, ISOSimpleFeatureBuilder)} instead.
      * <p>
      * If the feature type contains attributes in which the original feature 
      * does not have a value for, the value in the resulting feature is set to
@@ -498,7 +499,7 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
      * @return The copied feature, with a new type.
      */
     public static SimpleFeature retype(SimpleFeature feature, SimpleFeatureType featureType) {
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(featureType);
+    	ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(featureType);
         for (AttributeDescriptor att : featureType.getAttributeDescriptors()) {
             Object value = feature.getAttribute( att.getName() );
             builder.set(att.getName(), value);
@@ -514,12 +515,12 @@ public class ISOSimpleFeatureBuilder extends FeatureBuilder<FeatureType, Feature
      * <code>null</code>.
      * </p>
      * @param feature The original feature.
-     * @param SimpleFeatureBuilder A builder for the target feature type
+     * @param ISOSimpleFeatureBuilder A builder for the target feature type
      *  
      * @return The copied feature, with a new type.
      * @since 2.5.3
      */
-    public static SimpleFeature retype(SimpleFeature feature, SimpleFeatureBuilder builder) {
+    public static SimpleFeature retype(SimpleFeature feature, ISOSimpleFeatureBuilder builder) {
         builder.reset();
         for (AttributeDescriptor att : builder.getFeatureType().getAttributeDescriptors()) {
             Object value = feature.getAttribute( att.getName() );

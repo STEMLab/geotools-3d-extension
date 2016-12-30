@@ -27,7 +27,7 @@ import org.opengis.geometry.Geometry;;
 
 /**
  * 
- *
+ * @author Soojin Kim, Pusan National University
  * @source $URL$
  */
 public class ISOWithinImpl extends ISOAbstractPreparedGeometryFilter implements Within {

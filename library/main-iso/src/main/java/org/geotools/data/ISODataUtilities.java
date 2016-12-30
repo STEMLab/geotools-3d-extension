@@ -61,7 +61,6 @@ import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.data.view.DefaultView;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.AttributeImpl;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -74,17 +73,17 @@ import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
 import org.geotools.feature.type.GeometryTypeImpl;
-import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
-import org.geotools.filter.visitor.SimplifyingFilterVisitor;
-import org.geotools.geometry.GeometryBuilder;
+import org.geotools.filter.ISOFilterFactoryImpl;
+import org.geotools.filter.visitor.ISOPropertyNameResolvingVisitor;
+import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -118,6 +117,7 @@ import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiSurface;
@@ -182,7 +182,7 @@ import org.opengis.util.ProgressListener;
  * </ul>
  * 
  * @author Jody Garnett, Refractions Research
- * 
+ * @author Hyung-Gyu Ryoo, Pusan National University
  * 
  * @source $URL$ http://svn.osgeo.org/geotools/trunk/modules/library/main/src/main/java/org/geotools/ data/DataUtilities.java $
  */
@@ -193,7 +193,7 @@ public class ISODataUtilities {
     /** Reverse type map used by {@link #encodeType(FeatureType)} */
     static Map<Class, String> typeEncode = new HashMap<Class, String>();
 
-    static FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+    static FilterFactory2 ff = new ISOFilterFactoryImpl();
     
     static final boolean IS_WINDOWS_OS;
 
@@ -547,7 +547,7 @@ public class ISODataUtilities {
 
         if (src instanceof SimpleFeature) {
             SimpleFeature feature = (SimpleFeature) src;
-            return SimpleFeatureBuilder.copy(feature);
+            return ISOSimpleFeatureBuilder.copy(feature);
         }
 
         //
@@ -625,7 +625,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeature template(SimpleFeatureType featureType)
             throws IllegalAttributeException {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType), null);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType), null);
     }
 
     /**
@@ -639,7 +639,7 @@ public class ISODataUtilities {
      * @return Craeted feature
      */
     public static SimpleFeature template(SimpleFeatureType featureType, String featureID) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType), featureID);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType), featureID);
     }
 
     /**
@@ -662,7 +662,7 @@ public class ISODataUtilities {
      * @throws ArrayIndexOutOfBoundsException  If the number of provided values does not match the featureType
      */
     public static SimpleFeature template(SimpleFeatureType featureType, Object[] providedValues) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), null);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), null);
     }
 
     /**
@@ -679,7 +679,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeature template(SimpleFeatureType featureType, String featureID,
             Object[] providedValues) {
-        return SimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), featureID);
+        return ISOSimpleFeatureBuilder.build(featureType, defaultValues(featureType, providedValues), featureID);
     }
 
     /**
@@ -797,16 +797,20 @@ public class ISODataUtilities {
         if (type == java.util.Date.class)
             return new java.util.Date(0);
 
-        GeometryBuilder fac = new GeometryBuilder(DefaultGeographicCRS.WGS84);
-        DirectPosition ds = fac.createDirectPosition();
-
-        //TODO : set the default value of ISO Geometry
-        Point point = fac.createPoint(ds);
-        if (type == Point.class) {
-            return point;
-        }
-        if (type == MultiPoint.class) {
-            return fac.createMultiPoint(new HashSet(Arrays.asList(new Point[] {point})));
+        if(type.isAssignableFrom(Geometry.class)) {
+	        ISOGeometryBuilder fac = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+	        DirectPosition ds = fac.createDirectPosition();
+	        
+	        //TODO : set the default value of ISO Geometry
+	        Point point = fac.createPoint(ds);
+	        if (type == Point.class) {
+	            return point;
+	        }
+	        if (type == MultiPoint.class) {
+	            return fac.createMultiPoint(new HashSet(Arrays.asList(new Point[] {point})));
+	        }
+	        
+	        throw new UnsupportedOperationException("default values of ISO Geometry are not fully implemented");
         }
         
 
@@ -1260,7 +1264,7 @@ public class ISODataUtilities {
                 simpleFeatureType = ISODataUtilities.createSubType((SimpleFeatureType) featureType,
                         properties);
             } else {
-                SimpleFeatureTypeBuilder build = new SimpleFeatureTypeBuilder();
+            	ISOSimpleFeatureTypeBuilder build = new ISOSimpleFeatureTypeBuilder();
                 build.setName(featureType.getName());
                 build.setAttributes(simpleAttributes);
                 build.setDefaultGeometry(featureType.getGeometryDescriptor().getLocalName());
@@ -1614,7 +1618,7 @@ public class ISODataUtilities {
                 throw new RuntimeException(e);
             }
 
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName(typeName);
         tb.setNamespaceURI(namespace);
         tb.setCRS(null); // not interested in warnings from this simple method
@@ -1653,7 +1657,7 @@ public class ISODataUtilities {
             return featureType;
         }
 
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName(featureType.getName());
         tb.setCRS(null); // not interested in warnings from this simple method
         for (int i = 0; i < properties.length; i++) {
@@ -1663,7 +1667,7 @@ public class ISODataUtilities {
         return tb.buildFeatureType();
     }
 
-    private static void setDefaultGeometry(SimpleFeatureTypeBuilder typeBuilder, String[] properties,
+    private static void setDefaultGeometry(ISOSimpleFeatureTypeBuilder typeBuilder, String[] properties,
             SimpleFeatureType featureType) {
         GeometryDescriptor geometryDescriptor = featureType.getGeometryDescriptor();
         if (geometryDescriptor != null) {
@@ -1745,7 +1749,7 @@ public class ISODataUtilities {
      */
     public static SimpleFeatureType createType(String namespace, String name, String typeSpec)
             throws SchemaException {
-        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+    	ISOSimpleFeatureTypeBuilder builder = new ISOSimpleFeatureTypeBuilder();
         builder.setName(name);
         builder.setNamespaceURI(namespace);
 
@@ -1891,7 +1895,7 @@ public class ISODataUtilities {
      * <li>
      * <li>Encoding of <i>FeatureId</i> followed by the attributes</li>
      * <li>Attributes are seperated using the bar character</li>
-     * <li>Geometry is handled using {@link WKTReader2}</li>
+     * <li>Geometry is handled using {@link WKTReader}</li>
      * <li>Support for common escaped characters</li>
      * <li>Multi-line support using escaped line-feed characters</li>
      * <ul>
@@ -1918,7 +1922,7 @@ public class ISODataUtilities {
             Object value = createValue( descriptor, text[i] );
             values[i] = value;
         }
-        SimpleFeature feature = SimpleFeatureBuilder.build( featureType, values, fid );
+        SimpleFeature feature = ISOSimpleFeatureBuilder.build( featureType, values, fid );
         
         return feature;
     }
@@ -2088,7 +2092,7 @@ public class ISODataUtilities {
             AttributeType attType = type.getDescriptor(i).getType();
             attributes[i] = Converters.convert(text[i], attType.getBinding());
         }
-        return SimpleFeatureBuilder.build(type, attributes, fid);
+        return ISOSimpleFeatureBuilder.build(type, attributes, fid);
     }
 
     //
@@ -2294,7 +2298,7 @@ public class ISODataUtilities {
         } else if ((filter2 != null) && !filter2.equals(Filter.INCLUDE)) {
             filter = ff.and(filter, filter2);
         }
-        filter = SimplifyingFilterVisitor.simplify(filter);
+        filter = ISOSimplifyingFilterVisitor.simplify(filter);
         Integer start = 0;
         if (firstQuery.getStartIndex() != null) {
             start = firstQuery.getStartIndex();
@@ -2330,7 +2334,7 @@ public class ISODataUtilities {
         if (query == null) {
             return query;
         }
-        Filter filter = SimplifyingFilterVisitor.simplify(query.getFilter());
+        Filter filter = ISOSimplifyingFilterVisitor.simplify(query.getFilter());
         query.setFilter(filter);
         return query;
     }
@@ -2359,7 +2363,7 @@ public class ISODataUtilities {
         if (filter == null || filter == Filter.INCLUDE || filter == Filter.EXCLUDE) {
             return filter;
         }
-        return (Filter) filter.accept(new PropertyNameResolvingVisitor(schema), null);
+        return (Filter) filter.accept(new ISOPropertyNameResolvingVisitor(schema), null);
     }
 
     /**
@@ -2612,7 +2616,7 @@ public class ISODataUtilities {
         try {
             // Implementation taken from DefaultFeatureCollection implementation - thanks IanS
             CoordinateReferenceSystem crs = collection.getSchema().getCoordinateReferenceSystem();
-            ReferencedEnvelope bounds = new ReferencedEnvelope(crs);
+            ReferencedEnvelope bounds = ReferencedEnvelope.create(crs);
 
             while (i.hasNext()) {
                 Feature feature = i.next();
@@ -2959,7 +2963,7 @@ public class ISODataUtilities {
     		}                
         }
     	
-    	return ff.createFeature(value, (FeatureType)  schema, SimpleFeatureBuilder.createDefaultFeatureId());    		
+    	return ff.createFeature(value, (FeatureType)  schema, ISOSimpleFeatureBuilder.createDefaultFeatureId());    		
     }
 
 }

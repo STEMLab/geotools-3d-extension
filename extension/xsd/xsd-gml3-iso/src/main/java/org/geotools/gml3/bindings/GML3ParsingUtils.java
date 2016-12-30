@@ -16,14 +16,17 @@
  */
 package org.geotools.gml3.bindings;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CurvedGeometries;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
-import org.geotools.gml2.FeatureTypeCache;
-import org.geotools.gml2.bindings.GML2ParsingUtils;
+import org.geotools.gml2.iso.FeatureTypeCache;
+import org.geotools.gml2.iso.bindings.GML2ParsingUtils;
 import org.geotools.gml3.ArcParameters;
 import org.geotools.gml3.Circle;
 import org.geotools.xml.BindingWalkerFactory;
@@ -32,15 +35,13 @@ import org.geotools.xml.Node;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Utility class for gml3 parsing.
@@ -95,9 +96,7 @@ public class GML3ParsingUtils {
     /**
      * Returns the number of dimensions for the specified node, eventually recursing up to find the
      * parent node that has the indication of the dimensions (normally the top-most geometry element
-     * has it, not the posList). If no srsDimension can be found, check the srsName the same way
-     * and return the srsDimensions instead.
-     * Returns 2 if no srsDimension or srsName attribute could be found.
+     * has it, not the posList). Returns 2 if no srsDimension attribute could be found.
      * 
      * @param node
      * @return
@@ -111,27 +110,102 @@ public class GML3ParsingUtils {
             }
             current = current.getParent();
         }
-        current = node;
-        while (current != null) {
-            CoordinateReferenceSystem crs = crs(current);
-            if (crs != null) {
-                return crs.getCoordinateSystem().getDimension();
-            }
-            current = current.getParent();
-        }
 
         return 2;
     }
-
-    static LineString lineString(Node node, GeometryFactory gf, CoordinateSequenceFactory csf) {
-        return line(node, gf, csf, false);
+    
+    public static String id(Node node) {
+        Object id = getAttributeValue(node, "id");
+        if (id != null) {
+            return (String) id;
+        }
+        
+        return null;
+    }
+    
+    public static String name(Node node) {
+        Object name = getAttributeValue(node, "name");
+        if (name != null) {
+            return (String) name;
+        }
+        
+        return null;
+    }
+    
+    public static String description(Node node) {
+        Object description = getAttributeValue(node, "description");
+        if (description != null) {
+            return (String) description;
+        }
+        
+        return null;
+    }
+    
+    public static Object getAttributeValue(Node node, String name) {
+        Node attribute = node.getAttribute(name);
+        if (attribute != null) {
+            return attribute.getValue();
+        }
+        
+        return null;
+    }
+    
+    public static void setCRS(Object g, CoordinateReferenceSystem crs) {
+        if (g instanceof com.vividsolutions.jts.geom.Geometry) {
+            com.vividsolutions.jts.geom.Geometry geometry = (com.vividsolutions.jts.geom.Geometry) g;
+            
+            if (geometry.getUserData() == null) {
+                geometry.setUserData(new HashMap<Object, Object>());
+            }
+            if (geometry.getUserData() instanceof Map) {
+                ((Map) geometry.getUserData()).put(CoordinateReferenceSystem.class, crs);
+            }
+        }
+    }
+    
+    public static void setID(Object g, String id) {
+        setMetaData(g, "gml:id", id);
+    }
+    
+    public static void setName(Object g, String name) {
+        setMetaData(g, "gml:name", name);
+    }
+    
+    public static void setDescription(Object g, String description) {
+        setMetaData(g, "gml:description", description);
+    }
+    
+    public static void setMetaData(Object g, String metadata, String value) {
+        if (g instanceof com.vividsolutions.jts.geom.Geometry) {
+            com.vividsolutions.jts.geom.Geometry geometry = (com.vividsolutions.jts.geom.Geometry) g;
+            if (geometry.getUserData() == null) {
+                geometry.setUserData(new HashMap<Object, Object>());
+            }
+            if (geometry.getUserData() instanceof Map) {
+                ((Map) geometry.getUserData()).put(metadata, value);
+            }
+        } else if (g instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+            org.geotools.geometry.iso.root.GeometryImpl geometry = (org.geotools.geometry.iso.root.GeometryImpl) g;
+            if (geometry.getUserData() == null) {
+                geometry.setUserData(new HashMap<Object, Object>());
+            }
+            if (geometry.getUserData() instanceof Map) {
+                ((Map) geometry.getUserData()).put(metadata, value);
+            }
+        }
     }
 
-    static LinearRing linearRing(Node node, GeometryFactory gf, CoordinateSequenceFactory csf) {
-        return (LinearRing) line(node, gf, csf, true);
+    static Curve lineString(Node node, ISOGeometryBuilder gb) {
+        return line(node, gb, false);
     }
 
-    static LineString line(Node node, GeometryFactory gf, CoordinateSequenceFactory csf,
+    static Ring linearRing(Node node, ISOGeometryBuilder gb) {
+    	Curve curve = line(node, gf, true);
+    	//TODO
+        return (Ring) line(node, gf, csf, true);
+    }
+
+    static OrientableCurve line(Node node, ISOGeometryBuilder gb,
             boolean ring) {
         if (node.hasChild(DirectPosition.class)) {
             List dps = node.getChildValues(DirectPosition.class);
@@ -147,7 +221,7 @@ public class GML3ParsingUtils {
                 }
             }
 
-            return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
+            return ring ? gb.createring : gf.createLineString(seq);
         }
 
         if (node.hasChild(Point.class)) {
@@ -157,13 +231,6 @@ public class GML3ParsingUtils {
             for (int i = 0; i < points.size(); i++) {
                 coordinates[i] = ((Point) points.get(0)).getCoordinate();
             }
-
-            return ring ? gf.createLinearRing(coordinates) : gf.createLineString(coordinates);
-        }
-
-        if (node.hasChild(Coordinate.class)) {
-            List list = node.getChildValues(Coordinate.class);
-            Coordinate[] coordinates = (Coordinate[]) list.toArray(new Coordinate[list.size()]);
 
             return ring ? gf.createLinearRing(coordinates) : gf.createLineString(coordinates);
         }
@@ -190,7 +257,7 @@ public class GML3ParsingUtils {
             return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
         }
 
-        if (node.hasChild(CoordinateSequence.class)) {
+        if (node.hasChild(PointArray.class)) {
             CoordinateSequence seq = (CoordinateSequence) node
                     .getChildValue(CoordinateSequence.class);
 

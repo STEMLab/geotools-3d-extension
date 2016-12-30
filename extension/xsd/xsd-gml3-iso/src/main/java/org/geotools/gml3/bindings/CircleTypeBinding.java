@@ -22,6 +22,7 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
@@ -39,13 +40,11 @@ import org.geotools.gml3.Circle;
  * @source $URL$
  */
 public class CircleTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
-    CoordinateSequenceFactory csFactory;
+    ISOGeometryBuilder gBuilder;
     ArcParameters arcParameters;
 
-    public CircleTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory, ArcParameters arcParameters) {
-        this.gFactory = gFactory;
-        this.csFactory = csFactory;
+    public CircleTypeBinding(ISOGeometryBuilder gBuilder, ArcParameters arcParameters) {
+        this.gBuilder = gBuilder;
         this.arcParameters = arcParameters;
     }
 
@@ -81,7 +80,7 @@ public class CircleTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
 
-        LineString circleLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
+        /*LineString circleLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
 
         Coordinate[] circleCoordinates = circleLineString.getCoordinates();
         if (circleCoordinates.length != 3) {
@@ -99,8 +98,9 @@ public class CircleTypeBinding extends AbstractComplexBinding {
         Coordinate[] resultCoordinates = Circle.linearizeCircle(c1, c2, c3, tolerance);
 
         LineString resultLineString = gFactory.createLineString(resultCoordinates);
-
-        return resultLineString;
+*/
+        //return resultLineString;
+        return null;
     }
 
 }

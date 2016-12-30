@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -34,8 +35,8 @@ import com.vividsolutions.jts.geom.LineString;
 public class MultiCurveTypeBinding extends org.geotools.gml3.bindings.MultiCurveTypeBinding
     implements Comparable {
     
-    public MultiCurveTypeBinding(GeometryFactory gf) {
-        super(gf);
+    public MultiCurveTypeBinding(ISOGeometryBuilder gb) {
+        super(gb);
     }
 
     public Object parse(ElementInstance instance, Node node, Object value)
@@ -63,7 +64,8 @@ public class MultiCurveTypeBinding extends org.geotools.gml3.bindings.MultiCurve
             }
         }
 
-        return gf.createMultiLineString(GeometryFactory.toLineStringArray(lineStrings));
+        //return gf.createMultiLineString(GeometryFactory.toLineStringArray(lineStrings));
+        return null;
     }
 
     public int compareTo(Object o) {

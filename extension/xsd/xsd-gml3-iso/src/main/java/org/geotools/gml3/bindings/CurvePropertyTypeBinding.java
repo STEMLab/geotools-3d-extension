@@ -17,10 +17,11 @@
 package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
+
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Curve;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:CurvePropertyType.
@@ -77,7 +78,7 @@ public class CurvePropertyTypeBinding extends GeometryPropertyTypeBindingBase {
     }
 
     public Class<? extends Geometry> getGeometryType() {
-        return LineString.class;
+        return Curve.class;
     }
 
 }

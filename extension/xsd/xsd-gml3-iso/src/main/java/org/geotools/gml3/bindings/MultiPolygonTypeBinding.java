@@ -24,10 +24,9 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Surface;
 
 
 /**
@@ -60,10 +59,10 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class MultiPolygonTypeBinding extends AbstractComplexBinding implements Comparable {
-    GeometryFactory gFactory;
+    ISOGeometryBuilder gBuilder;
 
-    public MultiPolygonTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public MultiPolygonTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -84,7 +83,7 @@ public class MultiPolygonTypeBinding extends AbstractComplexBinding implements C
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     /**
@@ -95,14 +94,15 @@ public class MultiPolygonTypeBinding extends AbstractComplexBinding implements C
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        List polys = node.getChildValues(Polygon.class);
+        List polys = node.getChildValues(Surface.class);
 
-        return gFactory.createMultiPolygon((Polygon[]) polys.toArray(new Polygon[polys.size()]));
+        //return gFactory.createMultiPolygon((Polygon[]) polys.toArray(new Polygon[polys.size()]));
+        return null;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        if (GML.polygonMember.equals(name)) {
+        /*if (GML.polygonMember.equals(name)) {
             MultiPolygon multiPolygon = (MultiPolygon) object;
             Polygon[] members = new Polygon[multiPolygon.getNumGeometries()];
 
@@ -113,7 +113,7 @@ public class MultiPolygonTypeBinding extends AbstractComplexBinding implements C
             GML3EncodingUtils.setChildIDs(multiPolygon);
 
             return members;
-        }
+        }*/
 
         return null;
     }

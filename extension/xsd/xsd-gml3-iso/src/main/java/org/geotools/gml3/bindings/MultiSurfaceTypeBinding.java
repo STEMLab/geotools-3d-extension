@@ -25,11 +25,9 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiSurfaceType.
@@ -66,10 +64,10 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class MultiSurfaceTypeBinding extends AbstractComplexBinding {
-    protected GeometryFactory gf;
+    ISOGeometryBuilder gBuilder;
 
-    public MultiSurfaceTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    public MultiSurfaceTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -86,7 +84,7 @@ public class MultiSurfaceTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     public int getExecutionMode() {
@@ -103,19 +101,20 @@ public class MultiSurfaceTypeBinding extends AbstractComplexBinding {
         throws Exception {
         
         //&lt;element maxOccurs="unbounded" minOccurs="0" ref="gml:surfaceMember"/&gt;
-        List surfaces = node.getChildValues(Polygon.class);
+        List surfaces = node.getChildValues(Surface.class);
         
         //&lt;element minOccurs="0" ref="gml:surfaceMembers"/&gt;
-        if (node.hasChild(Polygon[].class)) {
-            surfaces.addAll(Arrays.asList((Polygon[])node.getChildValue(Polygon[].class)));
+        if (node.hasChild(Surface[].class)) {
+            surfaces.addAll(Arrays.asList((Surface[])node.getChildValue(Surface[].class)));
         }
         
-        return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));
+        //return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));
+        return null;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        if ("surfaceMember".equals(name.getLocalPart())) {
+        /*if ("surfaceMember".equals(name.getLocalPart())) {
             MultiPolygon multiSurface = (MultiPolygon) object;
             Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
 
@@ -126,7 +125,7 @@ public class MultiSurfaceTypeBinding extends AbstractComplexBinding {
             GML3EncodingUtils.setChildIDs(multiSurface);
 
             return members;
-        }
+        }*/
         
         return null;
     }

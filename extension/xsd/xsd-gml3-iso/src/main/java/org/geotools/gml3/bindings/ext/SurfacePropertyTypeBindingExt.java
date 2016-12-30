@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.gml3.bindings.GML3EncodingUtils;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -36,8 +37,8 @@ public class SurfacePropertyTypeBindingExt extends SurfacePropertyTypeBinding {
      * @param gf
      */
     public SurfacePropertyTypeBindingExt(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry,
-            GeometryFactory gf) {
-        super(encodingUtils, idRegistry, gf);
+            ISOGeometryBuilder gb) {
+        super(encodingUtils, idRegistry, gb);
     }
 
     @Override

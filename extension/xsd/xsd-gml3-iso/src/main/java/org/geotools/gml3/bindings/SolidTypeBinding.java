@@ -16,31 +16,18 @@
  */
 package org.geotools.gml3.bindings;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.jts.JTSUtils;
 import org.geotools.gml3.GML;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.util.UnsupportedImplementationException;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
-import org.opengis.geometry.primitive.OrientableSurface;
-import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
-import org.opengis.geometry.primitive.Surface;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.JTSUtilsNG;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SolidType.
@@ -50,8 +37,7 @@ import com.vividsolutions.jts.geom.JTSUtilsNG;
  * @source $URL$
  */
 public class SolidTypeBinding extends AbstractComplexBinding {
-
-	protected ISOGeometryBuilder gBuilder;
+    protected ISOGeometryBuilder gBuilder;
 
     public SolidTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
@@ -84,12 +70,8 @@ public class SolidTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        if (!(pf instanceof PrimitiveFactoryImpl)) {
-            throw new UnsupportedImplementationException("This binding class depends on org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl");
-        }
-        PrimitiveFactoryImpl pfImpl = (PrimitiveFactoryImpl) pf;
         
-        com.vividsolutions.jts.geom.MultiPolygon exterior = (com.vividsolutions.jts.geom.MultiPolygon) node.getChildValue("exterior");
+        /*CompositeSurface exterior = (CompositeSurface) node.getChildValue("exterior");
         com.vividsolutions.jts.geom.MultiPolygon[] interiors = null;
         
         if (node.hasChild("interior")) {
@@ -103,10 +85,10 @@ public class SolidTypeBinding extends AbstractComplexBinding {
             crs = (CoordinateReferenceSystem) DefaultGeographicCRS.WGS84_3D;
         }
         
-        /**
+        *//**
          * Convert a Polygon of JTSGeometry to a Surface of ISOGeometry.
          * Create the exterior Shell by the converted surfaces.
-         */
+         *//*
         List<OrientableSurface> exteriorSurfaces = new ArrayList<OrientableSurface>();
         for (int i = 0; i < exterior.getNumGeometries(); i++) {
             Surface surface = JTSUtilsNG.polygonToSurface((com.vividsolutions.jts.geom.Polygon) exterior.getGeometryN(i), crs);
@@ -132,9 +114,9 @@ public class SolidTypeBinding extends AbstractComplexBinding {
         
         // Create a SolidBoundary and a Solid Object of ISOGeometry
         SolidBoundary solidBoundary = pfImpl.createSolidBoundary(exteriorShell, interiorShells);
-        Solid solid = pfImpl.createSolid(solidBoundary);
+        Solid solid = pfImpl.createSolid(solidBoundary);*/
         
-        return solid;
+        return null;
     }
 
     @Override
@@ -165,7 +147,7 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     private com.vividsolutions.jts.geom.MultiPolygon shellToPolygons(Shell shell) {
         List elements = (List) shell.getElements();
         
-        List polygons = new ArrayList();
+        /*List polygons = new ArrayList();
         Iterator iter = elements.iterator();
         while (iter.hasNext()) {
             OrientableSurface surface = (OrientableSurface) iter.next();
@@ -187,7 +169,7 @@ public class SolidTypeBinding extends AbstractComplexBinding {
                 new com.vividsolutions.jts.geom.Polygon[polygons.size()];
         polygons.toArray(polygonMembers);
         com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
-                gf.createMultiPolygon(polygonMembers);
-        return multiPolygon;
+                gf.createMultiPolygon(polygonMembers);*/
+        return null;
     }
 }

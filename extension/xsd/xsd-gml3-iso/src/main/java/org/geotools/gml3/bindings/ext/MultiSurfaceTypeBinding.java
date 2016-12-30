@@ -17,18 +17,16 @@
 package org.geotools.gml3.bindings.ext;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.GML;
 import org.geotools.gml3.bindings.SurfaceTypeBinding;
-import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -41,8 +39,8 @@ import com.vividsolutions.jts.geom.Polygon;
 public class MultiSurfaceTypeBinding extends org.geotools.gml3.bindings.MultiSurfaceTypeBinding
     implements Comparable {
     
-    public MultiSurfaceTypeBinding(GeometryFactory gf) {
-        super(gf);
+    public MultiSurfaceTypeBinding(ISOGeometryBuilder gb) {
+        super(gb);
     }
 
     public Object parse(ElementInstance instance, Node node, Object value)
@@ -74,7 +72,8 @@ public class MultiSurfaceTypeBinding extends org.geotools.gml3.bindings.MultiSur
             }
         }
 
-        return gf.createMultiPolygon((Polygon[])polygons.toArray(new Polygon[polygons.size()]));
+        //return gf.createMultiPolygon((Polygon[])polygons.toArray(new Polygon[polygons.size()]));
+        return null;
     }
 
     public Object getProperty(Object object, QName name)

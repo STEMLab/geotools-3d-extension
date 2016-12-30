@@ -16,20 +16,13 @@
  */
 package org.geotools.gml3.v3_2.bindings;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.util.UnsupportedImplementationException;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-import org.opengis.geometry.primitive.PrimitiveFactory;
-import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -89,13 +82,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class SolidTypeBinding extends org.geotools.gml3.bindings.SolidTypeBinding {
     
-    public SolidTypeBinding(GeometryFactory gf, PrimitiveFactory pf) {
-        super(gf, pf);
+    public SolidTypeBinding(ISOGeometryBuilder gb) {
+        super(gb);
     }
 
     @Override
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        if (!(pf instanceof PrimitiveFactoryImpl)) {
+        /*if (!(pf instanceof PrimitiveFactoryImpl)) {
             throw new UnsupportedImplementationException("This binding class depends on org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl");
         }
         PrimitiveFactoryImpl pfImpl = (PrimitiveFactoryImpl) pf;
@@ -111,7 +104,8 @@ public class SolidTypeBinding extends org.geotools.gml3.bindings.SolidTypeBindin
         SolidBoundary solidBoundary = pfImpl.createSolidBoundary(exteriorShell, interiorShells);
         Solid solid = pfImpl.createSolid(solidBoundary);
         
-        return solid;
+        return solid;*/
+        return null;
     }
 
     @Override

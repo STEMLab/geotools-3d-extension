@@ -111,7 +111,7 @@ public class CurveTypeBinding extends AbstractComplexBinding implements Comparab
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        LineString[] segments = (LineString[]) node.getChildValue("segments");
+        /*LineString[] segments = (LineString[]) node.getChildValue("segments");
 
         if(segments.length == 0) {
             return null;
@@ -128,7 +128,8 @@ public class CurveTypeBinding extends AbstractComplexBinding implements Comparab
                     arcParameters, gf, curved != null ? curved.getCoordinateSequence() : null);
             return factory.createCurvedGeometry(Arrays.asList(segments));
 
-        }
+        }*/
+        return null;
     }
 
     public Object getProperty(Object object, QName name)

@@ -74,9 +74,8 @@ import org.geotools.gml3.v3_2.bindings.GML32EncodingUtils;
 import org.geotools.gml3.v3_2.bindings.LinearRingTypeBinding;
 import org.geotools.xml.Configuration;
 import org.geotools.xs.XS;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.picocontainer.MutablePicoContainer;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Parser configuration for the http://www.opengis.net/gml/3.2 schema.
@@ -314,7 +313,7 @@ public class GMLConfiguration_ISO extends Configuration {
      * 
      * @return the geometryFactory
      */
-    public GeometryFactory getGeometryFactory() {
+    public ISOGeometryBuilder getGeometryFactory() {
         return delegate.getGeometryFactory();
     }
 
@@ -323,7 +322,7 @@ public class GMLConfiguration_ISO extends Configuration {
      * 
      * @param geometryFactory the geometryFactory to set
      */
-    public void setGeometryFactory(GeometryFactory geometryFactory) {
+    public void setGeometryFactory(ISOGeometryBuilder geometryFactory) {
         delegate.setGeometryFactory(geometryFactory);
     }
 } 

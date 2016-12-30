@@ -16,43 +16,24 @@
  */
 package org.geotools.gml3.v3_2.bindings;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.gml3.v3_2.GML;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.util.UnsupportedImplementationException;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-import org.opengis.geometry.primitive.OrientableSurface;
-import org.opengis.geometry.primitive.PrimitiveFactory;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Shell;
-import org.opengis.geometry.primitive.Surface;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.JTSUtilsNG;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-
 /**
  * @author Donguk
  *
  */
 public class ShellTypeBinding extends AbstractComplexBinding {
 
-    GeometryFactory gf;
-    PrimitiveFactory pf;
+    ISOGeometryBuilder gb;
     
-    public ShellTypeBinding(GeometryFactory gf, PrimitiveFactory pf) {
-        this.gf = gf;
-        this.pf = pf;
+    public ShellTypeBinding(ISOGeometryBuilder gb) {
+        this.gb = gb;
     }
     
     /**
@@ -81,7 +62,7 @@ public class ShellTypeBinding extends AbstractComplexBinding {
     }
     
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        List multiPolygons = node.getChildValues(MultiPolygon.class);
+        /*List multiPolygons = node.getChildValues(MultiPolygon.class);
         List polygons = new ArrayList<Polygon>();
         
         for (Object object : multiPolygons) {
@@ -92,9 +73,9 @@ public class ShellTypeBinding extends AbstractComplexBinding {
             }
         }
         
-        /**
+        *//**
          * Convert a JTSPolygon to a surface of ISOGeometry
-         */
+         *//*
         if (!(pf instanceof PrimitiveFactoryImpl)) {
             throw new UnsupportedImplementationException("This binding class depends on org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl");
         }
@@ -120,12 +101,13 @@ public class ShellTypeBinding extends AbstractComplexBinding {
         }
         Shell shell = pfImpl.createShell(surfaces);
         
-        return shell;
+        return shell;*/
+        return null;
     }
 
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        Shell shell = (Shell) object;
+        /*Shell shell = (Shell) object;
         
         if ("surfaceMember".equals(name.getLocalPart())) {
             List elements = (List) shell.getElements();
@@ -154,7 +136,7 @@ public class ShellTypeBinding extends AbstractComplexBinding {
             //com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
                     gf.createMultiPolygon(polygonMembers);
             return polygonMembers;
-        }
+        }*/
         
         return null;
     }

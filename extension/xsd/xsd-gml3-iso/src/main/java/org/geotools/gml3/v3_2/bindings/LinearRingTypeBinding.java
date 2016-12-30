@@ -16,8 +16,7 @@
  */
 package org.geotools.gml3.v3_2.bindings;
 
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /**
  * 
@@ -26,8 +25,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class LinearRingTypeBinding extends org.geotools.gml3.bindings.LinearRingTypeBinding {
 
-    public LinearRingTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory) {
-        super(gFactory, csFactory);
+    public LinearRingTypeBinding(ISOGeometryBuilder gFactory) {
+        super(gFactory);
     }
 
     @Override

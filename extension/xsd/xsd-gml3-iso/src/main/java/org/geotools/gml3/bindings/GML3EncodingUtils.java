@@ -87,22 +87,24 @@ public class GML3EncodingUtils {
 
     static PointArray positions(Curve line) {
     	//TODO
-        if (line instanceof SingleCurvedGeometry<?>) {
+        /*if (line instanceof SingleCurvedGeometry<?>) {
             SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
             return new LiteCoordinateSequence(curved.getControlPoints());
         } else {
             return line.getCoordinateSequence();
-        }
+        }*/
+        return null;
     }
     
     static PointArray positions(Ring line) {
     	//TODO
-        if (line instanceof SingleCurvedGeometry<?>) {
+        /*if (line instanceof SingleCurvedGeometry<?>) {
             SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
             return new LiteCoordinateSequence(curved.getControlPoints());
         } else {
             return line.getCoordinateSequence();
-        }
+        }*/
+        return null;
     }
 
 
@@ -282,14 +284,14 @@ public class GML3EncodingUtils {
      */
     static void setChildIDs(Geometry multiGeometry) {
         String id = getID(multiGeometry);
-        if (id != null) {
+        /*if (id != null) {
             for (int i = 0; i < multiGeometry.getNumGeometries(); i++) {
                 StringBuilder builder = new StringBuilder(id);
                 builder.append(".");  // separator
                 builder.append(i + 1);  // synthetic gml:id suffix one-based
                 GML2EncodingUtils.setID(multiGeometry.getGeometryN(i), builder.toString());
             }
-        }
+        }*/
     }
 
     /**

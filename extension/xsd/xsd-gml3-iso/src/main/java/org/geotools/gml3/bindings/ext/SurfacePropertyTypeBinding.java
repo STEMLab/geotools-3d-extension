@@ -24,11 +24,12 @@ import org.geotools.gml3.bindings.GML3EncodingUtils;
 import org.geotools.gml3.bindings.SurfaceTypeBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Surface;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import com.google.common.collect.Sets;
 
 /**
  * 
@@ -38,24 +39,24 @@ import com.vividsolutions.jts.geom.Polygon;
 public class SurfacePropertyTypeBinding extends org.geotools.gml3.bindings.SurfacePropertyTypeBinding 
     implements Comparable {
 
-    GeometryFactory gf;
+    ISOGeometryBuilder gb;
     
-    public SurfacePropertyTypeBinding(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry, GeometryFactory gf) {
+    public SurfacePropertyTypeBinding(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry, ISOGeometryBuilder gb) {
         super(encodingUtils, idRegistry);
-        this.gf = gf;
+        this.gb = gb;
     }
 
     public Class<? extends Geometry> getGeometryType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     @Override
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        Polygon polygon = (Polygon)node.getChildValue(Polygon.class);
-        MultiPolygon surface = (MultiPolygon)node.getChildValue(MultiPolygon.class);
+        Surface polygon = (Surface)node.getChildValue(Surface.class);
+        MultiSurface surface = (MultiSurface)node.getChildValue(MultiSurface.class);
 
         if (polygon != null) {
-            return gf.createMultiPolygon(new Polygon[] {polygon});
+            return gb.createMultiSurface(Sets.newHashSet(polygon));
         } else {
             return surface;
         }
@@ -65,9 +66,9 @@ public class SurfacePropertyTypeBinding extends org.geotools.gml3.bindings.Surfa
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("_Surface".equals(name.getLocalPart()) || "AbstractSurface".equals(name.getLocalPart())) {
-            MultiPolygon multiPolygon = (MultiPolygon) object;
+            MultiSurface multiPolygon = (MultiSurface) object;
             // this MultiPolygon consists of a single Polygon wrapped in a MultiPolygon:
-            return multiPolygon.getGeometryN(0);
+            return multiPolygon.getElements().iterator().next();
         }
 
         return super.getProperty(object, name);

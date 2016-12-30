@@ -104,6 +104,7 @@
     
     <module>xsd-filter-iso</module>
     <module>xsd-wfs-iso</module>
+    <module>xsd-gml3-iso</module>
   </modules>
 
 </project>

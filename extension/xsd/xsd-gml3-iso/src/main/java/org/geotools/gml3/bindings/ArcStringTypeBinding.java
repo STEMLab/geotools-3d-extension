@@ -113,7 +113,7 @@ public class ArcStringTypeBinding extends AbstractComplexBinding implements Comp
     public Object parse(ElementInstance instance, Node node, Object value)
             throws Exception {
     
-        LineString arcLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
+/*        LineString arcLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
         CoordinateSequence cs = arcLineString.getCoordinateSequence();
         if (cs.size() < 3) {
             // maybe log this instead and return null
@@ -121,18 +121,19 @@ public class ArcStringTypeBinding extends AbstractComplexBinding implements Comp
                     + cs.size()+ " were specified: " + arcLineString);
         }
 
-        CurvedGeometryFactory factory = GML3ParsingUtils.getCurvedGeometryFactory(arcParameters, gFactory, cs);
+        CurvedGeometryFactory factory = GML3ParsingUtils.getCurvedGeometryFactory(arcParameters, gFactory, cs);*/
         
-        return factory.createCurvedGeometry(cs);
+        //return factory.createCurvedGeometry(cs);
+        return null;
     }
 
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        if ("interpolation".equals(name.getLocalPart())) {
+/*        if ("interpolation".equals(name.getLocalPart())) {
             return "circularArc3Points";
         } else if ("posList".equals(name.getLocalPart())) {
             return GML3EncodingUtils.positions((LineString) object);
-        }
+        }*/
 
         return super.getProperty(object, name);
     }

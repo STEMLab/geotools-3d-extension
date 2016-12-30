@@ -93,7 +93,7 @@ import com.vividsolutions.jts.geom.LineString;
  * @source $URL$
  */
 public class LineStringTypeBinding extends AbstractComplexBinding {
-	ISOGeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
     public LineStringTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;

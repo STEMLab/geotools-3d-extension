@@ -83,7 +83,7 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
         throws Exception {
         List members = node.getChildValues("curveMember");
 
-        if (members.isEmpty()) {
+        /*if (members.isEmpty()) {
             return null;
         } else if (members.size() == 1) {
             return members.get(0);
@@ -100,7 +100,8 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
             CurvedGeometryFactory factory = GML3ParsingUtils.getCurvedGeometryFactory(
                     arcParameters, gf, curved != null ? curved.getCoordinateSequence() : null);
             return factory.createCurvedGeometry(components);
-        }
+        }*/
+        return null;
     }
 
     public Object getProperty(Object object, QName name)

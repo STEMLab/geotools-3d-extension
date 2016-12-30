@@ -24,10 +24,9 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.primitive.Curve;
 
 
 /**
@@ -60,10 +59,10 @@ import com.vividsolutions.jts.geom.MultiLineString;
  * @source $URL$
  */
 public class MultiLineStringTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    ISOGeometryBuilder gBuilder;
 
-    public MultiLineStringTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public MultiLineStringTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -80,7 +79,7 @@ public class MultiLineStringTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiLineString.class;
+        return MultiCurve.class;
     }
 
     public int getExecutionMode() {
@@ -95,24 +94,25 @@ public class MultiLineStringTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        List lines = node.getChildValues(LineString.class);
+        List lines = node.getChildValues(Curve.class);
 
-        return gFactory.createMultiLineString((LineString[]) lines.toArray(
-                new LineString[lines.size()]));
+        //return gFactory.createMultiLineString((Curve[]) lines.toArray(
+        //        new LineString[lines.size()]));
+        return null;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if (GML.lineStringMember.equals(name)) {
-            MultiLineString multiLineString = (MultiLineString) object;
-            LineString[] members = new LineString[multiLineString.getNumGeometries()];
-
+            MultiCurve multiLineString = (MultiCurve) object;
+            Curve[] members = new Curve[multiLineString.getElements().size()];
+/*
             for (int i = 0; i < members.length; i++) {
                 members[i] = (LineString) multiLineString.getGeometryN(i);
             }
 
             GML3EncodingUtils.setChildIDs(multiLineString);
-
+*/
             return members;
         }
 

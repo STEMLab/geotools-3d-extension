@@ -17,10 +17,11 @@
 package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
+
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiSurface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiSurfacePropertyType.
@@ -72,7 +73,7 @@ public class MultiSurfacePropertyTypeBinding extends GeometryPropertyTypeBinding
 
     public Class<? extends Geometry> getGeometryType() {
         // return MultiSurface.class;
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
 }

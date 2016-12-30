@@ -120,7 +120,7 @@ public class ArcTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
 
-        LineString arcLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
+        /*LineString arcLineString = GML3ParsingUtils.lineString(node, gFactory, csFactory);
         CoordinateSequence cs = arcLineString.getCoordinateSequence();
         if (cs.size() < 3) {
             // maybe log this instead and return null
@@ -132,7 +132,8 @@ public class ArcTypeBinding extends AbstractComplexBinding {
         CurvedGeometryFactory factory = GML3ParsingUtils.getCurvedGeometryFactory(arcParameters,
                 gFactory, cs);
 
-        return factory.createCurvedGeometry(cs);
+        return factory.createCurvedGeometry(cs);*/
+        return null;
     }
 
 }

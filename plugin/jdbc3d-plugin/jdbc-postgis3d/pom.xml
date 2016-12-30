@@ -71,10 +71,8 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-jdbc</artifactId>
+      <artifactId>gt-jdbc-iso</artifactId>
       <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>

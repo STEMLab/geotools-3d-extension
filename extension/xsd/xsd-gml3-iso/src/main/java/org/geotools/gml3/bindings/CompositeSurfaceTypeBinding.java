@@ -32,8 +32,8 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.Surface;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -46,7 +46,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implements Comparable {
-	protected ISOGeometryBuilder gBuilder;
+    protected ISOGeometryBuilder gBuilder;
 
     public CompositeSurfaceTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
@@ -81,6 +81,10 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
+        
+        if (node.hasChild(Surface.class)) {
+            
+        }
         
         List multiPolygons = node.getChildValues(MultiPolygon.class);
         List surfaces = new ArrayList<Polygon>();

@@ -20,7 +20,15 @@ import org.opengis.feature.type.ComplexType;
 import org.opengis.feature.type.Name;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * 
@@ -804,7 +812,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_ABSTRACTGEOMETRYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","AbstractGeometryType"), com.vividsolutions.jts.geom.Geometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","AbstractGeometryType"), Geometry.class, false,
             true, Collections.<Filter>emptyList(), ABSTRACTGMLTYPE_TYPE, null
         );
         return builtType;
@@ -995,7 +1003,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_POINTTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","PointType"), com.vividsolutions.jts.geom.Point.class, false,
+            new NameImpl("http://www.opengis.net/gml","PointType"), Point.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICPRIMITIVETYPE_TYPE, null
         );
         return builtType;
@@ -1037,7 +1045,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_POINTPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","PointPropertyType"), com.vividsolutions.jts.geom.Point.class, false,
+            new NameImpl("http://www.opengis.net/gml","PointPropertyType"), Point.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -1703,7 +1711,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_POLYGONTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","PolygonType"), com.vividsolutions.jts.geom.Polygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","PolygonType"), Surface.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTSURFACETYPE_TYPE, null
         );
         return builtType;
@@ -4064,7 +4072,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_LINEARRINGTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","LinearRingType"), com.vividsolutions.jts.geom.LinearRing.class, false,
+            new NameImpl("http://www.opengis.net/gml","LinearRingType"), Ring.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTRINGTYPE_TYPE, null
         );
         return builtType;
@@ -4094,7 +4102,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_LINEARRINGPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","LinearRingPropertyType"), com.vividsolutions.jts.geom.LinearRing.class, false,
+            new NameImpl("http://www.opengis.net/gml","LinearRingPropertyType"), Ring.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -4155,63 +4163,17 @@ public class GMLSchema extends SchemaImpl {
      *
      * @generated
      */
-    public static final ComplexType SOLIDPROPERTYTYPE_TYPE = build_SOLIDPROPERTYTYPE_TYPE();
+    public static final AttributeType SOLIDPROPERTYTYPE_TYPE = build_SOLIDPROPERTYTYPE_TYPE();
     
-    private static ComplexType build_SOLIDPROPERTYTYPE_TYPE() {
-        ComplexType builtType;
-        List<PropertyDescriptor> schema = new ArrayList<PropertyDescriptor>();
-        schema.add(
-            new AttributeDescriptorImpl(
-                ABSTRACTSOLIDTYPE_TYPE, new NameImpl("http://www.opengis.net/gml","_Solid"), 1, 1, false, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XLINKSchema._ACTUATE_TYPE, new NameImpl("http://www.w3.org/1999/xlink","actuate"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.ANYURI_TYPE, new NameImpl("http://www.w3.org/1999/xlink","arcrole"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.ANYURI_TYPE, new NameImpl("http://www.w3.org/1999/xlink","href"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.ANYURI_TYPE, new NameImpl("http://www.opengis.net/gml","remoteSchema"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.ANYURI_TYPE, new NameImpl("http://www.w3.org/1999/xlink","role"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XLINKSchema._SHOW_TYPE, new NameImpl("http://www.w3.org/1999/xlink","show"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.STRING_TYPE, new NameImpl("http://www.w3.org/1999/xlink","title"), 0, 1, true, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                XSSchema.STRING_TYPE, new NameImpl("http://www.w3.org/1999/xlink","type"), 0, 1, true, null
-            )
-        );
-        builtType = new ComplexTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","SolidPropertyType"), schema, false,
+    private static AttributeType build_SOLIDPROPERTYTYPE_TYPE() {
+        AttributeType builtType;
+        builtType = new AttributeTypeImpl(
+            new NameImpl("http://www.opengis.net/gml","SolidPropertyType"), Solid.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
     }
-
+    
     /**
      * <p>
      *  <pre>
@@ -6288,7 +6250,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIPOINTTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiPointType"), com.vividsolutions.jts.geom.MultiPoint.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiPointType"), MultiPoint.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -6324,7 +6286,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIPOINTPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiPointPropertyType"), com.vividsolutions.jts.geom.MultiPoint.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiPointPropertyType"), MultiPoint.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -8837,7 +8799,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_SURFACEPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","SurfacePropertyType"), com.vividsolutions.jts.geom.Polygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","SurfacePropertyType"), Surface.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -8912,7 +8874,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTISURFACETYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiSurfaceType"), com.vividsolutions.jts.geom.MultiPolygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiSurfaceType"), MultiSurface.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -9475,7 +9437,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_LINESTRINGTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","LineStringType"), com.vividsolutions.jts.geom.LineString.class, false,
+            new NameImpl("http://www.opengis.net/gml","LineStringType"), Curve.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTCURVETYPE_TYPE, null
         );
         return builtType;
@@ -9518,7 +9480,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_LINESTRINGPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","LineStringPropertyType"), com.vividsolutions.jts.geom.LineString.class, false,
+            new NameImpl("http://www.opengis.net/gml","LineStringPropertyType"), Curve.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -9552,7 +9514,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTILINESTRINGTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiLineStringType"), com.vividsolutions.jts.geom.MultiLineString.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiLineStringType"), MultiCurve.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -9589,7 +9551,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTILINESTRINGPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiLineStringPropertyType"), com.vividsolutions.jts.geom.MultiLineString.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiLineStringPropertyType"), MultiCurve.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -10228,7 +10190,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTISURFACEPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiSurfacePropertyType"), com.vividsolutions.jts.geom.MultiPolygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiSurfacePropertyType"), MultiSurface.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -11589,7 +11551,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_SURFACETYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","SurfaceType"), com.vividsolutions.jts.geom.Polygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","SurfaceType"), Surface.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTSURFACETYPE_TYPE, null
         );
         return builtType;
@@ -15498,7 +15460,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIGEOMETRYPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiGeometryPropertyType"), com.vividsolutions.jts.geom.GeometryCollection.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiGeometryPropertyType"), MultiPrimitive.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -17886,7 +17848,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTICURVETYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiCurveType"), MultiCurvedGeometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiCurveType"), MultiCurve.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -18641,24 +18603,13 @@ public class GMLSchema extends SchemaImpl {
      *
      * @generated
      */
-    public static final ComplexType SOLIDTYPE_TYPE = build_SOLIDTYPE_TYPE();
+    public static final AttributeType SOLIDTYPE_TYPE = build_SOLIDTYPE_TYPE();
     
-    private static ComplexType build_SOLIDTYPE_TYPE() {
-        ComplexType builtType;
-        List<PropertyDescriptor> schema = new ArrayList<PropertyDescriptor>();
-        schema.add(
-            new AttributeDescriptorImpl(
-                SURFACEPROPERTYTYPE_TYPE, new NameImpl("http://www.opengis.net/gml","exterior"), 0, 1, false, null
-            )
-        );
-        schema.add(
-            new AttributeDescriptorImpl(
-                SURFACEPROPERTYTYPE_TYPE, new NameImpl("http://www.opengis.net/gml","interior"), 0, 2147483647, false, null
-            )
-        );
-        builtType = new ComplexTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","SolidType"), schema, false,
-            false, Collections.<Filter>emptyList(), ABSTRACTSOLIDTYPE_TYPE, null
+    private static AttributeType build_SOLIDTYPE_TYPE() {
+        AttributeType builtType;
+        builtType = new AttributeTypeImpl(
+            new NameImpl("http://www.opengis.net/gml","SolidType"), Solid.class, false,
+            false, Collections.<Filter>emptyList(), ABSTRACTSURFACETYPE_TYPE, null
         );
         return builtType;
     }
@@ -22218,7 +22169,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTICURVEPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiCurvePropertyType"), MultiCurvedGeometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiCurvePropertyType"), MultiCurve.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -22397,7 +22348,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_POLYGONPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","PolygonPropertyType"), com.vividsolutions.jts.geom.Polygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","PolygonPropertyType"), Surface.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -22431,7 +22382,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIPOLYGONTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiPolygonType"), com.vividsolutions.jts.geom.MultiPolygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiPolygonType"), MultiSurface.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -22469,7 +22420,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIPOLYGONPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiPolygonPropertyType"), com.vividsolutions.jts.geom.MultiPolygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiPolygonPropertyType"), MultiSurface.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -22743,7 +22694,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_CURVETYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","CurveType"), CurvedGeometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","CurveType"), Curve.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTCURVETYPE_TYPE, null
         );
         return builtType;
@@ -23405,7 +23356,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_GEOMETRYPROPERTYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","GeometryPropertyType"), com.vividsolutions.jts.geom.Geometry.class, false,
+            new NameImpl("http://www.opengis.net/gml","GeometryPropertyType"), Geometry.class, false,
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
@@ -23481,7 +23432,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_MULTIGEOMETRYTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","MultiGeometryType"), com.vividsolutions.jts.geom.GeometryCollection.class, false,
+            new NameImpl("http://www.opengis.net/gml","MultiGeometryType"), MultiPrimitive.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTGEOMETRICAGGREGATETYPE_TYPE, null
         );
         return builtType;
@@ -24128,6 +24079,10 @@ public class GMLSchema extends SchemaImpl {
         put(new NameImpl("http://www.opengis.net/gml","CylindricalCSType"),CYLINDRICALCSTYPE_TYPE);
         put(new NameImpl("http://www.opengis.net/gml","CylindricalCSRefType"),CYLINDRICALCSREFTYPE_TYPE);
         put(new NameImpl("http://www.opengis.net/gml","OffsetCurveType"),OFFSETCURVETYPE_TYPE);
+        
+        put(new NameImpl("http://www.opengis.net/gml","AbstractSolidType"),ABSTRACTSOLIDTYPE_TYPE);
+        put(new NameImpl("http://www.opengis.net/gml","SolidType"),SOLIDTYPE_TYPE);
+        put(new NameImpl("http://www.opengis.net/gml","SolidPropertyType"),SOLIDPROPERTYTYPE_TYPE);
     }
     /**
      * Profile of GMLSchema capturing a unique mapping of Java classes.
@@ -24151,6 +24106,8 @@ public class GMLSchema extends SchemaImpl {
         profile.add(new NameImpl(GML.MultiPolygonPropertyType));
         profile.add(new NameImpl(GML.GeometryPropertyType));
         profile.add(new NameImpl(GML.MultiGeometryPropertyType));
+        
+        profile.add(new NameImpl(GML.SolidPropertyType));
         
         return new ProfileImpl(this,profile);
     }

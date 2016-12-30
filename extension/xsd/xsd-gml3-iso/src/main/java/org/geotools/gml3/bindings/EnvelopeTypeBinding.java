@@ -25,7 +25,6 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration;
 import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.Configuration;

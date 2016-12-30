@@ -74,7 +74,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
     ISOGeometryBuilder builder;
-	Configuration config;
+    Configuration config;
     SrsSyntax srsSyntax;
 
     public AbstractGeometryTypeBinding(ISOGeometryBuilder builder, Configuration config, SrsSyntax srsSyntax) {

@@ -16,18 +16,14 @@
  */
 package org.geotools.gml3.bindings;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiCurve;
 
 
 /**
@@ -65,10 +61,10 @@ import com.vividsolutions.jts.geom.MultiLineString;
  * @source $URL$
  */
 public class MultiCurveTypeBinding extends AbstractComplexBinding {
-    protected GeometryFactory gf;
+    protected ISOGeometryBuilder gb;
 
-    public MultiCurveTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    public MultiCurveTypeBinding(ISOGeometryBuilder gb) {
+        this.gb = gb;
     }
 
     /**
@@ -85,7 +81,7 @@ public class MultiCurveTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiLineString.class;
+        return MultiCurve.class;
     }
 
     public int getExecutionMode() {
@@ -101,7 +97,7 @@ public class MultiCurveTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         //&lt;element maxOccurs="unbounded" minOccurs="0" ref="gml:curveMember"/&gt;
-        List curves = node.getChildValues(LineString.class);
+        /*List curves = node.getChildValues(LineString.class);
 
         //&lt;element minOccurs="0" ref="gml:curveMembers"/&gt;
         if (node.hasChild(MultiLineString[].class)) {
@@ -118,11 +114,12 @@ public class MultiCurveTypeBinding extends AbstractComplexBinding {
             }
         }
         
-        return gf.createMultiLineString((LineString[]) curves.toArray(new LineString[curves.size()]));
+        return gf.createMultiLineString((LineString[]) curves.toArray(new LineString[curves.size()]));*/
+        return null;
     }
 
     public Object getProperty(Object object, QName name) throws Exception {
-        if ("curveMember".equals(name.getLocalPart())) {
+        /*if ("curveMember".equals(name.getLocalPart())) {
             MultiLineString multiCurve = (MultiLineString) object;
             LineString[] members = new LineString[multiCurve.getNumGeometries()];
 
@@ -135,7 +132,7 @@ public class MultiCurveTypeBinding extends AbstractComplexBinding {
             return members;
         } else {
             super.getProperty(object, name);
-        }
+        }*/
 
         return null;
     }

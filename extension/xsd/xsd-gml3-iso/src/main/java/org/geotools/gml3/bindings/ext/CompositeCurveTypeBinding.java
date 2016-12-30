@@ -29,12 +29,11 @@ import org.geotools.gml3.bindings.GML3ParsingUtils;
 import org.geotools.gml3.bindings.LineStringTypeBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 
@@ -44,13 +43,13 @@ import com.vividsolutions.jts.geom.MultiLineString;
  */
 public class CompositeCurveTypeBinding extends LineStringTypeBinding {
 
-    private final GeometryFactory gFactory;
+    private final ISOGeometryBuilder gBuilder;
 
     private ArcParameters arcParameters;
     
-    public CompositeCurveTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory) {
-        super(gFactory, csFactory);
-        this.gFactory = gFactory;
+    public CompositeCurveTypeBinding(ISOGeometryBuilder gBuilder) {
+        super(gBuilder);
+        this.gBuilder = gBuilder;
     }
 
     public void setArcParameters(ArcParameters arcParameters) {
@@ -70,7 +69,7 @@ public class CompositeCurveTypeBinding extends LineStringTypeBinding {
     @Override
     public Object parse(ElementInstance instance, Node node, Object value)
             throws Exception {
-        List children = node.getChildren("curveMember");
+        /*List children = node.getChildren("curveMember");
         List<LineString> components = new ArrayList<>();
         for (Iterator it = children.iterator(); it.hasNext();) {
             Node child = (Node) it.next();
@@ -87,7 +86,8 @@ public class CompositeCurveTypeBinding extends LineStringTypeBinding {
             CurvedGeometryFactory factory = GML3ParsingUtils.getCurvedGeometryFactory(
                     arcParameters, gFactory, cs);
             return factory.createCurvedGeometry(components);
-        }
+        }*/
+        return null;
     }
 
     /**

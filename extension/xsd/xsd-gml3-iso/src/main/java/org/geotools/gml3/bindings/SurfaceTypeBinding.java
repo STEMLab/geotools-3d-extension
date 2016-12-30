@@ -22,9 +22,8 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiSurface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -84,10 +83,10 @@ import com.vividsolutions.jts.geom.MultiPolygon;
  */
 public class SurfaceTypeBinding extends AbstractComplexBinding implements Comparable {
 
-    GeometryFactory gf;
+    ISOGeometryBuilder gb;
     
-    public SurfaceTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    public SurfaceTypeBinding(ISOGeometryBuilder gb) {
+        this.gb = gb;
     }
     
     /**
@@ -108,7 +107,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return MultiSurface.class;
     }
 
     /**
@@ -117,7 +116,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return new MultiPolygonTypeBinding(gf).parse(instance, node, value);
+        return new MultiPolygonTypeBinding(gb).parse(instance, node, value);
     }
 
     public int compareTo(Object o) {

@@ -66,7 +66,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class PolygonTypeBinding extends AbstractComplexBinding {
-	ISOGeometryBuilder gBuilder;
+    ISOGeometryBuilder gBuilder;
 
     public PolygonTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;

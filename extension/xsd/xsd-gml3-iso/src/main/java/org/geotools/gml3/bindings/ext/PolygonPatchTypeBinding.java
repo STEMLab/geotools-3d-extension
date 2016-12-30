@@ -23,6 +23,7 @@ import org.geotools.gml3.bindings.PolygonTypeBinding;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
@@ -35,13 +36,13 @@ import com.vividsolutions.jts.geom.Polygon;
 public class PolygonPatchTypeBinding extends org.geotools.gml3.bindings.PolygonPatchTypeBinding
     implements Comparable {
 
-    public PolygonPatchTypeBinding(GeometryFactory gf) {
-        super(gf);
+    public PolygonPatchTypeBinding(ISOGeometryBuilder gb) {
+        super(gb);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
-        return new PolygonTypeBinding( gf ).getProperty(object, name);
+        return new PolygonTypeBinding( gBuilder ).getProperty(object, name);
     }
 
     public int compareTo(Object o) {

@@ -16,18 +16,14 @@
  */
 package org.geotools.gml3.bindings.ext;
 
-import javax.xml.namespace.QName;
-
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.gml3.bindings.CurveTypeBinding;
 import org.geotools.gml3.bindings.GML3EncodingUtils;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Curve;
 /**
  * Binding object for the type http://www.opengis.net/gml:CurvePropertyType.
  * 
@@ -72,20 +68,20 @@ import com.vividsolutions.jts.geom.LineString;
 public class CurvePropertyTypeBinding extends org.geotools.gml3.bindings.CurvePropertyTypeBinding
     implements Comparable {
 
-    GeometryFactory gf;
+    ISOGeometryBuilder gb;
     
-    public CurvePropertyTypeBinding(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry, GeometryFactory gf) {
+    public CurvePropertyTypeBinding(GML3EncodingUtils encodingUtils, XSDIdRegistry idRegistry, ISOGeometryBuilder gb) {
         super(encodingUtils, idRegistry);
-        this.gf = gf;
+        this.gb = gb;
     }
 
     public Class<? extends Geometry> getGeometryType() {
-        return LineString.class;
+        return Curve.class;
     }
     
     @Override
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return node.getChildValue(LineString.class);
+        return node.getChildValue(Curve.class);
     }
 
     public int compareTo(Object o) {

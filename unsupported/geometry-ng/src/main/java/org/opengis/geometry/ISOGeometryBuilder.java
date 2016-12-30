@@ -108,7 +108,7 @@ public class ISOGeometryBuilder {
         this.crs = crs;
         this.hints = GeoTools.getDefaultHints();
         hints.put( Hints.CRS, crs );
-        hints.put( Hints.GEOMETRY_VALIDATE, true );
+        hints.put( Hints.GEOMETRY_VALIDATE, false );
     }
     
     public ISOGeometryBuilder( String code ) throws NoSuchAuthorityCodeException, FactoryException{

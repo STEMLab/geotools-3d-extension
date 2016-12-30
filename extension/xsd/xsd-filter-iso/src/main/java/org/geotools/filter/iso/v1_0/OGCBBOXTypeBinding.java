@@ -159,7 +159,7 @@ public class OGCBBOXTypeBinding extends AbstractComplexBinding {
         }
 
         //&lt;xsd:element ref="gml:Box"/&gt;
-        if (GML.Box.equals(name) || org.geotools.gml3.GML.Envelope.equals(name)) {
+        if (GML.Box.equals(name) || org.geotools.gml3.iso.GML.Envelope.equals(name)) {
             try {
                 String srs = box.getSRS();
                 if(srs != null) {

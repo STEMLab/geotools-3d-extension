@@ -17,9 +17,9 @@
 package org.geotools.filter.iso.v1_0;
 
 import java.util.Set;
+
 import javax.xml.namespace.QName;
 
-import org.geotools.filter.iso.v1_0.OGC;
 import org.geotools.gml2.iso.GML;
 import org.geotools.xml.XSD;
 

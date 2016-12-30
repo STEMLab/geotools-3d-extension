@@ -17,10 +17,10 @@
 package org.geotools.filter.iso.v1_1;
 
 import java.util.Set;
+
 import javax.xml.namespace.QName;
 
-import org.geotools.filter.iso.v1_1.OGC;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.xml.XSD;
 
 

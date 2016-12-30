@@ -16,9 +16,9 @@
  */
 package org.geotools.geometry.iso.primitive;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.PrimitiveFactory;

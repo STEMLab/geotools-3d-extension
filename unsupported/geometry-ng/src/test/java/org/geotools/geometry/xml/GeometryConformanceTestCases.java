@@ -22,20 +22,20 @@ import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-import junit.framework.TestResult;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.text.WKTParser;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.test.TestData;
 import org.opengis.geometry.Boundary;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.xml.sax.InputSource;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import junit.framework.TestResult;
 
 /**
  * This TestCase picks up the file with the same name as the test method, a JTS test, and applies it to the provided

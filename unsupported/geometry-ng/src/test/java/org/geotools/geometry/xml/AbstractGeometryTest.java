@@ -21,10 +21,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.geotools.geometry.ISOGeometryBuilder;
-import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.primitive.Curve;
@@ -33,7 +32,6 @@ import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CRSFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import junit.framework.TestCase;

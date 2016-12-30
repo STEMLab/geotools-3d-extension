@@ -16,6 +16,7 @@
  */
 package org.geotools.gml3.bindings;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,28 +201,28 @@ public class GML3ParsingUtils {
     }
 
     static Ring linearRing(Node node, ISOGeometryBuilder gb) {
-    	Curve curve = line(node, gf, true);
-    	//TODO
-        return (Ring) line(node, gf, csf, true);
+    	Curve curve = line(node, gb, true);
+        return gb.createRing(Arrays.asList(curve));
     }
 
-    static OrientableCurve line(Node node, ISOGeometryBuilder gb,
+    static Curve line(Node node, ISOGeometryBuilder gb,
             boolean ring) {
         if (node.hasChild(DirectPosition.class)) {
             List dps = node.getChildValues(DirectPosition.class);
             DirectPosition dp = (DirectPosition) dps.get(0);
 
-            CoordinateSequence seq = csf.create(dps.size(), dp.getDimension());
-
+            PointArray pa = gb.createPointArray();
             for (int i = 0; i < dps.size(); i++) {
                 dp = (DirectPosition) dps.get(i);
-
-                for (int j = 0; j < dp.getDimension(); j++) {
-                    seq.setOrdinate(i, j, dp.getOrdinate(j));
-                }
+                pa.add(dp);
             }
-
-            return ring ? gb.createring : gf.createLineString(seq);
+            
+            if(ring) {
+            	if(!pa.get(0).equals(pa.get(pa.size() - 1)))
+            		pa.add(pa.get(0));
+            }
+            
+            return gb.createCurve(pa);
         }
 
         if (node.hasChild(Point.class)) {
@@ -258,10 +259,10 @@ public class GML3ParsingUtils {
         }
 
         if (node.hasChild(PointArray.class)) {
-            CoordinateSequence seq = (CoordinateSequence) node
-                    .getChildValue(CoordinateSequence.class);
+            PointArray pa = (PointArray) node
+                    .getChildValue(PointArray.class);
 
-            return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
+            return gb.createCurve(pa);
         }
 
         return null;
@@ -275,7 +276,7 @@ public class GML3ParsingUtils {
      * @param gFactory
      * @param cs
      * @return
-     */
+     *//*
     public static CurvedGeometryFactory getCurvedGeometryFactory(ArcParameters arcParameters,
             GeometryFactory gFactory, CoordinateSequence cs) {
         CurvedGeometryFactory factory;
@@ -293,6 +294,6 @@ public class GML3ParsingUtils {
             factory = new CurvedGeometryFactory(gFactory, Double.MAX_VALUE);
         }
         return factory;
-    }
+    }*/
 
 }

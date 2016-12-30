@@ -16,15 +16,13 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
-import org.geotools.gml2.iso.bindings.GMLBoxTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
-import org.picocontainer.defaults.DefaultPicoContainer;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /**
  * 

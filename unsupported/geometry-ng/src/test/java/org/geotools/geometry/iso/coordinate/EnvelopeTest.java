@@ -16,15 +16,12 @@
  */
 package org.geotools.geometry.iso.coordinate;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.UnsupportedDimensionException;
-import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
-import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
-import org.geotools.geometry.iso.coordinate.EnvelopeImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
+
+import junit.framework.TestCase;
 
 /**
  * @author sanjay

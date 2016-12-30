@@ -16,28 +16,29 @@
  */
 package org.geotools.geometry.xml;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.geotools.geometry.iso.PrecisionModel;
+import org.geotools.geometry.text.WKTParser;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.PrecisionType;
 import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-import org.geotools.geometry.ISOGeometryBuilder;
-import org.geotools.geometry.text.WKTParser;
-import org.geotools.geometry.iso.PrecisionModel;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.xml.sax.SAXException;
 
 
 /**

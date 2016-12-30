@@ -93,9 +93,10 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
             }
         }        
         
-        return gBuilder.createCompositeSurface(generator)
+        return null;
+        /*return gBuilder.createCompositeSurface(generator)
         
-        return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));
+        return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));*/
     }
 
     public Object getProperty(Object object, QName name)

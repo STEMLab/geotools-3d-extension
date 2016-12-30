@@ -18,19 +18,15 @@ package org.geotools.geometry.iso.primitive;
 
 import java.util.ArrayList;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
-import org.geotools.geometry.iso.primitive.CurveImpl;
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.iso.primitive.RingImpl;
+import org.geotools.geometry.visualization.PaintGMObject;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.Ring;
-
-import org.geotools.geometry.visualization.PaintGMObject;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 
 
 /**

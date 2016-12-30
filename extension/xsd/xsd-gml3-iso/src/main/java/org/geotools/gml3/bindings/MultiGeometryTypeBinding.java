@@ -16,7 +16,7 @@
  */
 package org.geotools.gml3.bindings;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.xml.namespace.QName;
 
@@ -24,10 +24,11 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Binding object for the type http://www.opengis.net/gml/3.2:MultiGeometryType.
@@ -53,17 +54,16 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * </p>
  * 
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class MultiGeometryTypeBinding extends AbstractComplexBinding {
+    ISOGeometryBuilder gBuilder;
 
-    GeometryFactory factory;
-    
-    public MultiGeometryTypeBinding( GeometryFactory factory ) {
-        this.factory = factory;
+    public MultiGeometryTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
     
     /**
@@ -79,7 +79,7 @@ public class MultiGeometryTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return GeometryCollection.class;
+        return MultiPrimitive.class;
     }
 
     public int getExecutionMode() {
@@ -94,7 +94,7 @@ public class MultiGeometryTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
             throws Exception {
 
-        ArrayList geometries = new ArrayList();
+        HashSet geometries = new HashSet();
 
         if (node.hasChild(Geometry.class)) {
             geometries.addAll(node.getChildValues(Geometry.class));
@@ -107,17 +107,18 @@ public class MultiGeometryTypeBinding extends AbstractComplexBinding {
                 geometries.add(g[i]);
         }
 
-        return factory.createGeometryCollection((Geometry[]) geometries.toArray(new Geometry[geometries.size()]));
+        return gBuilder.createMultiPrimitive(geometries);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
         if (GML.geometryMember.equals(name)) {
-            GeometryCollection multiGeometry = (GeometryCollection) object;
-            Geometry[] members = new Geometry[multiGeometry.getNumGeometries()];
+        	MultiPrimitive multiGeometry = (MultiPrimitive) object;
+            Geometry[] members = new Geometry[multiGeometry.getElements().size()];
 
-            for (int i = 0; i < members.length; i++) {
-                members[i] = (Geometry) multiGeometry.getGeometryN(i);
+            int i = 0;
+            for (Geometry g : multiGeometry.getElements()) {
+                members[i++] = g;
             }
 
             GML3EncodingUtils.setChildIDs(multiGeometry);

@@ -25,7 +25,6 @@ import javax.xml.namespace.QName;
 
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.TEST;
 import org.geotools.referencing.CRS;
@@ -33,7 +32,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiPrimitive;

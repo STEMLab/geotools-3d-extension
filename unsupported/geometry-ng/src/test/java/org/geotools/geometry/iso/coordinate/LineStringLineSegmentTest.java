@@ -19,22 +19,17 @@ package org.geotools.geometry.iso.coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
-import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
-import org.geotools.geometry.iso.coordinate.LineStringImpl;
-import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.iso.primitive.RingImpl;
-import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineSegment;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for LineString and LineSegment

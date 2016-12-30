@@ -16,11 +16,11 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Binding;
 import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.w3c.dom.Document;
 
 /**

@@ -18,10 +18,10 @@ package org.geotools.gml3;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.gml2.FeatureTypeCache;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml2.bindings.GMLCoordTypeBinding;
 import org.geotools.gml2.bindings.GMLCoordinatesTypeBinding;
+import org.geotools.gml2.iso.FeatureTypeCache;
 import org.geotools.gml3.bindings.AbstractFeatureCollectionTypeBinding;
 import org.geotools.gml3.bindings.AbstractFeatureTypeBinding;
 import org.geotools.gml3.bindings.AbstractGeometryTypeBinding;
@@ -91,10 +91,6 @@ import org.geotools.xml.Parser;
 import org.geotools.xs.XS;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.picocontainer.MutablePicoContainer;
-
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
 
 
 /**

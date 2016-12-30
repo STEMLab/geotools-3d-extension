@@ -22,6 +22,7 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 
 import com.vividsolutions.jts.geom.GeometryCollection;
 
@@ -51,7 +52,7 @@ import com.vividsolutions.jts.geom.GeometryCollection;
  * </p>
  * 
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -71,7 +72,7 @@ public class MultiGeometryPropertyTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return GeometryCollection.class;
+        return MultiPrimitive.class;
     }
 
     /**

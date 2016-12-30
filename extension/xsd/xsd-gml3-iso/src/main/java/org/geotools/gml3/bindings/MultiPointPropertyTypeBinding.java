@@ -17,10 +17,11 @@
 package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
+
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPoint;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.aggregate.MultiPoint;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:MultiPointPropertyType.
@@ -50,7 +51,7 @@ import com.vividsolutions.jts.geom.MultiPoint;
  * </p>
  * 
  * @generated
- * 
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$

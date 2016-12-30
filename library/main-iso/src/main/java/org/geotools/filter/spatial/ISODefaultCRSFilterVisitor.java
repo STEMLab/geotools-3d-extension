@@ -16,6 +16,7 @@
  */
 package org.geotools.filter.spatial;
 
+import org.geotools.filter.visitor.ISODuplicatingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.opengis.filter.FilterFactory2;
@@ -24,8 +25,6 @@ import org.opengis.filter.spatial.BBOX;
 import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.crs.SingleCRS;
-
-import visitor.ISODuplicatingFilterVisitor;
 
 /**
  * Returns a clone of the provided filter where all geometries and bboxes that

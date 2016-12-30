@@ -23,7 +23,7 @@ import org.geotools.gml3.XSDIdRegistry;
 import org.opengis.geometry.primitive.Solid;
 
 /**
- * @author Donguk Seo
+ * @author Donguk Seo, Pusan National University
  *
  */
 public class SolidPropertyTypeBinding extends GeometryPropertyTypeBindingBase {

@@ -16,24 +16,21 @@
  */
 package org.geotools.geometry.iso.primitive;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
-import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.complex.Complex;
 import org.opengis.geometry.complex.CompositePoint;
-import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import junit.framework.TestCase;
 
 /**
  * @author sanjay

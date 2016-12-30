@@ -21,8 +21,7 @@ import javax.xml.namespace.QName;
 import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractSimpleBinding;
 import org.geotools.xml.InstanceComponent;
-
-import com.vividsolutions.jts.geom.Envelope;
+import org.opengis.geometry.Envelope;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:NullType.
@@ -56,7 +55,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * </p>
  * 
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -90,9 +89,7 @@ public class NullTypeBinding extends AbstractSimpleBinding {
      * @generated modifiable
      */
     public Object parse(InstanceComponent instance, Object value) throws Exception {
-        Envelope e = new Envelope();
-        e.setToNull();
-        return e;
+        return null;
     }
     
     @Override

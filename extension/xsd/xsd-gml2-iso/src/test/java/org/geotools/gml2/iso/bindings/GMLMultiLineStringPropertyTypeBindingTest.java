@@ -19,14 +19,12 @@ package org.geotools.gml2.iso.bindings;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
-import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
-import org.geotools.gml2.iso.bindings.GMLMultiLineStringPropertyTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;

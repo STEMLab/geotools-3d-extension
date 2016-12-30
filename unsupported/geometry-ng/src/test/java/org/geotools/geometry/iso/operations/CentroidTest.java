@@ -19,9 +19,6 @@ package org.geotools.geometry.iso.operations;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.aggregate.MultiCurveImpl;
 import org.geotools.geometry.iso.aggregate.MultiPointImpl;
 import org.geotools.geometry.iso.aggregate.MultiSurfaceImpl;
@@ -31,10 +28,13 @@ import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import junit.framework.TestCase;
 
 /**
  * 

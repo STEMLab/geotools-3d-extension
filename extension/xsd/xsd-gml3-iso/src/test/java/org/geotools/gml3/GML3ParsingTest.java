@@ -38,7 +38,7 @@ public class GML3ParsingTest extends TestCase {
 
     public void testWithoutSchema() throws Exception {
         InputStream in = getClass().getResourceAsStream( "states.xml");
-        GMLConfiguration gml = new GMLConfiguration();
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
         StreamingParser parser = new StreamingParser( gml, in, SimpleFeature.class );
         
         int nfeatures = 0;
@@ -74,7 +74,7 @@ public class GML3ParsingTest extends TestCase {
         tx.transform( new DOMSource( instance ), new StreamResult( xml ) );
         
         InputStream in = new FileInputStream( xml );
-        GMLConfiguration gml = new GMLConfiguration();
+        GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
         StreamingParser parser = new StreamingParser( gml, in, SimpleFeature.class );
         
         int nfeatures = 0;
@@ -90,7 +90,7 @@ public class GML3ParsingTest extends TestCase {
     }
     
     public void testParse3D() throws Exception {
-        Parser p = new Parser(new GMLConfiguration());
+        Parser p = new Parser(new GMLConfiguration_ISO());
         Object g = p.parse(GML3ParsingTest.class.getResourceAsStream("polygon3d.xml"));
         assertThat(g, instanceOf(Polygon.class));
 

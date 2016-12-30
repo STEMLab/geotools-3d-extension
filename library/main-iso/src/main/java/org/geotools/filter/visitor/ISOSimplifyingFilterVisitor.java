@@ -53,8 +53,6 @@ import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.identity.GmlObjectId;
 import org.opengis.filter.identity.Identifier;
 
-import visitor.ISODuplicatingFilterVisitor;
-
 /**
  * Takes a filter and returns a simplified, equivalent one. At the moment the filter:
  * <ul>

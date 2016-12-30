@@ -646,7 +646,7 @@ public class TTADemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
    			//ArrayList<Solid> al = getSolids(builder);
-   		    Filter filter = ff.bbox(new AttributeExpressionImpl("geom"), (BoundingBox3D)new ReferencedEnvelope3D(-20,-20,-20,20,20,20,DefaultGeographicCRS.WGS84));
+   		    Filter filter = ff.bbox(new AttributeExpressionImpl("geom"), (BoundingBox3D)new ReferencedEnvelope3D(-20,20,-20,20,-20,20,DefaultGeographicCRS.WGS84));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);

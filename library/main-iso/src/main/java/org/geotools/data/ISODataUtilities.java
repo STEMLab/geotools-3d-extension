@@ -81,7 +81,7 @@ import org.geotools.feature.type.GeometryDescriptorImpl;
 import org.geotools.feature.type.GeometryTypeImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.visitor.PropertyNameResolvingVisitor;
-import org.geotools.filter.visitor.SimplifyingFilterVisitor;
+import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.WKTReader2;
 import org.geotools.metadata.iso.citation.Citations;
@@ -2298,7 +2298,7 @@ public class ISODataUtilities {
         } else if ((filter2 != null) && !filter2.equals(Filter.INCLUDE)) {
             filter = ff.and(filter, filter2);
         }
-        filter = SimplifyingFilterVisitor.simplify(filter);
+        filter = ISOSimplifyingFilterVisitor.simplify(filter);
         Integer start = 0;
         if (firstQuery.getStartIndex() != null) {
             start = firstQuery.getStartIndex();
@@ -2334,7 +2334,7 @@ public class ISODataUtilities {
         if (query == null) {
             return query;
         }
-        Filter filter = SimplifyingFilterVisitor.simplify(query.getFilter());
+        Filter filter = ISOSimplifyingFilterVisitor.simplify(query.getFilter());
         query.setFilter(filter);
         return query;
     }

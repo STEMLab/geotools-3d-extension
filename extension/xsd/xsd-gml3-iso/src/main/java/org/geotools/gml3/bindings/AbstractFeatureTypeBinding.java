@@ -21,8 +21,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.geotools.gml2.FeatureTypeCache;
-import org.geotools.gml2.bindings.GMLEncodingUtils;
+import org.geotools.gml2.iso.FeatureTypeCache;
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.xml.AbstractComplexBinding;
@@ -67,7 +66,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$

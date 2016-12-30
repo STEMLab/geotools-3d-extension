@@ -16,18 +16,20 @@
  */
 package org.geotools.gml3.bindings;
 
+import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.bindings.GML2EncodingUtils;
+import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml3.GML;
+import org.geotools.referencing.CRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -63,7 +65,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -111,15 +113,29 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         //set the crs
-        if (value instanceof Geometry) {
+        /*if (value instanceof Geometry) {
             CoordinateReferenceSystem crs = GML3ParsingUtils.crs(node);
 
             if (crs != null) {
                 Geometry geometry = (Geometry) value;
                 geometry.setUserData(crs);
             }
-        }
+        }*/
 
+    	/*if (node.hasAttribute("srsName")) {
+            URI srs = (URI) node.getAttributeValue("srsName");
+            CoordinateReferenceSystem crs = CRS.decode(srs.toString());
+            
+            if (crs != null) {
+                if(!builder.getCoordinateReferenceSystem().equals(crs)) {
+                	builder.setCoordinateReferenceSystem(crs);
+                }
+            } else {
+                logger.warning("Could not create Coordinate Reference System for " + srs);
+            }
+            return crs;
+        }*/
+    	
         return value;
     }
     
@@ -155,13 +171,13 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
         if ("description".equals(name.getLocalPart())) {
             return GML3EncodingUtils.getDescription(geometry);
         }   
-        if ("uomLabels".equals(name.getLocalPart())) {
+        /*if ("uomLabels".equals(name.getLocalPart())) {
             return GML3EncodingUtils.getUomLabels(geometry);
         }
 
         if ("axisLabels".equals(name.getLocalPart())) {
             return GML3EncodingUtils.getAxisLabels(geometry);
-        }
+        }*/
 
         return null;
     }

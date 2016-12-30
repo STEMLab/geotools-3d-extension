@@ -84,10 +84,12 @@ import org.geotools.gml3.bindings.TimePositionUnionBinding;
 import org.geotools.gml3.bindings.ext.CompositeCurveTypeBinding;
 import org.geotools.gml3.smil.SMIL20Configuration;
 import org.geotools.gml3.smil.SMIL20LANGConfiguration;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.geotools.xs.XS;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.picocontainer.MutablePicoContainer;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
@@ -147,7 +149,7 @@ public class GMLConfiguration_ISO extends Configuration {
     /**
      * The factory used to create geometries
      */
-    private GeometryFactory geometryFactory;
+    private ISOGeometryBuilder geometryBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
 
     public GMLConfiguration_ISO() {
@@ -350,10 +352,7 @@ public class GMLConfiguration_ISO extends Configuration {
         container.registerComponentInstance(new XSDIdRegistry());
 
         //factories
-        container.registerComponentInstance(CoordinateSequenceFactory.class,
-            CoordinateArraySequenceFactory.instance());
-        container.registerComponentInstance(geometryFactory == null ? new GeometryFactory()
-                : geometryFactory);
+        container.registerComponentInstance(geometryBuilder);
         
         container.registerComponentInstance(new GML3EncodingUtils());
         
@@ -385,8 +384,8 @@ public class GMLConfiguration_ISO extends Configuration {
      * 
      * @return the geometryFactory
      */
-    public GeometryFactory getGeometryFactory() {
-        return geometryFactory;
+    public ISOGeometryBuilder getGeometryFactory() {
+        return geometryBuilder;
     }
 
     /**
@@ -394,8 +393,8 @@ public class GMLConfiguration_ISO extends Configuration {
      * 
      * @param geometryFactory the geometryFactory to set
      */
-    public void setGeometryFactory(GeometryFactory geometryFactory) {
-        this.geometryFactory = geometryFactory;
+    public void setGeometryFactory(ISOGeometryBuilder geometryBuilder) {
+        this.geometryBuilder = geometryBuilder;
     }
 
 }

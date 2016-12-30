@@ -19,8 +19,8 @@ package org.geotools.gml3.bindings;
 import javax.xml.namespace.QName;
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:PointPropertyType.
@@ -56,7 +56,7 @@ import com.vividsolutions.jts.geom.Point;
  * </p>
  * 
  * @generated
- * 
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$

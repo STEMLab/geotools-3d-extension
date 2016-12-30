@@ -4,19 +4,18 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.gml2.bindings.GML2EncodingUtils;
+import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 /**
  * 
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  * @source $URL$
  */
 public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBinding {
@@ -39,14 +38,6 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
     public Class<? extends Geometry> getGeometryType() {
         return Geometry.class;
     }
-    
-    /**
-     * for Parsing ISOGeometry
-     * @return
-     */
-    public Class<? extends org.geotools.geometry.iso.root.GeometryImpl> getISOGeometryType() {
-        return org.geotools.geometry.iso.root.GeometryImpl.class;
-    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -54,14 +45,7 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        //return node.getChildValue(getGeometryType());
-        Object object = node.getChildValue(getGeometryType());
-        if (object != null) {
-            return object;
-        }
-        
-        object = node.getChildValue(getISOGeometryType());
-        return object;
+        return node.getChildValue(getGeometryType());
     }
 
     /**
@@ -80,9 +64,6 @@ public abstract class GeometryPropertyTypeBindingBase extends AbstractComplexBin
         // TODO: Move implementation to GML3EncodingUtils
         if (object instanceof Geometry) {
             return encodingUtils.GeometryPropertyType_GetProperty((Geometry) object, name, makeEmpty);
-        }
-        if (name.getLocalPart().equals("_Solid") || name.getLocalPart().equals("AbstractSolid")) { // 3.1(_Solid) and 3.2(AbstractSolid)
-            return object;
         }
         return null;
     }

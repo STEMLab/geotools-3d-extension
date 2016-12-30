@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.CircularArc;
 import org.geotools.geometry.jts.CurvedGeometries;
 import org.geotools.geometry.jts.CurvedGeometryFactory;
-import org.geotools.gml2.FeatureTypeCache;
-import org.geotools.gml2.bindings.GML2ParsingUtils;
+import org.geotools.gml2.iso.FeatureTypeCache;
+import org.geotools.gml2.iso.bindings.GML2ParsingUtils;
 import org.geotools.gml3.ArcParameters;
 import org.geotools.gml3.Circle;
 import org.geotools.xml.BindingWalkerFactory;
@@ -34,16 +35,13 @@ import org.geotools.xml.Node;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Utility class for gml3 parsing.
@@ -197,15 +195,17 @@ public class GML3ParsingUtils {
         }
     }
 
-    static LineString lineString(Node node, GeometryFactory gf, CoordinateSequenceFactory csf) {
-        return line(node, gf, csf, false);
+    static Curve lineString(Node node, ISOGeometryBuilder gb) {
+        return line(node, gb, false);
     }
 
-    static LinearRing linearRing(Node node, GeometryFactory gf, CoordinateSequenceFactory csf) {
-        return (LinearRing) line(node, gf, csf, true);
+    static Ring linearRing(Node node, ISOGeometryBuilder gb) {
+    	Curve curve = line(node, gf, true);
+    	//TODO
+        return (Ring) line(node, gf, csf, true);
     }
 
-    static LineString line(Node node, GeometryFactory gf, CoordinateSequenceFactory csf,
+    static OrientableCurve line(Node node, ISOGeometryBuilder gb,
             boolean ring) {
         if (node.hasChild(DirectPosition.class)) {
             List dps = node.getChildValues(DirectPosition.class);
@@ -221,7 +221,7 @@ public class GML3ParsingUtils {
                 }
             }
 
-            return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
+            return ring ? gb.createring : gf.createLineString(seq);
         }
 
         if (node.hasChild(Point.class)) {
@@ -231,13 +231,6 @@ public class GML3ParsingUtils {
             for (int i = 0; i < points.size(); i++) {
                 coordinates[i] = ((Point) points.get(0)).getCoordinate();
             }
-
-            return ring ? gf.createLinearRing(coordinates) : gf.createLineString(coordinates);
-        }
-
-        if (node.hasChild(Coordinate.class)) {
-            List list = node.getChildValues(Coordinate.class);
-            Coordinate[] coordinates = (Coordinate[]) list.toArray(new Coordinate[list.size()]);
 
             return ring ? gf.createLinearRing(coordinates) : gf.createLineString(coordinates);
         }
@@ -264,7 +257,7 @@ public class GML3ParsingUtils {
             return ring ? gf.createLinearRing(seq) : gf.createLineString(seq);
         }
 
-        if (node.hasChild(CoordinateSequence.class)) {
+        if (node.hasChild(PointArray.class)) {
             CoordinateSequence seq = (CoordinateSequence) node
                     .getChildValue(CoordinateSequence.class);
 

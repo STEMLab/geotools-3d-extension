@@ -30,6 +30,7 @@ import org.geotools.util.UnsupportedImplementationException;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.opengis.geometry.primitive.Shell;
@@ -50,12 +51,10 @@ import com.vividsolutions.jts.geom.JTSUtilsNG;
  */
 public class SolidTypeBinding extends AbstractComplexBinding {
 
-    protected GeometryFactory gf;
-    protected PrimitiveFactory pf;
-    
-    public SolidTypeBinding(GeometryFactory gf, PrimitiveFactory pf) {
-        this.gf = gf;
-        this.pf = pf;
+	protected ISOGeometryBuilder gBuilder;
+
+    public SolidTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
     
     /**

@@ -22,7 +22,8 @@ import org.geotools.gml2.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-import org.opengis.geometry.aggregate.Aggregate;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.primitive.Primitive;
 
 //import com.vividsolutions.jts.geom.GeometryCollection;
 
@@ -73,7 +74,7 @@ public class GMLAbstractGeometryCollectionBaseTypeBinding extends AbstractComple
      * @generated modifiable
      */
     public Class getType() {
-        return Aggregate.class;
+        return MultiPrimitive.class;
     }
 
     /**

@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.gml3.GML;
@@ -56,7 +57,7 @@ import org.opengis.feature.simple.SimpleFeature;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -97,7 +98,7 @@ public class AbstractFeatureCollectionTypeBinding extends AbstractComplexBinding
         List<SimpleFeature> childValues = node.getChildValues(SimpleFeature.class);
         
         // example DefaultFeatureCollections or ListFeatureCollection
-        Collection<SimpleFeature> collection = DataUtilities.collectionCast( featureCollection );
+        Collection<SimpleFeature> collection = ISODataUtilities.collectionCast( featureCollection );
         collection.addAll(childValues);
 
         //&lt;element minOccurs="0" ref="gml:featureMembers"/&gt;

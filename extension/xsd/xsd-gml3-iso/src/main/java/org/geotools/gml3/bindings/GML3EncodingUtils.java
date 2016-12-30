@@ -28,14 +28,11 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.feature.NameImpl;
-import org.geotools.geometry.jts.LiteCoordinateSequence;
-import org.geotools.geometry.jts.SingleCurvedGeometry;
-import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
-import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.bindings.GML2EncodingUtils;
-import org.geotools.gml2.bindings.GMLEncodingUtils;
+import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
+import org.geotools.gml2.iso.bindings.GMLEncodingUtils;
 import org.geotools.gml3.GML;
+import org.geotools.gml3.GMLConfiguration_ISO;
 import org.geotools.gml3.XSDIdRegistry;
 import org.geotools.util.Converters;
 import org.geotools.xlink.XLINK;
@@ -49,15 +46,15 @@ import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
-
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Utility class for gml3 encoding.
@@ -88,7 +85,18 @@ public class GML3EncodingUtils {
         e = new GMLEncodingUtils(gml);
     }
 
-    static CoordinateSequence positions(LineString line) {
+    static PointArray positions(Curve line) {
+    	//TODO
+        if (line instanceof SingleCurvedGeometry<?>) {
+            SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
+            return new LiteCoordinateSequence(curved.getControlPoints());
+        } else {
+            return line.getCoordinateSequence();
+        }
+    }
+    
+    static PointArray positions(Ring line) {
+    	//TODO
         if (line instanceof SingleCurvedGeometry<?>) {
             SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
             return new LiteCoordinateSequence(curved.getControlPoints());
@@ -123,7 +131,7 @@ public class GML3EncodingUtils {
     /**
      * Get uomLabels for the geometry if set in app-schema mapping configuration.
      */
-    public static String getUomLabels(Geometry g) {
+    /*public static String getUomLabels(Geometry g) {
         Object userData = g.getUserData();
         if (userData != null && userData instanceof Map) {
             Object attributes = ((Map) userData).get(Attributes.class);
@@ -136,12 +144,12 @@ public class GML3EncodingUtils {
             }
         }
         return null;
-    }
+    }*/
 
     /**
      * Get axisLabels for the geometry if set in app-schema mapping configuration.
      */
-    public static String getAxisLabels(Geometry g) {
+    /*public static String getAxisLabels(Geometry g) {
         Object userData = g.getUserData();
         if (userData != null && userData instanceof Map) {
             Object attributes = ((Map) userData).get(Attributes.class);
@@ -154,7 +162,7 @@ public class GML3EncodingUtils {
             }
         }
         return null;
-    }
+    }*/
 
     public static String getID(Geometry g) {
         return GML2EncodingUtils.getID(g);
@@ -208,7 +216,7 @@ public class GML3EncodingUtils {
             //}
     
             // check if srsDimension is turned off
-            if (config.hasProperty(GMLConfiguration.NO_SRS_DIMENSION)) {
+            if (config.hasProperty(GMLConfiguration_ISO.NO_SRS_DIMENSION)) {
                 return null;
             }
             

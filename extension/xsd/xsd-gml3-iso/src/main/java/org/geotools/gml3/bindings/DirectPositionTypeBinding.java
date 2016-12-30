@@ -89,7 +89,7 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return CoordinateSequence.class;
+        return DirectPosition.class;
     }
 
     /**

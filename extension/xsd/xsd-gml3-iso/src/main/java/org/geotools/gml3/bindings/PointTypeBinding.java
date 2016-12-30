@@ -18,19 +18,14 @@ package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.geometry.DirectPosition1D;
-import org.geotools.geometry.DirectPosition2D;
 import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Point;
 
 
 /**
@@ -76,16 +71,16 @@ import com.vividsolutions.jts.geom.Point;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class PointTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+	ISOGeometryBuilder gBuilder;
 
-    public PointTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public PointTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -119,21 +114,7 @@ public class PointTypeBinding extends AbstractComplexBinding {
         throws Exception {
         if (node.hasChild(DirectPosition.class)) {
             DirectPosition dp = (DirectPosition) node.getChildValue(DirectPosition.class);
-
-            if(dp instanceof DirectPosition2D) {
-                return gFactory.createPoint(new Coordinate(dp.getOrdinate(0), dp.getOrdinate(1)));
-            } else {
-                return gFactory.createPoint(new Coordinate(dp.getOrdinate(0), dp.getOrdinate(1), dp.getOrdinate(2)));
-            }
-        }
-
-        if (node.hasChild(Coordinate.class)) {
-            return gFactory.createPoint((Coordinate) node.getChildValue(Coordinate.class));
-        }
-
-        if (node.hasChild(CoordinateSequence.class)) {
-            return gFactory.createPoint((CoordinateSequence) node.getChildValue(
-                    CoordinateSequence.class));
+            return gBuilder.createPoint(dp);
         }
 
         return null;
@@ -142,13 +123,13 @@ public class PointTypeBinding extends AbstractComplexBinding {
     public Object getProperty(Object object, QName name) {
         //hack for xlink stuff
         Geometry geometry = (Geometry) object;
-        if ( geometry.isEmpty() ) {
+        if ( geometry == null ) {
             return null;
         }
         
         if ("pos".equals(name.getLocalPart())) {
             Point point = (Point) object;
-            return point.getCoordinateSequence();
+            return point.getDirectPosition();
         }
 
         return null;

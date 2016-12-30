@@ -17,10 +17,11 @@
 package org.geotools.gml3.bindings;
 
 import javax.xml.namespace.QName;
+
 import org.geotools.gml3.GML;
 import org.geotools.gml3.XSDIdRegistry;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:PolygonPropertyType.
@@ -77,7 +78,7 @@ public class PolygonPropertyTypeBinding extends GeometryPropertyTypeBindingBase 
      * @generated modifiable
      */
     public Class<? extends Geometry> getGeometryType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
 }

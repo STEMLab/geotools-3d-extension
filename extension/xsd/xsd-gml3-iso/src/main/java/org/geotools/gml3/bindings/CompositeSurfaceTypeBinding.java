@@ -30,6 +30,8 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.complex.CompositeSurface;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -44,10 +46,10 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implements Comparable {
-    protected GeometryFactory gf;
+	protected ISOGeometryBuilder gBuilder;
 
-    public CompositeSurfaceTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    public CompositeSurfaceTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -64,7 +66,7 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return CompositeSurface.class;
     }
 
     public int getExecutionMode() {
@@ -90,7 +92,9 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
                 surfaces.add((Polygon) multiPolygon.getGeometryN(i));
             }
         }        
-                
+        
+        return gBuilder.createCompositeSurface(generator)
+        
         return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));
     }
 

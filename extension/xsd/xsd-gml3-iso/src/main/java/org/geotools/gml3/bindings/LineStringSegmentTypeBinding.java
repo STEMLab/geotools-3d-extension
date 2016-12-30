@@ -22,6 +22,8 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -80,18 +82,16 @@ import com.vividsolutions.jts.geom.LineString;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class LineStringSegmentTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gf;
-    CoordinateSequenceFactory csf;
+	ISOGeometryBuilder gBuilder;
 
-    public LineStringSegmentTypeBinding(GeometryFactory gf, CoordinateSequenceFactory csf) {
-        this.gf = gf;
-        this.csf = csf;
+    public LineStringSegmentTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
 
     /**
@@ -108,7 +108,7 @@ public class LineStringSegmentTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return LineString.class;
+        return Curve.class;
     }
 
     /**
@@ -119,13 +119,13 @@ public class LineStringSegmentTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        return GML3ParsingUtils.lineString(node, gf, csf);
+        return GML3ParsingUtils.lineString(node, gBuilder);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("posList".equals(name.getLocalPart())) {
-            return GML3EncodingUtils.positions((LineString) object);
+            return GML3EncodingUtils.positions((Curve) object);
         }
 
         if ("interpolation".equals(name.getLocalPart())) {

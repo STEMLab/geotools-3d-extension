@@ -22,6 +22,8 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
@@ -73,17 +75,17 @@ import com.vividsolutions.jts.geom.Polygon;
  * </p>
  * 
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class PolygonPatchTypeBinding extends AbstractComplexBinding {
 
-    protected GeometryFactory gf;
-    
-    public PolygonPatchTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    protected ISOGeometryBuilder gBuilder;
+
+    public PolygonPatchTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
     
     /**
@@ -99,7 +101,7 @@ public class PolygonPatchTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon.class;
+        return Surface.class;
     }
 
     /**
@@ -108,7 +110,7 @@ public class PolygonPatchTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return new PolygonTypeBinding( gf ).parse( instance, node, value);
+        return new PolygonTypeBinding( gBuilder ).parse( instance, node, value);
     }
 
 }

@@ -19,17 +19,17 @@ package org.geotools.geometry.iso.complex;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.complex.ComplexFactory;
 import org.opengis.geometry.complex.CompositeSurface;
 import org.opengis.geometry.coordinate.GeometryFactory;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Surface;
+
+import junit.framework.TestCase;
 
 /**
  * 

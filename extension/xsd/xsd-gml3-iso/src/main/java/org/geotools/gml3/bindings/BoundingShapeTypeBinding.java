@@ -22,9 +22,9 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.Polygon;
 
 
 /**
@@ -50,7 +50,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
@@ -84,8 +84,7 @@ public class BoundingShapeTypeBinding extends AbstractComplexBinding {
         Envelope envelope = (Envelope) node.getChildValue(Envelope.class);
 
         if (envelope == null) {
-            envelope = new Envelope();
-            envelope.setToNull();
+            return null;
         }
 
         return envelope;
@@ -93,18 +92,18 @@ public class BoundingShapeTypeBinding extends AbstractComplexBinding {
 
     public Object getProperty(Object object, QName name) {
         //check for a polygon
-        if (object instanceof Polygon) {
-            object = ((Polygon) object).getEnvelopeInternal();
+        if (object instanceof Geometry) {
+            object = ((Geometry) object).getEnvelope();
         }
         Envelope e = (Envelope) object;
         
-        if ("Envelope".equals(name.getLocalPart()) && !e.isNull()) {
+        /*if ("Envelope".equals(name.getLocalPart()) && !e.isNull()) {
             return e;
         }
         if ("Null".equals(name.getLocalPart()) && e.isNull()) {
             return e;
-        }
+        }*/
 
-        return null;
+        return e;
     }
 }

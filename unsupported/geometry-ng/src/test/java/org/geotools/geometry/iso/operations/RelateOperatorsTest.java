@@ -19,9 +19,6 @@ package org.geotools.geometry.iso.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.geometry.iso.complex.CompositePointImpl;
 import org.geotools.geometry.iso.complex.CompositeSurfaceImpl;
 import org.geotools.geometry.iso.io.wkt.ParseException;
@@ -31,8 +28,11 @@ import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import junit.framework.TestCase;
 
 
 /**

@@ -17,9 +17,9 @@
 package org.geotools.gml2.iso;
 
 import org.geotools.feature.FeatureCollections;
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xs.XSConfiguration;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 

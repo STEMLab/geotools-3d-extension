@@ -16,15 +16,14 @@
  */
 package org.geotools.geometry.iso.coordinate;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
-import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineSegment;
 import org.opengis.geometry.coordinate.Position;
+
+import junit.framework.TestCase;
 
 /**
  * 

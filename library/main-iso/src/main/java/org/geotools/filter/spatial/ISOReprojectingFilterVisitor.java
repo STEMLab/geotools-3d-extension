@@ -18,11 +18,9 @@ package org.geotools.filter.spatial;
 
 import java.util.List;
 
-import org.geotools.filter.visitor.DuplicatingFilterVisitor;
-import org.geotools.geometry.jts.JTS;
+import org.geotools.filter.visitor.ISODuplicatingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.BinaryComparisonOperator;
@@ -52,8 +50,6 @@ import org.opengis.geometry.Geometry;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
-
-import visitor.ISODuplicatingFilterVisitor;
 
 /**
  * Returns a clone of the provided filter where all geometries and bboxes have

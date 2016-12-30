@@ -49,7 +49,7 @@ import com.vividsolutions.jts.geom.Point;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$

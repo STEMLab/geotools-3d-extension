@@ -16,13 +16,11 @@
  */
 package org.geotools.gml2.iso.bindings;
 
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.gml2.iso.GML;
-import org.geotools.gml2.iso.bindings.GMLGeometryAssociationTypeBinding;
-import org.geotools.gml2.iso.bindings.GMLPointPropertyTypeBinding;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Point;
 
 /**

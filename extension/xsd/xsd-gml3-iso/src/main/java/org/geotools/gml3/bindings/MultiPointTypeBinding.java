@@ -17,6 +17,8 @@
 package org.geotools.gml3.bindings;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -24,10 +26,9 @@ import org.geotools.gml3.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.primitive.Point;
 
 
 /**
@@ -59,18 +60,17 @@ import com.vividsolutions.jts.geom.Point;
  * </p>
  *
  * @generated
- *
+ * @author Hyung-Gyu Ryoo, Pusan National University
  *
  *
  * @source $URL$
  */
 public class MultiPointTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
+    ISOGeometryBuilder gBuilder;
 
-    public MultiPointTypeBinding(GeometryFactory gFactory) {
-        this.gFactory = gFactory;
+    public MultiPointTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
-
     /**
      * @generated
      */
@@ -100,7 +100,7 @@ public class MultiPointTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        ArrayList points = new ArrayList();
+        Set points = new HashSet();
 
         if (node.hasChild(Point.class)) {
             points.addAll(node.getChildValues(Point.class));
@@ -113,17 +113,18 @@ public class MultiPointTypeBinding extends AbstractComplexBinding {
                 points.add(p[i]);
         }
 
-        return gFactory.createMultiPoint((Point[]) points.toArray(new Point[points.size()]));
+        return gBuilder.createMultiPoint(points);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("pointMember".equals(name.getLocalPart())) {
             MultiPoint multiPoint = (MultiPoint) object;
-            Point[] members = new Point[multiPoint.getNumGeometries()];
+            Point[] members = new Point[multiPoint.getElements().size()];
 
-            for (int i = 0; i < members.length; i++) {
-                members[i] = (Point) multiPoint.getGeometryN(i);
+            int i = 0;
+            for (Point p : multiPoint.getElements()) {
+                members[i++] = p;
             }
 
             GML3EncodingUtils.setChildIDs(multiPoint);

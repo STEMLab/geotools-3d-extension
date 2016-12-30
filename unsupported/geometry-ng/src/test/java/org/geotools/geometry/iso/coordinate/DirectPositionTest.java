@@ -16,13 +16,13 @@
  */
 package org.geotools.geometry.iso.coordinate;
 
-import junit.framework.TestCase;
-
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.opengis.util.Cloneable;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.GeometryFactory;
+import org.opengis.util.Cloneable;
+
+import junit.framework.TestCase;
 
 /**
  * @author Sanjay Jena

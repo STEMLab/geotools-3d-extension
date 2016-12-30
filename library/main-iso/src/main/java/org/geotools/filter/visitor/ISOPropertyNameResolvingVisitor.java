@@ -35,7 +35,7 @@ import org.opengis.filter.expression.PropertyName;
  *
  * @source $URL$
  */
-public class ISOPropertyNameResolvingVisitor extends DuplicatingFilterVisitor {
+public class ISOPropertyNameResolvingVisitor extends ISODuplicatingFilterVisitor {
 
     /** the feature type */
     SimpleFeatureType featureType;

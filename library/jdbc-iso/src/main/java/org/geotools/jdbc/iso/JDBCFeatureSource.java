@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.ISOFilteringFeatureReader;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
@@ -673,7 +673,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
 
         // if post filter, wrap it
         if (postFilterRequired) {
-            reader = new FilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
+            reader = new ISOFilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
             if(!returnedSchema.equals(querySchema)) {
                 reader = new ISOReTypeFeatureReader(reader, returnedSchema);
             }

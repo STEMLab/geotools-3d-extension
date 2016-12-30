@@ -38,7 +38,7 @@ import org.geotools.data.FeatureLockException;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
-import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.ISOFilteringFeatureReader;
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.InProcessLockingManager;
 import org.geotools.data.MaxFeatureReader;
@@ -649,7 +649,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
         //filtering
         if ( !canFilter() ) {
             if (query.getFilter() != null && query.getFilter() != Filter.INCLUDE ) {
-                reader = new FilteringFeatureReader<SimpleFeatureType, SimpleFeature>( reader, query.getFilter() );
+                reader = new ISOFilteringFeatureReader<SimpleFeatureType, SimpleFeature>( reader, query.getFilter() );
             }    
         }
         

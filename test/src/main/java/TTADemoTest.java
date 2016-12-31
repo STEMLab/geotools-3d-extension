@@ -784,9 +784,11 @@ public class TTADemoTest extends JFrame{
    				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
    			}
    			else if(cql[0].equalsIgnoreCase("equals")) {
-   				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
+   				filter = ff.equals("geom", (Geometry)wktr.read(cql[1]));
    			}
-   		     
+   			else if(cql[0].equalsIgnoreCase("intersects")) {
+   				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
+   			} 
 			SimpleFeatureCollection features = source.getFeatures(filter);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);

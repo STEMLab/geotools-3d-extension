@@ -25,7 +25,6 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
-
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -39,7 +38,6 @@ import org.geotools.filter.AttributeExpressionImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
@@ -58,6 +56,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -79,13 +78,13 @@ public class TTADemoTest extends JFrame{
 	private JTextField text;
 	private static Hints hints = null;
 
-	private static GeometryBuilder builder;
+	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		builder = new GeometryBuilder(h);
+		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
 		frame.setVisible(true);
 	}
@@ -177,7 +176,7 @@ public class TTADemoTest extends JFrame{
 			}
 		});*/
 	}
-	public ArrayList<Solid> getSolids(GeometryBuilder builder) {
+	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
 		ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
 
@@ -187,7 +186,7 @@ public class TTADemoTest extends JFrame{
 
 		return solids;
 	}
-	public Solid makeSolid(GeometryBuilder builder, ArrayList<DirectPosition> points) {
+	public Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPosition> points) {
 		DirectPosition position1 = points.get(0);
 		DirectPosition position2 = points.get(1);
 		DirectPosition position3 = points.get(2);
@@ -325,7 +324,7 @@ public class TTADemoTest extends JFrame{
 
 		return solid;
 	}
-	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(GeometryBuilder builder) {
+	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
 		ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
 		DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 });
@@ -588,7 +587,7 @@ public class TTADemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-   			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
    		    Filter filter = ff.contains("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
@@ -616,7 +615,7 @@ public class TTADemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-   			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
    		    Filter filter = ff.within("geom", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "geom" });
@@ -644,7 +643,7 @@ public class TTADemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-   			GeometryBuilder gb = new GeometryBuilder(DefaultGeographicCRS.WGS84);
+   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			//ArrayList<Solid> al = getSolids(builder);
    		    Filter filter = ff.bbox(new AttributeExpressionImpl("geom"), (BoundingBox3D)new ReferencedEnvelope3D(-20,-20,-20,20,20,20,DefaultGeographicCRS.WGS84));
 			Query query = new Query(typeName, filter, new String[] { "geom" });

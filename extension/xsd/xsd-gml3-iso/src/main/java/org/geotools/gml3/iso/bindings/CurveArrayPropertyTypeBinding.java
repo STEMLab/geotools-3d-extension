@@ -24,6 +24,7 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -79,7 +80,7 @@ public class CurveArrayPropertyTypeBinding extends AbstractComplexBinding {
      */
     public Class getType() {
         //return Curve[].class;
-        return MultiLineString[].class;
+        return Curve[].class;
     }
 
     /**

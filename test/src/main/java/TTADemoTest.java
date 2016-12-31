@@ -41,6 +41,8 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
@@ -165,6 +167,7 @@ public class TTADemoTest extends JFrame{
 				bboxfilter();
 			}
 		});
+		
 
 		/*dataMenu.add(new SafeAction("Count") {
 			public void action(ActionEvent e) throws Throwable {
@@ -770,13 +773,26 @@ public class TTADemoTest extends JFrame{
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
-			Filter filter = CQL.toFilter(text.getText());
+			String sql = text.getText();
+			String[] cql = sql.split(":");
+			Hints h = new Hints();
+   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
+   			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
+   			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+   			Filter filter = CQL.toFilter("include");
+   			if(cql[0].equalsIgnoreCase("contains")) {
+   				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
+   			}
+   		     
 			SimpleFeatureCollection features = source.getFeatures(filter);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}

@@ -579,7 +579,7 @@ public class TTADemoTest extends JFrame{
 		}
 	}
 	private void constainsfilter() {
-		String typeName = "Solids";
+		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -607,7 +607,7 @@ public class TTADemoTest extends JFrame{
 		} 
 	}
 	private void withinfilter() {
-		String typeName = "Solids";
+		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -635,7 +635,7 @@ public class TTADemoTest extends JFrame{
 		} 
 	}
 	private void bboxfilter() {
-		String typeName = "Solids";
+		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -663,7 +663,7 @@ public class TTADemoTest extends JFrame{
 		} 
 	}
 	private void getLineString() {
-		String typeName = "linestring";
+		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -781,6 +781,9 @@ public class TTADemoTest extends JFrame{
    			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
    			Filter filter = CQL.toFilter("include");
    			if(cql[0].equalsIgnoreCase("contains")) {
+   				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
+   			}
+   			else if(cql[0].equalsIgnoreCase("equals")) {
    				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
    			}
    		     

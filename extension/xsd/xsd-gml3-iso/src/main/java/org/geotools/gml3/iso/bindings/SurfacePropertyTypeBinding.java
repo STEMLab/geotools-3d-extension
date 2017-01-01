@@ -22,7 +22,12 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.XSDIdRegistry;
 import org.geotools.gml3.iso.bindings.GML3EncodingUtils;
 import org.geotools.gml3.iso.bindings.GeometryPropertyTypeBindingBase;
+import org.geotools.xml.ElementInstance;
+import org.geotools.xml.Node;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Surface;
 
 /**
@@ -74,7 +79,20 @@ public class SurfacePropertyTypeBinding extends GeometryPropertyTypeBindingBase 
     }
 
     public Class<? extends Geometry> getGeometryType() {
-        return Surface.class;
+        return OrientableSurface.class;
+    }
+    
+    @Override
+    public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
+    	
+    	Surface surface = (Surface) node.getChildValue(Surface.class);
+    	CompositeSurface compSurface = (CompositeSurface) node.getChildValue(CompositeSurface.class);
+    	
+    	if(compSurface != null) {
+    		return compSurface; 
+    	} else {
+    		return surface;
+    	}
     }
 
 }

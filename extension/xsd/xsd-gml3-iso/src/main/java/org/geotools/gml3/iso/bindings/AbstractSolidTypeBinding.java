@@ -43,6 +43,11 @@ public class AbstractSolidTypeBinding extends AbstractComplexBinding {
         return null;
     }
 
+    @Override
+    public int getExecutionMode() {
+        return AFTER;
+    }
+    
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

@@ -34,6 +34,7 @@ import org.geotools.gml3.iso.bindings.ArcTypeBinding;
 import org.geotools.gml3.iso.bindings.BoundingShapeTypeBinding;
 import org.geotools.gml3.iso.bindings.CircleTypeBinding;
 import org.geotools.gml3.iso.bindings.ComplexSupportXSAnyTypeBinding;
+import org.geotools.gml3.iso.bindings.CompositeSurfaceTypeBinding;
 import org.geotools.gml3.iso.bindings.CurveArrayPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.CurvePropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.CurveSegmentArrayPropertyTypeBinding;
@@ -290,6 +291,7 @@ public class GMLConfiguration_ISO extends Configuration {
             SurfacePropertyTypeBinding.class);
         container.registerComponentImplementation(GML.SurfaceType, SurfaceTypeBinding.class);
         
+        container.registerComponentImplementation(GML.CompositeSurfaceType, CompositeSurfaceTypeBinding.class);
         container.registerComponentImplementation(GML.SolidType, SolidTypeBinding.class);
         container.registerComponentImplementation(GML.SolidPropertyType, SolidPropertyTypeBinding.class);
         

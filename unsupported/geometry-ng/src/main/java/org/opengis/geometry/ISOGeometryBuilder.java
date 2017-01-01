@@ -452,8 +452,8 @@ public class ISOGeometryBuilder {
     }
 
 	public Shell createShell(List<OrientableSurface> orientableSurfaces) throws MismatchedReferenceSystemException, MismatchedDimensionException {
-	        return getPrimitiveFactory().createShell(orientableSurfaces);
-        }
+	    return getPrimitiveFactory().createShell(orientableSurfaces);
+    }
 	
 	public SolidBoundary createSolidBoundary(Shell exterior, List<Shell> interiors) throws MismatchedReferenceSystemException, MismatchedDimensionException {
 	    return getPrimitiveFactory().createSolidBoundary(exterior, interiors);

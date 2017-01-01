@@ -19,13 +19,11 @@ package org.geotools.gml3.iso.bindings;
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
-import org.geotools.gml3.iso.bindings.MultiPolygonTypeBinding;
-import org.geotools.gml3.iso.bindings.MultiSurfaceTypeBinding;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
-import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -100,7 +98,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
     
     @Override
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -109,7 +107,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      * @generated modifiable
      */
     public Class getType() {
-        return MultiSurface.class;
+        return Surface.class;
     }
 
     /**

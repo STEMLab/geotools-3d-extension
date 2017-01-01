@@ -32,8 +32,9 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Surface;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -66,7 +67,7 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
      * @generated modifiable
      */
     public Class getType() {
-        return CompositeSurface.class;
+        return Surface.class;
     }
 
     public int getExecutionMode() {
@@ -82,21 +83,15 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         
-        List multiPolygons = node.getChildValues(MultiPolygon.class);
-        List surfaces = new ArrayList<Polygon>();
+        List multiPolygons = node.getChildValues(Surface.class);
+        List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
         
         for (Object object : multiPolygons) {
-            MultiPolygon multiPolygon = (MultiPolygon) object;
-            
-            for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
-                surfaces.add((Polygon) multiPolygon.getGeometryN(i));
-            }
+            Surface surface = (Surface) object;
+            surfaces.add(surface);
         }        
         
-        return null;
-        /*return gBuilder.createCompositeSurface(generator)
-        
-        return gf.createMultiPolygon((Polygon[]) surfaces.toArray(new Polygon[surfaces.size()]));*/
+        return gBuilder.createCompositeSurface(surfaces);
     }
 
     public Object getProperty(Object object, QName name)

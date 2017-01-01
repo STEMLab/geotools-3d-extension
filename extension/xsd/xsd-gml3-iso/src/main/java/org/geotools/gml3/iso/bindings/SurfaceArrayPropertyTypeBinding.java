@@ -24,6 +24,7 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -68,7 +69,7 @@ public class SurfaceArrayPropertyTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon[].class;
+        return Surface[].class;
     }
 
     /**
@@ -79,8 +80,8 @@ public class SurfaceArrayPropertyTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        List surfaces = node.getChildValues(Polygon.class);
+        List surfaces = node.getChildValues(Surface.class);
 
-        return surfaces.toArray(new Polygon[surfaces.size()]);
+        return surfaces.toArray(new Surface[surfaces.size()]);
     }
 }

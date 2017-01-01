@@ -236,7 +236,7 @@ public class GeometryToWKTString {
 		rString += ringCoordToString((Ring) sb.getExterior());
 		rString += ")";
 		List<Ring> interior = sb.getInteriors();
-		if (interior.size() > 0) {
+		if (interior != null && interior.size() > 0) {
 			for (int i = 0; i < interior.size(); i++) {
 				rString += ", (";
 				rString += ringCoordToString((Ring) interior.get(i));

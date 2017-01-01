@@ -16,6 +16,9 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
@@ -23,6 +26,9 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
@@ -69,57 +75,42 @@ public class SolidTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        /*if (!(pf instanceof PrimitiveFactoryImpl)) {
-            throw new UnsupportedImplementationException("This binding class depends on org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl");
-        }
-        PrimitiveFactoryImpl pfImpl = (PrimitiveFactoryImpl) pf;
-        
-        com.vividsolutions.jts.geom.MultiPolygon exterior = (com.vividsolutions.jts.geom.MultiPolygon) node.getChildValue("exterior");
-        com.vividsolutions.jts.geom.MultiPolygon[] interiors = null;
-        
-        if (node.hasChild("interior")) {
+
+    	CompositeSurface exterior = (CompositeSurface) node.getChildValue("exterior");
+    	CompositeSurface[] interiors = null;
+    	
+    	if (node.hasChild("interior")) {
             List list = node.getChildValues("interior");
-            interiors = (com.vividsolutions.jts.geom.MultiPolygon[]) list.toArray(new com.vividsolutions.jts.geom.MultiPolygon[list.size()]);
+            interiors = (CompositeSurface[]) list.toArray(new CompositeSurface[list.size()]);
         }
+    	
+    	List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+    	for(Primitive p : exterior.getElements()) {
+    		surfaces.add((OrientableSurface) p);
+    	}
+    	
+    	Shell exteriorShell = gBuilder.createShell(surfaces);
+    	List<Shell> interiorShells = null;
+    	
+    	if(interiors != null) {
+	    	for(CompositeSurface cs : interiors) {
+	    		if(interiorShells == null) {
+	    			interiorShells = new ArrayList<Shell>();
+	    		}
+	    		
+	        	surfaces = new ArrayList<OrientableSurface>();
+	        	for(Primitive p : cs.getElements()) {
+	        		surfaces.add((OrientableSurface) p);
+	        	}
+	    		
+	    		Shell intShell = gBuilder.createShell(surfaces);
+	    		interiorShells.add(intShell);
+	    	}
+    	}
         
-        
-        CoordinateReferenceSystem crs = (CoordinateReferenceSystem) exterior.getUserData();
-        if (crs == null || !(crs instanceof CoordinateReferenceSystem)) {
-            crs = (CoordinateReferenceSystem) DefaultGeographicCRS.WGS84_3D;
-        }
-        
-        *//**
-         * Convert a Polygon of JTSGeometry to a Surface of ISOGeometry.
-         * Create the exterior Shell by the converted surfaces.
-         *//*
-        List<OrientableSurface> exteriorSurfaces = new ArrayList<OrientableSurface>();
-        for (int i = 0; i < exterior.getNumGeometries(); i++) {
-            Surface surface = JTSUtilsNG.polygonToSurface((com.vividsolutions.jts.geom.Polygon) exterior.getGeometryN(i), crs);
-            exteriorSurfaces.add(surface);
-        }
-        Shell exteriorShell = pfImpl.createShell(exteriorSurfaces);
-        
-        // Create the interior Shells
-        List<Shell> interiorShells = null;
-        if (interiors != null) {
-            interiorShells = new ArrayList<Shell>();
-            for (int i = 0; i < interiors.length; i++) {
-                List<OrientableSurface> interiorSurfaces = new ArrayList<OrientableSurface>();
-                com.vividsolutions.jts.geom.MultiPolygon interior = interiors[i];
-                for (int j = 0; j < interior.getNumGeometries(); j++) {
-                    Surface surface = JTSUtilsNG.polygonToSurface((com.vividsolutions.jts.geom.Polygon) interior.getGeometryN(j), crs);
-                    interiorSurfaces.add(surface);
-                }
-                Shell interiorShell = pfImpl.createShell(interiorSurfaces);
-                interiorShells.add(interiorShell);
-            }
-        }
-        
-        // Create a SolidBoundary and a Solid Object of ISOGeometry
-        SolidBoundary solidBoundary = pfImpl.createSolidBoundary(exteriorShell, interiorShells);
-        Solid solid = pfImpl.createSolid(solidBoundary);
-        */
-        return null;
+        SolidBoundary solidBoundary = gBuilder.createSolidBoundary(exteriorShell, interiorShells);
+        Solid solid = gBuilder.createSolid(solidBoundary);
+    	return solid;
     }
 
     @Override

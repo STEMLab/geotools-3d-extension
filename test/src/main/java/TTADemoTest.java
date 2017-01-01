@@ -746,7 +746,7 @@ public class TTADemoTest extends JFrame{
 				 //BufferedReader in = new BufferedReader(
 		        //new InputStreamReader(oracle.openStream()));
 				long start = System.currentTimeMillis();
-				 SimpleFeatureCollection features = (SimpleFeatureCollection) parseGML(oracle.openStream());
+				currentfeatures = (SimpleFeatureCollection) parseGML(oracle.openStream());
 				 long end = System.currentTimeMillis();
 					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 					label.setText("load complete : " + ( end - start )/1000.0 + " sec");

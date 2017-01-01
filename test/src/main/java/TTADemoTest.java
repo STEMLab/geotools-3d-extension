@@ -1,8 +1,13 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -726,7 +731,29 @@ public class TTADemoTest extends JFrame{
 		int result = wizard.showModalDialog();
 		if (result == JWizard.FINISH) {
 			Map<String, Object> connectionParameters = wizard.getConnectionParameters();
-			System.out.println();
+			//File f = 
+			URL oracle;
+			try {
+				File f = (File) connectionParameters.get("file");
+				oracle = f.toURI().toURL();
+				 //BufferedReader in = new BufferedReader(
+		        //new InputStreamReader(oracle.openStream()));
+				 
+				 SimpleFeatureCollection features = (SimpleFeatureCollection) parseGML(oracle.openStream());
+					//long end = System.currentTimeMillis();
+					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+					//label.setText("time : " + ( end - start )/1000.0);
+					FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+					table.setModel(model);
+		        /*String inputLine;
+		        while ((inputLine = in.readLine()) != null)
+		            System.out.println(inputLine);
+		        in.close();*/
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	       
 			/*try {
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
 

@@ -94,11 +94,13 @@ public class TTADemoTest extends JFrame{
 	private JTextField text;
 	private static Hints hints = null;
 
+	private SimpleFeatureCollection currentfeatures;
+	
 	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, false);
+		h.put(Hints.GEOMETRY_VALIDATE, true);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
@@ -745,7 +747,7 @@ public class TTADemoTest extends JFrame{
 		        //new InputStreamReader(oracle.openStream()));
 				long start = System.currentTimeMillis();
 				 SimpleFeatureCollection features = (SimpleFeatureCollection) parseGML(oracle.openStream());
-					
+				 long end = System.currentTimeMillis();
 					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 					label.setText("load complete : " + ( end - start )/1000.0 + " sec");
 					FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);

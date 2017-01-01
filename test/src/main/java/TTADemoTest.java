@@ -911,7 +911,7 @@ public class TTADemoTest extends JFrame{
 	private FeatureCollection parseGML(InputStream in) throws Exception {
 		GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
 		PullParser parser = new PullParser(gml, in, SimpleFeature.class);
-		
+		gml.setGeometryFactory(builder);
 		SimpleFeature f = null;
 		List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
 		

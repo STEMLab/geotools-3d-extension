@@ -19,7 +19,6 @@ package org.geotools.jdbc.iso;
 import java.util.HashSet;
 import java.util.List;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
@@ -29,7 +28,6 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
-import org.geotools.geometry.ISOGeometryBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -38,6 +36,7 @@ import org.opengis.filter.FilterFactory;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -95,11 +94,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
     protected void connect() throws Exception {
         super.connect();
 
-        line3DType = DataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getLine3d()),
+        line3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getLine3d()),
                 aname(ID) + ":0," + aname(GEOM) + ":LineString:srid=" + getEpsgCode() + "," + aname(NAME)
                         + ":String");
         line3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
-        poly3DType = DataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getPoly3d()),
+        poly3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getPoly3d()),
                 aname(ID) + ":0," + aname(GEOM) + ":Polygon:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
         poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 

@@ -37,7 +37,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.v2_0.FES;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.wfs.v2_0.WFS;
 import org.geotools.wfs.v2_0.WFSTestSupport;
 import org.geotools.xlink.XLINK;

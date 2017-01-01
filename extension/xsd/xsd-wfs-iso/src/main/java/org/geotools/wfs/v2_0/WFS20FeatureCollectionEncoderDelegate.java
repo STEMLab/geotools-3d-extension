@@ -20,8 +20,8 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.gml2.simple.FeatureCollectionEncoderDelegate;
 import org.geotools.gml2.simple.GMLWriter;
 import org.geotools.gml2.simple.QualifiedName;
-import org.geotools.gml3.simple.GML32FeatureCollectionEncoderDelegate;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.simple.GML32FeatureCollectionEncoderDelegate;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.xml.Encoder;
 import org.xml.sax.SAXException;
 

@@ -28,8 +28,8 @@ import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.geotools.gml2.bindings.GMLEncodingUtils;
-import org.geotools.gml3.XSDIdRegistry;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.XSDIdRegistry;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.geotools.xml.SchemaIndex;
@@ -64,7 +64,7 @@ import org.opengis.feature.type.AttributeType;
  * @source $URL$
  */
 public class MemberPropertyTypeBinding extends
-        org.geotools.gml3.bindings.FeaturePropertyTypeBinding {
+        org.geotools.gml3.iso.bindings.FeaturePropertyTypeBinding {
 
     SchemaIndex schemaIndex;
     
@@ -94,7 +94,7 @@ public class MemberPropertyTypeBinding extends
     @Override
     public List getProperties(Object object, XSDElementDeclaration element) throws Exception {
         ArrayList list = new ArrayList();
-        Object member = super.getProperty(object, org.geotools.gml3.GML._Feature);
+        Object member = super.getProperty(object, org.geotools.gml3.iso.GML._Feature);
         if (member != null) {
             //check for joined feature
             if (GMLEncodingUtils.isJoinedFeature(member)) {

@@ -19,7 +19,7 @@ package org.geotools.filter.iso.v1_1;
 import org.w3c.dom.Document;
 import org.opengis.filter.identity.GmlObjectId;
 import org.geotools.filter.iso.v1_1.OGC;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.xml.Binding;
 
 

@@ -24,7 +24,7 @@ import net.opengis.wfs.WfsFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.simple.GML2FeatureCollectionEncoderDelegate;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.xml.Encoder;
 
 

@@ -22,9 +22,9 @@ import net.opengis.wfs.FeatureCollectionType;
 import net.opengis.wfs.WfsFactory;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.gml3.GML;
 import org.geotools.gml3.GMLConfiguration;
-import org.geotools.gml3.simple.GML3FeatureCollectionEncoderDelegate;
+import org.geotools.gml3.iso.GML;
+import org.geotools.gml3.iso.simple.GML3FeatureCollectionEncoderDelegate;
 import org.geotools.xml.Encoder;
 
 

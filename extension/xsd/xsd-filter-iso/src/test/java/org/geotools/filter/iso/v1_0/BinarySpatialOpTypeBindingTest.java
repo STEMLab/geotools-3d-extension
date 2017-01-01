@@ -32,7 +32,7 @@ import org.opengis.filter.spatial.Overlaps;
 import org.opengis.filter.spatial.Touches;
 import org.opengis.filter.spatial.Within;
 import org.geotools.filter.iso.v1_0.OGC;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 
 
 /**

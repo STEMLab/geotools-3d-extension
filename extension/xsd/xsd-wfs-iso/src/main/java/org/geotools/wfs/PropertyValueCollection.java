@@ -33,7 +33,7 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.collection.DecoratingFeatureCollection;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.xs.XS;
 import org.opengis.feature.Attribute;
 import org.opengis.feature.Feature;

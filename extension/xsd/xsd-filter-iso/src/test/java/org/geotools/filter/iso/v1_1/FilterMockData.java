@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.identity.ResourceIdImpl;
 import org.geotools.filter.iso.v1_1.OGC;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.opengis.filter.And;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.Id;

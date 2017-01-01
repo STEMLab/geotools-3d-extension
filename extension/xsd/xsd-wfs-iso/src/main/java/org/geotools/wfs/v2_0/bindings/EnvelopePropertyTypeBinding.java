@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.wfs.v2_0.WFS;
 import org.geotools.xml.AbstractComplexBinding;
 

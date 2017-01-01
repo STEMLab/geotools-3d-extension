@@ -25,7 +25,7 @@ import net.opengis.wfs20.QueryExpressionTextType;
 import net.opengis.wfs20.StoredQueryDescriptionType;
 import net.opengis.wfs20.Wfs20Factory;
 
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.wfs.v2_0.WFS;
 import org.geotools.wfs.v2_0.WFSTestSupport;
 import org.w3c.dom.Document;

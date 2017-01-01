@@ -713,7 +713,6 @@ public class TTADemoTest extends JFrame{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 	private void insertTable() {

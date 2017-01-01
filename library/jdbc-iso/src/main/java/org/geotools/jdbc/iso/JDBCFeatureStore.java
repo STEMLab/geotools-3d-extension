@@ -39,14 +39,16 @@ import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.feature.FeatureVisitor;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -382,8 +384,8 @@ public final class JDBCFeatureStore extends ContentFeatureStore {
                     // gather any updated bounds due to a geometry modification
                     for( Object value : values ){
                         if( value instanceof Geometry ){
-                            Geometry geometry = (Geometry) value;
-                            bounds.expandToInclude( geometry.getEnvelopeInternal() );
+                            Geometry geometry = (Geometry) value; 
+                            bounds.expandToInclude( new ReferencedEnvelope3D(geometry.getEnvelope()) );
                         }
                     }
                     // issue notificaiton

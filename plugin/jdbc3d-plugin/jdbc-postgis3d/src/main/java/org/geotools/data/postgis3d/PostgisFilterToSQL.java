@@ -20,7 +20,9 @@ import java.io.IOException;
 
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.filter.FilterCapabilities;
+import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Add;
 import org.opengis.filter.expression.Expression;
@@ -28,8 +30,9 @@ import org.opengis.filter.expression.Function;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BinarySpatialOperator;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
 
 /**
@@ -67,24 +70,24 @@ public class PostgisFilterToSQL extends FilterToSQL {
         // evaluate the literal and store it for later
         Geometry geom  = (Geometry) evaluateLiteral(expression, Geometry.class);
         
-        if ( geom instanceof LinearRing ) {
+        /*if ( geom instanceof LinearRing ) {
             //postgis does not handle linear rings, convert to just a line string
             geom = geom.getFactory().createLineString(((LinearRing) geom).getCoordinateSequence());
-        }
-        
+        }*/
+        GeometryToWKTString writer = new GeometryToWKTString(false);
         Object typename = currentGeometry.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME);
         if("geography".equals(typename)) {
             out.write("ST_GeogFromText('");
-            out.write(geom.toText());
+            out.write(writer.getString(geom));//geom.toText());
             out.write("')");
         } else {
             out.write("ST_GeomFromText('");
-            out.write(geom.toText());
-            if(currentSRID == null && currentGeometry  != null) {
+            out.write(writer.getString(geom));//geom.toText());
+            if(geom.getCoordinateReferenceSystem() == null && currentGeometry  != null) {
                 // if we don't know at all, use the srid of the geometry we're comparing against
                 // (much slower since that has to be extracted record by record as opposed to 
                 // being a constant)
-                out.write("', ST_SRID(\"" + currentGeometry.getLocalName() + "\"))");
+                out.write("', ST_SRID(\"EPSG:" + CRS.toSRS(geom.getCoordinateReferenceSystem()) + "\"))");
             } else {
                 out.write("', " + currentSRID + ")");
             }

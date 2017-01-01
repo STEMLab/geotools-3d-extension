@@ -19,7 +19,7 @@ package org.geotools.jdbc.iso;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.filter.visitor.DuplicatingFilterVisitor;
+import org.geotools.filter.visitor.ISODuplicatingFilterVisitor;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.And;
@@ -43,7 +43,7 @@ import org.opengis.filter.expression.PropertyName;
  * 
  * @author Andrea Aime - GeoSolutions
  */
-class NullHandlingVisitor extends DuplicatingFilterVisitor {
+class NullHandlingVisitor extends ISODuplicatingFilterVisitor {
 
     private FeatureType schema;
 

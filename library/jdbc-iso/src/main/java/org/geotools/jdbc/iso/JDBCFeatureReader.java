@@ -43,7 +43,6 @@ import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.filter.identity.FeatureIdImpl;
-import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.Converters;
 import org.geotools.util.logging.Logging;
@@ -343,14 +342,14 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
                             throw new RuntimeException(e);
                         }
                         
-                        if (value != null && value instanceof GeometryImpl) {
+                        /*if (value != null && value instanceof Geometry) {
                             //check to see if a crs was set
-                        	GeometryImpl geometry = (GeometryImpl) value;
+                        	Geometry geometry = (Geometry) value;
                             if ( geometry.getUserData() == null ) {
                                 //if not set, set from descriptor
                                 geometry.setUserData( gatt.getCoordinateReferenceSystem() );
                             }
-                        }
+                        }*/
                     } else {
                         value = rs.getObject(offset+attributeRsIndex[i]);
                     }

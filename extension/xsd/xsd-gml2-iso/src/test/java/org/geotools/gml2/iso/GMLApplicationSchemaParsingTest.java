@@ -27,15 +27,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.TestCase;
-
-import org.geotools.gml2.iso.GMLConfiguration_ISO;
 import org.geotools.xml.Parser;
 import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.primitive.Point;
 import org.w3c.dom.Document;
+
+import junit.framework.TestCase;
 
 
 /**

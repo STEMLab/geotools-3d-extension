@@ -105,6 +105,16 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
      *
      * @generated modifiable
      */
+    public int getExecutionMode() {
+        return OVERRIDE;
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     *
+     * @generated modifiable
+     */
     public Class getType() {
         return Geometry.class;
     }
@@ -127,7 +137,7 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
             }
         }*/
 
-    	if (node.hasAttribute("srsName")) {
+    	/*if (node.hasAttribute("srsName")) {
             URI srs = (URI) node.getAttributeValue("srsName");
             CoordinateReferenceSystem crs = CRS.decode(srs.toString());
             
@@ -139,7 +149,7 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
                 //logger.warning("Could not create Coordinate Reference System for " + srs);
             }
             return crs;
-        }
+        }*/
     	
         return value;
     }

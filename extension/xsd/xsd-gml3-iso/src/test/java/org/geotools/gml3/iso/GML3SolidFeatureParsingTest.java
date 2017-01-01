@@ -26,12 +26,7 @@ public class GML3SolidFeatureParsingTest {
 		PullParser parser = new PullParser(gml, in, SimpleFeature.class);
 		
 		SimpleFeature f = null;
-		
-		Hints hint = new Hints();
-		hint.put(Hints.CRS, CRS.decode("EPSG:4329"));
-		hint.put(Hints.GEOMETRY_VALIDATE, false);
-		
-		gml.setGeometryFactory(new ISOGeometryBuilder(hint));
+
 		while((f = (SimpleFeature) parser.parse()) != null) {
 			System.out.println(f);
 		}

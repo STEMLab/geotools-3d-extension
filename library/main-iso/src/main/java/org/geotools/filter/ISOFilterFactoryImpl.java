@@ -58,8 +58,8 @@ import org.geotools.filter.spatial.ISOContainsImpl;
 import org.geotools.filter.spatial.CrossesImpl;
 import org.geotools.filter.spatial.DWithinImpl;
 import org.geotools.filter.spatial.DisjointImpl;
-import org.geotools.filter.spatial.EqualsImpl;
-import org.geotools.filter.spatial.IntersectsImpl;
+import org.geotools.filter.spatial.ISOEqualsImpl;
+import org.geotools.filter.spatial.ISOIntersectsImpl;
 import org.geotools.filter.spatial.OverlapsImpl;
 import org.geotools.filter.spatial.TouchesImpl;
 import org.geotools.filter.spatial.ISOWithinImpl;
@@ -639,11 +639,11 @@ public class ISOFilterFactoryImpl implements Factory, org.opengis.filter.FilterF
     }
     
     public Equals equal(Expression geometry1, Expression geometry2) {
-        return new EqualsImpl(geometry1, geometry2 );
+        return new ISOEqualsImpl(geometry1, geometry2 );
     }
     
     public Equals equal(Expression geometry1, Expression geometry2, MatchAction matchAction) {
-        return new EqualsImpl(geometry1, geometry2, matchAction );
+        return new ISOEqualsImpl(geometry1, geometry2, matchAction );
     }
 
     public Intersects intersects(String propertyName, Geometry geometry) {
@@ -661,11 +661,11 @@ public class ISOFilterFactoryImpl implements Factory, org.opengis.filter.FilterF
     }
 
     public Intersects intersects(Expression geometry1, Expression geometry2) {
-        return new IntersectsImpl(geometry1, geometry2 );
+        return new ISOIntersectsImpl(geometry1, geometry2 );
     }
     
     public Intersects intersects(Expression geometry1, Expression geometry2, MatchAction matchAction) {
-        return new IntersectsImpl(geometry1, geometry2, matchAction );
+        return new ISOIntersectsImpl(geometry1, geometry2, matchAction );
     }
     
     public Overlaps overlaps(String propertyName, Geometry geometry) {

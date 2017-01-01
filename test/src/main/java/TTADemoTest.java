@@ -146,22 +146,22 @@ public class TTADemoTest extends JFrame{
 				connect(new CSVDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
-		});
+		});*/
 		/*fileMenu.add(new SafeAction("pointToTable...") {
 			public void action(ActionEvent e) throws Throwable {
 				pointToTable();
 			}
 		});*/
-		fileMenu.add(new SafeAction("getLineString...") {
+		/*fileMenu.add(new SafeAction("getLineString...") {
 			public void action(ActionEvent e) throws Throwable {
 				getLineString();
 			}
-		});
+		});*/
 		fileMenu.addSeparator();
 		fileMenu.add(new SafeAction("Exit") {
 			public void action(ActionEvent e) throws Throwable {
@@ -173,7 +173,12 @@ public class TTADemoTest extends JFrame{
 				filterFeatures();
 			}
 		});
-		dataMenu.add(new SafeAction("contains: solid") {
+		dataMenu.add(new SafeAction("Get features from datastore") {
+			public void action(ActionEvent e) throws Throwable {
+				filterFeatures();
+			}
+		});
+		/*dataMenu.add(new SafeAction("contains: solid") {
 			public void action(ActionEvent e) throws Throwable {
 				constainsfilter();
 			}
@@ -738,12 +743,12 @@ public class TTADemoTest extends JFrame{
 				oracle = f.toURI().toURL();
 				 //BufferedReader in = new BufferedReader(
 		        //new InputStreamReader(oracle.openStream()));
-				 
+				long start = System.currentTimeMillis();
 				 SimpleFeatureCollection features = (SimpleFeatureCollection) parseGML(oracle.openStream());
-					//long end = System.currentTimeMillis();
+					
 					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-					//label.setText("time : " + ( end - start )/1000.0);
-					FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+					label.setText("load complete : " + ( end - start )/1000.0 + " sec");
+					FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
 					table.setModel(model);
 		        /*String inputLine;
 		        while ((inputLine = in.readLine()) != null)
@@ -833,6 +838,62 @@ public class TTADemoTest extends JFrame{
 
 
 		table.setModel(new DefaultTableModel(5, 5));
+	}
+	private void filterFeatureswithtext() {
+		//String typeName = (String) featureTypeCBox.getSelectedItem();
+		//SimpleFeatureSource source;
+		try {
+			//source = dataStore.getFeatureSource(typeName);
+			String sql = text.getText();
+			String filtertype = "include";
+			String[] cql = sql.split(":");
+			Hints h = new Hints();
+   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
+   			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
+   			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+   			Filter filter = CQL.toFilter("include");
+   			long start = System.currentTimeMillis();
+   			if(cql[0].equalsIgnoreCase("contains")) {
+   				filter = ff.contains("the_geom", wktr.read(cql[1]));
+   				filtertype = "contains ";
+   			}
+   			else if(cql[0].equalsIgnoreCase("equals")) {
+   				filter = ff.equals("the_geom", wktr.read(cql[1]));
+   				filtertype = "equals ";
+   			}
+   			else if(cql[0].equalsIgnoreCase("intersects")) {
+   				filter = ff.intersects("the_geom", wktr.read(cql[1]));
+   				filtertype = "intersects ";
+   			} 
+
+   		
+   			
+			//SimpleFeatureCollection features = source.getFeatures(filter);
+   			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
+   			SimpleFeatureIterator iterator = currentfeatures.features();
+			while (iterator.hasNext()) {
+				SimpleFeature feature = iterator.next();
+				
+				if(filter.evaluate(feature)) {
+					sfs.add(feature);
+				}
+			}
+			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
+   			
+			long end = System.currentTimeMillis();
+			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+			label.setText(filtertype + "complete : " + ( end - start )/1000.0 + " sec");
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
+			table.setModel(model);
+			
+		} catch (CQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	private void filterFeatures()  {
 		String typeName = (String) featureTypeCBox.getSelectedItem();

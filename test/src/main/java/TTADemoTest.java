@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -22,14 +20,9 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import org.geotools.data.DataStore;
@@ -53,7 +46,6 @@ import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.AttributeExpressionImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
-import org.geotools.filter.LiteralExpressionImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.GeometryBuilder;
@@ -76,7 +68,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.IncludeFilter;
 import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
@@ -97,12 +88,10 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
 
 public class TTADemoTest extends JFrame{
 	private DataStore dataStore;
-	private SimpleFeatureCollection currentfeatures;
 	private JComboBox featureTypeCBox;
 	private JTable table;
 	private JLabel label;
 	private JTextField text;
-	private JProgressBar progressBar;
 	private static Hints hints = null;
 
 	private static ISOGeometryBuilder builder;
@@ -131,18 +120,10 @@ public class TTADemoTest extends JFrame{
 		JScrollPane scrollPane = new JScrollPane(table);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
-		/*label = new JLabel();
+		label = new JLabel();
 		label.setText("time : ");
-		getContentPane().add(label, BorderLayout.SOUTH);*/
-
-		JPanel statusPanel = new JPanel();
-		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-		getContentPane().add(statusPanel, BorderLayout.SOUTH);
-		statusPanel.setPreferredSize(new Dimension(getContentPane().getWidth(), 16));
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-		label = new JLabel("status");
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		statusPanel.add(label);
+		getContentPane().add(label, BorderLayout.SOUTH);
+		
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 
@@ -165,22 +146,22 @@ public class TTADemoTest extends JFrame{
 				connect(new CSVDataStoreFactory());
 			}
 		});
-		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
-		});*/
+		});
 		/*fileMenu.add(new SafeAction("pointToTable...") {
 			public void action(ActionEvent e) throws Throwable {
 				pointToTable();
 			}
-		});
+		});*/
 		fileMenu.add(new SafeAction("getLineString...") {
 			public void action(ActionEvent e) throws Throwable {
 				getLineString();
 			}
-		});*/
+		});
 		fileMenu.addSeparator();
 		fileMenu.add(new SafeAction("Exit") {
 			public void action(ActionEvent e) throws Throwable {
@@ -189,10 +170,10 @@ public class TTADemoTest extends JFrame{
 		});
 		dataMenu.add(new SafeAction("Get features") {
 			public void action(ActionEvent e) throws Throwable {
-				filterFeatureswithtext();
+				filterFeatures();
 			}
 		});
-		/*dataMenu.add(new SafeAction("contains: solid") {
+		dataMenu.add(new SafeAction("contains: solid") {
 			public void action(ActionEvent e) throws Throwable {
 				constainsfilter();
 			}
@@ -207,7 +188,7 @@ public class TTADemoTest extends JFrame{
 			public void action(ActionEvent e) throws Throwable {
 				bboxfilter();
 			}
-		});*/
+		});
 		
 
 		/*dataMenu.add(new SafeAction("Count") {
@@ -757,12 +738,12 @@ public class TTADemoTest extends JFrame{
 				oracle = f.toURI().toURL();
 				 //BufferedReader in = new BufferedReader(
 		        //new InputStreamReader(oracle.openStream()));
-				long start = System.currentTimeMillis();
-				 currentfeatures = (SimpleFeatureCollection) parseGML(oracle.openStream());
-				 long end = System.currentTimeMillis();
+				 
+				 SimpleFeatureCollection features = (SimpleFeatureCollection) parseGML(oracle.openStream());
+					//long end = System.currentTimeMillis();
 					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-					label.setText("time : " + ( end - start )/1000.0);
-					FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
+					//label.setText("time : " + ( end - start )/1000.0);
+					FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 					table.setModel(model);
 		        /*String inputLine;
 		        while ((inputLine = in.readLine()) != null)
@@ -853,58 +834,6 @@ public class TTADemoTest extends JFrame{
 
 		table.setModel(new DefaultTableModel(5, 5));
 	}
-	private void filterFeatureswithtext() {
-		//String typeName = (String) featureTypeCBox.getSelectedItem();
-		//SimpleFeatureSource source;
-		try {
-			//source = dataStore.getFeatureSource(typeName);
-			String sql = text.getText();
-			String[] cql = sql.split(":");
-			Hints h = new Hints();
-   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
-   			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
-   			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
-   			Filter filter = CQL.toFilter("include");
-   			long start = System.currentTimeMillis();
-   			if(cql[0].equalsIgnoreCase("contains")) {
-   				filter = ff.contains("the_geom", wktr.read(cql[1]));
-   			}
-   			else if(cql[0].equalsIgnoreCase("equals")) {
-   				filter = ff.equals("the_geom", wktr.read(cql[1]));
-   			}
-   			else if(cql[0].equalsIgnoreCase("intersects")) {
-   				filter = ff.intersects("the_geom", wktr.read(cql[1]));
-   			} 
-
-   		
-   			
-			//SimpleFeatureCollection features = source.getFeatures(filter);
-   			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
-   			SimpleFeatureIterator iterator = currentfeatures.features();
-			while (iterator.hasNext()) {
-				SimpleFeature feature = iterator.next();
-				
-				if(filter.evaluate(feature)) {
-					sfs.add(feature);
-				}
-			}
-			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
-   			
-			long end = System.currentTimeMillis();
-			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-			label.setText("time : " + ( end - start )/1000.0);
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
-			table.setModel(model);
-			
-		} catch (CQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	}
 	private void filterFeatures()  {
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
@@ -936,7 +865,6 @@ public class TTADemoTest extends JFrame{
 			label.setText("time : " + ( end - start )/1000.0);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
-			
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());

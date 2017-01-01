@@ -761,7 +761,7 @@ public class TTADemoTest extends JFrame{
 				 currentfeatures = (SimpleFeatureCollection) parseGML(oracle.openStream());
 				 long end = System.currentTimeMillis();
 					//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-					label.setText("time : " + ( end - start )/1000.0);
+					label.setText("load complete : " + ( end - start )/1000.0 + " sec");
 					FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
 					table.setModel(model);
 		        /*String inputLine;
@@ -859,6 +859,7 @@ public class TTADemoTest extends JFrame{
 		try {
 			//source = dataStore.getFeatureSource(typeName);
 			String sql = text.getText();
+			String filtertype = "include";
 			String[] cql = sql.split(":");
 			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
@@ -868,12 +869,15 @@ public class TTADemoTest extends JFrame{
    			long start = System.currentTimeMillis();
    			if(cql[0].equalsIgnoreCase("contains")) {
    				filter = ff.contains("the_geom", wktr.read(cql[1]));
+   				filtertype = "contains ";
    			}
    			else if(cql[0].equalsIgnoreCase("equals")) {
    				filter = ff.equals("the_geom", wktr.read(cql[1]));
+   				filtertype = "equals ";
    			}
    			else if(cql[0].equalsIgnoreCase("intersects")) {
    				filter = ff.intersects("the_geom", wktr.read(cql[1]));
+   				filtertype = "intersects ";
    			} 
 
    		
@@ -891,8 +895,8 @@ public class TTADemoTest extends JFrame{
 			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
    			
 			long end = System.currentTimeMillis();
-			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-			label.setText("time : " + ( end - start )/1000.0);
+			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+			label.setText(filtertype + "complete : " + ( end - start )/1000.0 + " sec");
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);
 			

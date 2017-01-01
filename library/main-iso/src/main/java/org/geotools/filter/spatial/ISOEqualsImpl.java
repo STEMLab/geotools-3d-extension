@@ -50,7 +50,8 @@ public class ISOEqualsImpl extends ISOGeometryFilterImpl implements Equals {
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		if (envRight.equals(envLeft))
 			//TODO previous code HACK!! sfcgal is so slow : return left.equals(right);
-			return true;
+			return left.equals(right);
+			//return true;
 		else
 			return false;
 	}

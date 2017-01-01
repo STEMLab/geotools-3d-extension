@@ -72,8 +72,8 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		
 		if(envLeft.contains((BoundingBox)envRight)) {
             //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
-			//return left.contains(right);
-			return true;
+			return left.contains(right);
+			//return true;
 		}
         
         return false;

@@ -66,6 +66,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -88,13 +89,13 @@ public class TTADemoTest extends JFrame{
 	private JTextField text;
 	private static Hints hints = null;
 
-	private static GeometryBuilder builder;
+	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		builder = new GeometryBuilder(h);
+		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
 		frame.setVisible(true);
 	}
@@ -130,6 +131,11 @@ public class TTADemoTest extends JFrame{
 		JMenu dataMenu = new JMenu("Data");
 		menubar.add(dataMenu);
 		pack();
+		fileMenu.add(new SafeAction("Open GML File...") {
+			public void action(ActionEvent e) throws Throwable {
+				connectGML(new GMLDataStoreFactory());
+			}
+		});
 		fileMenu.add(new SafeAction("Open csvfile...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
@@ -191,7 +197,7 @@ public class TTADemoTest extends JFrame{
 			}
 		});*/
 	}
-	public ArrayList<Solid> getSolids(GeometryBuilder builder) {
+	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
 		ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
 
@@ -201,7 +207,7 @@ public class TTADemoTest extends JFrame{
 
 		return solids;
 	}
-	public Solid makeSolid(GeometryBuilder builder, ArrayList<DirectPosition> points) {
+	public Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPosition> points) {
 		DirectPosition position1 = points.get(0);
 		DirectPosition position2 = points.get(1);
 		DirectPosition position3 = points.get(2);
@@ -339,7 +345,7 @@ public class TTADemoTest extends JFrame{
 
 		return solid;
 	}
-	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(GeometryBuilder builder) {
+	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
 		ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
 		DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 });
@@ -713,6 +719,29 @@ public class TTADemoTest extends JFrame{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	private void connectGML(DataStoreFactorySpi format) {
+		JDataStoreWizard wizard = new JDataStoreWizard(format);
+		int result = wizard.showModalDialog();
+		if (result == JWizard.FINISH) {
+			Map<String, Object> connectionParameters = wizard.getConnectionParameters();
+			System.out.println();
+			/*try {
+				dataStore = DataStoreFinder.getDataStore(connectionParameters);
+
+				if (dataStore == null) {
+					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+				}
+				updateUI();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+
 		}
 	}
 	private void insertTable() {

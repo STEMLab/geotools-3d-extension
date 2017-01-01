@@ -10,6 +10,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -78,6 +79,7 @@ public class TTADemoTest extends JFrame{
 	private DataStore dataStore;
 	private JComboBox featureTypeCBox;
 	private JTable table;
+	private JLabel label;
 	private JTextField text;
 	private static Hints hints = null;
 
@@ -106,7 +108,11 @@ public class TTADemoTest extends JFrame{
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-
+		
+		label = new JLabel();
+		label.setText("time : ");
+		getContentPane().add(label, BorderLayout.SOUTH);
+		
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 
@@ -780,6 +786,10 @@ public class TTADemoTest extends JFrame{
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
    			Filter filter = CQL.toFilter("include");
+   			long start = System.currentTimeMillis();
+   		
+
+   		
    			if(cql[0].equalsIgnoreCase("contains")) {
    				filter = ff.contains("geom", (Geometry)wktr.read(cql[1]));
    			}
@@ -790,6 +800,9 @@ public class TTADemoTest extends JFrame{
    				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
    			} 
 			SimpleFeatureCollection features = source.getFeatures(filter);
+			long end = System.currentTimeMillis();
+			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+			label.setText("time : " + ( end - start )/1000.0);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {

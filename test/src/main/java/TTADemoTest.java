@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
@@ -32,6 +34,7 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
+import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -46,12 +49,14 @@ import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.gml3.iso.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
 import org.geotools.swing.table.FeatureCollectionTableModel;
 import org.geotools.swing.wizard.JWizard;
+import org.geotools.xml.PullParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
@@ -834,5 +839,19 @@ public class TTADemoTest extends JFrame{
 		} 
 
 
+	}
+	private FeatureCollection parseGML(InputStream in) throws Exception {
+		GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
+		PullParser parser = new PullParser(gml, in, SimpleFeature.class);
+		
+		SimpleFeature f = null;
+		List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
+		
+		while((f = (SimpleFeature) parser.parse()) != null) {
+			sfs.add(f);
+		}
+		
+		FeatureCollection fc = ISODataUtilities.collection(sfs);
+		return fc;
 	}
 }

@@ -160,11 +160,11 @@ public class TTADemoTest extends JFrame{
 				connectGML(new GMLDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Open csvfile...") {
+		/*fileMenu.add(new SafeAction("Open csvfile...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
 			}
-		});
+		});*/
 		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());

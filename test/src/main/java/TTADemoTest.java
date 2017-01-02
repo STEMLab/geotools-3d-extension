@@ -101,7 +101,7 @@ public class TTADemoTest extends JFrame{
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, true);
+		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
@@ -882,6 +882,10 @@ public class TTADemoTest extends JFrame{
 				if(filter.evaluate(feature)) {
 					sfs.add(feature);
 				}
+			}
+			if(sfs.size() == 0) {
+				table.setModel(new DefaultTableModel(5, 5));
+				return;
 			}
 			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
    			

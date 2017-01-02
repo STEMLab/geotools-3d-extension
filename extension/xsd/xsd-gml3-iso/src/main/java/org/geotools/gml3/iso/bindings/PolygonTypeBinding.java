@@ -124,18 +124,9 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
         }
 
         if ("interior".equals(name.getLocalPart())) {
-        	return sb.getInteriors();
-            /*int n = polygon.getNumInteriorRing();
-
-            if (n > 0) {
-                LineString[] interior = new LineString[n];
-
-                for (int i = 0; i < n; i++) {
-                    interior[i] = polygon.getInteriorRingN(i);
-                }
-
-                return interior;
-            }*/
+            List<Ring> ringList = sb.getInteriors();
+            Ring[] rings = ringList.toArray(new Ring[ringList.size()]);
+            return rings;
         }
 
         return null;

@@ -16,14 +16,13 @@
  */
 package org.geotools.gml3.iso.simple;
 
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.ObjectEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.ObjectEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.Envelope;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Encodes a GML3 envelope
@@ -58,11 +57,11 @@ class EnvelopeEncoder extends ObjectEncoder<Envelope> {
     public void encode(Envelope e, AttributesImpl atts, GMLWriter handler) throws Exception {
         handler.startElement(envelope, atts);
         handler.startElement(lowerCorner, null);
-        handler.position(e.getMinX(), e.getMinY(), Double.NaN);
+        handler.position(e.getLowerCorner().getCoordinate());
         handler.endElement(lowerCorner);
 
         handler.startElement(upperCorner, null);
-        handler.position(e.getMaxX(), e.getMaxY(), Double.NaN);
+        handler.position(e.getUpperCorner().getCoordinate());
         handler.endElement(upperCorner);
         handler.endElement(envelope);
     }

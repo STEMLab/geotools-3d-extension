@@ -16,15 +16,14 @@
  */
 package org.geotools.gml3.iso.simple;
 
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.GeometryEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.primitive.Point;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Encodes a GML3 point
@@ -53,8 +52,8 @@ class PointEncoder extends GeometryEncoder<Point> {
         handler.startElement(point, atts);
         handler.startElement(pos, null);
         
-        Coordinate coordinate = geometry.getCoordinate();
-        handler.position(coordinate.x, coordinate.y, coordinate.z);
+        DirectPosition dp = geometry.getDirectPosition();
+        handler.position(dp.getCoordinate());
         
         handler.endElement(pos);
         handler.endElement(point);

@@ -41,8 +41,7 @@ import org.opengis.geometry.primitive.SolidBoundary;
  * @source $URL$
  */
 public class SolidTypeBinding extends AbstractComplexBinding {
-
-	protected ISOGeometryBuilder gBuilder;
+    protected ISOGeometryBuilder gBuilder;
 
     public SolidTypeBinding(ISOGeometryBuilder gBuilder) {
         this.gBuilder = gBuilder;
@@ -119,21 +118,11 @@ public class SolidTypeBinding extends AbstractComplexBinding {
         SolidBoundary boundary = solid.getBoundary();
 
         if ("exterior".equals(name.getLocalPart())) {
-            //return shellToPolygons(boundary.getExterior());
+            return boundary.getExterior();
         }
 
         if ("interior".equals(name.getLocalPart())) {
-            Shell[] interiors = boundary.getInteriors();
-            if (interiors != null) {
-                com.vividsolutions.jts.geom.MultiPolygon[] multiPolygons =
-                        new com.vividsolutions.jts.geom.MultiPolygon[interiors.length];
-                
-                for (int i = 0; i < interiors.length; i++) {
-                    //multiPolygons[i] = shellToPolygons(interiors[i]);
-                }
-                //return multiPolygons;
-                return null;
-            }
+            return boundary.getInteriors();
         }
 
         return null;

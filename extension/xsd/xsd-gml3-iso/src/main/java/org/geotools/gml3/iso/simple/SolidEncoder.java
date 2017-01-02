@@ -23,8 +23,11 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.simple.LinearRingEncoder;
 import org.geotools.gml3.iso.simple.RingEncoder;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.complex.CompositeSurface;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.xml.sax.helpers.AttributesImpl;
@@ -35,14 +38,14 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class PolygonEncoder extends GeometryEncoder<Surface> {
-    static final QualifiedName POLYGON = new QualifiedName(GML.NAMESPACE, "Polygon", "gml");
+class SolidEncoder extends GeometryEncoder<Solid> {
+    static final QualifiedName SOLID = new QualifiedName(GML.NAMESPACE, "Solid", "gml");
 
     static final QualifiedName EXTERIOR = new QualifiedName(GML.NAMESPACE, "exterior", "gml");
 
     static final QualifiedName INTERIOR = new QualifiedName(GML.NAMESPACE, "interior", "gml");
 
-    QualifiedName polygon;
+    QualifiedName solid;
 
     QualifiedName exterior;
 
@@ -52,36 +55,36 @@ class PolygonEncoder extends GeometryEncoder<Surface> {
 
     RingEncoder re;
 
-    protected PolygonEncoder(Encoder encoder, String gmlPrefix, String gmlUri) {
+    protected SolidEncoder(Encoder encoder, String gmlPrefix, String gmlUri) {
         super(encoder);
-        polygon = POLYGON.derive(gmlPrefix, gmlUri);
+        solid = SOLID.derive(gmlPrefix, gmlUri);
         exterior = EXTERIOR.derive(gmlPrefix, gmlUri);
         interior = INTERIOR.derive(gmlPrefix, gmlUri);
-        lre = new LinearRingEncoder(encoder, gmlPrefix, gmlUri);
-        re = new RingEncoder(encoder, gmlPrefix, gmlUri);
+        //lre = new LinearRingEncoder(encoder, gmlPrefix, gmlUri);
+        //re = new RingEncoder(encoder, gmlPrefix, gmlUri);
     }
     
     @Override
-    public void encode(Surface geometry, AttributesImpl atts, GMLWriter handler)
+    public void encode(Solid geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
-        handler.startElement(polygon, atts);
+        handler.startElement(solid, atts);
         
-        SurfaceBoundary boundary = geometry.getBoundary();
+        SolidBoundary boundary = geometry.getBoundary();
         
         handler.startElement(exterior, null);
-        encodeRing(boundary.getExterior(), handler);
+        encodeCompositeSurface(boundary.getExterior(), handler);
         handler.endElement(exterior);
         
-        for ( int i = 0; i < boundary.getInteriors().size(); i++ ) {
+        for ( int i = 0; i < boundary.getInteriors().length; i++ ) {
             handler.startElement(interior, null);
-            encodeRing(boundary.getInteriors().get(i), handler);
+            encodeCompositeSurface(boundary.getInteriors()[i], handler);
             handler.endElement(interior);
         }
         
-        handler.endElement(polygon);
+        handler.endElement(solid);
     }
 
-    private void encodeRing(Ring ring, GMLWriter handler) throws Exception {
+    private void encodeCompositeSurface(CompositeSurface ring, GMLWriter handler) throws Exception {
         /*if (ring instanceof CurvedGeometry) {
             re.encode(ring, null, handler);
         } else {

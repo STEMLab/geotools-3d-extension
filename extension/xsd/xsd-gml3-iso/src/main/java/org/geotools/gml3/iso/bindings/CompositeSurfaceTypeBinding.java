@@ -33,6 +33,7 @@ import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.complex.CompositeSurface;
 import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -101,16 +102,17 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
              *  If Binding class is in substitution group, Encoder class calls getProperty() in superior Binding class(SurfaceTypeBinding).
              *  To use this method, implementing compareTo method of Comparable interface is necessary.
              */
-            MultiPolygon multiSurface = (MultiPolygon) object;
-            Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
-
-            for (int i = 0; i < members.length; i++) {
-                members[i] = (Polygon) multiSurface.getGeometryN(i);
+            CompositeSurface compositeSurface = (CompositeSurface) object;
+            
+            OrientableSurface[] surfaces = new OrientableSurface[compositeSurface.getElements().size()];
+            
+            int i = 0;
+            for (Primitive p : compositeSurface.getElements()) {
+                OrientableSurface surface = (OrientableSurface) p;
+                surfaces[i++] = surface;
             }
-
             //GML3EncodingUtils.setChildIDs(multiSurface);
-
-            return members;
+            return surfaces;
         }
         
         return null;
@@ -124,3 +126,4 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
         }
     }    
 }
+

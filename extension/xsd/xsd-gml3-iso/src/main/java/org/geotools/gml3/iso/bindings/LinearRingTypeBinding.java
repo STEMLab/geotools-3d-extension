@@ -125,7 +125,7 @@ public class LinearRingTypeBinding extends AbstractComplexBinding {
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("posList".equals(name.getLocalPart())) {
-            return GML3EncodingUtils.positions((Ring) object);
+            return GML3EncodingUtils.positions((Ring) object, gBuilder);
         }
 
         return null;

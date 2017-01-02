@@ -16,7 +16,7 @@
  */
 package org.geotools.gml3.iso.simple;
 
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.simple.LineStringEncoder;
 import org.geotools.xml.Encoder;

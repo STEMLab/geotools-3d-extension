@@ -16,14 +16,15 @@
  */
 package org.geotools.gml3.iso.simple;
 
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.GeometryEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
+import org.geotools.gml3.iso.bindings.GML3EncodingUtils;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Curve;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Encodes a GML3 line string
@@ -31,7 +32,7 @@ import com.vividsolutions.jts.geom.LineString;
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class LineStringEncoder extends GeometryEncoder<LineString> {
+class LineStringEncoder extends GeometryEncoder<Curve> {
 
     static final QualifiedName LINE_STRING = new QualifiedName(GML.NAMESPACE, "LineString", "gml");
 
@@ -46,10 +47,11 @@ class LineStringEncoder extends GeometryEncoder<LineString> {
         this.element = element;
     }
 
-    public void encode(LineString geometry, AttributesImpl atts, GMLWriter handler)
+    public void encode(Curve geometry, AttributesImpl atts, GMLWriter handler)
             throws Exception {
         handler.startElement(element, atts);
-        handler.posList(geometry.getCoordinateSequence());
+        ISOGeometryBuilder builder = new ISOGeometryBuilder(geometry.getCoordinateReferenceSystem());
+        handler.posList(GML3EncodingUtils.positions(geometry, builder));
         handler.endElement(element);
     }
 }

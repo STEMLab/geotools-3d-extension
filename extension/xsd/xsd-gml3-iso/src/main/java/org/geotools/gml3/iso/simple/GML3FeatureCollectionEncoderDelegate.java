@@ -22,42 +22,27 @@ import java.util.Map;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.geometry.jts.CircularRing;
-import org.geotools.geometry.jts.CircularString;
-import org.geotools.geometry.jts.CompoundCurve;
-import org.geotools.geometry.jts.CompoundRing;
-import org.geotools.geometry.jts.MultiCurve;
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.GeometryEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GMLConfiguration_ISO;
 import org.geotools.gml3.iso.bindings.GML3EncodingUtils;
-import org.geotools.gml3.iso.simple.CurveEncoder;
-import org.geotools.gml3.iso.simple.EnvelopeEncoder;
-import org.geotools.gml3.iso.simple.LineStringEncoder;
-import org.geotools.gml3.iso.simple.LinearRingEncoder;
-import org.geotools.gml3.iso.simple.MultiLineStringEncoder;
-import org.geotools.gml3.iso.simple.MultiPointEncoder;
-import org.geotools.gml3.iso.simple.MultiPolygonEncoder;
-import org.geotools.gml3.iso.simple.PointEncoder;
-import org.geotools.gml3.iso.simple.PolygonEncoder;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
 import org.geotools.xml.XSD;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.NamespaceSupport;
-
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * {@link SimpleFeatureCollection} encoder delegate for fast GML3 encoding
@@ -66,13 +51,13 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  */
 public class GML3FeatureCollectionEncoderDelegate extends
-        org.geotools.gml2.simple.FeatureCollectionEncoderDelegate {
+        org.geotools.gml2.iso.simple.FeatureCollectionEncoderDelegate {
 
     public GML3FeatureCollectionEncoderDelegate(SimpleFeatureCollection features, Encoder encoder) {
         super(features, encoder, new GML3Delegate(encoder));
     }
 
-    static class GML3Delegate implements org.geotools.gml2.simple.GMLDelegate {
+    static class GML3Delegate implements org.geotools.gml2.iso.simple.GMLDelegate {
 
         SrsSyntax srsSyntax;
 
@@ -191,17 +176,21 @@ public class GML3FeatureCollectionEncoderDelegate extends
         @Override
         public void registerGeometryEncoders(Map<Class, GeometryEncoder> encoders, Encoder encoder) {
             encoders.put(Point.class, new PointEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(MultiPoint.class, new MultiPointEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(LineString.class, new LineStringEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(LinearRing.class, new LinearRingEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(MultiLineString.class, new MultiLineStringEncoder(encoder, gmlPrefix, gmlUri, false));
-            encoders.put(MultiCurve.class, new MultiLineStringEncoder(encoder, gmlPrefix, gmlUri, true));
-            encoders.put(Polygon.class, new PolygonEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(MultiPolygon.class, new MultiPolygonEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(CircularString.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
+            //encoders.put(MultiPoint.class, new MultiPointEncoder(encoder, gmlPrefix, gmlUri));
+            encoders.put(Curve.class, new LineStringEncoder(encoder, gmlPrefix, gmlUri));
+            encoders.put(Ring.class, new LinearRingEncoder(encoder, gmlPrefix, gmlUri));
+            //encoders.put(MultiCurve.class, new MultiLineStringEncoder(encoder, gmlPrefix, gmlUri, false));
+            //encoders.put(MultiCurve.class, new MultiLineStringEncoder(encoder, gmlPrefix, gmlUri, true));
+            encoders.put(Surface.class, new PolygonEncoder(encoder, gmlPrefix, gmlUri));
+            //encoders.put(MultiSurface.class, new MultiPolygonEncoder(encoder, gmlPrefix, gmlUri));
+            
+            //encoders.put(CompositeSurface.class, value);
+            //encoders.put(Solid.class, value);
+            
+            /*encoders.put(CircularString.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(CompoundCurve.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(CircularRing.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(CompoundRing.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
+            encoders.put(CompoundRing.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));*/
         }
 
         @Override

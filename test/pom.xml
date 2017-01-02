@@ -75,6 +75,58 @@
         <version>${project.version}</version>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.3.2</version>
+             
+            <configuration>
+                <finalName>geotools_demo</finalName>
+                <!-- jar 파일이 생성될 폴더 -->
+                <outputDirectory>target</outputDirectory>
+                <archive>
+                    <manifest>
+                        <!-- public static void main() 함수가 있는 클래스 지정 -->
+                        <mainClass>TTADemoTest</mainClass>
+                         
+                        <!-- jar 파일 META-INF/MANIFEST.MF 에 클래스패스 정보 추가 -->
+                        <addClasspath>true</addClasspath>
+                         
+                        <!-- 
+                            클래스패스에 추가시 prefix 설정 
+                            ex) log4j-1.2.16.jar -> lib/log4j-1.2.16.jar 로 추가됨 
+                        -->
+                        <classpathPrefix>lib/</classpathPrefix>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+         
+        <!-- package 실행할때 프로젝트 디펜던시들을 특정폴더로 복사해주게 설정  -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.3</version>
+            <executions>
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <outputDirectory>target/lib</outputDirectory>
+                <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+  
   <parent>
   	<groupId>org.geotools</groupId>
   	<artifactId>geotools-iso</artifactId>

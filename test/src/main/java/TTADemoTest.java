@@ -105,13 +105,12 @@ public class TTADemoTest extends JFrame{
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
+		frame.setTitle("GeoTools 3D DataStore DemoApplication");
 		frame.setVisible(true);
 	}
 	public TTADemoTest() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
-
-		
 
 		table = new JTable();
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -141,12 +140,12 @@ public class TTADemoTest extends JFrame{
 		JMenu dataMenu = new JMenu("Data");
 		menubar.add(dataMenu);
 		pack();
-		fileMenu.add(new SafeAction("Open GML File...") {
+		fileMenu.add(new SafeAction("Open GML File") {
 			public void action(ActionEvent e) throws Throwable {
 				connectGML(new GMLDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Open CSV File...") {
+		fileMenu.add(new SafeAction("Open CSV File") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
 			}

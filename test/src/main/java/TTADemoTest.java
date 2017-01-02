@@ -22,6 +22,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -91,7 +92,7 @@ public class TTADemoTest extends JFrame{
 	private JComboBox featureTypeCBox;
 	private JTable table;
 	private JLabel label;
-	private JTextField text;
+	private JTextArea text;
 	private static Hints hints = null;
 
 	private SimpleFeatureCollection currentfeatures;
@@ -110,9 +111,7 @@ public class TTADemoTest extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 
-		text = new JTextField(80);
-		text.setText("include"); // include selects everything!
-		getContentPane().add(text, BorderLayout.NORTH);
+		
 
 		table = new JTable();
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -120,10 +119,14 @@ public class TTADemoTest extends JFrame{
 		table.setPreferredScrollableViewportSize(new Dimension(500, 200));
 
 		JScrollPane scrollPane = new JScrollPane(table);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(scrollPane, BorderLayout.NORTH);
+		
+		text = new JTextArea(4,90);
+		text.setText("include"); // include selects everything!
+		getContentPane().add(text, BorderLayout.CENTER);
 		
 		label = new JLabel();
-		label.setText("time : ");
+		label.setText("state");
 		getContentPane().add(label, BorderLayout.SOUTH);
 		
 		JMenuBar menubar = new JMenuBar();
@@ -143,7 +146,7 @@ public class TTADemoTest extends JFrame{
 				connectGML(new GMLDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Open csvfile...") {
+		fileMenu.add(new SafeAction("Open CSV File...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
 			}
@@ -170,17 +173,17 @@ public class TTADemoTest extends JFrame{
 				System.exit(0);
 			}
 		});
-		dataMenu.add(new SafeAction("Get features") {
+		dataMenu.add(new SafeAction("Evaluate Filter") {
 			public void action(ActionEvent e) throws Throwable {
 				filterFeatures();
 			}
 		});
-		dataMenu.add(new SafeAction("Get features from datastore") {
+		/*dataMenu.add(new SafeAction("Get features from datastore") {
 			public void action(ActionEvent e) throws Throwable {
 				filterFeatures();
 			}
 		});
-		/*dataMenu.add(new SafeAction("contains: solid") {
+		dataMenu.add(new SafeAction("contains: solid") {
 			public void action(ActionEvent e) throws Throwable {
 				constainsfilter();
 			}
@@ -738,7 +741,7 @@ public class TTADemoTest extends JFrame{
 		int result = wizard.showModalDialog();
 		if (result == JWizard.FINISH) {
 			Map<String, Object> connectionParameters = wizard.getConnectionParameters();
-			//File f = 
+			dataStore = null;
 			URL oracle;
 			try {
 				File f = (File) connectionParameters.get("file");
@@ -898,6 +901,10 @@ public class TTADemoTest extends JFrame{
 		} 
 	}
 	private void filterFeatures()  {
+		if(dataStore == null) {
+			filterFeatureswithtext();
+			return;
+		}
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {

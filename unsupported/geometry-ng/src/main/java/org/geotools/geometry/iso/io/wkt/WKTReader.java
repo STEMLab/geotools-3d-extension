@@ -390,7 +390,7 @@ public class WKTReader {
 			ParseException {
 		String type = getNextWord();
 
-		if (type.equals(WKTConstants.WKT_POINT)) {
+		if (type.equalsIgnoreCase(WKTConstants.WKT_POINT)) {
 			return readPointText();
 		} else if (type.equalsIgnoreCase(WKTConstants.WKT_CURVE)) {
 			return readLineStringText();

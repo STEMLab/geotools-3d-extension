@@ -101,7 +101,7 @@ public class TTADemoTest extends JFrame{
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, true);
+		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
@@ -870,34 +870,36 @@ public class TTADemoTest extends JFrame{
    				filtertype = "intersects ";
    			} 
 
-   		
-   			
 			//SimpleFeatureCollection features = source.getFeatures(filter);
    			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
    			SimpleFeatureIterator iterator = currentfeatures.features();
 			while (iterator.hasNext()) {
 				SimpleFeature feature = iterator.next();
-				
-				if(filter.evaluate(feature)) {
-					sfs.add(feature);
+				try {
+					if(filter.evaluate(feature)) {
+						System.out.println("OK = " + feature.getID());
+						sfs.add(feature);
+					} else {
+						System.out.println("Else = " + feature.getID());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("Error = " + feature.getID());
 				}
 			}
 			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
-   			
+			
 			long end = System.currentTimeMillis();
 			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText(filtertype + "complete : " + ( end - start )/1000.0 + " sec");
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);
 			
-		} catch (CQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		}
 	}
 	private void filterFeatures()  {
 		if(dataStore == null) {

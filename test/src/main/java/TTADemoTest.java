@@ -887,6 +887,10 @@ public class TTADemoTest extends JFrame{
 					System.out.println("Error = " + feature.getID());
 				}
 			}
+			if(sfs.size() == 0) {
+				table.setModel(new DefaultTableModel(5, 5));
+				return;
+			}
 			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
 			
 			long end = System.currentTimeMillis();

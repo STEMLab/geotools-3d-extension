@@ -95,6 +95,7 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         double[] position = (double[]) value;
+        
         DirectPosition dp = gBuilder.createDirectPosition(position);
         return dp;
     }

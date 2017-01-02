@@ -37,10 +37,9 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.util.InternationalString;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Builder for attribute types and descriptors.

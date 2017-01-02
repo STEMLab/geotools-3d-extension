@@ -880,7 +880,7 @@ public class TTADemoTest extends JFrame{
 						System.out.println("OK = " + feature.getID());
 						sfs.add(feature);
 					} else {
-						System.out.println("Else = " + feature.getID());
+						//System.out.println("Else = " + feature.getID());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -934,11 +934,39 @@ public class TTADemoTest extends JFrame{
    			else if(cql[0].equalsIgnoreCase("intersects")) {
    				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
    			} 
-			SimpleFeatureCollection features = source.getFeatures(filter);
+			SimpleFeatureCollection features = source.getFeatures();
+			
+			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
+			SimpleFeatureIterator iterator = features.features();
+			try {
+				while (iterator.hasNext()) {
+					SimpleFeature feature = iterator.next();
+					try {
+						if(filter.evaluate(feature)) {
+							System.out.println("OK = " + feature.getID());
+							sfs.add(feature);
+						} else {
+							//System.out.println("Else = " + feature.getID());
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println("Error = " + feature.getID());
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(sfs.size() == 0) {
+				table.setModel(new DefaultTableModel(5, 5));
+				return;
+			}
+			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
+			
+			
 			long end = System.currentTimeMillis();
 			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText("time : " + ( end - start )/1000.0);
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
@@ -980,8 +1008,6 @@ public class TTADemoTest extends JFrame{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} 
-
-
 	}
 	private FeatureCollection parseGML(InputStream in) throws Exception {
 		GMLConfiguration_ISO gml = new GMLConfiguration_ISO();

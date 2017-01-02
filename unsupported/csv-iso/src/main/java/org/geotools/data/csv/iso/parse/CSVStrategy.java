@@ -74,6 +74,13 @@ public abstract class CSVStrategy {
         try {
             csvReader = csvFileState.openCSVReader();
             headers = csvReader.getHeaders();
+            
+            //hack! trim headers
+            for(int i = 0; i < headers.length; i++) {
+            	headers[i] = headers[i].replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
+            	headers[i] = headers[i].trim();
+            }
+            
             typesFromData = findMostSpecificTypesFromData(csvReader, headers);
         } catch (IOException e) {
             throw new RuntimeException("Failure reading csv file", e);

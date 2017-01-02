@@ -155,6 +155,13 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             int ordinateIdx = 0;
             // HACK: not sure if its correct to assign ordinates 0 to 0 and 1 to
             // 1 or it should be inferred from the crs
+            
+            /*for(int i = 0; i < values.length; i++) {
+            	values[i] = values[i] * 10000000d;
+            	values[i] = Math.floor(values[i]);
+            	//values[i] = Math.round(values[i] * 10000d) / 10000d;
+            }*/
+            
             for (int coordIndex = 0; coordIndex < coordCount; coordIndex++) {
             	DirectPosition dp = gBuilder.createDirectPosition(
             			new double[] { 

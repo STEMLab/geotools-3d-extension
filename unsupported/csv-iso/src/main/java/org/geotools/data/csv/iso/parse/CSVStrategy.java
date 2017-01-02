@@ -76,9 +76,11 @@ public abstract class CSVStrategy {
             headers = csvReader.getHeaders();
             
             //hack! trim headers
+            
             for(int i = 0; i < headers.length; i++) {
-            	headers[i] = headers[i].replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
-            	headers[i] = headers[i].trim();
+            	//headers[i] = headers[i].replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
+            	//headers[i] = headers[i].trim();
+            	headers[i] = headers[i].replaceAll("\\u0000", "");
             }
             
             typesFromData = findMostSpecificTypesFromData(csvReader, headers);

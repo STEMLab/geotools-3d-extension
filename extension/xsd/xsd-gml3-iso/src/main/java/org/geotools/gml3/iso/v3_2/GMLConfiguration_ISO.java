@@ -73,6 +73,9 @@ import org.geotools.gml3.iso.v3_2.bindings.DoubleListBinding;
 import org.geotools.gml3.iso.v3_2.bindings.EnvelopeTypeBinding;
 import org.geotools.gml3.iso.v3_2.bindings.GML32EncodingUtils;
 import org.geotools.gml3.iso.v3_2.bindings.LinearRingTypeBinding;
+import org.geotools.gml3.iso.v3_2.bindings.ShellPropertyTypeBinding;
+import org.geotools.gml3.iso.v3_2.bindings.ShellTypeBinding;
+import org.geotools.gml3.iso.v3_2.bindings.SolidTypeBinding;
 import org.geotools.xml.Configuration;
 import org.geotools.xs.XS;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -242,6 +245,13 @@ public class GMLConfiguration_ISO extends Configuration {
         container.registerComponentImplementation(GML.RingType, RingTypeBinding.class);
         container.registerComponentImplementation(GML.CompositeCurveType,
                 CompositeCurveTypeBinding.class);
+        
+        container.registerComponentImplementation(GML.ShellPropertyType,
+                ShellPropertyTypeBinding.class);
+        container.registerComponentImplementation(GML.ShellType,
+                ShellTypeBinding.class);
+        container.registerComponentImplementation(GML.SolidType,
+                SolidTypeBinding.class);
         
         //extended bindings for arc/surface support
         if (isExtendedArcSurfaceSupport()) {

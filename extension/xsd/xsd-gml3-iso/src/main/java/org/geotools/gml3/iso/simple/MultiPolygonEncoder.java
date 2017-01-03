@@ -59,11 +59,11 @@ class MultiPolygonEncoder extends GeometryEncoder<MultiPolygon> {
             throws Exception {
         handler.startElement(multiSurface, atts);
 
-        for (int i = 0; i < geometry.getNumGeometries(); i++) {
+        /*for (int i = 0; i < geometry.getNumGeometries(); i++) {
             handler.startElement(surfaceMember, null);
             pe.encode((Polygon) geometry.getGeometryN(i), null, handler);
             handler.endElement(surfaceMember);
-        }
+        }*/
 
         handler.endElement(multiSurface);
     }

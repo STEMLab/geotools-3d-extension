@@ -1,26 +1,21 @@
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.gml2.simple.GMLWriter;
 import org.geotools.gml3.iso.GML;
-import org.geotools.gml3.iso.GMLConfiguration_ISO;
-import org.geotools.gml3.iso.simple.GML3FeatureCollectionEncoderDelegate;
 import org.geotools.xml.Encoder;
 import org.w3c.dom.Document;
-import org.xml.sax.helpers.AttributesImpl;
 
 /*
  * Indoor Moving Objects Generator
@@ -55,22 +50,15 @@ public class FeatureCollectionEncode {
 
     static final String INDENT_AMOUNT_KEY =
             "{http://xml.apache.org/xslt}indent-amount";
-    
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-        Encoder encoder = new Encoder(new GMLConfiguration_ISO());
-    }
 
-    public static Document encode(SimpleFeatureCollection features, Encoder encoder) throws Exception {
+    public static ByteArrayOutputStream encode(SimpleFeatureCollection features, Encoder encoder) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // create the document serializer
         SAXTransformerFactory txFactory = (SAXTransformerFactory) SAXTransformerFactory
                 .newInstance();
-
+        Transformer transformer = txFactory.newTransformer();
+        
         TransformerHandler xmls;
         try {
             xmls = txFactory.newTransformerHandler();
@@ -81,23 +69,29 @@ public class FeatureCollectionEncode {
         outputProps.setProperty(INDENT_AMOUNT_KEY, "2");
         xmls.getTransformer().setOutputProperties(outputProps);
         xmls.getTransformer().setOutputProperty(OutputKeys.METHOD, "xml");
+        xmls.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");
         xmls.setResult(new StreamResult(out));
-
-        /*GMLWriter handler = new GMLWriter(xmls, encoder.getNamespaces(), 6, false, "gml");
-        handler.startDocument();
-        handler.startPrefixMapping("gml", GML.NAMESPACE);
-        handler.endPrefixMapping("gml");
-*/
-        GML3FeatureCollectionEncoderDelegate en = new GML3FeatureCollectionEncoderDelegate(features, encoder);
-        en.encode(xmls);
-        //handler.endDocument();
-
-        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-        DOMResult result = new DOMResult();
-        Transformer tx = TransformerFactory.newInstance().newTransformer();
-        tx.transform(new StreamSource(in), result);
-        Document d = (Document) result.getNode();
-        return d;
+        encoder.setIndenting(true);
+        encoder.encode( features, GML.FeatureCollection, out);
+        return out;
     }
+    
+    public static void saveAsFile(File file, ByteArrayOutputStream stream) throws IOException {
+    	FileOutputStream fos = null;
+    	try {
+    		fos = new FileOutputStream (file); 
+
+    		stream.writeTo(fos);
+    	} catch(IOException ioe) {
+    	    // Handle exception here
+    	    ioe.printStackTrace();
+    	} finally {
+    		if(fos != null) {
+    			fos.close();
+    		}
+    	}
+    }
+    
+    
     
 }

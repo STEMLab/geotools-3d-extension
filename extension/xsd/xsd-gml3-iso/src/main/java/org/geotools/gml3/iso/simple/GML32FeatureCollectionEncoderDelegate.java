@@ -21,15 +21,10 @@ import java.util.Map;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.geometry.jts.CircularRing;
-import org.geotools.geometry.jts.CircularString;
-import org.geotools.geometry.jts.CompoundCurve;
-import org.geotools.geometry.jts.CompoundRing;
-import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.GeometryEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.bindings.GML3EncodingUtils;
 import org.geotools.gml3.iso.simple.CurveEncoder;
 import org.geotools.gml3.iso.simple.EnvelopeEncoder;
@@ -42,6 +37,7 @@ import org.geotools.gml3.iso.simple.MultiPolygonEncoder;
 import org.geotools.gml3.iso.simple.PointEncoder;
 import org.geotools.gml3.iso.simple.PolygonEncoder;
 import org.geotools.gml3.iso.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GMLConfiguration_ISO;
 import org.geotools.gml3.iso.v3_2.bindings.GML32EncodingUtils;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
@@ -50,29 +46,19 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
 /**
  * SimpleFeatureCollection encoder delegate for fast GML3 encoding
  * 
  * @author Andrea Aime - GeoSolutions
  */
 public class GML32FeatureCollectionEncoderDelegate extends
-        org.geotools.gml2.simple.FeatureCollectionEncoderDelegate {
+        org.geotools.gml2.iso.simple.FeatureCollectionEncoderDelegate {
 
     public GML32FeatureCollectionEncoderDelegate(SimpleFeatureCollection features, Encoder encoder) {
         super(features, encoder, new GML32Delegate(encoder));
     }
 
-    public static class GML32Delegate implements org.geotools.gml2.simple.GMLDelegate {
+    public static class GML32Delegate implements org.geotools.gml2.iso.simple.GMLDelegate {
 
         SrsSyntax srsSyntax;
 
@@ -99,11 +85,11 @@ public class GML32FeatureCollectionEncoderDelegate extends
         }
 
         private int getNumDecimals(Configuration configuration) {
-            GMLConfiguration config;
+            GMLConfiguration_ISO config;
             if (configuration instanceof org.geotools.gml3.iso.v3_2.GMLConfiguration_ISO) {
-                config = (GMLConfiguration) configuration;
+                config = (GMLConfiguration_ISO) configuration;
             } else {
-                config = configuration.getDependency(GMLConfiguration.class);
+                config = configuration.getDependency(GMLConfiguration_ISO.class);
             }
 
             if (config == null) {
@@ -156,7 +142,7 @@ public class GML32FeatureCollectionEncoderDelegate extends
 
         @Override
         public void registerGeometryEncoders(Map<Class, GeometryEncoder> encoders, Encoder encoder) {
-            encoders.put(Point.class, new PointEncoder(encoder, gmlPrefix, gmlUri));
+            /*encoders.put(Point.class, new PointEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(MultiPoint.class, new MultiPointEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(LineString.class, new LineStringEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(LinearRing.class, new LinearRingEncoder(encoder, gmlPrefix, gmlUri));
@@ -167,7 +153,7 @@ public class GML32FeatureCollectionEncoderDelegate extends
             encoders.put(CompoundCurve.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(CircularRing.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(CompoundRing.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
-            encoders.put(GeometryCollection.class, new GeometryCollectionEncoder(encoder, gmlPrefix, gmlUri));
+            encoders.put(GeometryCollection.class, new GeometryCollectionEncoder(encoder, gmlPrefix, gmlUri));*/
         }
 
         @Override

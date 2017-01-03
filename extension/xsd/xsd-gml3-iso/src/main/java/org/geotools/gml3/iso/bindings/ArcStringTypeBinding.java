@@ -11,6 +11,7 @@ import org.geotools.gml3.iso.bindings.LineStringTypeBinding;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -78,12 +79,12 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class ArcStringTypeBinding extends AbstractComplexBinding implements Comparable {
 
-    GeometryFactory gFactory;
+    ISOGeometryBuilder gBuilder;
     CoordinateSequenceFactory csFactory;
     ArcParameters arcParameters;
 
-    public ArcStringTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory, ArcParameters arcParameters) {
-        this.gFactory = gFactory;
+    public ArcStringTypeBinding(ISOGeometryBuilder gBuilder, ArcParameters arcParameters) {
+        this.gBuilder = gBuilder;
         this.csFactory = csFactory;
         this.arcParameters = arcParameters;
     }
@@ -136,7 +137,7 @@ public class ArcStringTypeBinding extends AbstractComplexBinding implements Comp
         if ("interpolation".equals(name.getLocalPart())) {
             return "circularArc3Points";
         } else if ("posList".equals(name.getLocalPart())) {
-            return GML3EncodingUtils.positions((Curve) object);
+            return GML3EncodingUtils.positions((Curve) object, gBuilder);
         }
 
         return super.getProperty(object, name);

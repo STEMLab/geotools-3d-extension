@@ -87,7 +87,7 @@ class MultiLineStringEncoder extends GeometryEncoder<Geometry> {
 
     protected void encodeMembers(Geometry geometry, GMLWriter handler) throws SAXException,
             Exception {
-        for (int i = 0; i < geometry.getNumGeometries(); i++) {
+        /*for (int i = 0; i < geometry.getNumGeometries(); i++) {
             handler.startElement(member, null);
             LineString line = (LineString) geometry.getGeometryN(i);
             if (curveEncoding && line instanceof CurvedGeometry) {
@@ -98,7 +98,7 @@ class MultiLineStringEncoder extends GeometryEncoder<Geometry> {
                 lse.encode(line, null, handler);
             }
             handler.endElement(member);
-        }
+        }*/
     }
 
 

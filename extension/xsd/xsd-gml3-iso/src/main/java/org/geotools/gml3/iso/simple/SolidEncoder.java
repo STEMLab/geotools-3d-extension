@@ -51,7 +51,7 @@ class SolidEncoder extends GeometryEncoder<Solid> {
 
     QualifiedName interior;
 
-    LinearRingEncoder lre;
+    CompositeSurfaceEncoder cse;
 
     RingEncoder re;
 
@@ -60,7 +60,7 @@ class SolidEncoder extends GeometryEncoder<Solid> {
         solid = SOLID.derive(gmlPrefix, gmlUri);
         exterior = EXTERIOR.derive(gmlPrefix, gmlUri);
         interior = INTERIOR.derive(gmlPrefix, gmlUri);
-        //lre = new LinearRingEncoder(encoder, gmlPrefix, gmlUri);
+        cse = new CompositeSurfaceEncoder(encoder, gmlPrefix, gmlUri);
         //re = new RingEncoder(encoder, gmlPrefix, gmlUri);
     }
     
@@ -84,13 +84,13 @@ class SolidEncoder extends GeometryEncoder<Solid> {
         handler.endElement(solid);
     }
 
-    private void encodeCompositeSurface(CompositeSurface ring, GMLWriter handler) throws Exception {
+    private void encodeCompositeSurface(CompositeSurface compositeSurface, GMLWriter handler) throws Exception {
         /*if (ring instanceof CurvedGeometry) {
             re.encode(ring, null, handler);
         } else {
             lre.encode(ring, null, handler);
         }*/
-        lre.encode((Curve) ring.getElements().iterator().next(), null, handler);
+    	cse.encode(compositeSurface, null, handler);
     }
     
 }

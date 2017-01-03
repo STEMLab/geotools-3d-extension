@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -63,6 +65,7 @@ import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
 import org.geotools.swing.table.FeatureCollectionTableModel;
 import org.geotools.swing.wizard.JWizard;
+import org.geotools.xml.Encoder;
 import org.geotools.xml.PullParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -85,6 +88,7 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.w3c.dom.Document;
 
 
 public class TTADemoTest extends JFrame{
@@ -93,8 +97,9 @@ public class TTADemoTest extends JFrame{
 	private JTable table;
 	private JLabel label;
 	private JTextArea text;
+	private JFileChooser jfc = new JFileChooser();
 	private static Hints hints = null;
-
+	
 	private SimpleFeatureCollection currentfeatures;
 	
 	private static ISOGeometryBuilder builder;
@@ -153,7 +158,7 @@ public class TTADemoTest extends JFrame{
 		
 		fileMenu.add(new SafeAction("Save as GML") {
 			public void action(ActionEvent e) throws Throwable {
-				
+				saveGML();
 			}
 		});
 		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {
@@ -217,6 +222,23 @@ public class TTADemoTest extends JFrame{
 			}
 		});*/
 	}
+	
+	public void saveGML() throws Exception {
+		try {
+			if( jfc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File save = jfc.getSelectedFile();
+				long start = System.currentTimeMillis();
+				Encoder encoder = new Encoder(new GMLConfiguration_ISO());
+				ByteArrayOutputStream st = FeatureCollectionEncode.encode(currentfeatures, encoder);
+				FeatureCollectionEncode.saveAsFile(save, st);
+				long end = System.currentTimeMillis();
+				label.setText("save as GML complete : " + ( end - start )/1000.0 + " sec");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
 		ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
@@ -892,12 +914,12 @@ public class TTADemoTest extends JFrame{
 				table.setModel(new DefaultTableModel(5, 5));
 				return;
 			}
-			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
+			currentfeatures = ISODataUtilities.collection(sfs);
    			
 			long end = System.currentTimeMillis();
 			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText(filtertype + "complete : " + ( end - start )/1000.0 + " sec");
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
 			table.setModel(model);
 			
 		} catch (CQLException e) {
@@ -938,11 +960,11 @@ public class TTADemoTest extends JFrame{
    			else if(cql[0].equalsIgnoreCase("intersects")) {
    				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
    			} 
-			SimpleFeatureCollection features = source.getFeatures(filter);
+			currentfeatures = source.getFeatures(filter);
 			long end = System.currentTimeMillis();
 			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText("time : " + ( end - start )/1000.0);
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block

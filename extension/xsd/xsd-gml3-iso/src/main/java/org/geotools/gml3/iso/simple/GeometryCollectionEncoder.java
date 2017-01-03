@@ -18,13 +18,14 @@ package org.geotools.gml3.iso.simple;
 
 import com.vividsolutions.jts.geom.GeometryCollection;
 
-import org.geotools.gml2.simple.GMLWriter;
-import org.geotools.gml2.simple.GeometryEncoder;
-import org.geotools.gml2.simple.QualifiedName;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
+import org.geotools.gml2.iso.simple.QualifiedName;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.simple.GenericGeometryEncoder;
 import org.geotools.gml3.iso.simple.GeometryCollectionEncoder;
 import org.geotools.xml.Encoder;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -32,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @author 
  */
-public class GeometryCollectionEncoder extends GeometryEncoder<GeometryCollection> {
+public class GeometryCollectionEncoder extends GeometryEncoder<MultiPrimitive> {
 
     static final QualifiedName GEOMETRY_COLLECTION = new QualifiedName(
         GML.NAMESPACE, "GeometryCollection", "gml");
@@ -49,10 +50,10 @@ public class GeometryCollectionEncoder extends GeometryEncoder<GeometryCollectio
         GeometryCollectionEncoder.encoder = encoder;
     }
     @Override
-    public void encode(GeometryCollection geometry, AttributesImpl atts,
+    public void encode(MultiPrimitive geometry, AttributesImpl atts,
         GMLWriter handler) throws Exception {
         handler.startElement(GEOMETRY_COLLECTION, atts);
-        if (geometry.getNumGeometries() < 1) {
+        /*if (geometry.getNumGeometries() < 1) {
             throw new Exception("More than 1 geometry required!");
         } else {
             GenericGeometryEncoder gec = new GenericGeometryEncoder(
@@ -60,7 +61,7 @@ public class GeometryCollectionEncoder extends GeometryEncoder<GeometryCollectio
             for (int i = 0; i < geometry.getNumGeometries(); i++) {
                 gec.encode(geometry.getGeometryN(i), atts, handler);
             }
-        }
+        }*/
         handler.endElement(GEOMETRY_COLLECTION);
     }
 

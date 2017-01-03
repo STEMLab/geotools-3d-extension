@@ -60,6 +60,9 @@ public class GML3FeatureCollectionEncoderDelegate extends
 
         SrsSyntax srsSyntax;
 
+        static final QualifiedName FEATURECOLLECTION = new QualifiedName(GML.NAMESPACE,
+                GML.FeatureCollection.getLocalPart(), "gml");
+        
         static final QualifiedName FEATURE_MEMBERS = new QualifiedName(GML.NAMESPACE,
                 GML.featureMembers.getLocalPart(), "gml");
 
@@ -84,8 +87,8 @@ public class GML3FeatureCollectionEncoderDelegate extends
             String gmlURI = encoder.getNamespaces().getURI(gmlPrefix);
             this.gmlUri = gmlURI != null ? gmlURI : GML.NAMESPACE;
 
-            this.featureMembers = FEATURE_MEMBERS.derive(gmlPrefix, gmlURI);
-            this.featureMember = FEATURE_MEMBER.derive(gmlPrefix, gmlURI);
+            this.featureMembers = FEATURE_MEMBERS.derive(gmlPrefix, gmlUri);
+            this.featureMember = FEATURE_MEMBER.derive(gmlPrefix, gmlUri);
             this.srsSyntax = (SrsSyntax) encoder.getContext().getComponentInstanceOfType(
                     SrsSyntax.class);
             this.numDecimals = getNumDecimals(encoder.getConfiguration());
@@ -147,7 +150,7 @@ public class GML3FeatureCollectionEncoderDelegate extends
         public void initFidAttribute(AttributesImpl atts) {
             atts.addAttribute(GML.NAMESPACE, "id", "gml:id", null, "");
         }
-
+        
         public void startFeatures(GMLWriter handler) throws Exception {
             if (!encodeSeparateMember) {
                 handler.startElement(featureMembers, null);

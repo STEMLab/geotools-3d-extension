@@ -25,10 +25,9 @@ import org.geotools.gml3.iso.bindings.GML3ParsingUtils;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Donguk Seo
@@ -48,8 +47,7 @@ public class AbstractGeometryTypeBindingExt extends AbstractGeometryTypeBinding 
     @Override
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         //set the crs
-        if (value instanceof Geometry ||
-                value instanceof org.geotools.geometry.iso.root.GeometryImpl) {
+        if (value instanceof Geometry) {
             CoordinateReferenceSystem crs = GML3ParsingUtils.crs(node);
             if (crs != null) {
                 GML3ParsingUtils.setCRS(value, crs);

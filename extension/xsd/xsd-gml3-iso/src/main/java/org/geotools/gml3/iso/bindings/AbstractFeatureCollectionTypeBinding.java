@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureCollection;

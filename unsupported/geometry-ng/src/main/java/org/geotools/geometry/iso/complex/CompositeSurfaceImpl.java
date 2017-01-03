@@ -17,6 +17,7 @@
 package org.geotools.geometry.iso.complex;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -139,7 +140,7 @@ public class CompositeSurfaceImpl extends CompositeImpl<OrientableSurfaceImpl>
 	 */
 	public Set<OrientableSurface> getGenerators() {
 		// TODO Auto-generated method stub
-		return null;
+	    return new HashSet<OrientableSurface>((List<OrientableSurface>) this.elements);
 	}
 
 	/* (non-Javadoc)

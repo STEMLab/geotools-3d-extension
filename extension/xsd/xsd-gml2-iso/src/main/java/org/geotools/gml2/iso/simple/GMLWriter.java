@@ -291,6 +291,16 @@ public class GMLWriter {
         position(x, y, z, sb);
         characters(sb);
     }
+    
+    public void position(double[] coords) throws SAXException {
+        if(coords.length == 3) {
+            position(coords[0], coords[1], coords[2]);
+        } else if(coords.length == 2) {
+            position(coords[0], coords[1], Double.NaN);
+        } else {
+            position(coords[0], Double.NaN, Double.NaN);
+        }
+    }
 
     void position(double x, double y, double z, StringBuffer sb) {
         sb.setLength(0);

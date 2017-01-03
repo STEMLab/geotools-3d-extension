@@ -32,6 +32,7 @@ import org.geotools.xml.Node;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -186,23 +187,24 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      */
     public Element encode(Object object, Document document, Element value) throws Exception {
         // TODO: remove this when the parser can do lists
-        CoordinateSequence cs = (CoordinateSequence) object;
+        PointArray pa = (PointArray) object;
         StringBuffer sb = new StringBuffer();
 
-        int dim = CoordinateSequences.coordinateDimension(cs);
-        int size = cs.size();
+        int dim = pa.getDimension();
+        int size = pa.size();
         int nOrdWithSpace = size * dim - 1;
         int count = 0;
         for (int i = 0; i < size; i++) {
-        	for (int d = 0; d < dim; d++) {
-	            sb.append(cs.getOrdinate(i, d));
-	
-	            if (count < nOrdWithSpace) {
-	                sb.append(" ");
-	            }
-	            count++;
-
-        	}
+            Position p = pa.get(i);
+            double[] coords = p.getDirectPosition().getCoordinate();
+            for(int j = 0; j < coords.length; j++) {
+                sb.append(coords[j]);
+                
+                if (count < nOrdWithSpace) {
+                    sb.append(" ");
+                }
+                count++;
+            }
         }
 
         value.appendChild(document.createTextNode(sb.toString()));

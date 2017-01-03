@@ -71,8 +71,8 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 		
 		if(envLeft.intersects((BoundingBox)envRight)) {
             //TODO previous code HACK!! sfcgal is so slow : return left.intersects(right);
-			return left.intersects(right);
-			//return true;
+			//return left.intersects(right);
+			return true;
 		}
         
         return false;

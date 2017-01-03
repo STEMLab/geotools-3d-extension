@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +29,14 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.geotools.feature.NameImpl;
+import org.geotools.geometry.iso.coordinate.LineStringImpl;
+import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml2.iso.bindings.GMLEncodingUtils;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GMLConfiguration_ISO;
 import org.geotools.gml3.iso.XSDIdRegistry;
-import org.geotools.gml3.iso.bindings.GML3EncodingUtils;
 import org.geotools.util.Converters;
 import org.geotools.xlink.XLINK;
 import org.geotools.xml.ComplexBinding;
@@ -48,8 +50,13 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.LineSegment;
+import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
+import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
@@ -86,26 +93,45 @@ public class GML3EncodingUtils {
         e = new GMLEncodingUtils(gml);
     }
 
-    static PointArray positions(Curve line) {
-    	//TODO
-        /*if (line instanceof SingleCurvedGeometry<?>) {
-            SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
-            return new LiteCoordinateSequence(curved.getControlPoints());
-        } else {
-            return line.getCoordinateSequence();
-        }*/
-    	return null;
+    public static PointArray positions(Curve curve, ISOGeometryBuilder builder) {
+        PointArray pa = builder.createPointArray();
+        Iterator<? extends CurveSegment> tCurveSegmentIter = curve.getSegments().iterator();
+        CurveSegment tSegment = null;
+
+        // Iterate all CurveSegments (= LineStrings)
+        while (tCurveSegmentIter.hasNext()) {
+                tSegment = tCurveSegmentIter.next();
+
+                
+                
+                // TODO: This version only handles the CurveSegment type
+                // LineString
+                LineString tLineString = (LineString) tSegment;
+
+                Iterator<LineSegment> tLineSegmentIter = tLineString
+                                .asLineSegments().iterator();
+                while (tLineSegmentIter.hasNext()) {
+                        LineSegment tLineSegment = tLineSegmentIter.next();
+                        // Add new Coordinate, which is the start point of the
+                        // actual LineSegment
+                        pa.add( tLineSegment.getStartPoint());
+                }
+        }
+        // Add new Coordinate, which is the end point of the last
+        // curveSegment
+        pa.add( tSegment.getEndPoint());
+        return pa;
     }
     
-    static PointArray positions(Ring line) {
-    	//TODO
-        /*if (line instanceof SingleCurvedGeometry<?>) {
-            SingleCurvedGeometry<?> curved = (SingleCurvedGeometry<?>) line;
-            return new LiteCoordinateSequence(curved.getControlPoints());
-        } else {
-            return line.getCoordinateSequence();
-        }*/
-    	return null;
+    public static PointArray positions(Ring line, ISOGeometryBuilder builder) {
+        List<? extends OrientableCurve> curves = line.getGenerators();
+        PointArray pa = builder.createPointArray();
+        for (int i = 0; i < curves.size(); i++) {
+            Curve c = (Curve) curves.get(i);
+            PointArray cPa = positions(c, builder);
+            pa.addAll(cPa);
+        }
+    	return pa;
     }
 
 

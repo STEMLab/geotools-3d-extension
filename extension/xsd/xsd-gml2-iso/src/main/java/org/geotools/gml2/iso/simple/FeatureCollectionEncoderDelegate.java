@@ -33,7 +33,6 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.GMLConfiguration_ISO;
-import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml2.iso.bindings.GMLEncodingUtils;
 import org.geotools.util.Converters;
 import org.geotools.xml.Binding;

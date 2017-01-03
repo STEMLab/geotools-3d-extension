@@ -24,6 +24,7 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -78,13 +79,11 @@ import com.vividsolutions.jts.geom.LineString;
  * @source $URL$
  */
 public class ArcTypeBinding extends AbstractComplexBinding {
-    GeometryFactory gFactory;
-    CoordinateSequenceFactory csFactory;
+    ISOGeometryBuilder gBuilder;
     ArcParameters arcParameters;
 
-    public ArcTypeBinding(GeometryFactory gFactory, CoordinateSequenceFactory csFactory, ArcParameters arcParameters) {
-        this.gFactory = gFactory;
-        this.csFactory = csFactory;
+    public ArcTypeBinding(ISOGeometryBuilder gBuilder, ArcParameters arcParameters) {
+        this.gBuilder = gBuilder;
         this.arcParameters = arcParameters;
     }
 

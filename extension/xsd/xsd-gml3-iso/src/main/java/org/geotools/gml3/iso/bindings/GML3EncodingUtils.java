@@ -459,6 +459,11 @@ public class GML3EncodingUtils {
                 }
             }
             encoding.setAttributeNS(gml.getNamespaceURI(), "id", id);
+            
+            //temporary code
+            Element name = document.createElementNS(gml.getNamespaceURI(), "name");
+            name.appendChild(document.createTextNode(id));
+            encoding.appendChild(name);
         }
         encodeClientProperties(feature, encoding);
 

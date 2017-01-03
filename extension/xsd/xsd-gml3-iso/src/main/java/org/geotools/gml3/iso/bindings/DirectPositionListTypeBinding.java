@@ -190,7 +190,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
         PointArray pa = (PointArray) object;
         StringBuffer sb = new StringBuffer();
 
-        int dim = pa.getDimension();
+        int dim = pa.getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
         int size = pa.size();
         int nOrdWithSpace = size * dim - 1;
         int count = 0;

@@ -23,6 +23,8 @@ import org.opengis.feature.type.PropertyDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
 
 /**
  * 
@@ -1705,7 +1707,7 @@ public class GMLSchema extends SchemaImpl {
     private static AttributeType build_POLYGONTYPE_TYPE() {
         AttributeType builtType;
         builtType = new AttributeTypeImpl(
-            new NameImpl("http://www.opengis.net/gml","PolygonType"), com.vividsolutions.jts.geom.Polygon.class, false,
+            new NameImpl("http://www.opengis.net/gml","PolygonType"), Surface.class, false,
             false, Collections.<Filter>emptyList(), ABSTRACTSURFACETYPE_TYPE, null
         );
         return builtType;
@@ -18643,9 +18645,18 @@ public class GMLSchema extends SchemaImpl {
      *
      * @generated
      */
-    public static final ComplexType SOLIDTYPE_TYPE = build_SOLIDTYPE_TYPE();
+    public static final AttributeType SOLIDTYPE_TYPE = build_SOLIDTYPE_TYPE();
     
-    private static ComplexType build_SOLIDTYPE_TYPE() {
+    private static AttributeType build_SOLIDTYPE_TYPE() {
+        AttributeType builtType;
+        builtType = new AttributeTypeImpl(
+            new NameImpl("http://www.opengis.net/gml","PolygonType"), Solid.class, false,
+            false, Collections.<Filter>emptyList(), ABSTRACTSOLIDTYPE_TYPE, null
+        );
+        return builtType;
+    }
+    
+    /*private static ComplexType build_SOLIDTYPE_TYPE() {
         ComplexType builtType;
         List<PropertyDescriptor> schema = new ArrayList<PropertyDescriptor>();
         schema.add(
@@ -18663,7 +18674,7 @@ public class GMLSchema extends SchemaImpl {
             false, Collections.<Filter>emptyList(), ABSTRACTSOLIDTYPE_TYPE, null
         );
         return builtType;
-    }
+    }*/
 
     /**
      * <p>

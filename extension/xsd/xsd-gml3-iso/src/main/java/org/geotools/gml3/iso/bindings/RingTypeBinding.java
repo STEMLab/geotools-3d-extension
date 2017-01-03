@@ -71,7 +71,7 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
 
     @Override
     public int getExecutionMode() {
-        return OVERRIDE;
+        return AFTER;
     }
 
     /**
@@ -109,13 +109,14 @@ public class RingTypeBinding extends AbstractComplexBinding implements Comparabl
         throws Exception {
         // System.out.println(name.getLocalPart());
         if ("curveMember".equals(name.getLocalPart())) {
-            if (object instanceof CompoundCurvedGeometry<?>) {
+        	return ((Ring) object).getGenerators();
+            /*if (object instanceof CompoundCurvedGeometry<?>) {
                 CompoundCurvedGeometry<?> curve = (CompoundCurvedGeometry<?>) object;
                 List<LineString> components = curve.getComponents();
                 return components;
             } else {
                 return object;
-            }
+            }*/
         }
 
         return null;

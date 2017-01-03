@@ -24,6 +24,7 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.primitive.Curve;
 
 import com.vividsolutions.jts.geom.LineString;
 
@@ -68,7 +69,7 @@ public class CurveSegmentArrayPropertyTypeBinding extends AbstractComplexBinding
      * @generated modifiable
      */
     public Class getType() {
-        return LineString[].class;
+        return Curve[].class;
     }
 
     /**

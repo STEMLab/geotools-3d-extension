@@ -68,7 +68,7 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
      * @generated modifiable
      */
     public Class getType() {
-        return Surface.class;
+        return CompositeSurface.class;
     }
 
     public int getExecutionMode() {
@@ -104,11 +104,11 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
              */
             CompositeSurface compositeSurface = (CompositeSurface) object;
             
-            OrientableSurface[] surfaces = new OrientableSurface[compositeSurface.getElements().size()];
+            Surface[] surfaces = new Surface[compositeSurface.getElements().size()];
             
             int i = 0;
             for (Primitive p : compositeSurface.getElements()) {
-                OrientableSurface surface = (OrientableSurface) p;
+            	Surface surface = (Surface) p;
                 surfaces[i++] = surface;
             }
             //GML3EncodingUtils.setChildIDs(multiSurface);

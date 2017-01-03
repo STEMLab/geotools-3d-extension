@@ -94,25 +94,29 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        double[] position = (double[]) value;
+    	Double[] position = (Double[]) value;
         
-        DirectPosition dp = gBuilder.createDirectPosition(position);
+    	double[] dPos = new double[position.length];
+    	for(int i = 0; i < position.length; i++) {
+    		dPos[i] = position[i];
+    	}
+    	
+        DirectPosition dp = gBuilder.createDirectPosition(dPos);
         return dp;
     }
 
     public Element encode(Object object, Document document, Element value)
         throws Exception {
     	
-    	//TODO
-        /*CoordinateSequence cs = (CoordinateSequence) object;
+    	DirectPosition cs = (DirectPosition) object;
 
         StringBuffer sb = new StringBuffer();
 
         // assume either zero or one coordinate
-        if (cs.size() >= 1) {
-            int dim = cs.getDimension();
-            for (int d = 0; d < dim; d++) {
-                double v = cs.getOrdinate(0, d);
+        if(cs != null) {
+        	int dim = cs.getCoordinate().length;
+        	for (int d = 0; d < dim; d++) {
+                double v = cs.getOrdinate(d);
                 if (Double.isNaN(v) && d > 1) {
                     continue;
                 }
@@ -120,13 +124,13 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
                 // separator char is a blank
                 sb.append(String.valueOf(v)).append(" ");
             }
-            if (dim > 0) {
+        	if (dim > 0) {
                 sb.setLength(sb.length()-1);
             }
         }
 
         value.appendChild(document.createTextNode(sb.toString()));
-*/
+        
         return value;
     }
 }

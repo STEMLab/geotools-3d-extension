@@ -3413,6 +3413,7 @@ public final class GML extends XSD {
         profile.add(name(GML.MultiCurvePropertyType));
         profile.add(name(GML.SurfacePropertyType));
         profile.add(name(GML.MultiSurfacePropertyType));
+        profile.add(name(GML.SolidPropertyType));
 
         // register polygon and multipolygon only after surface, the iteration order
         // will make sure surface is found before in any encoding attempt, this way we

@@ -117,7 +117,10 @@ public class SolidTypeBinding extends AbstractComplexBinding {
         SolidBoundary boundary = solid.getBoundary();
 
         if ("exterior".equals(name.getLocalPart())) {
-            return boundary.getExterior();
+        	Shell extShell = boundary.getExterior();
+        	List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>(extShell.getGenerators());
+        	CompositeSurface sf = gBuilder.createCompositeSurface(surfaces);
+            return sf;
         }
 
         if ("interior".equals(name.getLocalPart())) {

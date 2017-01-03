@@ -886,19 +886,17 @@ public class TTADemoTest extends JFrame{
    			Filter filter = CQL.toFilter("include");
    			long start = System.currentTimeMillis();
    			if(cql[0].equalsIgnoreCase("contains")) {
-   				filter = ff.contains("the_geom", wktr.read(cql[1]));
+   				filter = ff.contains("geom", wktr.read(cql[1]));
    				filtertype = "contains ";
    			}
    			else if(cql[0].equalsIgnoreCase("equals")) {
-   				filter = ff.equals("the_geom", wktr.read(cql[1]));
+   				filter = ff.equals("geom", wktr.read(cql[1]));
    				filtertype = "equals ";
    			}
    			else if(cql[0].equalsIgnoreCase("intersects")) {
-   				filter = ff.intersects("the_geom", wktr.read(cql[1]));
+   				filter = ff.intersects("geom", wktr.read(cql[1]));
    				filtertype = "intersects ";
    			} 
-
-   		
    			
 			//SimpleFeatureCollection features = source.getFeatures(filter);
    			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();

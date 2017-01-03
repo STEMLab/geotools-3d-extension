@@ -171,6 +171,13 @@ public class EnvelopeTypeBinding extends AbstractComplexBinding {
             return null;
         }
 
+        String localName = name.getLocalPart();
+        if (localName.equals("srsName")) {
+            return GML3EncodingUtils.toURI(envelope
+                    .getCoordinateReferenceSystem(), srsSyntax);
+        }
+        
+
         if (name.getLocalPart().equals("lowerCorner")) {
         	return envelope.getLowerCorner();
         }
@@ -178,7 +185,6 @@ public class EnvelopeTypeBinding extends AbstractComplexBinding {
         if (name.getLocalPart().equals("upperCorner")) {
         	return envelope.getUpperCorner();
         }
-
         /*if (envelope instanceof ReferencedEnvelope) {
             String localName = name.getLocalPart();
             if (localName.equals("srsName")) {

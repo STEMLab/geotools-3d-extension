@@ -19,9 +19,9 @@ package org.geotools.gml3.iso;
 import javax.xml.namespace.QName;
 
 import org.geotools.gml2.SrsSyntax;
-import org.geotools.gml2.bindings.GMLCoordTypeBinding;
-import org.geotools.gml2.bindings.GMLCoordinatesTypeBinding;
 import org.geotools.gml2.iso.FeatureTypeCache;
+import org.geotools.gml2.iso.bindings.GMLCoordTypeBinding;
+import org.geotools.gml2.iso.bindings.GMLCoordinatesTypeBinding;
 import org.geotools.gml3.iso.ArcParameters;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.XSDIdRegistry;
@@ -303,17 +303,17 @@ public class GMLConfiguration_ISO extends Configuration {
         
         container.registerComponentImplementation(XS.ANYTYPE, ComplexSupportXSAnyTypeBinding.class);
 
-        container.registerComponentImplementation(GML.ArcStringType, ArcStringTypeBinding.class);
-        container.registerComponentImplementation(GML.ArcType, ArcTypeBinding.class);
-        container.registerComponentImplementation(GML.RingType, RingTypeBinding.class);
+        //container.registerComponentImplementation(GML.ArcStringType, ArcStringTypeBinding.class);
+        //container.registerComponentImplementation(GML.ArcType, ArcTypeBinding.class);
+        //container.registerComponentImplementation(GML.RingType, RingTypeBinding.class);
         container.registerComponentImplementation(GML.CompositeCurveType,
                 CompositeCurveTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveArrayPropertyType,
+        /*container.registerComponentImplementation(GML.CurveArrayPropertyType,
                 org.geotools.gml3.iso.bindings.ext.CurveArrayPropertyTypeBinding.class);
         container.registerComponentImplementation(GML.CurvePropertyType,
                 org.geotools.gml3.iso.bindings.ext.CurvePropertyTypeBinding.class);
         container.registerComponentImplementation(GML.CurveType,
-                org.geotools.gml3.iso.bindings.ext.CurveTypeBinding.class);
+                org.geotools.gml3.iso.bindings.ext.CurveTypeBinding.class);*/
         container.registerComponentImplementation(GML.MultiCurveType,
                 org.geotools.gml3.iso.bindings.ext.MultiCurveTypeBinding.class);
         

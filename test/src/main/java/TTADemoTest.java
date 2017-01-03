@@ -101,7 +101,7 @@ public class TTADemoTest extends JFrame{
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, false);
+		h.put(Hints.GEOMETRY_VALIDATE, true);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
@@ -148,6 +148,12 @@ public class TTADemoTest extends JFrame{
 		fileMenu.add(new SafeAction("Open CSV File") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
+			}
+		});
+		
+		fileMenu.add(new SafeAction("Save as GML") {
+			public void action(ActionEvent e) throws Throwable {
+				
 			}
 		});
 		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {

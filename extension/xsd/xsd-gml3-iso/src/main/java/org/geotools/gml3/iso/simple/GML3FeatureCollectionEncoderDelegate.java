@@ -33,12 +33,11 @@ import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
 import org.geotools.xml.XSD;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.geometry.aggregate.MultiCurve;
-import org.opengis.geometry.aggregate.MultiPoint;
-import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.complex.CompositeSurface;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.xml.sax.helpers.AttributesImpl;
@@ -184,8 +183,8 @@ public class GML3FeatureCollectionEncoderDelegate extends
             encoders.put(Surface.class, new PolygonEncoder(encoder, gmlPrefix, gmlUri));
             //encoders.put(MultiSurface.class, new MultiPolygonEncoder(encoder, gmlPrefix, gmlUri));
             
-            //encoders.put(CompositeSurface.class, value);
-            //encoders.put(Solid.class, value);
+            encoders.put(CompositeSurface.class, new CompositeSurfaceEncoder(encoder, gmlPrefix, gmlUri));
+            encoders.put(Solid.class, new SolidEncoder(encoder, gmlPrefix, gmlUri));
             
             /*encoders.put(CircularString.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));
             encoders.put(CompoundCurve.class, new CurveEncoder(encoder, gmlPrefix, gmlUri));

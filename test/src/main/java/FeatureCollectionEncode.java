@@ -7,7 +7,6 @@ import java.util.Properties;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -15,7 +14,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.gml3.iso.GML;
 import org.geotools.xml.Encoder;
-import org.w3c.dom.Document;
 
 /*
  * Indoor Moving Objects Generator

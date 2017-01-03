@@ -81,7 +81,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.3.2</version>
+            <version>3.0.2</version>
              
             <configuration>
                 <finalName>geotools_demo</finalName>
@@ -94,11 +94,6 @@
                          
                         <!-- jar 파일 META-INF/MANIFEST.MF 에 클래스패스 정보 추가 -->
                         <addClasspath>true</addClasspath>
-                         
-                        <!-- 
-                            클래스패스에 추가시 prefix 설정 
-                            ex) log4j-1.2.16.jar -> lib/log4j-1.2.16.jar 로 추가됨 
-                        -->
                         <classpathPrefix>lib/</classpathPrefix>
                     </manifest>
                 </archive>

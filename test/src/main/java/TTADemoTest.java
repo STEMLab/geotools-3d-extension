@@ -106,7 +106,7 @@ public class TTADemoTest extends JFrame{
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, true);
+		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
@@ -228,7 +228,12 @@ public class TTADemoTest extends JFrame{
 			if( jfc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 				File save = jfc.getSelectedFile();
 				long start = System.currentTimeMillis();
-				Encoder encoder = new Encoder(new GMLConfiguration_ISO());
+				GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
+		                gml.setGeometryFactory(builder);
+		                
+		                TestSolidConfiguration conf = new TestSolidConfiguration();
+		                conf.setDependency(gml);
+				Encoder encoder = new Encoder(gml);
 				ByteArrayOutputStream st = FeatureCollectionEncode.encode(currentfeatures, encoder);
 				FeatureCollectionEncode.saveAsFile(save, st);
 				long end = System.currentTimeMillis();
@@ -249,6 +254,145 @@ public class TTADemoTest extends JFrame{
 
 		return solids;
 	}
+	
+	
+	
+	public Solid makeFromEnvelope(ISOGeometryBuilder builder, DirectPosition l, DirectPosition u) {
+	    
+	    DirectPosition position1 = builder.createDirectPosition(new double[] { l.getOrdinate(0), u.getOrdinate(1), l.getOrdinate(2) }); //LUL
+	    DirectPosition position2 = builder.createDirectPosition(new double[] { l.getOrdinate(0), l.getOrdinate(1), l.getOrdinate(2) }); //LLL
+	    DirectPosition position3 = builder.createDirectPosition(new double[] { u.getOrdinate(0), l.getOrdinate(1), l.getOrdinate(2) }); //ULL
+	    DirectPosition position4 = builder.createDirectPosition(new double[] { u.getOrdinate(0), u.getOrdinate(1), l.getOrdinate(2) }); //UUL
+	    DirectPosition position5 = builder.createDirectPosition(new double[] { l.getOrdinate(0), u.getOrdinate(1), u.getOrdinate(2) }); //LUU
+	    DirectPosition position6 = builder.createDirectPosition(new double[] { l.getOrdinate(0), l.getOrdinate(1), u.getOrdinate(2) }); //LLU
+	    DirectPosition position7 = builder.createDirectPosition(new double[] { u.getOrdinate(0), l.getOrdinate(1), u.getOrdinate(2) }); //ULU
+	    DirectPosition position8 = builder.createDirectPosition(new double[] { u.getOrdinate(0), u.getOrdinate(1), u.getOrdinate(2) }); //UUU
+	    
+	    List<Position> dps1 = new ArrayList<Position>();
+            dps1.add(position1);
+            dps1.add(position4);
+            dps1.add(position3);
+            dps1.add(position2);
+            dps1.add(position1);
+
+            List<Position> dps2 = new ArrayList<Position>();
+            dps2.add(position3);
+            dps2.add(position4);
+            dps2.add(position8);
+            dps2.add(position7);
+            dps2.add(position3);
+
+            List<Position> dps3 = new ArrayList<Position>();
+            dps3.add(position5);
+            dps3.add(position6);
+            dps3.add(position7);
+            dps3.add(position8);
+            dps3.add(position5);
+
+            List<Position> dps4 = new ArrayList<Position>();
+            dps4.add(position6);
+            dps4.add(position5);
+            dps4.add(position1);
+            dps4.add(position2);
+            dps4.add(position6);
+
+            List<Position> dps5 = new ArrayList<Position>();
+            dps5.add(position2);
+            dps5.add(position3);
+            dps5.add(position7);
+            dps5.add(position6);
+            dps5.add(position2);
+
+            List<Position> dps6 = new ArrayList<Position>();
+            dps6.add(position1);
+            dps6.add(position5);
+            dps6.add(position8);
+            dps6.add(position4);
+            dps6.add(position1);
+
+            // create linestring from directpositions
+            LineString line1 = builder.createLineString(dps1);
+            LineString line2 = builder.createLineString(dps2);
+            LineString line3 = builder.createLineString(dps3);
+            LineString line4 = builder.createLineString(dps4);
+            LineString line5 = builder.createLineString(dps5);
+            LineString line6 = builder.createLineString(dps6);
+
+            // create curvesegments from line
+            ArrayList<CurveSegment> segs1 = new ArrayList<CurveSegment>();
+            segs1.add(line1);
+            ArrayList<CurveSegment> segs2 = new ArrayList<CurveSegment>();
+            segs2.add(line2);
+            ArrayList<CurveSegment> segs3 = new ArrayList<CurveSegment>();
+            segs3.add(line3);
+            ArrayList<CurveSegment> segs4 = new ArrayList<CurveSegment>();
+            segs4.add(line4);
+            ArrayList<CurveSegment> segs5 = new ArrayList<CurveSegment>();
+            segs5.add(line5);
+            ArrayList<CurveSegment> segs6 = new ArrayList<CurveSegment>();
+            segs6.add(line6);
+
+            // Create list of OrientableCurves that make up the surface
+            OrientableCurve curve1 = builder.createCurve(segs1);
+            List<OrientableCurve> orientableCurves1 = new ArrayList<OrientableCurve>();
+            orientableCurves1.add(curve1);
+            OrientableCurve curve2 = builder.createCurve(segs2);
+            List<OrientableCurve> orientableCurves2 = new ArrayList<OrientableCurve>();
+            orientableCurves2.add(curve2);
+            OrientableCurve curve3 = builder.createCurve(segs3);
+            List<OrientableCurve> orientableCurves3 = new ArrayList<OrientableCurve>();
+            orientableCurves3.add(curve3);
+            OrientableCurve curve4 = builder.createCurve(segs4);
+            List<OrientableCurve> orientableCurves4 = new ArrayList<OrientableCurve>();
+            orientableCurves4.add(curve4);
+            OrientableCurve curve5 = builder.createCurve(segs5);
+            List<OrientableCurve> orientableCurves5 = new ArrayList<OrientableCurve>();
+            orientableCurves5.add(curve5);
+            OrientableCurve curve6 = builder.createCurve(segs6);
+            List<OrientableCurve> orientableCurves6 = new ArrayList<OrientableCurve>();
+            orientableCurves6.add(curve6);
+
+            // create the interior ring and a list of empty interior rings (holes)
+            Ring extRing1 = builder.createRing(orientableCurves1);
+            Ring extRing2 = builder.createRing(orientableCurves2);
+            Ring extRing3 = builder.createRing(orientableCurves3);
+            Ring extRing4 = builder.createRing(orientableCurves4);
+            Ring extRing5 = builder.createRing(orientableCurves5);
+            Ring extRing6 = builder.createRing(orientableCurves6);
+
+            // create surfaceboundary by rings
+            SurfaceBoundary sb1 = builder.createSurfaceBoundary(extRing1, new ArrayList<Ring>());
+            SurfaceBoundary sb2 = builder.createSurfaceBoundary(extRing2, new ArrayList<Ring>());
+            SurfaceBoundary sb3 = builder.createSurfaceBoundary(extRing3, new ArrayList<Ring>());
+            SurfaceBoundary sb4 = builder.createSurfaceBoundary(extRing4, new ArrayList<Ring>());
+            SurfaceBoundary sb5 = builder.createSurfaceBoundary(extRing5, new ArrayList<Ring>());
+            SurfaceBoundary sb6 = builder.createSurfaceBoundary(extRing6, new ArrayList<Ring>());
+
+            // create the surface
+            Surface surface1 = builder.createSurface(sb1);
+            Surface surface2 = builder.createSurface(sb2);
+            Surface surface3 = builder.createSurface(sb3);
+            Surface surface4 = builder.createSurface(sb4);
+            Surface surface5 = builder.createSurface(sb5);
+            Surface surface6 = builder.createSurface(sb6);
+
+            List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+            surfaces.add(surface1);
+            surfaces.add(surface2);
+            surfaces.add(surface3);
+            surfaces.add(surface4);
+            surfaces.add(surface5);
+            surfaces.add(surface6);
+
+            Shell exteriorShell = builder.createShell(surfaces);
+            List<Shell> interiors = new ArrayList<Shell>();
+
+            SolidBoundary solidBoundary = builder.createSolidBoundary(exteriorShell, interiors);
+            Solid solid = builder.createSolid(solidBoundary);
+
+            return solid;
+	}
+	
 	public Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPosition> points) {
 		DirectPosition position1 = points.get(0);
 		DirectPosition position2 = points.get(1);
@@ -390,15 +534,18 @@ public class TTADemoTest extends JFrame{
 	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
 		ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
-		DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 });
-		DirectPosition p2 = builder.createDirectPosition(new double[] { 0, -2, 0 });
-		DirectPosition p3 = builder.createDirectPosition(new double[] { 2, -2, 0 });
-		DirectPosition p4 = builder.createDirectPosition(new double[] { 2, 0, 0 });
-		DirectPosition p5 = builder.createDirectPosition(new double[] { 0, 0, 2 });
-		DirectPosition p6 = builder.createDirectPosition(new double[] { 0, -2, 2 });
-		DirectPosition p7 = builder.createDirectPosition(new double[] { 2, -2, 2 });
-		DirectPosition p8 = builder.createDirectPosition(new double[] { 2, 0, 2 });
+		DirectPosition p1 = builder.createDirectPosition(new double[] { 0, 0, 0 }); //LUL
+		DirectPosition p2 = builder.createDirectPosition(new double[] { 0, -2, 0 }); //LLL
+		DirectPosition p3 = builder.createDirectPosition(new double[] { 2, -2, 0 }); //ULL
+		DirectPosition p4 = builder.createDirectPosition(new double[] { 2, 0, 0 }); //UUL
+		DirectPosition p5 = builder.createDirectPosition(new double[] { 0, 0, 2 }); //LUU
+		DirectPosition p6 = builder.createDirectPosition(new double[] { 0, -2, 2 }); //LLU
+		DirectPosition p7 = builder.createDirectPosition(new double[] { 2, -2, 2 }); //ULU
+		DirectPosition p8 = builder.createDirectPosition(new double[] { 2, 0, 2 }); //UUU
 
+		//lower : 0 -2 0
+		//upper : 2 0 2
+		
 		ArrayList<DirectPosition> points1 = new ArrayList<DirectPosition>();
 		points1.add(p1);
 		points1.add(p2);
@@ -886,17 +1033,17 @@ public class TTADemoTest extends JFrame{
    			Filter filter = CQL.toFilter("include");
    			long start = System.currentTimeMillis();
    			if(cql[0].equalsIgnoreCase("contains")) {
-   				filter = ff.contains("geom", wktr.read(cql[1]));
+   				filter = ff.contains(cql[1], wktr.read(cql[2]));
    				filtertype = "contains ";
    			}
    			else if(cql[0].equalsIgnoreCase("equals")) {
-   				filter = ff.equals("geom", wktr.read(cql[1]));
+   				filter = ff.equals(cql[1], wktr.read(cql[2]));
    				filtertype = "equals ";
    			}
    			else if(cql[0].equalsIgnoreCase("intersects")) {
-   				filter = ff.intersects("geom", wktr.read(cql[1]));
+   				filter = ff.intersects(cql[1], wktr.read(cql[2]));
    				filtertype = "intersects ";
-   			} 
+   			}
    			
 			//SimpleFeatureCollection features = source.getFeatures(filter);
    			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
@@ -912,12 +1059,12 @@ public class TTADemoTest extends JFrame{
 				table.setModel(new DefaultTableModel(5, 5));
 				return;
 			}
-			currentfeatures = ISODataUtilities.collection(sfs);
+			SimpleFeatureCollection result = ISODataUtilities.collection(sfs);
    			
 			long end = System.currentTimeMillis();
 			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText(filtertype + "complete : " + ( end - start )/1000.0 + " sec");
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);
 			
 		} catch (CQLException e) {
@@ -958,11 +1105,12 @@ public class TTADemoTest extends JFrame{
    			else if(cql[0].equalsIgnoreCase("intersects")) {
    				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
    			} 
-			currentfeatures = source.getFeatures(filter);
+   			
+   			SimpleFeatureCollection result = source.getFeatures(filter);
 			long end = System.currentTimeMillis();
 			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText("time : " + ( end - start )/1000.0);
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(currentfeatures);
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
@@ -1009,8 +1157,13 @@ public class TTADemoTest extends JFrame{
 	}
 	private FeatureCollection parseGML(InputStream in) throws Exception {
 		GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
-		PullParser parser = new PullParser(gml, in, SimpleFeature.class);
 		gml.setGeometryFactory(builder);
+		
+		TestSolidConfiguration conf = new TestSolidConfiguration();
+		conf.setDependency(gml);
+		
+		PullParser parser = new PullParser(gml, in, SimpleFeature.class);
+		
 		SimpleFeature f = null;
 		List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
 		
@@ -1018,7 +1171,7 @@ public class TTADemoTest extends JFrame{
 			sfs.add(f);
 		}
 		
-		FeatureCollection fc = ISODataUtilities.collection(sfs);
+		SimpleFeatureCollection fc = ISODataUtilities.collection(sfs);
 		return fc;
 	}
 }

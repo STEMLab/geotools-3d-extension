@@ -109,8 +109,7 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     	}
         
         SolidBoundary solidBoundary = gBuilder.createSolidBoundary(exteriorShell, interiorShells);
-        Solid solid = gBuilder.createSolid(solidBoundary);
-    	return solid;
+    	return gBuilder.createSolid(solidBoundary);
     }
 
     @Override

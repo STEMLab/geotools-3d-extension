@@ -38,7 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Justin Deoliveira, OpenGeo
  * @author Andrea Aime - GeoSolutions
  */
-class SolidEncoder extends GeometryEncoder<Solid> {
+public class SolidEncoder extends GeometryEncoder<Solid> {
     static final QualifiedName SOLID = new QualifiedName(GML.NAMESPACE, "Solid", "gml");
 
     static final QualifiedName EXTERIOR = new QualifiedName(GML.NAMESPACE, "exterior", "gml");

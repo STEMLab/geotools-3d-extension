@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -27,6 +29,15 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
@@ -58,7 +69,13 @@ import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.gml2.iso.GML;
+import org.geotools.gml2.iso.simple.GMLWriter;
+import org.geotools.gml2.iso.simple.GeometryCollectionEncoder;
+import org.geotools.gml2.iso.simple.GeometryEncoder;
 import org.geotools.gml3.iso.GMLConfiguration_ISO;
+import org.geotools.gml3.iso.simple.GenericGeometryEncoder;
+import org.geotools.gml3.iso.simple.SolidEncoder;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
@@ -89,6 +106,7 @@ import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.w3c.dom.Document;
+import org.xml.sax.helpers.AttributesImpl;
 
 
 public class TTADemoTest extends JFrame{
@@ -1018,7 +1036,7 @@ public class TTADemoTest extends JFrame{
 
 		table.setModel(new DefaultTableModel(5, 5));
 	}
-	private void filterFeatureswithtext() {
+	private void filterFeatureswithtext() throws Exception {
 		//String typeName = (String) featureTypeCBox.getSelectedItem();
 		//SimpleFeatureSource source;
 		try {
@@ -1032,6 +1050,40 @@ public class TTADemoTest extends JFrame{
    			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
    			Filter filter = CQL.toFilter("include");
    			long start = System.currentTimeMillis();
+   			
+   			if(cql[2].startsWith("BBOX3D")) {
+   			    cql[2] = cql[2].replaceAll("BBOX3D", "");
+   			    cql[2] = cql[2].replaceAll("\\(", "");
+   			    cql[2] = cql[2].replaceAll("\\)", "");
+   			    
+   			    String[] coords = cql[2].split(",");
+   			    
+   			    String[] lowerStr = coords[0].trim().split(" ");
+   			    String[] upperStr = coords[1].trim().split(" ");
+   			    
+   			    double[] lower = new double[3];
+   			    double[] upper = new double[3];
+   			    
+   			    lower[0] = Double.parseDouble(lowerStr[0]);
+                            lower[1] = Double.parseDouble(lowerStr[1]);
+                            lower[2] = Double.parseDouble(lowerStr[2]);
+                            
+                            upper[0] = Double.parseDouble(upperStr[0]);
+                            upper[1] = Double.parseDouble(upperStr[1]);
+                            upper[2] = Double.parseDouble(upperStr[2]);
+                            
+                            DirectPosition lowerCorner = builder.createDirectPosition(lower);
+                            DirectPosition upperCorner = builder.createDirectPosition(upper);
+                            
+                            Solid s = makeFromEnvelope(builder, lowerCorner, upperCorner);
+                            cql[2] = s.toString();
+
+                            Document d = encode(s);
+                            System.out.println(d);
+
+                            System.out.println(cql[2]);
+   			}
+   			
    			if(cql[0].equalsIgnoreCase("contains")) {
    				filter = ff.contains(cql[1], wktr.read(cql[2]));
    				filtertype = "contains ";
@@ -1076,7 +1128,7 @@ public class TTADemoTest extends JFrame{
 			e.printStackTrace();
 		} 
 	}
-	private void filterFeatures()  {
+	private void filterFeatures() throws Exception  {
 		if(dataStore == null) {
 			filterFeatureswithtext();
 			return;
@@ -1174,4 +1226,49 @@ public class TTADemoTest extends JFrame{
 		SimpleFeatureCollection fc = ISODataUtilities.collection(sfs);
 		return fc;
 	}
+	
+	protected Document encode(Geometry geometry) throws Exception {
+	        final String INDENT_AMOUNT_KEY =
+	                "{http://xml.apache.org/xslt}indent-amount";
+	        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+	        GMLConfiguration_ISO gml = new GMLConfiguration_ISO();
+                gml.setGeometryFactory(builder);
+                Encoder encoder = new Encoder(gml);
+                GenericGeometryEncoder gce = new GenericGeometryEncoder(encoder);
+	        
+	        // create the document serializer
+	        SAXTransformerFactory txFactory =
+	            (SAXTransformerFactory) SAXTransformerFactory
+	            .newInstance();
+
+	        TransformerHandler xmls;
+	        try {
+	            xmls = txFactory.newTransformerHandler();
+	        } catch (TransformerConfigurationException e) {
+	            throw new IOException(e);
+	        }
+	        Properties outputProps = new Properties();
+	        outputProps.setProperty(INDENT_AMOUNT_KEY, "2");
+	        xmls.getTransformer().setOutputProperties(outputProps);
+	        xmls.getTransformer().setOutputProperty(OutputKeys.METHOD, "XML");
+	        xmls.setResult(new StreamResult(out));
+
+	        GMLWriter handler = new GMLWriter(xmls, encoder.getNamespaces(), 6,
+	            false, "gml");
+	        handler.startDocument();
+	        handler.startPrefixMapping("gml", GML.NAMESPACE);
+	        handler.endPrefixMapping("gml");
+
+	        gce.encode(geometry, new AttributesImpl(), handler);
+	        handler.endDocument();
+
+	        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+	        DOMResult result = new DOMResult();
+	        Transformer tx = TransformerFactory.newInstance().newTransformer();
+	        tx.transform(new StreamSource(in), result);
+	        Document d = (Document) result.getNode();
+	        return d;
+	    }
+	
 }

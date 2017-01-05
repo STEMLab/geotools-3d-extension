@@ -141,7 +141,7 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 					int i = 0;
 					for(; i < pa.size(); i++) {
 						
-						if(z == Double.NaN) {
+						if(i == 0) {
 							z = pa.get(i).getDirectPosition().getOrdinate(2);
 							continue;
 						}
@@ -175,14 +175,14 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 					for(int i = 0; i < leftSurface.size(); i++) {
 						DirectPosition p = leftSurface.get(i).getDirectPosition();
 						double[] coords = p.getCoordinate();
-						Coordinate c = new Coordinate(coords[0], coords[1], coords[2]);
+						Coordinate c = new Coordinate(coords[0], coords[1]);
 						leftJTSCoords[i] = c;
 					}
 					
 					for(int i = 0; i < rightSurface.size(); i++) {
 						DirectPosition p = rightSurface.get(i).getDirectPosition();
 						double[] coords = p.getCoordinate();
-						Coordinate c = new Coordinate(coords[0], coords[1], coords[2]);
+						Coordinate c = new Coordinate(coords[0], coords[1]);
 						rightJTSCoords[i] = c;
 					}
 					

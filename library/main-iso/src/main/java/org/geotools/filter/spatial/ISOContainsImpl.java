@@ -74,6 +74,10 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		if(envLeft.contains((BoundingBox3D)envRight)) {
                         //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
 			//return left.contains(right);
+			System.out.print("\nquery lowerbound (" + envRight.getMinX() + "," + envRight.getMinY() + "," + envRight.getMinZ() + ") > ");
+			System.out.println("room lowerbound (" + envLeft.getMinX() + "," + envLeft.getMinY() + "," + envLeft.getMinZ() + ")");
+			System.out.print("query upperbound (" + envRight.getMaxX() + "," + envRight.getMaxY() + "," + envRight.getMaxZ() + ") < ");
+			System.out.println("room upperbound (" + envLeft.getMaxX() + "," + envLeft.getMaxY() + "," + envLeft.getMaxZ() + ")");
 			return true;
 		}
         

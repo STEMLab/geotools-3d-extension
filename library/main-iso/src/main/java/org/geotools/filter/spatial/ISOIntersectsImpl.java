@@ -75,6 +75,11 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 		if(!empty.equals(queryResult)) {
             //TODO previous code HACK!! sfcgal is so slow : return left.intersects(right);
 			//return left.intersects(right);
+			
+			System.out.print("\nlowerbound : (" + queryResult.getMinX() + "," 
+			+ queryResult.getMinY() + "," + queryResult.getMinZ() + ")");
+			System.out.print(" upperbound : (" + queryResult.getMaxX() + "," 
+					+ queryResult.getMaxY() + "," + queryResult.getMaxZ() + ") ");
 		    return true;
 		}
         

@@ -84,8 +84,6 @@ public class DemoTest extends JFrame{
 
 	private static ISOGeometryBuilder builder;
 	/*public static void main(String[] args) throws Exception {
-	private static ISOGeometryBuilder builder;
-	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
@@ -127,13 +125,13 @@ public class DemoTest extends JFrame{
 				connect(new CSVDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Connect to Kairos database...") {
+		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
 		});
-		fileMenu.add(new SafeAction("Insert to Kairos database...") {
+		fileMenu.add(new SafeAction("Insert to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				insertTable();
 			}

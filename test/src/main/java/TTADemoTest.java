@@ -1,13 +1,16 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -117,9 +120,10 @@ public class TTADemoTest extends JFrame{
 	private JTextArea text;
 	private JFileChooser jfc = new JFileChooser();
 	private static Hints hints = null;
-	
+	public PrintStream printstream;
+	public PrintStream sysout;
 	private SimpleFeatureCollection currentfeatures;
-	
+	private String featureid ="";
 	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -163,6 +167,11 @@ public class TTADemoTest extends JFrame{
 		JMenu dataMenu = new JMenu("Data");
 		menubar.add(dataMenu);
 		pack();
+		fileMenu.add(new SafeAction("Set LOG") {
+			public void action(ActionEvent e) throws Throwable {
+				setLOG();
+			}
+		});
 		fileMenu.add(new SafeAction("Open GML File") {
 			public void action(ActionEvent e) throws Throwable {
 				connectGML(new GMLDataStoreFactory());
@@ -179,6 +188,7 @@ public class TTADemoTest extends JFrame{
 				saveGML();
 			}
 		});
+		
 		/*fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
@@ -261,7 +271,21 @@ public class TTADemoTest extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void setLOG() throws Exception {
+		try {
+			if( jfc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File save = jfc.getSelectedFile();
+				printstream = new PrintStream(new FileOutputStream(save));
+				sysout = System.out;
+				System.setOut(printstream);
+				System.setErr(printstream);
+			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
 		ArrayList<ArrayList<DirectPosition>> solidPoints = getSolidPoints(builder);
@@ -1050,8 +1074,10 @@ public class TTADemoTest extends JFrame{
    			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
    			Filter filter = CQL.toFilter("include");
    			long start = System.currentTimeMillis();
+   			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
+   			SimpleFeatureIterator iterator = currentfeatures.features();
    			
-   			if(cql[2].startsWith("BBOX3D")) {
+   			if(cql.length > 1 && cql[2].startsWith("BBOX3D")) {
    			    cql[2] = cql[2].replaceAll("BBOX3D", "");
    			    cql[2] = cql[2].replaceAll("\\(", "");
    			    cql[2] = cql[2].replaceAll("\\)", "");
@@ -1079,12 +1105,13 @@ public class TTADemoTest extends JFrame{
                             cql[2] = s.toString();
 
                             Document d = encode(s);
-                            System.out.println(d);
+                            //System.out.println(d);
 
-                            System.out.println(cql[2]);
+                            //System.out.println(cql[2]);
    			}
    			
    			if(cql[0].equalsIgnoreCase("contains")) {
+   				featureid = "";
    				filter = ff.contains(cql[1], wktr.read(cql[2]));
    				filtertype = "contains ";
    			}
@@ -1093,18 +1120,30 @@ public class TTADemoTest extends JFrame{
    				filtertype = "equals ";
    			}
    			else if(cql[0].equalsIgnoreCase("intersects")) {
+   				Filter getidfilter = ff.equals(cql[1], wktr.read(cql[2]));
+   				
+   				while (iterator.hasNext()) {
+   					SimpleFeature feature = iterator.next();
+   					
+   					if(getidfilter.evaluate(feature)) {
+   						featureid = feature.getID();
+   						break;
+   					}
+   				}
    				filter = ff.intersects(cql[1], wktr.read(cql[2]));
    				filtertype = "intersects ";
    			}
    			
 			//SimpleFeatureCollection features = source.getFeatures(filter);
-   			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
-   			SimpleFeatureIterator iterator = currentfeatures.features();
+   			iterator = currentfeatures.features();
 			while (iterator.hasNext()) {
 				SimpleFeature feature = iterator.next();
-				
+				System.out.print(featureid + " : " + feature.getID() + " ");
 				if(filter.evaluate(feature)) {
 					sfs.add(feature);
+					System.out.println("true");
+				}else {
+					System.out.println("false");
 				}
 			}
 			if(sfs.size() == 0) {
@@ -1160,7 +1199,7 @@ public class TTADemoTest extends JFrame{
    			
    			SimpleFeatureCollection result = source.getFeatures(filter);
 			long end = System.currentTimeMillis();
-			System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
 			label.setText("time : " + ( end - start )/1000.0);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(result);
 			table.setModel(model);

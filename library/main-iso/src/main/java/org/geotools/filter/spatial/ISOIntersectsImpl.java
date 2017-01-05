@@ -192,7 +192,10 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 					
 					boolean filteredResult = leftPolygon.intersects(rightPolygon);
 					if(filteredResult) {
-						
+						System.out.print("\nlowerbound : (" + queryResult.getMinX() + "," 
+								+ queryResult.getMinY() + "," + queryResult.getMinZ() + ")");
+								System.out.print(" upperbound : (" + queryResult.getMaxX() + "," 
+										+ queryResult.getMaxY() + "," + queryResult.getMaxZ() + ") ");
 					}
 					return filteredResult;
 				}

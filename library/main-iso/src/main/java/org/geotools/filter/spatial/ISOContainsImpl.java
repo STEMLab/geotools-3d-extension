@@ -87,6 +87,7 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
 		if(envLeft.contains((BoundingBox3D)envRight)) {
+<<<<<<< HEAD
 				if(left instanceof Solid && right instanceof Solid) {
 				
 				ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
@@ -194,6 +195,12 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 				}
 				return false;
 			}
+            //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
+			//return left.contains(right);
+			System.out.print("\nquery lowerbound (" + envRight.getMinX() + "," + envRight.getMinY() + "," + envRight.getMinZ() + ") > ");
+			System.out.println("room lowerbound (" + envLeft.getMinX() + "," + envLeft.getMinY() + "," + envLeft.getMinZ() + ")");
+			System.out.print("query upperbound (" + envRight.getMaxX() + "," + envRight.getMaxY() + "," + envRight.getMaxZ() + ") < ");
+			System.out.println("room upperbound (" + envLeft.getMaxX() + "," + envLeft.getMaxY() + "," + envLeft.getMaxZ() + ")");
 			return false;
 		}
         

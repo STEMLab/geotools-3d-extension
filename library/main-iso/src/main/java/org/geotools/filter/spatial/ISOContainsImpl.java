@@ -22,6 +22,7 @@ import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Contains;
 import org.opengis.geometry.BoundingBox;
+import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 
@@ -70,8 +71,8 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
-		if(envLeft.contains((BoundingBox)envRight)) {
-            //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
+		if(envLeft.contains((BoundingBox3D)envRight)) {
+                        //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
 			//return left.contains(right);
 			return true;
 		}

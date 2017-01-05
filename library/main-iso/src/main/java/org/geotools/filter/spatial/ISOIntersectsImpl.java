@@ -89,8 +89,9 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
     	ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
-		if(envLeft.intersects((BoundingBox)envRight)) {
-			
+		ReferencedEnvelope3D empty = new ReferencedEnvelope3D();
+		ReferencedEnvelope3D queryResult = envLeft.intersection(envRight);
+		if(!empty.equals(queryResult)) {
 			if(left instanceof Solid && right instanceof Solid) {
 				
 				ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
@@ -196,17 +197,10 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 					}
 					return filteredResult;
 				}
+				return false;
 			}
-			
-			
-			
-			
-            //TODO previous code HACK!! sfcgal is so slow : return left.intersects(right);
-			//return left.intersects(right);
-			return true;
 		}
-        
-        return false;
+        return true;
         //return envRight.intersects(envLeft) && left.intersects(right);
     }
     

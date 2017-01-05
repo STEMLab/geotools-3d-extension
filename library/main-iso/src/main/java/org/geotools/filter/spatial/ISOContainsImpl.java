@@ -16,15 +16,30 @@
  */
 package org.geotools.filter.spatial;
 
+import java.util.Collection;
+
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Contains;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.BoundingBox3D;
+import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 //import com.vividsolutions.jts.geom.Envelope;
 //import com.vividsolutions.jts.geom.Geometry;
@@ -72,9 +87,114 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
 		if(envLeft.contains((BoundingBox3D)envRight)) {
-                        //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
-			//return left.contains(right);
-			return true;
+				if(left instanceof Solid && right instanceof Solid) {
+				
+				ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+				
+				Solid leftSolid = (Solid) left;
+				Solid rightSolid = (Solid) right;
+				
+				Shell leftShell = leftSolid.getBoundary().getExterior();
+				Shell rightShell = rightSolid.getBoundary().getExterior();
+				
+				Collection<? extends Primitive> lsElem = leftShell.getElements();
+				Collection<? extends Primitive> rsElem = rightShell.getElements();
+				
+				PointArray leftSurface = null;
+				PointArray rightSurface = null;
+				
+				for(Primitive p : lsElem) {
+					Surface s = (Surface) p;
+					Ring r = s.getBoundary().getExterior();
+					PointArray pa = ISOIntersectsImpl.positions(r, builder);
+					
+					double z = Double.NaN;
+					int i = 0;
+					for(; i < pa.size(); i++) {
+						
+						if(z == Double.NaN) {
+							z = pa.get(i).getDirectPosition().getOrdinate(2);
+							continue;
+						}
+						
+						if(z != pa.get(i).getDirectPosition().getOrdinate(2)) {
+							break;
+						}
+					}
+					
+					if(i == pa.size()) {
+						leftSurface = pa;
+						break;
+					}
+				}
+				
+				for(Primitive p : rsElem) {
+					Surface s = (Surface) p;
+					Ring r = s.getBoundary().getExterior();
+					PointArray pa = ISOIntersectsImpl.positions(r, builder);
+					
+					double z = Double.NaN;
+					int i = 0;
+					for(; i < pa.size(); i++) {
+						
+						if(z == Double.NaN) {
+							z = pa.get(i).getDirectPosition().getOrdinate(2);
+							continue;
+						}
+						
+						if(z != pa.get(i).getDirectPosition().getOrdinate(2)) {
+							break;
+						}
+					}
+					
+					if(i == pa.size()) {
+						rightSurface = pa;
+						break;
+					}
+				}
+				
+				if(leftSurface != null && rightSurface != null) {
+					
+					if(leftSurface.get(0) != leftSurface.get( leftSurface.size() - 1)) {
+						leftSurface.add(leftSurface.get(0));
+					}
+					
+					if(rightSurface.get(0) != rightSurface.get( rightSurface.size() - 1)) {
+						rightSurface.add(rightSurface.get(0));
+					}
+					
+					GeometryFactory factory = new GeometryFactory();
+					
+					Coordinate[] leftJTSCoords = new Coordinate[leftSurface.size()];
+					Coordinate[] rightJTSCoords = new Coordinate[rightSurface.size()];
+					
+					for(int i = 0; i < leftSurface.size(); i++) {
+						DirectPosition p = leftSurface.get(i).getDirectPosition();
+						double[] coords = p.getCoordinate();
+						Coordinate c = new Coordinate(coords[0], coords[1], coords[2]);
+						leftJTSCoords[i] = c;
+					}
+					
+					for(int i = 0; i < rightSurface.size(); i++) {
+						DirectPosition p = rightSurface.get(i).getDirectPosition();
+						double[] coords = p.getCoordinate();
+						Coordinate c = new Coordinate(coords[0], coords[1], coords[2]);
+						rightJTSCoords[i] = c;
+					}
+					
+					
+					Polygon leftPolygon = factory.createPolygon(leftJTSCoords);
+					Polygon rightPolygon = factory.createPolygon(rightJTSCoords);
+					
+					boolean filteredResult = leftPolygon.contains(rightPolygon);
+					if(filteredResult) {
+						
+					}
+					return filteredResult;
+				}
+				return false;
+			}
+			return false;
 		}
         
         return false;

@@ -25,7 +25,6 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Intersects;
-import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -113,11 +112,11 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 					Ring r = s.getBoundary().getExterior();
 					PointArray pa = positions(r, builder);
 					
-					double z = Double.NaN;
+					double z = 0.0;
 					int i = 0;
 					for(; i < pa.size(); i++) {
 						
-						if(z == Double.NaN) {
+						if(i == 0) {
 							z = pa.get(i).getDirectPosition().getOrdinate(2);
 							continue;
 						}
@@ -199,14 +198,15 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 				}
 				return false;
 			}
+			
 		}
-        return true;
+        return false;
         //return envRight.intersects(envLeft) && left.intersects(right);
     }
     
     
     
-    public PointArray positions(Curve curve, ISOGeometryBuilder builder) {
+    public static PointArray positions(Curve curve, ISOGeometryBuilder builder) {
         PointArray pa = builder.createPointArray();
         Iterator<? extends CurveSegment> tCurveSegmentIter = curve.getSegments().iterator();
         CurveSegment tSegment = null;
@@ -236,7 +236,7 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
         return pa;
     }
     
-    public PointArray positions(Ring line, ISOGeometryBuilder builder) {
+    public static PointArray positions(Ring line, ISOGeometryBuilder builder) {
         List<? extends OrientableCurve> curves = line.getGenerators();
         PointArray pa = builder.createPointArray();
         for (int i = 0; i < curves.size(); i++) {

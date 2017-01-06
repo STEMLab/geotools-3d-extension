@@ -115,17 +115,10 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// coordinate.
 
 		// Coordinate[] coords = new Coordinate[5];
-		double[] coords = new double[10];
-		coords[0] = envelope.getMinX();
-		coords[1] = envelope.getMinY();
-		coords[2] = envelope.getMinX();
-		coords[3] = envelope.getMaxY();
-		coords[4] = envelope.getMaxX();
-		coords[5] = envelope.getMaxZ();
-		coords[6] = envelope.getMaxX();
-		coords[7] = envelope.getMinY();
-		coords[8] = envelope.getMinX();
-		coords[9] = envelope.getMinY();
+		double[] coords = new double[24];
+		for(int i=0;i<coords.length;i++) {
+			
+		}
 		
 		// LinearRing ring = null;
 		Curve curve = null;

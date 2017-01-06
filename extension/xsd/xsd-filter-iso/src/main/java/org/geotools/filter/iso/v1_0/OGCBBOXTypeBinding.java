@@ -165,7 +165,7 @@ public class OGCBBOXTypeBinding extends AbstractComplexBinding {
                 if(srs != null) {
                     CoordinateReferenceSystem crs = CRS.decode(srs);
                     int dimension = crs.getCoordinateSystem().getDimension();
-                    return new ReferencedEnvelope(box.getMinX(), box.getMaxX(), box.getMinY(), box.getMaxY(), crs);
+                    return ReferencedEnvelope.reference(box.getBounds());
                 }
             } catch(Throwable t) {
                 // never mind

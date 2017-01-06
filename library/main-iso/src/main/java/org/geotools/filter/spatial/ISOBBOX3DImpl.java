@@ -17,10 +17,12 @@
  */
 package org.geotools.filter.spatial;
 
+import org.geotools.factory.Hints;
 import org.geotools.filter.IllegalFilterException;
 import org.geotools.geometry.iso.topograph2D.TopologyException;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.geotools.util.Util;
 import org.opengis.feature.simple.SimpleFeature;
@@ -116,8 +118,11 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// coordinate.
 
 		
+		Hints h = new Hints();
+		h.put(Hints.GEOMETRY_VALIDATE, false);
+		h.put(Hints.CRS, envelope.getCoordinateReferenceSystem());
 
-		ISOGeometryBuilder gfac = new ISOGeometryBuilder(envelope.getCoordinateReferenceSystem());
+		ISOGeometryBuilder gfac = new ISOGeometryBuilder(h);
 		Solid solid = Util.makeSolidFromEnvelope(gfac, envelope.getLowerCorner(), envelope.getUpperCorner());
 
 		return factory.literal(solid);

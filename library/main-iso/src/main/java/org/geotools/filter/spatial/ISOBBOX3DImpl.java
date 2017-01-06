@@ -33,6 +33,7 @@ import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 
@@ -114,32 +115,12 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// 3DBBOX must be run as a post-filter in order to support the third
 		// coordinate.
 
-		// Coordinate[] coords = new Coordinate[5];
-		double[] coords = new double[24];
-		for(int i=0;i<coords.length;i++) {
-			
-		}
 		
-		// LinearRing ring = null;
-		Curve curve = null;
 
 		ISOGeometryBuilder gfac = new ISOGeometryBuilder(envelope.getCoordinateReferenceSystem());
-		try {
-			curve = gfac.createCurve(gfac.createPointArray(coords));// createLinearRing(coords);
-		} catch (TopologyException tex) {
-			throw new IllegalFilterException(tex.toString());
-		}
+		Solid solid = Util.makeSolidFromEnvelope(gfac, envelope.getLowerCorner(), envelope.getUpperCorner());
 
-		// Polygon polygon = gfac.createPolygon(ring, null);
-		SurfaceBoundary surfaceboundary = gfac.createSurfaceBoundary(curve);
-		Surface surface = gfac.createSurface(surfaceboundary);
-		if (envelope instanceof ReferencedEnvelope3D) {
-			ReferencedEnvelope3D refEnv = (ReferencedEnvelope3D) envelope;
-			// polygon.setUserData(refEnv.getCoordinateReferenceSystem());
-
-		}
-
-		return factory.literal(surface);
+		return factory.literal(solid);
 	}
 
 	public Object accept(FilterVisitor visitor, Object context) {

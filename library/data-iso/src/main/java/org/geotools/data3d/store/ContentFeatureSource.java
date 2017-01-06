@@ -38,16 +38,16 @@ import org.geotools.data.FeatureLockException;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureWriter;
-import org.geotools.data.ISOFilteringFeatureReader;
 import org.geotools.data.ISODataUtilities;
+import org.geotools.data.ISOFilteringFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.InProcessLockingManager;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
-import org.geotools.data.crs.ForceCoordinateSystemFeatureReader;
+import org.geotools.data.crs.ISOForceCoordinateSystemFeatureReader;
 import org.geotools.data.crs.ReprojectFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.sort.SortedFeatureReader;
@@ -55,6 +55,7 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.function.Collection_AverageFunction;
 import org.geotools.filter.function.Collection_BoundsFunction;
@@ -440,7 +441,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
             
             if (sourceCRS != null && !sourceCRS.equals(nativeCRS)) {
                 //override native crs
-                bounds = new ReferencedEnvelope(bounds, sourceCRS);
+                bounds = ReferencedEnvelope.create(bounds, sourceCRS);
             } else {
                 //no override
                 sourceCRS = nativeCRS;
@@ -701,7 +702,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
             if (sourceCRS != null && !sourceCRS.equals(nativeCRS)) {
                 //override the nativeCRS
                 try {
-                    reader = new ForceCoordinateSystemFeatureReader(reader, sourceCRS);
+                    reader = new ISOForceCoordinateSystemFeatureReader(reader, sourceCRS);
                 } catch (SchemaException e) {
                     throw (IOException) new IOException("Error occurred trying to force CRS").initCause(e);
                 }

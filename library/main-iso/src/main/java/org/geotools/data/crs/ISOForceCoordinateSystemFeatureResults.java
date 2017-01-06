@@ -132,7 +132,7 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
         if(env == null) {
             return null;
         }
-        env = new ReferencedEnvelope(env, getSchema().getCoordinateReferenceSystem());
+        env = ReferencedEnvelope.create(env, getSchema().getCoordinateReferenceSystem());
         return env;
     }
 

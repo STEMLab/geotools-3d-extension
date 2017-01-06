@@ -242,7 +242,7 @@ public class CoordinateWriter {
             // format y into buffer
             formatDecimal(y, coordBuff);
             
-            boolean zAvailable = coordSeqDimension > 2 && !Double.isNaN(dp.getOrdinate(2)) && !Double.isInfinite(dp.getOrdinate(2));
+            boolean zAvailable = coordSeqDimension > 2 && dp.getCoordinate().length > 2 && !Double.isNaN(dp.getOrdinate(2)) && !Double.isInfinite(dp.getOrdinate(2));
             if (D == 3 || zAvailable || useDummyZ) {
                 z = zAvailable? dp.getOrdinate(2) : dummyZ;
                 coordBuff.append(coordinateDelimiter);

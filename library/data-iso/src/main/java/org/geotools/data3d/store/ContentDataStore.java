@@ -35,10 +35,10 @@ import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureTypes;
+import org.geotools.feature.ISOFeatureTypes;
 import org.geotools.feature.NameImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.opengis.feature.FeatureFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -49,8 +49,6 @@ import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.util.TypeName;
-//import org.opengis.geometry.coordinate.GeometryFactory;
-//import com.vividsolutions.jts.geom.GeometryFactory;
 
 
 /**
@@ -171,7 +169,8 @@ public abstract class ContentDataStore implements DataStore {
             getClass().getPackage().getName()
         );
         //default
-        setFilterFactory(CommonFactoryFinder.getFilterFactory());
+        //TODO
+        setFilterFactory(new ISOFilterFactoryImpl());
     }
 
     //
@@ -292,7 +291,7 @@ public abstract class ContentDataStore implements DataStore {
     public ServiceInfo getInfo() {
         DefaultServiceInfo info = new DefaultServiceInfo();
         info.setDescription("Features from "+getClass().getSimpleName() );
-        info.setSchema( FeatureTypes.DEFAULT_NAMESPACE );
+        info.setSchema( ISOFeatureTypes.DEFAULT_NAMESPACE );
         return info;
     }
     

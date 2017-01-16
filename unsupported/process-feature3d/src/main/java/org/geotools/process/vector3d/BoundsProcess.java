@@ -22,7 +22,6 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.geotools.process.vector.VectorProcess;
 
 /**
  * Simple process with a {@link ReferencedEnvelope} as the output

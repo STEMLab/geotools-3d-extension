@@ -15,8 +15,9 @@
 
     <parent>
         <groupId>org.geotools</groupId>
-        <artifactId>unsupported</artifactId>
+        <artifactId>geotools-iso</artifactId>
         <version>15-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
     </parent>
 
 
@@ -78,6 +79,16 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-process</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-process-feature</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-main-iso</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

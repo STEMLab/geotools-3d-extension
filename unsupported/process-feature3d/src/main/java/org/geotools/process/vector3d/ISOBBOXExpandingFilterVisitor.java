@@ -18,6 +18,7 @@
 package org.geotools.process.vector3d;
 
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
+import org.geotools.filter.visitor.ISODuplicatingFilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.BBOX;
 
@@ -28,7 +29,7 @@ import org.opengis.filter.spatial.BBOX;
  * @author Martin Davis - OpenGeo
  *
  */
-class BBOXExpandingFilterVisitor extends DuplicatingFilterVisitor {
+class ISOBBOXExpandingFilterVisitor extends ISODuplicatingFilterVisitor {
     private double expandMinX;
 
     private double expandMaxX;
@@ -45,7 +46,7 @@ class BBOXExpandingFilterVisitor extends DuplicatingFilterVisitor {
      * @param expandMinY the distance to expand the box Y dimension downwards
      * @param expandMaxY the distance to expand the box Y dimension upwards
      */
-    public BBOXExpandingFilterVisitor(double expandMinX, double expandMaxX, double expandMinY,
+    public ISOBBOXExpandingFilterVisitor(double expandMinX, double expandMaxX, double expandMinY,
             double expandMaxY) {
         this.expandMinX = expandMinX;
         this.expandMaxX = expandMaxX;

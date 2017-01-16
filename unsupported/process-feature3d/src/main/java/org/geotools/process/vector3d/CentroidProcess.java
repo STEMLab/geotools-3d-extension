@@ -19,16 +19,18 @@ package org.geotools.process.vector3d;
 
 import java.util.NoSuchElementException;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.process.ProcessException;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
+import org.geotools.process.vector.SimpleProcessingCollection;
+import org.geotools.process.vector.VectorProcess;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -36,16 +38,14 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Point;
 
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.geom.Point;
-
 /**
  * A process that returns the centroids for the geometries in the
  * input feature collection.
  * 
  * @author Rohan Singh
+ * @author Soojin Kim, Pusan National University
+ * @author Hyung-Gyu Ryoo, Pusan National University
  * 
- *
  * @source $URL: http://svn.osgeo.org/geotools/trunk/modules/unsupported/process-feature/src/main/java/org/geotools/process/feature/gs/CentroidProcess.java $
  */
 @DescribeProcess(title = "Centroid3D", description = "Computes the geometric centroids of features")
@@ -55,7 +55,7 @@ public class CentroidProcess implements VectorProcess {
     public SimpleFeatureCollection execute(
             @DescribeParameter(name = "features", description = "Input feature collection") SimpleFeatureCollection features)
             throws ProcessException {
-        return DataUtilities.simple(new CentroidFeatureCollection(features));
+        return ISODataUtilities.simple(new CentroidFeatureCollection(features));
     }
 
     static class CentroidFeatureCollection extends SimpleProcessingCollection {
@@ -72,12 +72,12 @@ public class CentroidProcess implements VectorProcess {
 
         @Override
         public ReferencedEnvelope getBounds() {
-            return DataUtilities.bounds( features() );
+            return ISODataUtilities.bounds( features() );
         }
 
         @Override
         protected SimpleFeatureType buildTargetFeatureType() {
-            SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+            ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
             for (AttributeDescriptor ad : delegate.getSchema().getAttributeDescriptors()) {
                 if(ad instanceof GeometryDescriptor) {
                     GeometryDescriptor gd = (GeometryDescriptor) ad;
@@ -107,11 +107,11 @@ public class CentroidProcess implements VectorProcess {
     static class CentroidFeatureIterator implements SimpleFeatureIterator {
         SimpleFeatureIterator delegate;
 
-        SimpleFeatureBuilder fb;
+        ISOSimpleFeatureBuilder fb;
 
         public CentroidFeatureIterator(SimpleFeatureIterator delegate, SimpleFeatureType schema) {
             this.delegate = delegate;
-            fb = new SimpleFeatureBuilder(schema);
+            fb = new ISOSimpleFeatureBuilder(schema);
         }
 
         public void close() {
@@ -133,6 +133,5 @@ public class CentroidProcess implements VectorProcess {
             }
             return fb.buildFeature(f.getID());
         }
-
     }
 }

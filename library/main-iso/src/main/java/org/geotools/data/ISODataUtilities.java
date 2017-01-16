@@ -2590,7 +2590,7 @@ public class ISODataUtilities {
                 
                 if(featureEnvelope != null) {
                     if(bounds == null) {
-                        bounds = new ReferencedEnvelope(featureEnvelope);
+                        bounds = ReferencedEnvelope.reference(featureEnvelope);
                     } else {
                         bounds.expandToInclude(featureEnvelope);
                     }

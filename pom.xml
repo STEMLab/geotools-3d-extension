@@ -1249,6 +1249,7 @@
 		
 		<module>unsupported/csv-iso</module>
 		<module>extension/xsd</module>
+		<module>unsupported/process-feature3d</module>
 	</modules>
 </project>
 

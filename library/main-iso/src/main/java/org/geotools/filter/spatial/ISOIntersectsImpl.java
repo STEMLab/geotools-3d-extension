@@ -91,7 +91,7 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
 		ReferencedEnvelope3D empty = new ReferencedEnvelope3D();
 		ReferencedEnvelope3D queryResult = envLeft.intersection(envRight);
 		if(!empty.equals(queryResult)) {
-			return true;
+			return left.intersects(right);
 		}
         return false;
         //return envRight.intersects(envLeft) && left.intersects(right);

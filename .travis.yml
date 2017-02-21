@@ -1,13 +1,22 @@
 sudo: false
+
 cache:
   directories:
     - "$HOME/.m2"
+    
 language: java
+
 script:
   - mvn -B -fae -Djava.awt.headless=true -Dall clean install
+  
 notifications:
   email: false
   on_failure: never
-env: GDAL_LIBRARY_NAME=disabled_see_geot-4733
+  
+env:
+
+before_install:
+  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
+
 jdk: 
   - oraclejdk8

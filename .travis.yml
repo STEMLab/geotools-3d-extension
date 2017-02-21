@@ -19,7 +19,7 @@ notifications:
 env:
 
 before_install:
-  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
+  - ./travis/linux/before_install.sh
 
 jdk: 
   - oraclejdk8

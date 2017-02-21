@@ -29,9 +29,11 @@ import java.util.UUID;
 import junit.framework.TestCase;
 
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultEngineeringCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -47,6 +49,8 @@ import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -70,7 +74,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  *
  * @todo It should be possible to move this class in the {@code sample-data} module.
  */
-public class ISODataTestCase extends TestCase {
+public abstract class ISODataTestCase extends TestCase {
     protected ISOGeometryBuilder gb;
     protected SimpleFeatureType roadType; // road: id,geom,name
     protected SimpleFeatureType subRoadType; // road: id,geom    
@@ -94,13 +98,16 @@ public class ISODataTestCase extends TestCase {
     protected ReferencedEnvelope lakeBounds;
     protected FilterFactory2 ff;
     
-    protected static CoordinateReferenceSystem DEFAULT_CRS = DefaultGeographicCRS.WGS84;
+    protected static CoordinateReferenceSystem DEFAULT_CRS;
     
     /**
      * Creates a default test case with the given name.
+     * @throws FactoryException 
+     * @throws NoSuchAuthorityCodeException 
      */
-    public ISODataTestCase(final String name) {
+    public ISODataTestCase(final String name) throws NoSuchAuthorityCodeException, FactoryException {
         super(name);
+        DEFAULT_CRS = CRS.decode("EPSG:4326");
     }
 
     protected int expected( Filter filter ){
@@ -138,7 +145,7 @@ public class ISODataTestCase extends TestCase {
         //  2,2 +-----+-----+ 4,2
         //     /     rd1     \
         // 1,1+               +5,1
-        roadFeatures[0] = SimpleFeatureBuilder.build(roadType, new Object[] {
+        roadFeatures[0] = ISOSimpleFeatureBuilder.build(roadType, new Object[] {
                 new Integer(1),
                 line(new int[] { 1, 1, 2, 2, 4, 2, 5, 1 }),
                 "r1",
@@ -152,7 +159,7 @@ public class ISODataTestCase extends TestCase {
         //  rd2  + 3,2
         //       |
         //    3,0+
-        roadFeatures[1] = SimpleFeatureBuilder.build(roadType, new Object[] {
+        roadFeatures[1] = ISOSimpleFeatureBuilder.build(roadType, new Object[] {
                 new Integer(2), line(new int[] { 3, 0, 3, 2, 3, 3, 3, 4 }),
                 "r2",
                 UUID.randomUUID()
@@ -163,7 +170,7 @@ public class ISODataTestCase extends TestCase {
         //     rd3     + 5,3
         //            / 
         //  3,2 +----+ 4,2
-        roadFeatures[2] = SimpleFeatureBuilder.build(roadType, new Object[] {
+        roadFeatures[2] = ISOSimpleFeatureBuilder.build(roadType, new Object[] {
                 new Integer(3),
                 line(new int[] { 3, 2, 4, 2, 5, 3 }),
                 "r3",
@@ -189,7 +196,7 @@ public class ISODataTestCase extends TestCase {
         //   + 2,3
         //  / rd4
         // + 1,2
-        newRoad = SimpleFeatureBuilder.build(roadType, new Object[] {
+        newRoad = ISOSimpleFeatureBuilder.build(roadType, new Object[] {
                     new Integer(4), line(new int[] { 1, 2, 2, 3 }), "r4", UUID.randomUUID()
                 }, "road.rd4");
 
@@ -206,7 +213,7 @@ public class ISODataTestCase extends TestCase {
         //  +---+ rv1
         //   7,5 \
         //    9,3 +----+ 11,3
-        riverFeatures[0] = SimpleFeatureBuilder.build(riverType, new Object[] {
+        riverFeatures[0] = ISOSimpleFeatureBuilder.build(riverType, new Object[] {
                     new Integer(1),
                     lines(new int[][] {
                             { 5, 5, 7, 4 },
@@ -220,7 +227,7 @@ public class ISODataTestCase extends TestCase {
         //    rv2+ 4,8
         //       |
         //   4,6 +
-        riverFeatures[1] = SimpleFeatureBuilder.build(riverType, new Object[] {
+        riverFeatures[1] = ISOSimpleFeatureBuilder.build(riverType, new Object[] {
                     new Integer(2),
                     lines(new int[][] {
                             { 4, 6, 4, 8, 6, 10 }
@@ -237,7 +244,7 @@ public class ISODataTestCase extends TestCase {
         //     rv3  \ 
         //           + 13,3
         //                     
-        newRiver = SimpleFeatureBuilder.build(riverType, new Object[] {
+        newRiver = ISOSimpleFeatureBuilder.build(riverType, new Object[] {
                 new Integer(3),
                 lines(new int[][] {
                         { 9, 5, 11, 5, 13, 3 }
@@ -255,7 +262,7 @@ public class ISODataTestCase extends TestCase {
         //            \  | 
         //        14,4 +-+ 16,4
         //
-        lakeFeatures[0] = SimpleFeatureBuilder.build(lakeType, new Object[]{
+        lakeFeatures[0] = ISOSimpleFeatureBuilder.build(lakeType, new Object[]{
                 new Integer(0),
                 polygon( new int[]{ 12,6, 14,8, 16,6, 16,4, 14,4, 12,6} ),
                 "muddy"

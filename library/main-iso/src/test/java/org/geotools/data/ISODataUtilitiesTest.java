@@ -41,7 +41,7 @@ import org.geotools.feature.IllegalAttributeException;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.filter.IllegalFilterException;
@@ -68,6 +68,8 @@ import org.opengis.filter.expression.Function;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -85,8 +87,10 @@ public class ISODataUtilitiesTest extends ISODataTestCase {
      * Constructor for DataUtilitiesTest.
      * 
      * @param arg0
+     * @throws FactoryException 
+     * @throws NoSuchAuthorityCodeException 
      */
-    public ISODataUtilitiesTest(String arg0) {
+    public ISODataUtilitiesTest(String arg0) throws NoSuchAuthorityCodeException, FactoryException {
         super(arg0);
     }
     
@@ -618,7 +622,7 @@ public class ISODataUtilitiesTest extends ISODataTestCase {
     }
 
     public void testCreateSubTypePreservesDefaultGeometryProperty() throws Exception {
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName("test");
         tb.add("name", String.class);
         tb.add("the_geom1", Point.class, 4326);
@@ -817,7 +821,7 @@ public class ISODataUtilitiesTest extends ISODataTestCase {
         AttributeDescriptor descr4 = new AttributeDescriptorImpl(at, new NameImpl("att4"), 1, 1,
                 false, null);
 
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName("type");
         tb.add(descr1);
         tb.add(descr2);

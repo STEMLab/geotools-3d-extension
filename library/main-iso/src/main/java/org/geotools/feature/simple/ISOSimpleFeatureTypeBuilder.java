@@ -950,20 +950,14 @@ public class ISOSimpleFeatureTypeBuilder {
 		}
 		
 		if ( defGeom == null ) {
-			//none was set by name, look for first geometric type
-			for ( AttributeDescriptor att : attributes() ) {
-				if ( att instanceof GeometryDescriptor ) {
-					
-					attributeBuilder.init( att );
-					attributeBuilder.setCRS(defaultCrs);
-					GeometryType type = attributeBuilder.buildGeometryType();
-					
-					att = attributeBuilder.buildDescriptor(att.getName(),type);
-					defGeom = (GeometryDescriptor) att;
-					break;
-				}
-			}
-		}
+                    //none was set by name, look for first geometric type
+                    for ( AttributeDescriptor att : attributes() ) {
+                            if ( att instanceof GeometryDescriptor ) {
+                                    defGeom = (GeometryDescriptor) att;
+                                    break;
+                            }
+                    }
+                }
 		
 		SimpleFeatureType built = factory.createSimpleFeatureType(
 			name(), attributes(), defGeom, isAbstract,

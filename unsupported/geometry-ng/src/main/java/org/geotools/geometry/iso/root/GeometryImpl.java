@@ -815,8 +815,21 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		}
 
 	}
+	
+	@Override
+        public boolean equals(Object obj) {
+	    if (this == obj)
+	        return true;
+	    if (obj == null)
+	        return false;
+	    if (!(obj instanceof TransfiniteSet))
+	        return false;
+	    
+	    TransfiniteSet set = (TransfiniteSet) obj;
+	    return this.equals(set);
+        }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.opengis.geometry.coordinate.TransfiniteSet#equals(org.opengis.geometry.coordinate.TransfiniteSet)

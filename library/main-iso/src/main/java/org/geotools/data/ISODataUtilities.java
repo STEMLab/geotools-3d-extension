@@ -75,6 +75,7 @@ import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
@@ -1697,7 +1698,13 @@ public class ISODataUtilities {
         tb.setName(featureType.getName());
         tb.setCRS(null); // not interested in warnings from this simple method
         for (int i = 0; i < properties.length; i++) {
-            tb.add(featureType.getDescriptor(properties[i]));
+            // let's get the attribute descriptor corresponding to the current property
+            AttributeDescriptor attributeDescriptor = featureType.getDescriptor(properties[i]);
+            if (attributeDescriptor != null) {
+                // if the property doesn't map to an attribute descriptor we ignore it
+                // an attribute descriptor may be omitted for security proposes for example
+                tb.add(attributeDescriptor);
+            }
         }
         setDefaultGeometry(tb, properties, featureType);
         return tb.buildFeatureType();

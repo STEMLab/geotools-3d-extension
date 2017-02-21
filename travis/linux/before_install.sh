@@ -10,7 +10,7 @@ sudo apt-get install --force-yes \
     libboost-system1.53-dev libboost-serialization1.53-dev \
     libmpfr-dev libgmp-dev \
     cmake
-    
+
 #CGAL
 wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.7/CGAL-4.7.tar.gz
 tar xzf CGAL-4.7.tar.gz

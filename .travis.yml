@@ -3,10 +3,7 @@ sudo: false
 cache:
   directories:
     - "$HOME/.m2"
-
-os:
-  - linux
-
+    
 language: java
 
 script:
@@ -16,10 +13,8 @@ notifications:
   email: false
   on_failure: never
   
-env:
-
 before_install:
-  - ./travis/linux/before_install.sh
+  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 jdk: 
   - oraclejdk8

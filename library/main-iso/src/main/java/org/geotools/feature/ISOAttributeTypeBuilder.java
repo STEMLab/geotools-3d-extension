@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.filter.IllegalFilterException;
@@ -588,7 +588,7 @@ public class ISOAttributeTypeBuilder {
     }
 	private Object defaultValue(){
 	    if( defaultValue == null && !isNillable && binding != null){
-	        defaultValue = DataUtilities.defaultValue( binding );
+	        defaultValue = ISODataUtilities.defaultValue( binding );
 	    }
 	    return defaultValue;
 	}

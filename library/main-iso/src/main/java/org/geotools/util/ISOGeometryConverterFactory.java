@@ -50,7 +50,7 @@ public class ISOGeometryConverterFactory implements ConverterFactory {
 			if ( String.class.equals( source ) ) {
 				return new Converter() {
 					public Object convert(Object source, Class target) throws Exception {
-                        return new WKTReader(hints).read((String) source);
+					    return new WKTReader(hints).read((String) source);
 					}
 				};
 			}

@@ -17,7 +17,7 @@ before_install:
   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 before_script:
- - chmod +x ./travis/${TRAVIS_OS_NAME}/before_install.sh
+ - chmod a+x ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 jdk: 
   - oraclejdk8

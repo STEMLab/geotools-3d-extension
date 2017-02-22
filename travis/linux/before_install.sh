@@ -1,5 +1,10 @@
 export DEBIAN_FRONTEND=noninteractive
 
+#CMAKE
+wget https://cmake.org/files/v3.4/cmake-3.4.3.tar.gz -O cmake-3.4.3.tar.gz
+tar xzf cmake-3.4.3.tar.gz
+cd cmake-3.4.3 && ./bootstrap && sudo make install && cd ..
+
 #BOOST
 wget https://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz/download -c -O boost-1.60.tar.gz
 tar xzf boost-1.60.tar.gz

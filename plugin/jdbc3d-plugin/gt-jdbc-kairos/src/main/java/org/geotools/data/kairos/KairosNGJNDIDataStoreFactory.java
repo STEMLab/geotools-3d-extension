@@ -18,10 +18,10 @@ package org.geotools.data.kairos;
 
 import java.util.Map;
 
-import org.geotools.jdbc.JDBCJNDIDataStoreFactory3D;
+import org.geotools.jdbc.iso.JDBCJNDIDataStoreFactory;
 
 @SuppressWarnings("unchecked")
-public class KairosNGJNDIDataStoreFactory extends JDBCJNDIDataStoreFactory3D {
+public class KairosNGJNDIDataStoreFactory extends JDBCJNDIDataStoreFactory {
 
     public KairosNGJNDIDataStoreFactory() {
         super(new KairosNGDataStoreFactory());

@@ -29,15 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.BasicSQLDialect;
+import org.geotools.jdbc.iso.BasicSQLDialect;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore3D;
+import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Version;
@@ -46,6 +47,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiPrimitive;
@@ -165,7 +167,7 @@ public class KairosDialect extends BasicSQLDialect {
         }
     };
 
-    public KairosDialect(JDBCDataStore3D dataStore) {
+    public KairosDialect(JDBCDataStore dataStore) {
         super(dataStore);
     }
 
@@ -204,18 +206,18 @@ public class KairosDialect extends BasicSQLDialect {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, String column,
-            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+    		ISOGeometryBuilder factory, Connection cx) throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         return (Geometry) reader.read(rs, column);
     }
 
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+    		ISOGeometryBuilder factory, Connection cx) throws IOException, SQLException {
         WKBAttributeIO reader = getWKBReader(factory);
         return (Geometry) reader.read(rs, column);
     }
 
-    WKBAttributeIO getWKBReader(GeometryFactory factory) {
+    WKBAttributeIO getWKBReader(ISOGeometryBuilder factory) {
         WKBAttributeIO reader = wkbReader.get();
         if (reader == null) {
             reader = new WKBAttributeIO(factory);
@@ -240,7 +242,9 @@ public class KairosDialect extends BasicSQLDialect {
         encodeColumnName(null, geometryColumn, sql);
         sql.append("))");
     }
-
+    
+   
+    
     @Override
     public void encodeColumnName(String prefix, String raw, StringBuffer sql) {
         if (prefix != null) {
@@ -355,9 +359,10 @@ public class KairosDialect extends BasicSQLDialect {
         return geometryClass;
     }
 
-    @Override
+    //@Override
     public void handleUserDefinedType(ResultSet columnMetaData, ColumnMetadata metadata,
             Connection cx) throws SQLException {
+    	
         String tableName = columnMetaData.getString("TABLE_NAME");
         String columnName = columnMetaData.getString("COLUMN_NAME");
         String schemaName = columnMetaData.getString("TABLE_SCHEM");
@@ -634,8 +639,8 @@ public class KairosDialect extends BasicSQLDialect {
                     // lookup or reverse engineer the srid
                     int srid = -1;
 
-                    if (gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID) != null) {
-                        srid = (Integer) gd.getUserData().get(JDBCDataStore3D.JDBC_NATIVE_SRID);
+                    if (gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID) != null) {
+                        srid = (Integer) gd.getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID);
                     } else if (gd.getCoordinateReferenceSystem() != null) {
                         try {
                             Integer result = CRS.lookupEpsgCode(gd.getCoordinateReferenceSystem(),
@@ -843,10 +848,10 @@ public class KairosDialect extends BasicSQLDialect {
         return false; // getVersion(cx).compareTo(V_5_0_0) >= 0;
     }
 
-	@Override
+	/*@Override
 	public void encodeGeometryValue(Solid value, int dimension, int srid, StringBuffer sql) throws IOException {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 }

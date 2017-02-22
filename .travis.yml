@@ -7,9 +7,6 @@ cache:
     
 language: java
 
-script:
-  - mvn -B -fae -Djava.awt.headless=true -Dall clean install
-  
 notifications:
   email: false
   on_failure: never
@@ -19,6 +16,7 @@ before_script :
 
 script :
   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
+  - mvn clean install
 
 jdk: 
   - oraclejdk8

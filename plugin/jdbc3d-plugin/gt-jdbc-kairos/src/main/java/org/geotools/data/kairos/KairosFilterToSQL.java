@@ -18,7 +18,7 @@ package org.geotools.data.kairos;
 
 import java.io.IOException;
 
-import org.geotools.data.jdbc3d.FilterToSQL;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.filter.FilterCapabilities;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;

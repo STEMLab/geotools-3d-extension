@@ -7,10 +7,13 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.geotools.data.DataSourceException;
+import org.geotools.factory.GeoTools;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.GeometryFactory;
 
 //import com.vividsolutions.jts.geom.Geometry;
@@ -35,17 +38,17 @@ public class WKBAttributeIO {
 
     //ByteArrayInStream inStream = new ByteArrayInStream(new byte[0]);
 
-    GeometryFactory gf;
+    ISOGeometryBuilder gf;
 
     public WKBAttributeIO() {
-        this(new GeometryFactoryImpl());
+        this(new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D));
     }
 
-    public WKBAttributeIO(GeometryFactory gf) {
+    public WKBAttributeIO(ISOGeometryBuilder gf) {
         wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 
-    public void setGeometryFactory(GeometryFactory gf) {
+    public void setGeometryFactory(ISOGeometryBuilder gf) {
         wkbr = new WKTReader(gf.getCoordinateReferenceSystem());
     }
 

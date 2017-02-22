@@ -30,14 +30,15 @@ import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.ColumnMetadata;
-import org.geotools.jdbc.JDBCDataStore3D;
-import org.geotools.jdbc.PreparedFilterToSQL;
-import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.jdbc.iso.PreparedFilterToSQL;
+import org.geotools.jdbc.iso.PreparedStatementSQLDialect;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.GeometryFactory;
 
 //import com.vividsolutions.jts.geom.Envelope;
@@ -54,7 +55,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
 
     //private WKBWriter wkbWriter = new WKBWriter();
 
-    public KairosPSDialect(JDBCDataStore3D store, KairosDialect delegate) {
+    public KairosPSDialect(JDBCDataStore store, KairosDialect delegate) {
         super(store);
         this.delegate = delegate;
     }
@@ -79,16 +80,26 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, int column,
-            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+    		ISOGeometryBuilder factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
 
     @Override
     public Geometry decodeGeometryValue(GeometryDescriptor descriptor, ResultSet rs, String column,
-            GeometryFactory factory, Connection cx) throws IOException, SQLException {
+    		ISOGeometryBuilder factory, Connection cx) throws IOException, SQLException {
         return delegate.decodeGeometryValue(descriptor, rs, column, factory, cx);
     }
-
+    
+    /*@Override
+    public void encodeTableName(String raw, StringBuffer sql) {
+        sql.append(raw).append(ne());
+    }*/
+    
+    /*@Override
+    public void encodeSchemaName(String raw, StringBuffer sql) {
+        sql.append(ne()).append(raw);
+    }*/
+    
     @Override
     public void encodeGeometryColumn(GeometryDescriptor gatt, String prefix, int srid, Hints hints,
             StringBuffer sql) {
@@ -192,7 +203,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
         delegate.registerSqlTypeToSqlTypeNameOverrides(overrides);
     }
 
-    @Override
+    //@Override
     public void handleUserDefinedType(ResultSet columnMetaData, ColumnMetadata metadata,
             Connection cx) throws SQLException {
         delegate.handleUserDefinedType(columnMetaData, metadata, cx);

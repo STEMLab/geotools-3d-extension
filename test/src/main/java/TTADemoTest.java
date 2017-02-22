@@ -126,7 +126,7 @@ public class TTADemoTest extends JFrame{
 	private SimpleFeatureCollection currentfeatures;
 	private String featureid ="";
 	private static ISOGeometryBuilder builder;
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, true);
@@ -135,7 +135,7 @@ public class TTADemoTest extends JFrame{
 		JFrame frame = new TTADemoTest();
 		frame.setTitle("GeoTools 3D DataStore DemoApplication");
 		frame.setVisible(true);
-	}
+	}*/
 	public TTADemoTest() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());

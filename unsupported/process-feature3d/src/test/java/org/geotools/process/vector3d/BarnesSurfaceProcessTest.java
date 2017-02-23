@@ -16,7 +16,7 @@
  */
 package org.geotools.process.vector3d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.geom.Point2D;
@@ -25,12 +25,12 @@ import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.factory.Hints;
 import org.geotools.feature.DefaultFeatureCollection;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.topograph2D.Coordinate;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.process.vector3d.BarnesSurfaceProcess;
+import org.geotools.process.vector.BarnesSurfaceProcess;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeatureType;

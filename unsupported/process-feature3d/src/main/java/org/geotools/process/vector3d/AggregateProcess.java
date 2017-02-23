@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.visitor.AbstractCalcResult;
 import org.geotools.feature.visitor.AverageVisitor;
 import org.geotools.feature.visitor.CalcResult;
@@ -35,6 +34,7 @@ import org.geotools.feature.visitor.MedianVisitor;
 import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.StandardDeviationVisitor;
 import org.geotools.feature.visitor.SumVisitor;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.process.ProcessException;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
@@ -112,7 +112,8 @@ public class AggregateProcess implements VectorProcess {
             } else if (function == AggregationFunction.Min) {
                 calc = new MinVisitor(attIndex, features.getSchema());
             } else if (function == AggregationFunction.StdDev) {
-                calc = new StandardDeviationVisitor(CommonFactoryFinder.getFilterFactory(null).property(aggAttribute));
+            	//TODO uses CommonFactoryFinder
+                calc = new StandardDeviationVisitor(new ISOFilterFactoryImpl().property(aggAttribute));
             } else if (function == AggregationFunction.Sum) {
                 calc = new SumVisitor(attIndex, features.getSchema());
             } else {

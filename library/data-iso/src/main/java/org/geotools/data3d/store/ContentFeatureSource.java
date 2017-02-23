@@ -48,14 +48,13 @@ import org.geotools.data.QueryCapabilities;
 import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.crs.ISOForceCoordinateSystemFeatureReader;
-import org.geotools.data.crs.ReprojectFeatureReader;
+import org.geotools.data.crs.ISOReprojectFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.sort.SortedFeatureReader;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.function.Collection_AverageFunction;
 import org.geotools.filter.function.Collection_BoundsFunction;
@@ -715,7 +714,7 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
                     throw new IOException("Cannot reproject data, the source CRS is not available");
                 } else if(!sourceCRS.equals(targetCRS)) {
                     try {
-                        reader = new ReprojectFeatureReader(reader, targetCRS);
+                        reader = new ISOReprojectFeatureReader(reader, targetCRS);
                     } catch (Exception e) {
                         if(e instanceof IOException)
                             throw (IOException) e;

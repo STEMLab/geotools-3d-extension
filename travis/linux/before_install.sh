@@ -15,6 +15,7 @@ export DEBIAN_FRONTEND=noninteractive
 #tar xzf CGAL-4.3.tar.gz
 #cd CGAL-4.3 && cmake . -DWITH_examples=ON -DWITH_demos=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/ && sudo make install && cd ..
 
+sudo apt-get update && sudo apt-get upgrade
 sudo apt-get install libboost-all-dev
 sudo apt-get install libcgal-dev
 

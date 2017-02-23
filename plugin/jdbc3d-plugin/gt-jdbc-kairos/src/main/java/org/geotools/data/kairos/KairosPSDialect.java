@@ -217,7 +217,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
     @Override
     public void prepareGeometryValue(Class<? extends Geometry> gClass, int dimension, int srid, Class binding, StringBuffer sql ) {
         if (gClass != null) {
-            sql.append("ST_GEOMFROMWKB(?, " + srid + ")");   // yhl, 20131206
+            sql.append("ST_GEOMFROMTEXT(?, " + srid + ")");   // yhl, 20131206
         } else {
             sql.append("?");
         }

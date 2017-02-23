@@ -3175,13 +3175,7 @@ public final class JDBCDataStore extends ContentDataStore
                     sqlTypeNames[i] = sqlTypeName;
                 }
             }
-            else if(Solid.class.isAssignableFrom(clazz)) {
-            	String sqlTypeName = dialect.getGeometryTypeName(sqlType);
-
-                if (sqlTypeName != null) {
-                    sqlTypeNames[i] = sqlTypeName;
-                }
-            } 
+            
             //check the overrides
             String sqlTypeName = getSqlTypeToSqlTypeNameOverrides().get( sqlType );
             if ( sqlTypeName != null ) {

@@ -3,7 +3,6 @@ sudo: required
 cache:
   directories:
     - "$HOME/.m2"
-    - "/usr/local/"
     
 language: java
 

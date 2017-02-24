@@ -125,4 +125,16 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
         run("DROP TABLE \"point3d\"");
     }
 
+	@Override
+	protected void createSolidTable() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void dropSolidTable() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

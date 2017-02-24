@@ -394,10 +394,11 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
      * Subclasses may override, this implementation returns <code>null</code>.
      * </p>
      */
+    
     public Map<java.awt.RenderingHints.Key, ?> getImplementationHints() {
         return null;
     }
-
+	
     /**
      * Returns a string to identify the type of the database.
      * <p>

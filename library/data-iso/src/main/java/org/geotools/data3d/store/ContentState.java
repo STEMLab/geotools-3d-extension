@@ -30,9 +30,7 @@ import org.geotools.data.FeatureEvent.Type;
 import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Transaction;
-import org.geotools.data3d.store.DiffTransactionState;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
@@ -182,7 +180,7 @@ public class ContentState {
 
         featureType = state.featureType;
         count = state.count;
-        bounds = state.bounds == null ? null : new ReferencedEnvelope( state.bounds );
+        bounds = state.bounds == null ? null : ReferencedEnvelope.create( state.bounds );
         batchFeatureEvent = null;
    }
 
@@ -311,7 +309,7 @@ public class ContentState {
             return; // nobody is listenting
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope)feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.reference(feature.getBounds());
         if( bounds != null ){
             bounds.expandToInclude(before);
         }
@@ -331,7 +329,7 @@ public class ContentState {
             return;
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope) feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.reference(feature.getBounds());
 
         FeatureEvent event = new FeatureEvent(source, Type.ADDED, bounds, filter);
 
@@ -343,7 +341,7 @@ public class ContentState {
             return;
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope) feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.reference(feature.getBounds());
 
         FeatureEvent event = new FeatureEvent(source, Type.REMOVED, bounds, filter);
 

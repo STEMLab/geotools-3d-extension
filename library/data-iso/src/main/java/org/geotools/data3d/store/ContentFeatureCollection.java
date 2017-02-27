@@ -37,7 +37,7 @@ import org.geotools.data3d.store.ContentFeatureSource;
 import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data.store.ContentState;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.FeatureTypes;
+import org.geotools.feature.ISOFeatureTypes;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -92,10 +92,10 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
         //  featureType generated here to be correct)
         try {
             if (query.getCoordinateSystemReproject() != null){
-                this.featureType = FeatureTypes.transform(this.featureType, query.getCoordinateSystemReproject() );
+                this.featureType = ISOFeatureTypes.transform(this.featureType, query.getCoordinateSystemReproject() );
             }
             else if (query.getCoordinateSystem() != null){
-                this.featureType = FeatureTypes.transform(this.featureType, query.getCoordinateSystem() );
+                this.featureType = ISOFeatureTypes.transform(this.featureType, query.getCoordinateSystem() );
             }
         } catch (SchemaException e) {
             LOGGER.log(Level.FINER,"Problem handling Query change of CoordinateReferenceSystem:"+e,e);
@@ -297,7 +297,7 @@ public class ContentFeatureCollection implements SimpleFeatureCollection {
                  Date.class.isAssignableFrom(binding)) {
              return 4;
          } else if(binding.equals(String.class)) {
-             int fieldLen = FeatureTypes.getFieldLength(ad);
+             int fieldLen = ISOFeatureTypes.getFieldLength(ad);
              if(fieldLen > 0) {
                  return fieldLen * 2;
              } else {

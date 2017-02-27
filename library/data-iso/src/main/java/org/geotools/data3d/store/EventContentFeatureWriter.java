@@ -19,7 +19,6 @@ package org.geotools.data3d.store;
 import java.io.IOException;
 
 import org.geotools.data.BatchFeatureEvent;
-import org.geotools.data.Diff;
 import org.geotools.data.DiffFeatureWriter;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;

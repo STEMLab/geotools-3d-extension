@@ -132,10 +132,6 @@ import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
 
-//import com.vividsolutions.jts.geom.Envelope;
-//import com.vividsolutions.jts.geom.Geometry;
-//import com.vividsolutions.jts.geom.Point;
-
 
 /**
  * Datastore implementation for jdbc based relational databases.
@@ -2271,6 +2267,7 @@ public final class JDBCDataStore extends ContentDataStore
             nillable[i] = attributeType.getMinOccurs() <= 0 || attributeType.isNillable();
         }
         System.out.println(columnNames);
+        
         sqlTypeNames = getSQLTypeNames(classes, cx);
         for ( int i = 0; i < sqlTypeNames.length; i++ ) {
             if ( sqlTypeNames[i] == null ) {

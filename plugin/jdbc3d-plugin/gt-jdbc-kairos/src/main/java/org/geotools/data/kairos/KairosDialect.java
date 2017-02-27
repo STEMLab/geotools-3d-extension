@@ -79,7 +79,7 @@ import com.vividsolutions.jts.io.ParseException;*/
 
 public class KairosDialect extends BasicSQLDialect {
 
-    static final Version V_5_5_0 = new Version("5.5.0");
+    static final Version V_5_5_0 = new Version("5.5");
 
     boolean looseBBOXEnabled = false;
 
@@ -108,20 +108,21 @@ public class KairosDialect extends BasicSQLDialect {
         {
             put("GEOMETRY", Geometry.class);
             put("POINT", Point.class);
-            put("POINTM", Point.class);
+            put("POINTN", Point.class);
             put("POINTZ", Point.class);
             /*put("LINESTRING", LineString.class);
             put("LINESTRINGM", LineString.class);
             put("LINESTRINGZ", LineString.class);*/
             put("LINESTRING", Curve.class);
-            put("LINESTRINGM", Curve.class);
+            //put("LINESTRINGM", Curve.class);
             put("LINESTRINGZ", Curve.class);
             /*put("POLYGON", Polygon.class);
             put("POLYGONM", Polygon.class);
             put("POLYGONZ", Polygon.class);*/
             put("POLYGON", Ring.class);
-            put("POLYGONM", Ring.class);
+            //put("POLYGONM", Ring.class);
             put("POLYGONZ", Ring.class);
+            put("POLYHEDRA", Solid.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTIPOINTZ", MultiPoint.class);
@@ -151,11 +152,12 @@ public class KairosDialect extends BasicSQLDialect {
     final static Map<Class, String> CLASS_TO_TYPE_MAP = new HashMap<Class, String>() {
         {
             put(Geometry.class, "GEOMETRY");
-            put(Point.class, "POINT");
+            put(Point.class, "POINTZ");
             //put(LineString.class, "LINESTRING");
-            put(Curve.class, "LINESTRING");
+            put(Curve.class, "LINESTRINGZ");
             //put(Polygon.class, "POLYGON");
-            put(Ring.class, "POLYGON");
+            put(Ring.class, "POLYGONZ");
+            put(Solid.class,"POLYHEDRA");
             put(MultiPoint.class, "MULTIPOINT");
             //put(MultiLineString.class, "MULTILINESTRING");
             put(MultiCurve.class, "MULTILINESTRING");
@@ -404,11 +406,13 @@ public class KairosDialect extends BasicSQLDialect {
 
                 LOGGER.log(Level.FINE, "Geometry srid check; {0} ", sqlStatement);
                 statement = cx.createStatement();
-                result = statement.executeQuery(sqlStatement);
-
+                /*result = statement.executeQuery(sqlStatement);
+                
                 if (result.next()) {
                     srid = result.getInt(1);
-                }
+                	
+                }*/
+                srid = 4327;
             } catch (SQLException e) {
                 LOGGER.log(Level.WARNING, "Failed to retrieve information about " + schemaName
                         + "." + tableName + "." + columnName
@@ -554,6 +558,7 @@ public class KairosDialect extends BasicSQLDialect {
         mappings.put("POLYGON", Ring.class);
         mappings.put("POLYGONM", Ring.class);
         mappings.put("POLYGONZ", Ring.class);
+        mappings.put("POLYHEDRA", Solid.class);
         mappings.put("MULTIPOINT", MultiPoint.class);
         mappings.put("MULTIPOINTM", MultiPoint.class);
         mappings.put("MULTIPOINTZ", MultiPoint.class);
@@ -836,7 +841,11 @@ public class KairosDialect extends BasicSQLDialect {
      */
     public Version getVersion(Connection conn) throws SQLException {
         if (version == null) {
-            version = new Version("V_5_0_0");
+        	version = new Version(conn.getMetaData().getDatabaseProductVersion());
+        	if(version == null){
+        		 version = new Version("V_6_0_0");
+        	}
+           
         }
         return version;
     }

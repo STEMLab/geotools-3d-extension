@@ -196,10 +196,8 @@ public class ISOBBOXImpl extends ISOAbstractPreparedGeometryFilter implements BB
     }
 
     protected boolean basicEvaluate(Geometry left, Geometry right) {
-        //Envelope envLeft = left.getEnvelopeInternal();
-        //Envelope envRight = right.getEnvelopeInternal();
-    	ReferencedEnvelope envLeft = new ReferencedEnvelope(left.getEnvelope());
-		ReferencedEnvelope envRight = new ReferencedEnvelope(right.getEnvelope());
+    	ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
+	ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
 
         if (envRight.intersects((BoundingBox)envLeft)) {
             return left.intersects(right);

@@ -16,14 +16,13 @@
  */
 package org.geotools.filter.spatial;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Within;
 import org.opengis.geometry.BoundingBox;
-import org.opengis.geometry.Geometry;;
-//import com.vividsolutions.jts.geom.Envelope;
-//import com.vividsolutions.jts.geom.Geometry;
+import org.opengis.geometry.Geometry;
 
 /**
  * 
@@ -68,17 +67,16 @@ public class ISOWithinImpl extends ISOAbstractPreparedGeometryFilter implements 
 
 	@Override
 	protected boolean basicEvaluate(Geometry left, Geometry right) {
-
-		//Envelope envLeft = left.getEnvelopeInternal();
-		//Envelope envRight = right.getEnvelopeInternal();
-		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
-		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
-		
-		 if(envRight.contains((BoundingBox)envLeft)) {
-			//TODO previous code HACK!! sfcgal is so slow : return left.within(right);
-			 return true;
-		 }else
-             return false;
-	 }
+	    ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
+	    ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
+	        
+	    ReferencedEnvelope empty = new ReferencedEnvelope();
+	    ReferencedEnvelope queryResult = envLeft.intersection(envRight);
+	    if(!empty.equals(queryResult)) {
+	        //return left.(right);
+	        return true;
+	    }
+	    return false;
+	}
 
 }

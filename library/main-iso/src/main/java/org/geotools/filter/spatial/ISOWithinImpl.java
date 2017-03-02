@@ -71,10 +71,9 @@ public class ISOWithinImpl extends ISOAbstractPreparedGeometryFilter implements 
 	    ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
 	        
 	    ReferencedEnvelope empty = new ReferencedEnvelope();
-	    ReferencedEnvelope queryResult = envLeft.intersection(envRight);
+	    ReferencedEnvelope queryResult = envRight.intersection(envLeft);
 	    if(!empty.equals(queryResult)) {
-	        //return left.(right);
-	        return true;
+	        return right.contains(left);
 	    }
 	    return false;
 	}

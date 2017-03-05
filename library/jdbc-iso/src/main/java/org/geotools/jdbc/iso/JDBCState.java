@@ -16,8 +16,8 @@
  */
 package org.geotools.jdbc.iso;
 
-import org.geotools.data3d.store.ContentEntry;
-import org.geotools.data3d.store.ContentState;
+import org.geotools.data.store.iso.ContentEntry;
+import org.geotools.data.store.iso.ContentState;
 import org.geotools.jdbc.iso.JDBCState;
 import org.geotools.jdbc.iso.PrimaryKey;
 

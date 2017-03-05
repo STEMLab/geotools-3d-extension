@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.geotools.data.FeatureWriter;
-import org.geotools.data3d.store.ContentEntry;
-import org.geotools.data3d.store.ContentState;
+import org.geotools.data.store.iso.ContentEntry;
+import org.geotools.data.store.iso.ContentState;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeature;

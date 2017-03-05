@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data3d.store;
+package org.geotools.data.store.iso;
 
 import java.util.HashMap;
 import java.util.Map;

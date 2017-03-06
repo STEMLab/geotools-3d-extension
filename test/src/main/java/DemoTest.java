@@ -44,6 +44,7 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
+import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 //import org.geotools.gml2.GMLConfiguration_ISO;
@@ -62,7 +63,9 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
@@ -535,7 +538,11 @@ public class DemoTest extends JFrame{
 		//hints.put(Hints.COORDINATE_DIMENSION, 3);
 		//builder = new GeometryBuilder(hints);
 		//ArrayList<Solid> al = getSolids(builder);
-		Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+		
+		PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+
+		Curve al = builder.createCurve(lp);
+		////Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
 		//b.userData(Hints.COORDINATE_DIMENSION, 3);
@@ -545,7 +552,7 @@ public class DemoTest extends JFrame{
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
-		b.add("loc", Point.class);
+		b.add("loc", Curve.class);
 		SimpleFeatureType schema = b.buildFeatureType();
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);

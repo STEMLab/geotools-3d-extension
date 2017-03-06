@@ -60,6 +60,7 @@ import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.jdbc.datasource.ManageableDataSource;
 import org.geotools.data.jdbc.fidmapper.FIDMapper;
 import org.geotools.data.jdbc.iso.FilterToSQL;
+import org.geotools.data.jdbc.iso.LoggableStatement;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data3d.store.ContentEntry;
@@ -1751,7 +1752,11 @@ public final class JDBCDataStore extends ContentDataStore
             // ask the DB to return the values of all the keys after the insertion
             ps = cx.prepareStatement(sql, keysFetcher.getColumnNames());
         } else {
-            ps = cx.prepareStatement(sql);
+        	/*///////////////////////////////////////////
+    			modify
+    		//////////////////////////////////////////*/
+            //ps = cx.prepareStatement(sql);
+            ps = new LoggableStatement(cx, sql);
         }
         try {
             for (SimpleFeature feature : features) {
@@ -1788,7 +1793,10 @@ public final class JDBCDataStore extends ContentDataStore
                 }
 
                 keysFetcher.setKeyValues(dialect, ps, cx, featureType, feature, i);
-
+                /*///////////////////////////////////////////
+    			modify
+    			//////////////////////////////////////////*/
+                System.out.println(((LoggableStatement)ps).getQueryString());
                 dialect.onInsert(ps, cx, featureType);
                 ps.addBatch();
             }

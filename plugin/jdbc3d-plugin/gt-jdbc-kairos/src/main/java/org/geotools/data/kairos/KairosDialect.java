@@ -94,6 +94,8 @@ public class KairosDialect extends BasicSQLDialect {
     static Integer GEOM_LINESTRING = Integer.valueOf(4002);
 
     static Integer GEOM_POLYGON = Integer.valueOf(4003);
+    
+    static Integer GEOM_SOLID = Integer.valueOf(1111);
 
     static Integer GEOM_MULTIPOINT = Integer.valueOf(4004);
 
@@ -122,7 +124,7 @@ public class KairosDialect extends BasicSQLDialect {
             put("POLYGON", Ring.class);
             //put("POLYGONM", Ring.class);
             put("POLYGONZ", Ring.class);
-            put("POLYHEDRA", Solid.class);
+            put("SOLID", Solid.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTIPOINTZ", MultiPoint.class);
@@ -157,7 +159,7 @@ public class KairosDialect extends BasicSQLDialect {
             put(Curve.class, "LINESTRINGZ");
             //put(Polygon.class, "POLYGON");
             put(Ring.class, "POLYGONZ");
-            put(Solid.class,"POLYHEDRA");
+            put(Solid.class,"SOLID");
             put(MultiPoint.class, "MULTIPOINT");
             //put(MultiLineString.class, "MULTILINESTRING");
             put(MultiCurve.class, "MULTILINESTRING");
@@ -399,20 +401,22 @@ public class KairosDialect extends BasicSQLDialect {
         try {
             // try geometry_columns
             try {
-                String sqlStatement = "SELECT SRID FROM GEOMETRY_COLUMNS WHERE " //
+                /*String sqlStatement = "SELECT SRID FROM GEOMETRY_COLUMNS WHERE " //
                         + "F_TABLE_SCHEMA = '" + schemaName + "' " //
                         + "AND F_TABLE_NAME = '" + tableName + "' " //
-                        + "AND F_GEOMETRY_COLUMN = '" + columnName + "'";
-
+                        + "AND F_GEOMETRY_COLUMN = '" + columnName + "'";*/
+            	String sqlStatement = "SELECT SRID FROM geomSRID WHERE " //
+                        + "TABLENAME = '" + tableName + "' " //
+                        + "AND COLUMNNAME = '" + columnName + "'";
                 LOGGER.log(Level.FINE, "Geometry srid check; {0} ", sqlStatement);
                 statement = cx.createStatement();
-                /*result = statement.executeQuery(sqlStatement);
+                result = statement.executeQuery(sqlStatement);
                 
                 if (result.next()) {
                     srid = result.getInt(1);
                 	
-                }*/
-                srid = 4327;
+                }
+         
             } catch (SQLException e) {
                 LOGGER.log(Level.WARNING, "Failed to retrieve information about " + schemaName
                         + "." + tableName + "." + columnName
@@ -528,6 +532,7 @@ public class KairosDialect extends BasicSQLDialect {
         mappings.put(Curve.class, GEOM_LINESTRING);
         //mappings.put(Polygon.class, GEOM_POLYGON);
         mappings.put(Ring.class, GEOM_POLYGON);
+        mappings.put(Solid.class, GEOM_SOLID);
         mappings.put(MultiPoint.class, GEOM_MULTIPOINT);
         //mappings.put(MultiLineString.class, GEOM_MULTILINESTRING);
         mappings.put(MultiCurve.class, GEOM_MULTILINESTRING);
@@ -558,7 +563,7 @@ public class KairosDialect extends BasicSQLDialect {
         mappings.put("POLYGON", Ring.class);
         mappings.put("POLYGONM", Ring.class);
         mappings.put("POLYGONZ", Ring.class);
-        mappings.put("POLYHEDRA", Solid.class);
+        mappings.put("SOLID", Solid.class);
         mappings.put("MULTIPOINT", MultiPoint.class);
         mappings.put("MULTIPOINTM", MultiPoint.class);
         mappings.put("MULTIPOINTZ", MultiPoint.class);
@@ -599,12 +604,14 @@ public class KairosDialect extends BasicSQLDialect {
     @Override
     public String getGeometryTypeName(Integer type) {
         switch (type) {
+        case 1111: 
+        	return "ST_SOLID";
         case 4001:
-            return "ST_POINT";
+            return "ST_POINTZ";
         case 4002:
-            return "ST_MULTILINESTRING";
+            return "ST_LINESTRINGZ";
         case 4003:
-            return "ST_MULTIPOLYGON";
+            return "ST_POLYGONZ";
         case 4004:
             return "ST_MULTIPOINT";
         case 4005:
@@ -682,17 +689,31 @@ public class KairosDialect extends BasicSQLDialect {
                         } else if(dimensions > 4){
                             throw new IllegalArgumentException("Kairos only supports geometries with 2, 3 and 4 dimensions, current value: " + dimensions);
                         }
-                        
                         sql = 
+                        		"CREATE TABLE geomSRID(" + 
+                                        "TABLENAME varchar(30), " + 
+                                        "SRID INT, " +
+                                        "COLUMNNAME varchar(30));" ;
+                 
+                        /*sql = 
                     		"ALTER TABLE \"" + tableName + "\" " + 
                                     "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
-                                    "TYPE geometry (" + geomType + ", " + srid + ");";
+                                    "TYPE geometry (" + geomType + ", " + srid + ");";*/
                             /*"ALTER TABLE \"" + schemaName + "\".\"" + tableName + "\" " + 
                              "ALTER COLUMN \"" + gd.getLocalName() + "\" " + 
                              "TYPE geometry (" + geomType + ", " + srid + ");";*/
                         
                         LOGGER.fine( sql );
+                        try{
                         st.execute( sql );
+                        }catch(Exception e){
+                        	
+                        }finally{
+                        	sql = 
+                            		"INSERT INTO geomSRID(TABLENAME, SRID, COLUMNNAME)"
+                            		+ "VALUES('"+tableName+"',"+srid+",'"+gd.getLocalName()+"');";
+                        	st.execute( sql );
+                        }
                     }
                     else{
                     	System.out.println("not support this version");
@@ -767,7 +788,7 @@ public class KairosDialect extends BasicSQLDialect {
                         ((com.vividsolutions.jts.geom.LinearRing) value).getCoordinateSequence());
             }*/
             // KAIROS ERROR: ERROR(43003) WKT string is too long. Max length is 4KB
-            sql.append("ST_GeomFromText('" + new GeometryToWKTString(false).getString(value) + "', " + srid + ")");
+            sql.append("ST_GeomFromText('" + new GeometryToKairosWKTString(false).getString(value) + "', " + srid + ")");
         }
     }
 

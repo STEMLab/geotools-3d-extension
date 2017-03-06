@@ -239,7 +239,7 @@ public class KairosPSDialect extends PreparedStatementSQLDialect {
             }*/
 
             //byte[] bytes = wkbWriter.write(g);
-        	String text = new GeometryToWKTString(false).getString(g);
+        	String text = new GeometryToKairosWKTString(false).getString(g);
             //ps.setBytes(column, bytes);
         	ps.setString(column, text);
         } else {

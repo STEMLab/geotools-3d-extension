@@ -84,7 +84,8 @@
 
   <modules> 
     <module>jdbc-postgis3d</module>
-    <module>gt-jdbc-kairos</module>
+    
     <module>jdbc-oracle3d</module>
+    <module>jdbc-kairos</module>
   </modules>
 </project>

@@ -23,7 +23,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geotools.jdbc</groupId>
   <artifactId>gt-jdbc-oracle-iso</artifactId>
   <packaging>jar</packaging>
   <name>Oracle DataStore for ISO Geometry</name>

@@ -541,8 +541,8 @@ public class DemoTest extends JFrame{
 		
 		PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
 
-		Curve al = builder.createCurve(lp);
-		////Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+		//Curve al = builder.createCurve(lp);
+		Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
 		//b.userData(Hints.COORDINATE_DIMENSION, 3);
@@ -552,7 +552,8 @@ public class DemoTest extends JFrame{
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
-		b.add("loc", Curve.class);
+		b.add("loc", Point.class);
+		//b.add("loc", Curve.class);
 		SimpleFeatureType schema = b.buildFeatureType();
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);

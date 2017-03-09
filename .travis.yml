@@ -15,10 +15,9 @@ services:
 
 before_install:
   - docker pull hgryoo/geoserver-3d-extension-environment
-  - docker run hgryoo/geoserver-3d-extension-environment
+  - docker run -d hgryoo/geoserver-3d-extension-environment /bin/bash -c "mvn clean install"
   
 script:
-  - mvn clean install
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then

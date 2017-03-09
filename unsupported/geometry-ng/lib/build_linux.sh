@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH=$PATH:.
+export PATH=$PATH:../
 
 javac -cp javacpp.jar:../src/main/java/ ../src/main/java/org/geotools/geometry/iso/sfcgal/wrapper/PointerVector.java
 javac -cp javacpp.jar:../src/main/java/ ../src/main/java/org/geotools/geometry/iso/sfcgal/wrapper/SFCoordinate.java

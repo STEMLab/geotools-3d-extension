@@ -18,8 +18,11 @@
 package org.geotools.filter.spatial;
 
 import org.geotools.factory.Hints;
+import org.geotools.filter.IllegalFilterException;
+import org.geotools.geometry.iso.topograph2D.TopologyException;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.geotools.util.Util;
 import org.opengis.feature.simple.SimpleFeature;
@@ -31,9 +34,17 @@ import org.opengis.filter.spatial.BBOX3D;
 import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
 import com.vividsolutions.jts.geom.Coordinate;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.geom.LinearRing;
+//import com.vividsolutions.jts.geom.Polygon;
+//import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * 
@@ -133,6 +144,7 @@ public class ISOBBOX3DImpl implements BBOX3D {
 	}
 
 	public boolean evaluate(Object feature) {
+
 		Geometry other = Converters.convert(property.evaluate(feature), Geometry.class);
 		if (other == null)
 			return false;

@@ -27,9 +27,11 @@ import java.util.Map;
 
 import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.IllegalAttributeException;
+import org.geotools.feature.simple.SimpleFeatureImpl.Attribute;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.util.Converters;
 import org.geotools.util.Utilities;
 import org.opengis.feature.GeometryAttribute;

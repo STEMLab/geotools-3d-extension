@@ -1,3 +1,0 @@
-org.geotools.data.oracle.OracleNGDataStoreFactory
-org.geotools.data.oracle.OracleNGJNDIDataStoreFactory
-org.geotools.data.oracle.OracleNGOCIDataStoreFactory

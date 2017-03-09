@@ -25,7 +25,6 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
-import org.geotools.data.kairos.KairosNGDataStoreFactory;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
@@ -44,7 +43,6 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
-import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 //import org.geotools.gml2.GMLConfiguration_ISO;
@@ -63,9 +61,7 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
-import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
-import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
@@ -87,7 +83,7 @@ public class DemoTest extends JFrame{
 
 
 	private static ISOGeometryBuilder builder;
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
@@ -95,7 +91,7 @@ public class DemoTest extends JFrame{
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
-	}
+	}*/
 	public DemoTest() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -132,12 +128,6 @@ public class DemoTest extends JFrame{
 		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
-				System.out.println("Connection succeeded");
-			}
-		});
-		fileMenu.add(new SafeAction("Connect to Kairos database...") {
-			public void action(ActionEvent e) throws Throwable {
-				connect(new KairosNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
 		});
@@ -531,17 +521,19 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void pointToTable() {
-		String typeName = text.getText();
+		String typeName = "newFlag";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		//hints.put(Hints.GEOMETRY_VALIDATE, false);
 		//hints.put(Hints.COORDINATE_DIMENSION, 3);
 		//builder = new GeometryBuilder(hints);
 		//ArrayList<Solid> al = getSolids(builder);
+
 		
-		PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+		//PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
 
 		//Curve al = builder.createCurve(lp);
+
 		Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
@@ -553,7 +545,9 @@ public class DemoTest extends JFrame{
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
 		b.add("loc", Point.class);
+
 		//b.add("loc", Curve.class);
+
 		SimpleFeatureType schema = b.buildFeatureType();
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);
@@ -563,16 +557,16 @@ public class DemoTest extends JFrame{
 			//source = dataStore.getFeatureSource(typeName);
 			//DataStore dataStore1;
 			//JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
-			/*JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
 				if (dataStore == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
-				}*/
-				JDBCDataStore jds = (JDBCDataStore)dataStore;
-				jds.setDatabaseSchema(null);
+				}
+				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				//jds.setDatabaseSchema(null);
 				dataStore.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
 				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
@@ -599,7 +593,7 @@ public class DemoTest extends JFrame{
 
 				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 				table.setModel(model);*/
-			//}
+			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -749,15 +743,13 @@ public class DemoTest extends JFrame{
 		} 
 	}
 	private void boxToSolid() {
-		String typeName = "newFlag2";
+		String typeName = "newFlag";
 		SimpleFeatureSource source;
 		try {
-			JDBCDataStore jds = (JDBCDataStore)dataStore;
-			jds.setDatabaseSchema(null);
 			source = dataStore.getFeatureSource(typeName);
-   			//FeatureType schema = source.getSchema();
+   			FeatureType schema = source.getSchema();
 			//String name = schema.getGeometryDescriptor().getLocalName();
-   			
+		
 			Filter filter = CQL.toFilter(text.getText());
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 

@@ -24,9 +24,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.geotools.data.FeatureWriter;
-import org.geotools.data.store.iso.ContentEntry;
-import org.geotools.data.store.iso.ContentFeatureStore;
-import org.geotools.data.store.iso.ContentState;
+import org.geotools.data3d.store.ContentEntry;
+import org.geotools.data3d.store.ContentFeatureStore;
+import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.Hints;
 import org.geotools.filter.identity.FeatureIdImpl;
 import org.opengis.feature.simple.SimpleFeature;

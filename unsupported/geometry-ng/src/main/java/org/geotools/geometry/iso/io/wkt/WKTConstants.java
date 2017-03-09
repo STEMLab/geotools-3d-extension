@@ -31,8 +31,6 @@ public class WKTConstants {
 
 	public static String WKT_POINT = "POINT";
 
-	public static String WKT_LINESTRING = "LINESTRING";
-	
 	public static String WKT_CURVE = "CURVE";
 
 	public static String WKT_SURFACE = "SURFACE";

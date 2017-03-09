@@ -58,11 +58,6 @@
       <artifactId>gt-jdbc-postgis-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.geotools.jdbc</groupId>
-      <artifactId>gt-jdbc-kairos</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <!-- Provides GUI components -->
     <dependency>
         <groupId>org.geotools</groupId>

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.filter.FilterVisitor;
@@ -86,13 +85,15 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 	
 	@Override
 	protected boolean basicEvaluate(Geometry left, Geometry right) {
-	    ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
-	    ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
+		//Envelope envLeft = left.getEnvelopeInternal();
+		//Envelope envRight = right.getEnvelopeInternal();
+		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
+		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
-	    if(envLeft.contains((BoundingBox3D)envRight)) {
-	        return left.contains(right);
-	    }
-	    return false;
+		if(envLeft.contains((BoundingBox3D)envRight)) {
+			return true;
+		}
+        return false;
 	}
     
 	public Object accept(FilterVisitor visitor, Object extraData) {

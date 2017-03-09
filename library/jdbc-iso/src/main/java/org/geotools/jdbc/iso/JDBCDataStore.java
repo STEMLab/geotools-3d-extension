@@ -60,13 +60,12 @@ import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.jdbc.datasource.ManageableDataSource;
 import org.geotools.data.jdbc.fidmapper.FIDMapper;
 import org.geotools.data.jdbc.iso.FilterToSQL;
-import org.geotools.data.jdbc.iso.LoggableStatement;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.data.store.iso.ContentDataStore;
-import org.geotools.data.store.iso.ContentEntry;
-import org.geotools.data.store.iso.ContentFeatureSource;
-import org.geotools.data.store.iso.ContentState;
+import org.geotools.data3d.store.ContentEntry;
+import org.geotools.data3d.store.ContentFeatureSource;
+import org.geotools.data3d.store.ContentState;
+import org.geotools.data3d.store.ContentDataStore;
 import org.geotools.factory.Hints;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
@@ -132,6 +131,10 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
+
+//import com.vividsolutions.jts.geom.Envelope;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Point;
 
 
 /**
@@ -1748,11 +1751,7 @@ public final class JDBCDataStore extends ContentDataStore
             // ask the DB to return the values of all the keys after the insertion
             ps = cx.prepareStatement(sql, keysFetcher.getColumnNames());
         } else {
-        	/*///////////////////////////////////////////
-    			modify
-    		//////////////////////////////////////////*/
-            //ps = cx.prepareStatement(sql);
-            ps = new LoggableStatement(cx, sql);
+            ps = cx.prepareStatement(sql);
         }
         try {
             for (SimpleFeature feature : features) {
@@ -1789,10 +1788,7 @@ public final class JDBCDataStore extends ContentDataStore
                 }
 
                 keysFetcher.setKeyValues(dialect, ps, cx, featureType, feature, i);
-                /*///////////////////////////////////////////
-    			modify
-    			//////////////////////////////////////////*/
-                System.out.println(((LoggableStatement)ps).getQueryString());
+
                 dialect.onInsert(ps, cx, featureType);
                 ps.addBatch();
             }
@@ -2275,7 +2271,6 @@ public final class JDBCDataStore extends ContentDataStore
             nillable[i] = attributeType.getMinOccurs() <= 0 || attributeType.isNillable();
         }
         System.out.println(columnNames);
-        
         sqlTypeNames = getSQLTypeNames(classes, cx);
         for ( int i = 0; i < sqlTypeNames.length; i++ ) {
             if ( sqlTypeNames[i] == null ) {
@@ -3180,7 +3175,13 @@ public final class JDBCDataStore extends ContentDataStore
                     sqlTypeNames[i] = sqlTypeName;
                 }
             }
-            
+            else if(Solid.class.isAssignableFrom(clazz)) {
+            	String sqlTypeName = dialect.getGeometryTypeName(sqlType);
+
+                if (sqlTypeName != null) {
+                    sqlTypeNames[i] = sqlTypeName;
+                }
+            } 
             //check the overrides
             String sqlTypeName = getSqlTypeToSqlTypeNameOverrides().get( sqlType );
             if ( sqlTypeName != null ) {

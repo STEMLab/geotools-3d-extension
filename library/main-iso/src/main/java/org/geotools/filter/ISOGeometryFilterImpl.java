@@ -28,6 +28,9 @@ import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.geometry.Geometry;
 
+//import com.vividsolutions.jts.geom.Geometry;
+
+
 /**
  * Implements a geometry filter.
  * 

@@ -95,10 +95,4 @@ public abstract class JDBC3DTestSetup extends JDBCDelegatingTestSetup {
      * Drops the "point3D" table
      */
     protected abstract void dropPoint3DTable() throws Exception;
-
-
-	protected abstract void createSolidTable() throws Exception;
-
-
-	protected abstract void dropSolidTable() throws Exception;
 }

@@ -122,18 +122,11 @@ public class LineStringImpl extends CurveSegmentImpl implements LineString {
         LineStringImpl result;
 
         if (other.getEndPoint().equals(this.getStartPoint())) {
-        	if(this.getEndPoint().equals(other.getStartPoint())){
-        		LinkedList<Position> posToAdd = new LinkedList<Position>(getControlPoints());
-                posToAdd.removeLast();
-                posToAdd.addAll(other.getControlPoints());
-                result = new LineStringImpl( posToAdd );
-        	}
-        	else{
-        		LinkedList<Position> posToAdd = new LinkedList<Position>(other.getControlPoints());
-                posToAdd.removeLast();
-                posToAdd.addAll(getControlPoints());
-                result = new LineStringImpl( posToAdd );	
-        	}
+            LinkedList<Position> posToAdd = new LinkedList<Position>(other.getControlPoints());
+            posToAdd.removeLast();
+            posToAdd.addAll(getControlPoints());
+            result = new LineStringImpl( posToAdd );
+
         } else if (this.getEndPoint().equals(other.getStartPoint())) {
             LinkedList<Position> posToAdd = new LinkedList<Position>(getControlPoints());
             posToAdd.removeLast();

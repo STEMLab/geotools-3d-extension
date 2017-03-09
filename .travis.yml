@@ -25,6 +25,3 @@ after_success:
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push STEMLab/geotools-3d-extension;
     fi
-  
-jdk: 
-  - oraclejdk8

@@ -29,9 +29,9 @@
   <name>Geometries 3D</name>
   
   <properties>
-    <allow.test.skip>true</allow.test.skip>
-    <allow.test.failure.ignore>true</allow.test.failure.ignore>
-    <maven.test.skip>true</maven.test.skip>
+    <allow.test.skip>false</allow.test.skip>
+    <allow.test.failure.ignore>false</allow.test.failure.ignore>
+    <maven.test.skip>false</maven.test.skip>
   </properties>
 
   <description>

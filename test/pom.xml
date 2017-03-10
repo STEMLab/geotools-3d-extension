@@ -74,6 +74,11 @@
         <artifactId>gt-xsd-gml2-iso</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-oracle-iso</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
   
   <build>

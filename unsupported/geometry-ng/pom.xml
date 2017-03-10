@@ -159,7 +159,7 @@
             </execution>
         </executions>
         <configuration>
-            <executable>lib/build${script.extension}.sh</executable>
+            <executable>/lib/build${script.extension}.sh</executable>
         </configuration>
 	  </plugin>
     </plugins>

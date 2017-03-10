@@ -32,7 +32,9 @@ import org.geotools.data.DataUtilities;
 import org.geotools.data.Parameter;
 import org.geotools.data.jdbc.datasource.DBCPDataSource;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -267,16 +269,17 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
             SessionCommandsListener listener = new SessionCommandsListener(sqlOnBorrow, sqlOnRelease);
             dataStore.getConnectionLifecycleListeners().add(listener);
         }
+        
         /*Hints hints = GeoTools.getDefaultHints();
         hints.put( Hints.CRS, DefaultGeographicCRS.WGS84_3D );
         hints.put(Hints.GEOMETRY_FACTORY, value)*/
         ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 		
         // factories
-        dataStore.setFilterFactory(CommonFactoryFinder.getFilterFactory(null));
+        dataStore.setFilterFactory(new ISOFilterFactoryImpl());
         dataStore.setGeometryFactory(builder);
         dataStore.setFeatureTypeFactory(new FeatureTypeFactoryImpl());
-        dataStore.setFeatureFactory(CommonFactoryFinder.getFeatureFactory(null));
+        dataStore.setFeatureFactory(new ISOFeatureFactoryImpl());
         dataStore.setDataStoreFactory(this);
         
         //call subclass hook and return

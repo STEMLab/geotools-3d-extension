@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.geometry.iso.sfcgal.wrapper;
+package org.geotools.geometry.iso.sfcgal.util;
 
 import java.util.ArrayList;
 

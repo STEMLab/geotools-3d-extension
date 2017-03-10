@@ -100,7 +100,7 @@ public class GeometryToPostGISWKTString {
 	        return "Solid(" + solidBoundaryCoordToString((SolidBoundary) s.getBoundary()) + ")";
 	}*/
 	private String solidToString(Solid s) {
-        return "Solid(" + solidBoundaryToString((SolidBoundary) s.getBoundary()) + ")";
+        return "POLYHEDRALSURFACE(" + shellCoordToString((Shell)s.getBoundary().getExterior()) + ")";
 	}
 	
 	private String multiPrimitiveToString(MultiPrimitive mp) {

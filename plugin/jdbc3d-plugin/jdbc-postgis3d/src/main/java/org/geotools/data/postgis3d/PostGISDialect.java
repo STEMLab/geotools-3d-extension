@@ -65,6 +65,7 @@ import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -110,7 +111,7 @@ public class PostGISDialect extends BasicSQLDialect {
             put("LINESTRINGM", Curve.class);
             put("POLYGON", Surface.class);
             put("POLYGONM", Surface.class);
-            put("POLYHEDRALSURFACE", Shell.class);
+            put("POLYHEDRALSURFACE", Solid.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
             put("MULTILINESTRING", MultiCurve.class);
@@ -141,7 +142,7 @@ public class PostGISDialect extends BasicSQLDialect {
             add(MultiCurve.class);
             add(Surface.class);
             add(MultiSurface.class);
-            add(Shell.class);
+            add(Solid.class);
         }
     };
 
@@ -149,12 +150,10 @@ public class PostGISDialect extends BasicSQLDialect {
     final static Map<Class, String> CLASS_TO_TYPE_MAP = new HashMap<Class, String>() {
         {
             put(Geometry.class, "GEOMETRY");
-            put(Point.class, "POINT");
-            put(Curve.class, "CURVE");
-            
+            put(Point.class, "POINT");            
             put(Curve.class, "LINESTRING");
             put(Surface.class, "POLYGON");
-            put(Shell.class, "POLYHEDRALSURFACE");
+            put(Solid.class, "POLYHEDRALSURFACE");
             put(MultiPoint.class, "MULTIPOINT");
             put(MultiCurve.class, "MULTILINESTRING");
             put(MultiSurface.class, "MULTIPOLYGON");

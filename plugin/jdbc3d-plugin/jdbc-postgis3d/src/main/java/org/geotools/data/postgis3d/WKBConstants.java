@@ -50,6 +50,8 @@ interface WKBConstants {
     int wkbLineString = 2;
 
     int wkbPolygon = 3;
+    
+    int wkbPolyHedralSurface = 15;
 
     int wkbMultiPoint = 4;
 

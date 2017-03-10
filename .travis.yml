@@ -3,20 +3,24 @@ sudo: required
 cache:
   directories:
     - "$HOME/.m2"
-    - "/usr/local/"
     
 language: java
 
 notifications:
   email: false
   on_failure: never
+
+services:
+  - docker
+
+before_install:
+  - docker pull hgryoo/geoserver-3d-extension-environment
+  - docker run -d hgryoo/geoserver-3d-extension-environment /bin/bash -c "mvn clean install"
   
-before_script :
-  - chmod +x ./travis/${TRAVIS_OS_NAME}/before_install.sh
+script:
 
-script :
-  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
-  - mvn clean install
-
-jdk: 
-  - oraclejdk8
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push STEMLab/geotools-3d-extension;
+    fi

@@ -295,7 +295,7 @@ public class SurfaceTest extends TestCase {
 //    }
 	
 	
-    public void testFastSurfaceBuilder(){
+    /*public void testFastSurfaceBuilder(){
         double closed[] = new double[]{
                 0.0, 0.0,
                 0.0, 0.5,
@@ -318,7 +318,7 @@ public class SurfaceTest extends TestCase {
         Surface openSurface = builder.createSurface( openBoundary );
         
         assertEquals( "close array", openSurface, closedSurface );                
-    }
+    }*/
     public void testFastSurfaceFactory() throws Exception {
 
         
@@ -330,7 +330,7 @@ public class SurfaceTest extends TestCase {
                 0.0, 0.0}; 
         Surface closedSurface = createSurfaceFast(closed);
         
-        
+        /*        
         // this example is not closed and would fail
         // if we were not calling createSurfaceBoundary
         double open[] = new double[]{
@@ -342,7 +342,7 @@ public class SurfaceTest extends TestCase {
         SurfaceBoundary openBoundary = builder.createSurfaceBoundary( openPoints );
         Surface openSurface = builder.createSurface( openBoundary );
         
-        assertEquals( "close array", openSurface, closedSurface );
+        assertEquals( "close array", openSurface, closedSurface );*/
         
         Surface surface = transmit(closedSurface);
         assertEquals( closedSurface, surface );

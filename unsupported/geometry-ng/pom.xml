@@ -29,9 +29,9 @@
   <name>Geometries 3D</name>
   
   <properties>
-    <allow.test.skip>true</allow.test.skip>
-    <allow.test.failure.ignore>true</allow.test.failure.ignore>
-    <maven.test.skip>true</maven.test.skip>
+    <allow.test.skip>false</allow.test.skip>
+    <allow.test.failure.ignore>false</allow.test.failure.ignore>
+    <maven.test.skip>false</maven.test.skip>
   </properties>
 
   <description>
@@ -133,6 +133,35 @@
           <testFailureIgnore>${allow.test.failure.ignore}</testFailureIgnore>
         </configuration>
       </plugin>
+      
+      <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-dependency-plugin</artifactId>
+	    <version>2.3</version>
+	    <executions>
+	      <execution>
+	        <goals>
+	          <goal>copy-dependencies</goal>
+	        </goals>
+	      </execution>
+	    </executions>
+	  </plugin>
+	  <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>exec-maven-plugin</artifactId>
+	    <version>1.2.1</version>
+	    <executions>
+            <execution>
+                <phase>generate-sources</phase>
+                <goals>
+                    <goal>exec</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <executable>lib/build${script.extension}.sh</executable>
+        </configuration>
+	  </plugin>
     </plugins>
   </build>
 

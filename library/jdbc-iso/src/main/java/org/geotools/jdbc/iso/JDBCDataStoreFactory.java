@@ -284,7 +284,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
 		Hints hints = GeoTools.getDefaultHints();
 		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		hints.put(Hints.GEOMETRY_VALIDATE, (Object) false);
-		ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		ISOGeometryBuilder builder = new ISOGeometryBuilder(hints);
 
 		// factories
         dataStore.setFilterFactory(new ISOFilterFactoryImpl());

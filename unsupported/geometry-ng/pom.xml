@@ -134,7 +134,7 @@
         </configuration>
       </plugin>
       
-      <plugin>
+      <!-- <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-dependency-plugin</artifactId>
 	    <version>2.3</version>
@@ -159,9 +159,9 @@
             </execution>
         </executions>
         <configuration>
-            <executable>lib/build${script.extension}.sh</executable>
+            <executable>/lib/build${script.extension}.sh</executable>
         </configuration>
-	  </plugin>
+	  </plugin> -->
     </plugins>
   </build>
 

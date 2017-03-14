@@ -392,7 +392,8 @@ public class WKTReader {
 
 		if (type.equalsIgnoreCase(WKTConstants.WKT_POINT)) {
 			return readPointText();
-		} else if (type.equalsIgnoreCase(WKTConstants.WKT_CURVE)) {
+		} else if (type.equalsIgnoreCase(WKTConstants.WKT_CURVE) || 
+				type.equalsIgnoreCase(WKTConstants.WKT_LINESTRING) ) {
 			return readLineStringText();
 		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_SURFACE) ||
 				type.equalsIgnoreCase(WKTConstants.WKT_POLYGON) ) {

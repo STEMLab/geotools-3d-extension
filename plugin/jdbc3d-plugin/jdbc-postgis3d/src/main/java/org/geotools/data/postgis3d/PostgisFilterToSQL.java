@@ -31,6 +31,7 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Solid;
 
 //import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -74,15 +75,18 @@ public class PostgisFilterToSQL extends FilterToSQL {
             //postgis does not handle linear rings, convert to just a line string
             geom = geom.getFactory().createLineString(((LinearRing) geom).getCoordinateSequence());
         }*/
-        GeometryToWKTString writer = new GeometryToWKTString(false);
+        GeometryToPostGISWKTString writer = new GeometryToPostGISWKTString(false);
         Object typename = currentGeometry.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME);
         if("geography".equals(typename)) {
             out.write("ST_GeogFromText('");
             out.write(writer.getString(geom));//geom.toText());
             out.write("')");
         } else {
-            out.write("ST_GeomFromText('");
-            out.write(writer.getString(geom));//geom.toText());
+        	if(geom instanceof Solid) {
+        		out.write("ST_makeSolid(");
+        	}
+    		out.write("ST_GeomFromText('");
+    		out.write(writer.getString(geom));//geom.toText());
             if(geom.getCoordinateReferenceSystem() == null && currentGeometry  != null) {
                 // if we don't know at all, use the srid of the geometry we're comparing against
                 // (much slower since that has to be extracted record by record as opposed to 
@@ -91,6 +95,11 @@ public class PostgisFilterToSQL extends FilterToSQL {
             } else {
                 out.write("', " + currentSRID + ")");
             }
+        	
+        	if(geom instanceof Solid) {
+        		out.write(")");
+        	}
+            
         }
     }
 

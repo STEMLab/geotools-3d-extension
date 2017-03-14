@@ -149,11 +149,6 @@ public class DemoTest extends JFrame{
 				boxToSolid();
 			}
 		});
-		fileMenu.add(new SafeAction("memorycollection...") {
-			public void action(ActionEvent e) throws Throwable {
-				memorycollection();
-			}
-		});
 		/*fileMenu.add(new SafeAction("gmlToGeometry...") {
 			public void action(ActionEvent e) throws Throwable {
 				gmlToGeometry();
@@ -611,65 +606,6 @@ public class DemoTest extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	private void memorycollection() {
-		hints = GeoTools.getDefaultHints();
-		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		hints.put(Hints.GEOMETRY_VALIDATE, false);
-		
-		builder = new ISOGeometryBuilder(hints);
-		ArrayList<Solid> al = getSolids(builder);
-		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-
-		//set the name
-		b.setName( "Flag" );
-		//add some properties
-		//add a geometry property
-		//b.setCRS( DefaultGeographicCRS.WSG84 );
-		b.add( "location", Solid.class );
-
-		//build the type
-		SimpleFeatureType schema = b.buildFeatureType();
-		//create the builder
-		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
-
-		//add the values
-		builder.add( al.get(0) );
-
-		//build the feature with provided ID
-		SimpleFeature feature = builder.buildFeature( "fid.1" );
-
-		MemoryDataStore data = new MemoryDataStore();
-		//DataStore data = new DataStore();
-		data.addFeature(feature);
-		/**
-		 * Filter f = CQL.toFilter(&quot;ATTR1 &lt; 10 AND ATTR2 &lt; 2 OR ATTR3 &gt; 10&quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME = 'New York' &quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME LIKE 'New%' &quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME IS NULL&quot;);
-		 * Filter f = CQL.toFilter(&quot;DATE BEFORE 2006-11-30T01:30:00Z&quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME DOES-NOT-EXIST&quot;);
-		 * Filter f = CQL.toFilter(&quot;QUANTITY BETWEEN 10 AND 20&quot;);
-		 * Filter f = CQL.toFilter(&quot;CROSSES(SHAPE, LINESTRING(1 2, 10 15))&quot;);
-		 * Filter f = CQL.toFilter(&quot;BBOX(SHAPE, 10,20,30,40)&quot;);
-		 * Filter filter = ECQL.toFilter("area( SHAPE ) BETWEEN 10000 AND 30000");
-		 * List filters = CQL.toFilterList(&quot;NAME IS NULL;BBOX(SHAPE, 10,20,30,40);INCLUDE&quot;);
-		 */
-		try {
-			Filter filter = ECQL.toFilter("area( SHAPE ) BETWEEN 6 AND 9");
-			String name = schema.getGeometryDescriptor().getLocalName();
-			Query query = new Query("fid.1", filter, new String[] { name });
-			ContentFeatureSource source = data.getFeatureSource("Flag");
-
-			SimpleFeatureCollection features = source.getFeatures(query);
-
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
-			table.setModel(model);
-		} catch (IOException | CQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-
-	}
 	/*private void gmlToGeometry() {
 		/*GMLConfiguration configuration = new GMLConfiguration();
 		InputStream input = getClass().getResourceAsStream("geometry.xml");
@@ -722,22 +658,30 @@ public class DemoTest extends JFrame{
 		}
 	}*/
 	private void constainsfilter() {
-		String typeName = "Flag";
+		String typeName = (String) featureTypeCBox.getSelectedItem();;
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
    			FeatureType schema = source.getSchema();
 			//String name = schema.getGeometryDescriptor().getLocalName();
-		
+   			PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+   			for(int i = 2;i < 3;i++) {
+   				lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
+   			}
+   			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+   			Curve al = builder.createCurve(lp);
+   			SurfaceBoundary s = builder.createSurfaceBoundary(al);
+   			Surface sf = builder.createSurface(s);
 			//Filter filter = CQL.toFilter(text.getText());
    			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
-   			ArrayList<Solid> al = getSolids(builder);
-   		    Filter filter = ff.within("geom", (Geometry)al.get(0));
-			Query query = new Query(typeName, filter, new String[] { "geom" });
+   			//ArrayList<Solid> al = getSolids(builder);
+   		    //Filter filter = ff.contains("loc", (Geometry)al.get(0));
+   			Filter filter = ff.contains("loc", (Geometry)sf);
+			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 
@@ -789,7 +733,6 @@ public class DemoTest extends JFrame{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 	private void insertTable() {

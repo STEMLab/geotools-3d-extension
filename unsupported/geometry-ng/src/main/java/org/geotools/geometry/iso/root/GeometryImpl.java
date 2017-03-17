@@ -497,7 +497,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		// Ring: the average of the weighted line segments of the contained curves
 		if (this instanceof CurveImpl ||
 			this instanceof MultiCurveImpl ||
-			this instanceof RingImpl) {
+			this instanceof RingImplUnsafe) {
 			CentroidLine cl = new CentroidLine(this.crs);
 			cl.add(this);
 			return cl.getCentroid();

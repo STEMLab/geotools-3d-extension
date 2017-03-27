@@ -50,7 +50,7 @@ import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
-import org.geotools.data.oracle.OracleNGDataStoreFactory;
+//import org.geotools.data.oracle.OracleNGDataStoreFactory;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -198,7 +198,7 @@ public class TTADemoTest extends JFrame{
 		
 		fileMenu.add(new SafeAction("Connect to Oracle database...") {
                 public void action(ActionEvent e) throws Throwable {
-                        connect(new OracleNGDataStoreFactory());
+                       // connect(new OracleNGDataStoreFactory());
                         System.out.println("Connection succeeded");
                 }
                 });

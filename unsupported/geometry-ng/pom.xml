@@ -33,8 +33,8 @@
     <allow.test.failure.ignore>false</allow.test.failure.ignore>
     <maven.test.skip>false</maven.test.skip>
     
-    <javacpp.cppbuild.skip>true</javacpp.cppbuild.skip> <!-- To skip execution of cppbuild.sh: -Djavacpp.cppbuild.skip=true -->
-  	<javacpp.parser.skip>true</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
+    <javacpp.cppbuild.skip>false</javacpp.cppbuild.skip> <!-- To skip execution of cppbuild.sh: -Djavacpp.cppbuild.skip=true -->
+  	<javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
   	<javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
     
   </properties>
@@ -178,58 +178,88 @@
         </plugin>
         -->
        
-       <!-- JavaCPP plugin -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>properties</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-       
-       <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-dependency-plugin</artifactId>
-           <version>2.3</version>
-           <executions>
-               <execution>
-                   <goals>
-                       <goal>properties</goal>
-                   </goals>
-               </execution>
-           </executions>
-       </plugin>
-       
-       <plugin>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <configuration>
-                <classPath>${project.build.outputDirectory}</classPath>
-                <includePaths>
-                    <includePath>${project.build.sourceDirectory}</includePath>
-                </includePaths>
-                <copyLibs>true</copyLibs>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>process-classes</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>build</goal>
-                    </goals>
-                    <configuration>
-                        <classOrPackageNames>
-                            <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.*</classOrPackageName>
-                        </classOrPackageNames>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+		<plugin>
+		  <groupId>org.bytedeco</groupId>
+		  <artifactId>javacpp</artifactId>
+		  <configuration>
+		    <properties>${javacpp.platform}</properties>
+		    <propertyKeysAndValues>
+		      <property>
+		        <name>platform.root</name>
+		        <value>${javacpp.platform.root}</value>
+		      </property>
+		      <property>
+		        <name>platform.compiler</name>
+		        <value>${javacpp.platform.compiler}</value>
+		      </property>
+		    </propertyKeysAndValues>
+		    <classPath>${project.build.outputDirectory}</classPath>
+		    <includePath>${basedir}/cppbuild/${javacpp.platform}/include/</includePath>
+		    <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
+		    <preloadPath>${basedir}/cppbuild/${javacpp.platform}/bin/</preloadPath>
+		  </configuration>
+		  <executions>
+		    <execution>
+		      <id>javacpp.parser</id>
+		      <phase>generate-sources</phase>
+		      <goals>
+		        <goal>build</goal>
+		      </goals>
+		      <configuration>
+		        <skip>${javacpp.parser.skip}</skip>
+		        <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+		        <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.cpp.*</classOrPackageName>
+		      </configuration>
+		    </execution>
+		    <execution>
+		      <id>javacpp.compiler</id>
+		      <phase>process-classes</phase>
+		      <goals>
+		        <goal>build</goal>
+		      </goals>
+		      <configuration>
+		        <skip>${javacpp.compiler.skip}</skip>
+		        <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.*</classOrPackageName>
+		        <copyLibs>true</copyLibs>
+		      </configuration>
+		    </execution>
+		  </executions>
+		</plugin>
+		
+		  <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-dependency-plugin</artifactId>
+		    <version>2.3</version>
+		    <executions>
+		      <execution>
+		        <goals>
+		          <goal>properties</goal>
+		        </goals>
+		      </execution>
+		    </executions>
+		  </plugin>
+		  <plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>exec-maven-plugin</artifactId>
+		    <version>1.2.1</version>
+		    <!-- <executions>
+			    <execution>
+			      <id>javacpp</id>
+			      <phase>process-classes</phase>
+			      <goals>
+			        <goal>exec</goal>
+			      </goals>
+			      <configuration>
+			        <executable>java</executable>
+			        <arguments>
+			          <argument>-jar</argument>       <argument>${org.bytedeco.javacpp:javacpp:jar}</argument>
+			          <argument>-classpath</argument> <argument>${project.build.outputDirectory}</argument>
+			          <argument>-d</argument>         <argument>${project.build.outputDirectory}/lib/</argument>
+			        </arguments>
+			      </configuration>
+			    </execution>
+			  </executions> -->
+		  </plugin>
 		        
         
       <plugin>
@@ -243,6 +273,32 @@
           <testFailureIgnore>${allow.test.failure.ignore}</testFailureIgnore>
         </configuration>
       </plugin>
+      
+      <!-- <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+                <execution>
+                    <id>copy-resources01</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/classes</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/src</directory>
+                                <includes>
+                                    <include>**/*.properties</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin> -->
       
       <!-- <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>

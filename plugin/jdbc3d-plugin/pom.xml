@@ -84,7 +84,5 @@
 
   <modules> 
     <module>jdbc-postgis3d</module>
-    
-    
   </modules>
 </project>

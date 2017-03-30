@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- =======================================================================    
-        Maven Project Configuration File                                        
-                                                                                
-        The Geotools Project                                                    
-            http://www.geotools.org/                                            
-                                                                                
-        Version: $Id$              
+<!-- =======================================================================
+        Maven Project Configuration File
+
+        The Geotools Project
+            http://www.geotools.org/
+
+        Version: $Id$
      ======================================================================= -->
-  <project xmlns="http://maven.apache.org/POM/4.0.0" 
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                                http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -27,16 +27,16 @@
   <artifactId>gt-geometry-ng</artifactId>
   <packaging>jar</packaging>
   <name>Geometries 3D</name>
-  
+
   <properties>
     <allow.test.skip>false</allow.test.skip>
     <allow.test.failure.ignore>false</allow.test.failure.ignore>
     <maven.test.skip>false</maven.test.skip>
-    
+
     <javacpp.cppbuild.skip>true</javacpp.cppbuild.skip> <!-- To skip execution of cppbuild.sh: -Djavacpp.cppbuild.skip=true -->
   	<javacpp.parser.skip>true</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
   	<javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
-    
+
   </properties>
 
   <description>
@@ -77,7 +77,7 @@
       </roles>
     </developer>
   </developers>
-  
+
   <profiles>
   	<profile>
   		<id>windows</id>
@@ -107,7 +107,7 @@
   <!--     Dependency Management                                   -->
   <!-- =========================================================== -->
   <dependencies>
-  
+
   	<dependency>
       <groupId>net.java.dev.jsr-275</groupId>
       <artifactId>jsr-275</artifactId>
@@ -115,12 +115,12 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
-      <version>${project.version}</version>  
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-opengis</artifactId>
-      <version>${project.version}</version>  
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
@@ -144,7 +144,7 @@
 	    <artifactId>picocontainer</artifactId>
 	    <version>3</version>
 	    <scope>test</scope>
-	</dependency>       
+	</dependency>
 	<dependency>
 	    <groupId>org.bytedeco</groupId>
 	    <artifactId>javacpp</artifactId>
@@ -159,7 +159,7 @@
   <!-- ======================================================= -->
   <build>
     <plugins>
-      <!-- 
+      <!--
       <plugin>
       	<artifactId>exec-maven-plugin</artifactId>
 	      <groupId>org.codehaus.mojo</groupId>
@@ -171,13 +171,13 @@
 	              <goal>exec</goal>
 	            </goals>
 	            <configuration>
-	              <executable>${basedir}/lib/build${script.extension}</executable>	              
+	              <executable>${basedir}/lib/build${script.extension}</executable>
 	            </configuration>
 	          </execution>
 	      </executions>
         </plugin>
         -->
-       
+
        <!-- JavaCPP plugin -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -191,7 +191,7 @@
                 </execution>
             </executions>
         </plugin>
-       
+
        <plugin>
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-dependency-plugin</artifactId>
@@ -204,7 +204,7 @@
                </execution>
            </executions>
        </plugin>
-       
+
        <plugin>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacpp</artifactId>
@@ -230,8 +230,8 @@
                 </execution>
             </executions>
         </plugin>
-		        
-        
+
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -243,7 +243,7 @@
           <testFailureIgnore>${allow.test.failure.ignore}</testFailureIgnore>
         </configuration>
       </plugin>
-      
+
       <!-- <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-dependency-plugin</artifactId>

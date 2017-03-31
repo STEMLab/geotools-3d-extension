@@ -13,5 +13,4 @@ notifications:
 before_install:
 	sudo apt-get -qq update
 	sudo apt-get install -y libboost-dev libgmp3-dev libmpfr-dev libcgal-dev libsfcgal-dev
-  
-script:
+

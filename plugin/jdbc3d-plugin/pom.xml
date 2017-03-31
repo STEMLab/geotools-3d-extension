@@ -85,7 +85,11 @@
   <modules> 
     <module>jdbc-postgis3d</module>
     
+<<<<<<< HEAD
     <module>jdbc-oracle3d</module>
     <module>jdbc-kairos</module>
+=======
+    
+>>>>>>> 9b1b6dc3af7346fdcfd086834b620aebfbd19d5f
   </modules>
 </project>

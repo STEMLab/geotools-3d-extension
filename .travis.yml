@@ -3,7 +3,7 @@ sudo: required
 cache:
   directories:
     - "$HOME/.m2"
-    
+
 language: java
 
 notifications:
@@ -11,6 +11,5 @@ notifications:
   on_failure: never
 
 before_install:
-  sudo apt-get -qq update
-  sudo apt-get install -y libboost-dev libgmp3-dev libmpfr-dev libcgal-dev libsfcgal-dev
-
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libboost-dev libgmp3-dev libmpfr-dev libcgal-dev libsfcgal-dev

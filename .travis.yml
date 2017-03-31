@@ -10,17 +10,8 @@ notifications:
   email: false
   on_failure: never
 
-services:
-  - docker
-
 before_install:
-  - docker pull hgryoo/geoserver-3d-extension-environment
-  - docker run -d hgryoo/geoserver-3d-extension-environment /bin/bash -c "mvn clean install"
+	sudo apt-get -qq update
+	sudo apt-get install -y libboost-dev libgmp3-dev libmpfr-dev libcgal-dev libsfcgal-dev
   
 script:
-
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push STEMLab/geotools-3d-extension;
-    fi

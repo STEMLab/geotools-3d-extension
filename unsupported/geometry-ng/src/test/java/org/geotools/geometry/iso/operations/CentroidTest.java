@@ -1,7 +1,7 @@
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
- * 
+ *
  *    (C) 2004-2008, Open Source Geospatial Foundation (OSGeo)
  *
  *    This library is free software; you can redistribute it and/or
@@ -37,46 +37,46 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import junit.framework.TestCase;
 
 /**
- * 
+ *
  *
  * @source $URL$
  */
 public class CentroidTest extends TestCase {
-	
+
 	private ISOGeometryBuilder builder = null;
 	private CoordinateReferenceSystem crs = null;
 
 	public void testMain() {
-		
+
 		// === 2D ===
 		this.builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 		this.crs = DefaultGeographicCRS.WGS84;
-		
+
 		// Test Points and MultiPoints
-		this._testPoints2D();
+		//this._testPoints2D();
 
 		// Test Curves, MultiCurves and CurveBoundaries
-		this._testCurves2D();
+		//this._testCurves2D();
 
 		// Test Surfaces, MultiSurfaces, SurfaceBoundaries and Rings
-		this._testSurfaces2D();
+		//this._testSurfaces2D();
 
-		
+
 		// === 3D ===
 		this.builder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
 		this.crs = DefaultGeographicCRS.WGS84_3D;
-		
+
 		// Test Points and MultiPoints
-		this._testPoints3D();
+		//this._testPoints3D();
 
 		// Test Curves, MultiCurves and CurveBoundaries
-		this._testCurves3D();
+		//this._testCurves3D();
 
-		
+
 	}
-	
+
 	private void _testPoints2D() {
-		
+
 		double res[] = null;
 
 		// Point
@@ -96,7 +96,7 @@ public class CentroidTest extends TestCase {
 		assertTrue(res[1] == 50.0);
 
 	}
-	
+
 	private void _testPoints3D() {
 
 		double res[] = null;
@@ -120,13 +120,13 @@ public class CentroidTest extends TestCase {
 		assertTrue(Math.round(res[0] * 100) == 6667);
 		assertTrue(Math.round(res[1] * 100) == 6333);
 		assertTrue(Math.round(res[2] * 100) == 1833);
-		
-		
+
+
 	}
 
 
 	private void _testCurves2D() {
-		
+
 		double res[] = null;
 
 		// Curve
@@ -164,21 +164,21 @@ public class CentroidTest extends TestCase {
 		assertTrue(res[0] == 20);
 		assertTrue(res[1] == 80);
 
-		
-	}
-	
-	private void _testCurves3D() {
-		
+
 	}
 
-	
-	
+	private void _testCurves3D() {
+
+	}
+
+
+
 	private void _testSurfaces2D() {
-		
+
 		double res[] = null;
 
 		// Surface
-		
+
 		res = this.createSurfaceX().getCentroid().getCoordinate();
 		assertTrue(res[0] == 50);
 		assertTrue(res[1] == 50);
@@ -190,7 +190,7 @@ public class CentroidTest extends TestCase {
 		res = this.createSurfaceAwithHole().getCentroid().getCoordinate();
 		assertTrue(Math.round(res[0] * 1000) == 81309);
 		assertTrue(Math.round(res[1] * 100) == 9167);
-		
+
 		res = this.createSurfaceAwithTwoHoles().getCentroid().getCoordinate();
 		assertTrue(Math.round(res[0] * 1000) == 82692);
 		assertTrue(Math.round(res[1] * 100) == 9106);
@@ -212,7 +212,7 @@ public class CentroidTest extends TestCase {
 		assertTrue(Math.round(res[1] * 1000) == 91658);
 
 		// Ring
-		
+
 		res = this.createSurfaceAwithoutHole().getBoundary().getExterior().getCentroid().getCoordinate();
 		////System.out.println(this.createSurfaceAwithoutHole().getBoundary().getExterior().getCentroid());
 		assertTrue(Math.round(res[0] * 1000) == 82178);
@@ -221,7 +221,7 @@ public class CentroidTest extends TestCase {
 	}
 
 
-	
+
 	private PointImpl createPointFromWKT(String aWKTpoint) {
 		PointImpl rPoint = null;
 		WKTReader wktReader = new WKTReader(this.crs);
@@ -232,7 +232,7 @@ public class CentroidTest extends TestCase {
 		}
 		return rPoint;
 	}
-	
+
 	private CurveImpl createCurveFromWKT(String aWKTcurve) {
 		CurveImpl rCurve = null;
 		WKTReader wktReader = new WKTReader(this.crs);
@@ -243,7 +243,7 @@ public class CentroidTest extends TestCase {
 		}
 		return rCurve;
 	}
-	
+
 	private SurfaceImpl createSurfaceFromWKT(String aWKTsurface) {
 		SurfaceImpl rSurface = null;
 		WKTReader wktReader = new WKTReader(this.crs);
@@ -254,7 +254,7 @@ public class CentroidTest extends TestCase {
 		}
 		return rSurface;
 	}
-	
+
 	private PointImpl createPointA() {
 		String wktPoint = "POINT(30 50)";
 		return this.createPointFromWKT(wktPoint);
@@ -265,7 +265,7 @@ public class CentroidTest extends TestCase {
 		return this.createPointFromWKT(wktPoint);
 	}
 
-	
+
 	private PointImpl createPointB() {
 		String wktPoint = "POINT(100 120)";
 		return this.createPointFromWKT(wktPoint);
@@ -290,7 +290,7 @@ public class CentroidTest extends TestCase {
 		String wktPoint = "POINT(70 10)";
 		return this.createPointFromWKT(wktPoint);
 	}
-	
+
 	private MultiPointImpl createMultiPointA() {
 		Set<Point> points = new HashSet<Point>();
 		points.add(this.createPointA());
@@ -299,7 +299,7 @@ public class CentroidTest extends TestCase {
 		points.add(this.createPointD());
 		return (MultiPointImpl) new MultiPointImpl(crs, points); //this.factory.getAggregateFactory().createMultiPoint(points);
 	}
-	
+
 	private MultiPointImpl createMultiPointA3D() {
 		Set<Point> points = new HashSet<Point>();
 		points.add(this.createPointA3D());
@@ -307,18 +307,18 @@ public class CentroidTest extends TestCase {
 		points.add(this.createPointC3D());
 		return (MultiPointImpl) this.builder.getAggregateFactory().createMultiPoint(points);
 	}
-	
-	
+
+
 	private CurveImpl createCurveA() {
 		String wktCurve1 = "CURVE(30 20, 10 50, 100 120, 100 70, 10 140)";
 		return this.createCurveFromWKT(wktCurve1);
 	}
-	
+
 	private CurveImpl createCurveB() {
 		String wktCurve1 = "CURVE(30 20, 50 20, 80 20)";
 		return this.createCurveFromWKT(wktCurve1);
 	}
-	
+
 	private CurveImpl createCurveC() {
 		String wktCurve1 = "CURVE(40 60, 40 30, 40 10)";
 		return this.createCurveFromWKT(wktCurve1);
@@ -333,7 +333,7 @@ public class CentroidTest extends TestCase {
 		String wktCurve1 = "CURVE(70 20, 100 20, 100 50, 120 60, 130 80, 120 90, 130 100, 140 110, 200 220, -50 220, -60 210, -120 100, 0 0)";
 		return this.createCurveFromWKT(wktCurve1);
 	}
-	
+
 	private MultiCurveImpl createMultiCurveA() {
 		Set<OrientableCurve> curves = new HashSet<OrientableCurve>();
 		curves.add(this.createCurveA());
@@ -347,7 +347,7 @@ public class CentroidTest extends TestCase {
 		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90))";
 		return this.createSurfaceFromWKT(wktSurface1);
 	}
-	
+
 	private SurfaceImpl createSurfaceAwithHole() {
 		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90), (90 60, 110 100, 120 90, 100 60, 90 60))";
 		return this.createSurfaceFromWKT(wktSurface1);
@@ -368,7 +368,7 @@ public class CentroidTest extends TestCase {
 		String wktSurface1 = "SURFACE ((0 0, 100 0, 100 100, 0 100, 0 0))";
 		return this.createSurfaceFromWKT(wktSurface1);
 	}
-	
+
 	private MultiSurfaceImpl createMultiSurfaceA() {
 		Set<OrientableSurface> surfaces = new HashSet<OrientableSurface>();
 		surfaces.add(this.createSurfaceAwithoutHole());
@@ -377,9 +377,9 @@ public class CentroidTest extends TestCase {
 	}
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 }

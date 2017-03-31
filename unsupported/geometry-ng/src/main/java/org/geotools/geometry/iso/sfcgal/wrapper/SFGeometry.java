@@ -28,7 +28,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFGeometry.h")
+@Platform(include = "cpp/SFGeometry.h", link = "SFCGAL")
 public class SFGeometry extends Pointer {
         static {
                 Loader.load();
@@ -151,5 +151,5 @@ public class SFGeometry extends Pointer {
          */
         @Name("operator==")
         public native @Cast("bool") boolean equals(@ByRef SFGeometry other);
-        
+
 }

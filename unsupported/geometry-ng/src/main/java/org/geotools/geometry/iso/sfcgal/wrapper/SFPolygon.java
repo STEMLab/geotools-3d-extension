@@ -30,7 +30,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFPolygon.h")
+@Platform(include = "cpp/SFPolygon.h", link = "SFCGAL")
 public class SFPolygon extends SFSurface {
         static {
                 Loader.load();

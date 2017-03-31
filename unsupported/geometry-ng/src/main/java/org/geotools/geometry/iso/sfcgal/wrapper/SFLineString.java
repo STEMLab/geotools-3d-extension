@@ -30,7 +30,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFLineString.h")
+@Platform(include = "cpp/SFLineString.h", link = "SFCGAL")
 public class SFLineString extends SFGeometry {
         static {
                 Loader.load();

@@ -26,7 +26,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFCAPI.h")
+@Platform(include = "cpp/SFCAPI.h", link = "SFCGAL")
 public class SFCAPI {
         static {
                 Loader.load();

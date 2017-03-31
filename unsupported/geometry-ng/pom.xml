@@ -36,7 +36,6 @@
     <javacpp.cppbuild.skip>false</javacpp.cppbuild.skip> <!-- To skip execution of cppbuild.sh: -Djavacpp.cppbuild.skip=true -->
   	<javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
   	<javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
-
   </properties>
 
   <description>
@@ -50,7 +49,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
 
   <!-- =========================================================== -->
   <!--     Developers and Contributors                             -->
@@ -159,82 +157,6 @@
   <!-- ======================================================= -->
   <build>
     <plugins>
-      <!--
-      <plugin>
-      	<artifactId>exec-maven-plugin</artifactId>
-	      <groupId>org.codehaus.mojo</groupId>
-	      <executions>
-	        <execution>
-	            <id>Generating dll/so files</id>
-	            <phase>generate-test-sources</phase>
-	            <goals>
-	              <goal>exec</goal>
-	            </goals>
-	            <configuration>
-	              <executable>${basedir}/lib/build${script.extension}</executable>
-	            </configuration>
-	          </execution>
-	      </executions>
-        </plugin>
-        -->
-<<<<<<< HEAD
-
-       <!-- JavaCPP plugin -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>properties</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-
-       <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-dependency-plugin</artifactId>
-           <version>2.3</version>
-           <executions>
-               <execution>
-                   <goals>
-                       <goal>properties</goal>
-                   </goals>
-               </execution>
-           </executions>
-       </plugin>
-
-       <plugin>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <configuration>
-                <classPath>${project.build.outputDirectory}</classPath>
-                <includePaths>
-                    <includePath>${project.build.sourceDirectory}</includePath>
-                </includePaths>
-                <copyLibs>true</copyLibs>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>process-classes</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>build</goal>
-                    </goals>
-                    <configuration>
-                        <classOrPackageNames>
-                            <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.*</classOrPackageName>
-                        </classOrPackageNames>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-
-
-=======
-
 		<plugin>
 		  <groupId>org.bytedeco</groupId>
 		  <artifactId>javacpp</artifactId>
@@ -251,9 +173,16 @@
 		      </property>
 		    </propertyKeysAndValues>
 		    <classPath>${project.build.outputDirectory}</classPath>
-		    <includePath>${basedir}/cppbuild/${javacpp.platform}/include/</includePath>
-		    <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
+        <includePath>${basedir}/cppbuild/include/</includePath>
+        <!--
+        <includePaths>
+            <includePath>${project.build.sourceDirectory}/org/geotools/geometry/iso/sfcgal/wrapper/</includePath>
+            <includePath>${basedir}/cppbuild/include/</includePath>
+		        <includePath>${basedir}/cppbuild/${javacpp.platform}/include/</includePath>
+        </includePaths>
+        <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
 		    <preloadPath>${basedir}/cppbuild/${javacpp.platform}/bin/</preloadPath>
+      -->
 		  </configuration>
 		  <executions>
 		    <execution>
@@ -264,8 +193,8 @@
 		      </goals>
 		      <configuration>
 		        <skip>${javacpp.parser.skip}</skip>
-		        <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
-		        <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.cpp.*</classOrPackageName>
+		        <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+		        <classOrPackageName>org.geotools.geometry.iso.sfcgal.wrapper.*</classOrPackageName>
 		      </configuration>
 		    </execution>
 		    <execution>
@@ -295,100 +224,16 @@
 		      </execution>
 		    </executions>
 		  </plugin>
-		  <plugin>
-		    <groupId>org.codehaus.mojo</groupId>
-		    <artifactId>exec-maven-plugin</artifactId>
-		    <version>1.2.1</version>
-		    <!-- <executions>
-			    <execution>
-			      <id>javacpp</id>
-			      <phase>process-classes</phase>
-			      <goals>
-			        <goal>exec</goal>
-			      </goals>
-			      <configuration>
-			        <executable>java</executable>
-			        <arguments>
-			          <argument>-jar</argument>       <argument>${org.bytedeco.javacpp:javacpp:jar}</argument>
-			          <argument>-classpath</argument> <argument>${project.build.outputDirectory}</argument>
-			          <argument>-d</argument>         <argument>${project.build.outputDirectory}/lib/</argument>
-			        </arguments>
-			      </configuration>
-			    </execution>
-			  </executions> -->
-		  </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+      </plugin>
 
-
->>>>>>> 8cf6677ea0a1d9baffa967880d770c961fa0aab0
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <!-- <skipTests>true</skipTests> -->
-          <excludes>
-            <exclude>**/RunStoredTest.java</exclude>
-          </excludes>
-          <testFailureIgnore>${allow.test.failure.ignore}</testFailureIgnore>
-        </configuration>
       </plugin>
-
-      <!-- <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>2.6</version>
-            <executions>
-                <execution>
-                    <id>copy-resources01</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/classes</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/src</directory>
-                                <includes>
-                                    <include>**/*.properties</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin> -->
-
-      <!-- <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-dependency-plugin</artifactId>
-	    <version>2.3</version>
-	    <executions>
-	      <execution>
-	        <goals>
-	          <goal>copy-dependencies</goal>
-	        </goals>
-	      </execution>
-	    </executions>
-	  </plugin>
-	  <plugin>
-	    <groupId>org.codehaus.mojo</groupId>
-	    <artifactId>exec-maven-plugin</artifactId>
-	    <version>1.2.1</version>
-	    <executions>
-            <execution>
-                <phase>generate-sources</phase>
-                <goals>
-                    <goal>exec</goal>
-                </goals>
-            </execution>
-        </executions>
-        <configuration>
-            <executable>/lib/build${script.extension}.sh</executable>
-        </configuration>
-	  </plugin> -->
     </plugins>
   </build>
-
-
-
 </project>

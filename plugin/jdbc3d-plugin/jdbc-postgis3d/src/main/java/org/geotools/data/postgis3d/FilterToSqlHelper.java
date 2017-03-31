@@ -287,26 +287,39 @@ class FilterToSqlHelper {
     void visitBinarySpatialOperator(BinarySpatialOperator filter, Expression e1, Expression e2, 
         boolean swapped, Object extraData) throws IOException {
         
+    	boolean isprecision = false;
+    	boolean swap = false;
         String closingParenthesis = ")";
         if (filter instanceof Equals) {
             out.write("ST_Equals");
         } else if (filter instanceof Disjoint) {
-            out.write("NOT (ST_Intersects");
+            out.write("NOT (ST_3DIntersects");
             closingParenthesis += ")";
         } else if (filter instanceof Intersects || filter instanceof BBOX) {
-            out.write("ST_Intersects");
+            out.write("ST_3DIntersects");
         } else if (filter instanceof Crosses) {
             out.write("ST_Crosses");
         } else if (filter instanceof Within) {
-            if(swapped)
-                out.write("ST_Contains");
-            else
-                out.write("ST_Within");
+        	isprecision = true;
+            if(swapped){
+            	//out.write("ST_Contains");
+            	out.write("ST_3DDWithin");
+             	swap = true;
+            }
+            else {
+                out.write("ST_3DDWithin");
+            }
         } else if (filter instanceof Contains) {
-            if(swapped)
-                out.write("ST_Within");
-            else
-                out.write("ST_Contains");
+        	isprecision = true;
+            if(swapped){
+                out.write("ST_3DDWithin");
+                
+            }
+            else{
+            	//out.write("ST_Contains");
+            	out.write("ST_3DDWithin");
+             	swap = true;
+            }
         } else if (filter instanceof Overlaps) {
             out.write("ST_Overlaps");
         } else if (filter instanceof Touches) {
@@ -315,11 +328,19 @@ class FilterToSqlHelper {
             throw new RuntimeException("Unsupported filter type " + filter.getClass());
         }
         out.write("(");
-
-        e1.accept(delegate, extraData);
-        out.write(", ");
-        e2.accept(delegate, extraData);
-
+        if(swap) {
+        	e2.accept(delegate, extraData);
+            out.write(", ");
+            e1.accept(delegate, extraData);
+        }else {
+        	e1.accept(delegate, extraData);
+            out.write(", ");
+            e2.accept(delegate, extraData);
+        }
+        
+        if(isprecision){
+        	out.write(",126.8");
+        }
         out.write(closingParenthesis);
     }
 

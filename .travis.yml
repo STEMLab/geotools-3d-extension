@@ -10,13 +10,13 @@ notifications:
   email: false
   on_failure: never
 
-before_script:
+before_install:
   - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
   - sudo apt-get update
   - sudo apt-get install -y cmake libboost-dev libgmp3-dev libmpfr-dev libcgal-dev
+  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 script :
-   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
    - mvn clean install
 
 jdk:

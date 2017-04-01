@@ -10,14 +10,21 @@ notifications:
   email: false
   on_failure: never
 
+addons:
+  apt:
+    sources:
+      - ubuntugis/ubuntugis-unstable
+      - george-edison55/precise-backports
+    packages:
+      - cmake
+      - libgmp3-dev
+      - libmpfr-dev
+
 before_install:
-  - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
-  - sudo apt-get update
-  - sudo apt-get install -y cmake libboost-dev libgmp3-dev libmpfr-dev
   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 script :
-   - mvn clean install
+  - mvn clean install
 
 jdk:
   - oraclejdk8

@@ -11,9 +11,10 @@ notifications:
   on_failure: never
 
 before_install:
-  - sudo add-apt-repository -y ubuntugis/ubuntugis-unstable
-  - sudo add-apt-repository -y george-edison55/precise-backports
-  - sudo apt-get install -y cmake libgmp3-dev libmpfr-dev
+  - sudo apt-add-repository -y ubuntugis/ubuntugis-unstable
+  - sudo apt-add-repository -y george-edison55/precise-backports
+  - sudo apt-get -qq update
+  - sudo apt-get install -y cmake libboost-dev libboost-chrono-dev libboost-date-time-dev libboost-filesystem-dev libboost-thread-dev libgmp3-dev libmpfr-dev
   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
 
 script :

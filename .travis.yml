@@ -11,12 +11,13 @@ notifications:
   on_failure: never
 
 before_install:
-  - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
-  - sudo apt-add-repository -y ppa:george-edison55/precise-backports
+  - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
+  - sudo add-apt-repository ppa:kalakris/cmake --yes
   - sudo apt-get -qq update
-  - sudo apt-get install -y cmake-data cmake libboost-dev libboost-date-time-dev libboost-filesystem-dev libboost-thread-dev libgmp3-dev libmpfr-dev
+  - sudo apt-get install --force-yes \
+      cmake libboost-dev libboost-date-time-dev libboost-filesystem-dev libboost-thread-dev libgmp-dev libmpfr-dev
   - ./travis/${TRAVIS_OS_NAME}/before_install.sh
-
+  
 script :
   - mvn clean install
 

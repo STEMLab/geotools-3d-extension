@@ -13,13 +13,11 @@
 #CGAL
 wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.7/CGAL-4.7.tar.gz -c -O CGAL-4.7.tar.gz
 tar xzf CGAL-4.7.tar.gz
-cd CGAL-4.7 && sudo cmake "-DCMAKE_INSTALL_PREFIX=/usr/local" && sudo make && sudo make install
-cd ../
+cd CGAL-4.7 && sudo cmake . && sudo make && sudo make install && cd ..
 
 #SFCGAL
 wget https://github.com/Oslandia/SFCGAL/archive/v1.3.0.tar.gz -c -O sfcgal-1.3.tar.gz
 tar xzf sfcgal-1.3.tar.gz
-cd SFCGAL-1.3.0 && sudo cmake "-DCMAKE_INSTALL_PREFIX=/usr/local" && sudo make && sudo make installb
-cd ../
+cd SFCGAL-1.3.0 && sudo cmake . && sudo make && sudo make install && cd ..
 
 # cmake --version

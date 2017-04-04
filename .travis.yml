@@ -11,9 +11,9 @@ notifications:
   on_failure: never
 
 before_install:
-  - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
+  - sudo add-apt-repository ppa:george-edison55/precise-backports --yes
   - sudo apt-get -qq update
-  - sudo apt-get install -y cmake
+  - sudo apt-get install -y cmake-data cmake
   - cmake --version
   - ./unsupported/geometry-ng/cppbuild.sh install
 

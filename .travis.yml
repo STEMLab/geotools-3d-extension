@@ -11,13 +11,12 @@ notifications:
   on_failure: never
 
 before_install:
-  - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
-  - sudo add-apt-repository ppa:kalakris/cmake --yes
+  - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
   - sudo apt-get -qq update
-  - sudo apt-get install --force-yes \
-      cmake libboost-dev libboost-date-time-dev libboost-filesystem-dev libboost-thread-dev libgmp-dev libmpfr-dev
-  - ./travis/${TRAVIS_OS_NAME}/before_install.sh
-  
+  - sudo apt-get install cmake
+  - sudo apt-get upgrade
+  - ./cppbuild.sh install
+
 script :
   - mvn clean install
 

@@ -12,7 +12,9 @@ notifications:
 
 before_install:
   - sudo add-apt-repository ppa:george-edison55/precise-backports --yes
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
   - sudo apt-get -qq update
+  - sudo apt-get install -y libgmp-dev libmpfr-dev
   - sudo apt-get install -y cmake-data cmake
   - cmake --version
   - ./unsupported/geometry-ng/cppbuild.sh install

@@ -14,7 +14,7 @@ before_install:
   - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
   - sudo apt-get -qq update
   - sudo apt-get install cmake
-  - ./cppbuild.sh install
+  - ./unsupported/geometry-ng/cppbuild.sh install
 
 script :
   - mvn clean install

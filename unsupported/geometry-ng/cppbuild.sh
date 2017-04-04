@@ -49,6 +49,7 @@ esac
 PLATFORM=$OS-$ARCH
 echo "Detected platform \"$PLATFORM\""
 
+mkdir -p cppbuild
 cd cppbuild
 TOP_PATH=`pwd`
 
@@ -80,7 +81,7 @@ function download {
     ln -sf "$TOP_PATH/downloads/$2" "$2"
 }
 
-download https://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz/download boost-1.60.tar.gz
+download https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.gz/download boost-1.63.tar.gz
 download https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.7/CGAL-4.7.tar.gz CGAL-4.7.tar.gz
 download https://github.com/Oslandia/SFCGAL/archive/v1.3.0.tar.gz SFCGAL-1.3.0.tar.gz
 
@@ -89,17 +90,17 @@ cd $PLATFORM
 INSTALL_PATH=`pwd`
 mkdir -p include lib bin
 
-tar -xzf ../boost-1.60.tar.gz
+tar -xzf ../boost-1.63.tar.gz
 tar -xzf ../CGAL-4.7.tar.gz
 tar -xzf ../SFCGAL-1.3.0.tar.gz
 
 case $PLATFORM in
     linux-x86_64)
 
-    	# building boost
-    	  cd boost_1_60_0
+    	  # building boost
+    	  cd boost_1_63_0
         ./bootstrap.sh "--prefix=../" "--with-libraries=filesystem,system,thread,date_time,serialization"
-        ./b2 install "--prefix=../" link=static cflags=-fPIC
+        ./b2 install "--prefix=../"
         cd ../
 
         # building cgal

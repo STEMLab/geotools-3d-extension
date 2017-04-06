@@ -179,15 +179,6 @@
         </includePaths>
         <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
         <preloadPath>${basedir}/cppbuild/${javacpp.platform}/bin/</preloadPath>
-        <!--
-        <includePaths>
-            <includePath>${project.build.sourceDirectory}/org/geotools/geometry/iso/sfcgal/wrapper/</includePath>
-            <includePath>${basedir}/cppbuild/include/</includePath>
-		        <includePath>${basedir}/cppbuild/${javacpp.platform}/include/</includePath>
-        </includePaths>
-        <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
-		    <preloadPath>${basedir}/cppbuild/${javacpp.platform}/bin/</preloadPath>
-      -->
 		  </configuration>
 		  <executions>
 		    <execution>

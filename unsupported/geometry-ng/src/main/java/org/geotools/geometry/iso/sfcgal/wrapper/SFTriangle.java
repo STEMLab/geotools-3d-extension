@@ -28,7 +28,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = { "cpp/SFTriangle.h" }, link = "SFCGAL")
+@Platform(include = { "cpp/SFTriangle.h", "cpp/SFTriangle.cpp" }, link = "SFCGAL")
 public class SFTriangle extends SFSurface {
         static {
                 Loader.load();

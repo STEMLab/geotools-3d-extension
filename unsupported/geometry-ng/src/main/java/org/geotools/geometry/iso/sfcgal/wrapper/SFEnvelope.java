@@ -27,7 +27,7 @@ import org.bytedeco.javacpp.annotation.Platform;
  * @author Donguk Seo
  *
  */
-@Platform(include = { "cpp/SFEnvelope.h", "cpp/SFEnvelope.cpp" }, link = "SFCGAL")
+@Platform(include = { "cpp/SFEnvelope.h" }, link = "SFCGAL")
 public class SFEnvelope extends Pointer {
         static {
                 Loader.load();

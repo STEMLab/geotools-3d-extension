@@ -16,5 +16,5 @@ workspace
 *.db
 *.so
 *.dll
-*.cpp
 *.tar.gz
+cppbuild

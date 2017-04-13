@@ -64,24 +64,24 @@ public class Geometry3DOperationTest extends TestCase {
                 hints.put(Hints.GEOMETRY_VALIDATE, false);
                 builder = new ISOGeometryBuilder(hints);
 
-                // _testPointPoint();
-                // _testPointCurve();
-                // _testPointSurface();
-                // _testPointSolid();
-                // _testCurveCurve();
-                // _testCurveSurface();
-                // _testCurveSolid();
-                // _testSurfaceSurface();
-                // _testSurfaceSolid();
-                // _testSolidSolid();
+                 _testPointPoint();
+                 _testPointCurve();
+                 _testPointSurface();
+                 _testPointSolid();
+                 _testCurveCurve();
+                 _testCurveSurface();
+                 _testCurveSolid();
+                 _testSurfaceSurface();
+                 _testSurfaceSolid();
+                 _testSolidSolid();
                 testPointInSolid();
         }
-        
+
         public void testPointInSolid() {
                 Solid solid = getSolids(builder).get(8);
-                
+
                 Point point = builder.createPoint(-161949.5098996643, 8871.603480360383, 0.0);
-                
+
                 System.out.println(solid.toString());
                 System.out.println(solid.contains(point));
         }
@@ -946,7 +946,7 @@ public class Geometry3DOperationTest extends TestCase {
                 positions61.add(positions61.get(0));
 
                 ArrayList<Surface> surfaces = new ArrayList<Surface>();
-                
+
                 surfaces.add(makeSurface(builder, positions1));
                 surfaces.add(makeSurface(builder, positions2));
                 surfaces.add(makeSurface(builder, positions3));
@@ -964,7 +964,7 @@ public class Geometry3DOperationTest extends TestCase {
                 surfaces.add(makeSurface(builder, positions15));
                 surfaces.add(makeSurface(builder, positions16));
                 surfaces.add(makeSurface(builder, positions17));
-                surfaces.add(makeSurface(builder, positions18));                 
+                surfaces.add(makeSurface(builder, positions18));
                 surfaces.add(makeSurface(builder, positions19));
                 surfaces.add(makeSurface(builder, positions20));
                 surfaces.add(makeSurface(builder, positions21));
@@ -1168,7 +1168,7 @@ public class Geometry3DOperationTest extends TestCase {
                 points8.add(p76);
                 points8.add(p77);
                 points8.add(p78);
-                
+
                 DirectPosition p81 = builder.createDirectPosition(new double[] { -125745.58224841699, 3813.6302470150695, 0.0 });
                 DirectPosition p82 = builder.createDirectPosition(new double[] { -125738.91237563781, 4813.464779595859, 0.0 });
                 DirectPosition p83 = builder.createDirectPosition(new double[] { -126731.71448564173, 4815.075754128498, 0.0 });

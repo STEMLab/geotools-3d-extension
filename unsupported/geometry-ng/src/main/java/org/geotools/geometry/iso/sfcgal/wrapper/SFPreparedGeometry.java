@@ -27,7 +27,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFPreparedGeometry.h")
+@Platform(include = "cpp/SFPreparedGeometry.h", link = "SFCGAL")
 public class SFPreparedGeometry extends Pointer {
         static {
                 Loader.load();

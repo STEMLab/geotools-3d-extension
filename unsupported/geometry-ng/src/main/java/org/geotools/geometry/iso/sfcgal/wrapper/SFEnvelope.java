@@ -27,7 +27,7 @@ import org.bytedeco.javacpp.annotation.Platform;
  * @author Donguk Seo
  *
  */
-@Platform(include = { "cpp/SFEnvelope.h", "cpp/SFEnvelope.cpp" })
+@Platform(include = { "cpp/SFEnvelope.h", "cpp/SFEnvelope.cpp" }, link = "SFCGAL")
 public class SFEnvelope extends Pointer {
         static {
                 Loader.load();
@@ -193,7 +193,7 @@ public class SFEnvelope extends Pointer {
         /**
          * @param a
          * @param b
-         * @return True, if the envelope overlaps the envelope b 
+         * @return True, if the envelope overlaps the envelope b
          */
         public static native @Cast("bool") boolean overlaps(@ByRef SFEnvelope a, @ByRef SFEnvelope b);
 

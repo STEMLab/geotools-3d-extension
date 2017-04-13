@@ -30,7 +30,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFTriangulatedSurface.h")
+@Platform(include = "cpp/SFTriangulatedSurface.h", link = "SFCGAL")
 public class SFTriangulatedSurface extends SFSurface {
         static {
                 Loader.load();

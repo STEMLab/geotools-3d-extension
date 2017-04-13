@@ -25,7 +25,7 @@ import org.bytedeco.javacpp.annotation.Platform;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFAlgorithm.h")
+@Platform(include = "cpp/SFAlgorithm.h", link = "SFCGAL")
 public class SFAlgorithm {
         static {
                 Loader.load();
@@ -39,7 +39,7 @@ public class SFAlgorithm {
         public static native double area(@ByRef SFGeometry g);
 
         /**
-         * Compute the 3D area for a Geometry 
+         * Compute the 3D area for a Geometry
          * @param g SFGeometry Instance
          * @return 3D area of SFGeometry
          */
@@ -112,7 +112,7 @@ public class SFAlgorithm {
         /**
          * Extrude a Geometry with a direction
          * @param g SFGeometry Instance
-         * @param dx 
+         * @param dx
          * @param dy
          * @param dz
          * @return

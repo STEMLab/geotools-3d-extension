@@ -30,7 +30,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFPolyhedralSurface.h")
+@Platform(include = "cpp/SFPolyhedralSurface.h", link = "SFCGAL")
 public class SFPolyhedralSurface extends SFSurface {
         static {
                 Loader.load();

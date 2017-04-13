@@ -27,7 +27,7 @@ import org.bytedeco.javacpp.annotation.Platform;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFCoordinate.h")
+@Platform(include = "cpp/SFCoordinate.h", link = "SFCGAL")
 public class SFCoordinate extends Pointer {
         static {
                 Loader.load();
@@ -124,7 +124,7 @@ public class SFCoordinate extends Pointer {
 
         /**
          * Compares with another point (lexicographic order)
-         * @param c SFCoordinate Instance 
+         * @param c SFCoordinate Instance
          * @return True, if this coordinate is smaller than another coordinate
          */
         @Name("operator<")
@@ -133,7 +133,7 @@ public class SFCoordinate extends Pointer {
         /**
          * Compares with another point
          * @param c SFCoordinate Instance
-         * @return True, if this coordinate is equal to another coordinate 
+         * @return True, if this coordinate is equal to another coordinate
          */
         @Name("operator==")
         public native @Cast("bool") boolean equals(@ByRef SFCoordinate c);

@@ -26,7 +26,7 @@ import org.bytedeco.javacpp.annotation.Namespace;
 import org.bytedeco.javacpp.annotation.Platform;
 
 /**
- * 
+ *
  *
  */
 @Platform(include = "<vector>")

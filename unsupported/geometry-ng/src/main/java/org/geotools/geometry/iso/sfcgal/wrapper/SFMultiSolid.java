@@ -28,7 +28,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFMultiSolid.h")
+@Platform(include = "cpp/SFMultiSolid.h", link = "SFCGAL")
 public class SFMultiSolid extends SFGeometryCollection {
         static {
                 Loader.load();

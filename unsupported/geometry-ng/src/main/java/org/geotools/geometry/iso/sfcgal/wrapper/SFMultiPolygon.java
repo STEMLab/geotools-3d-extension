@@ -28,7 +28,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFMultiPolygon.h")
+@Platform(include = "cpp/SFMultiPolygon.h", link = "SFCGAL")
 public class SFMultiPolygon extends SFGeometryCollection {
         static {
                 Loader.load();

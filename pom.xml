@@ -1250,5 +1250,6 @@
 		<module>unsupported/csv-iso</module>
 		<module>extension/xsd</module>
 		<module>unsupported/process-feature3d</module>
+		<module>unsupported/graph-iso</module>
 	</modules>
 </project>

@@ -1,9 +1,14 @@
 
-#Geotools 3D Extension [![Build Status](https://travis-ci.org/STEMLab/geotools-3d-extension.svg?branch=master)](https://travis-ci.org/STEMLab/geotools-3d-extension)
+# Geotools 3D Extension
 
 This project is extension of [GeoTools](geotools.org) library to support 3D spatial operations.  
 We are just working on making a prototype now. We need to make many tests and fix bugs.  
 We will inform you if we are ready. Thank you. [Simple demonstration](https://www.youtube.com/watch?v=SsNlYwbfso8)
+
+## About
+| Continuous Integration | Chat |
+|:------------------:|:----:|
+|[![Build Status](http://164.125.37.176:9999/job/GeoTools3D/badge/icon)](http://164.125.37.176:9999/job/GeoTools3D/)|[![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/geotools-3d-extension/Lobby)|
 
 ## License
 This project licensed under the [LGPL](http://www.gnu.org/licenses/lgpl.html)

@@ -92,7 +92,7 @@ public class KairosNGDataStoreFactory extends JDBCDataStoreFactory {
         String schema = (String) USER.lookUp(params);
         if (schema != null) {
             // NOTE: schema is an owner in this database
-            dataStore.setDatabaseSchema(schema.toUpperCase());
+            //dataStore.setDatabaseSchema(schema.toUpperCase());
         }
 
         // setup loose bbox

@@ -686,7 +686,6 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			//ArrayList<Solid> al = getSolids(builder);
-   		    //Filter filter = ff.contains("loc", (Geometry)al.get(0));
    			Filter filter = ff.contains("loc", (Geometry)sf);
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 

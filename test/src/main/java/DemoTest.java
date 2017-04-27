@@ -25,7 +25,6 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
-import org.geotools.data.kairos.KairosNGDataStoreFactory;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
@@ -137,7 +136,7 @@ public class DemoTest extends JFrame{
 		});
 		fileMenu.add(new SafeAction("Connect to Kairos database...") {
 			public void action(ActionEvent e) throws Throwable {
-				connect(new KairosNGDataStoreFactory());
+				//connect(new KairosNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
 		});

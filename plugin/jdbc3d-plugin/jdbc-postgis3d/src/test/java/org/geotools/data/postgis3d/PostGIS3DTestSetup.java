@@ -68,7 +68,6 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
         Version version = getVersion();
         boolean atLeastV2 = version.compareTo(V_2_0_0) >= 0;
         String geometryType = atLeastV2 ? "geometry(LINESTRINGZ, 4326)" : "geometry";
-        
         // setup table
         run("CREATE TABLE \"line3d\"(\"fid\" serial PRIMARY KEY, \"id\" int, "
                 + "\"geom\" " + geometryType + ", \"name\" varchar )");

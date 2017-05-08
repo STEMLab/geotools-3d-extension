@@ -95,11 +95,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
         super.connect();
 
         line3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getLine3d()),
-                aname(ID) + ":0," + aname(GEOM) + ":LineString:srid=" + getEpsgCode() + "," + aname(NAME)
+                aname(ID) + ":0," + aname(GEOM) + ":Curve:srid=" + getEpsgCode() + "," + aname(NAME)
                         + ":String");
         line3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
         poly3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getPoly3d()),
-                aname(ID) + ":0," + aname(GEOM) + ":Polygon:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
+                aname(ID) + ":0," + aname(GEOM) + ":Surface:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
         poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 
         crs = CRS.decode("EPSG:" + getEpsgCode());

@@ -12,6 +12,11 @@ In order to support 3D spatial operations such as intersects, this module uses [
 ## License of third party libraries
 SFCGAL is distributed under the terms of the [LGPL](http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)(v2+). Starting from release 4.0. CGAL is available under the [GPL](http://www.gnu.org/copyleft/gpl.html)(v3+)/[LGPL](http://www.gnu.org/copyleft/lesser.html)(v3+). JavaCPP is available under Apache License(v2.0)/[GPL](http://www.gnu.org/copyleft/gpl.html)(v2+) with "Classpath" exception.
 
+## Installation on Linux
+
+- Run cppbuild.sh (Boost, CGAL, SFCGAL will be installed automatically)
+- mvn clean install
+
 ## Installation on Windows 7 (64 bit)
 To use this extension, some open source libraries and tools([Mingw-w64](http://sourceforge.net/projects/mingw-w64/),[CMake](http://cmake.org),[Boost](http://www.boost.org),[CGAL](http://cgal.org),[SFCGAL](http://sfcgal.org)) are required.
 

@@ -16,20 +16,28 @@
  */
 package org.geotools.geojson;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.geotools.geojson.geom.GeometryJSON;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import org.geotools.referencing.CRS;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
 /**
  * 
@@ -38,12 +46,25 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class GeometryJSONTest extends GeoJSONTestSupport {
 
-    GeometryFactory gf = new GeometryFactory();
-    GeometryJSON gjson = new GeometryJSON();
+    ISOGeometryBuilder gb;
+    ISOGeometryBuilder gb3D;
+    
+    GeometryJSON gjson;
+    GeometryJSON gjson3D;
+    
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        gb = new ISOGeometryBuilder(CRS.decode("EPSG:4326"));
+        gb3D = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+        
+        gjson = new GeometryJSON(gb);
+        gjson3D = new GeometryJSON(gb3D);
+    }
     
     public void testPointWrite() throws Exception {
         assertEquals(pointText(), gjson.toString(point()));
-        assertEquals(point3dText(), gjson.toString(point3d()));
+        assertEquals(point3dText(), gjson3D.toString(point3d()));
     }
     
     String pointText() {
@@ -51,7 +72,7 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
     }
 
     Point point() {
-        Point p = gf.createPoint(new Coordinate(100.1, 0.1));
+        Point p = gb.createPoint(gb.createDirectPosition(new double[] {100.1, 0.1}));
         return p;
     }
     
@@ -60,19 +81,19 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
     }
 
     Point point3d() {
-        Point p = gf.createPoint(new Coordinate(100.1, 0.1, 10.2));
+        Point p = gb3D.createPoint(gb3D.createDirectPosition(new double[] {100.1, 0.1, 10.2}));
         return p;
     }
     
     public void testPointRead() throws Exception {
         assertTrue(point().equals(gjson.readPoint(reader(pointText()))));
-        assertTrue(point3d().equals(gjson.readPoint(reader(point3dText()))));
+        assertTrue(point3d().equals(gjson3D.readPoint(reader(point3dText()))));
     }
      
     public void testLineWrite() throws Exception {
         assertEquals(lineText(), gjson.toString(line()));
         assertEquals(line2Text(), gjson.toString(line2()));
-        assertEquals(line3dText(), gjson.toString(line3d()));
+        assertEquals(line3dText(), gjson3D.toString(line3d()));
     }
     
     String lineText() {
@@ -84,13 +105,13 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
         return strip("null");
     }
 
-    LineString line() {
-        LineString l = gf.createLineString(array(new double[][]{{100.1, 0.1},{101.1,1.1}}));
+    Curve line() {
+    	Curve l = gb.createCurve(array(gb, new double[][]{{100.1, 0.1},{101.1,1.1}}));
         return l;
     }
 
-    LineString line2() {
-        LineString l = gf.createLineString(array(new double[][]{}));
+    Curve line2() {
+    	Curve l = gb.createCurve(array(gb, new double[][]{}));
         return l;
     }
     
@@ -99,40 +120,62 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
             "{'type': 'LineString', 'coordinates': [[100.1,0.1,10.2],[101.1,1.1,10.2]]}");
     }
 
-    LineString line3d() {
-        LineString l = gf.createLineString(array(new double[][]{{100.1, 0.1, 10.2},{101.1,1.1, 10.2}}));
+    Curve line3d() {
+    	Curve l = gb3D.createCurve(array(gb3D, new double[][]{{100.1, 0.1, 10.2},{101.1,1.1, 10.2}}));
         return l;
     }
     
     public void testLineRead() throws Exception {
         assertTrue(line().equals(gjson.readLine(reader(lineText()))));
         assertNull(gjson.readLine(reader(line2Text())));
-        assertTrue(line3d().equals(gjson.readLine(reader(line3dText()))));
+        assertTrue(line3d().equals(gjson3D.readLine(reader(line3dText()))));
     }
        
     public void testPolyWrite() throws Exception {
         assertEquals(polygonText1(), gjson.toString(polygon1()));
         assertEquals(polygonText2(), gjson.toString(polygon2()));
-        assertEquals(polygonText3(), gjson.toString(polygon3()));
+        assertEquals(polygonText3(), gjson3D.toString(polygon3()));
     }
 
-    Polygon polygon2() {
-        Polygon poly;
-        poly = gf.createPolygon(gf.createLinearRing(
-            array(new double[][]{ 
-                {100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}})),
-            new LinearRing[]{ gf.createLinearRing(array(new double[][]{
-                {100.2, 0.2}, {100.8, 0.2}, {100.8, 0.8}, {100.2, 0.8}, {100.2, 0.2}}))});
+    Surface polygon2() {
+    	Surface poly;
+    	SurfaceBoundary sb;
+    	
+    	Ring ext = gb.createRing(
+				Arrays.asList(
+						gb.createCurve( array(gb, new double[][]{ 
+							{100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}
+							}))));
+    	
+    	List<Ring> interior = 
+    			Arrays.asList(
+    					gb.createRing(
+    							Arrays.asList(gb.createCurve(array(gb, new double[][]{
+    								{100.2, 0.2}, {100.8, 0.2}, {100.8, 0.8}, {100.2, 0.8}, {100.2, 0.2}})))));
+    	
+    	sb = gb.createSurfaceBoundary(ext, interior);
+    	poly = gb.createSurface(sb);
         return poly;
     }
     
-    Polygon polygon3() {
-        Polygon poly;
-        poly = gf.createPolygon(gf.createLinearRing(
-            array(new double[][]{ 
-                {100.1, 0.1, 10.2}, {101.1, 0.1, 11.2}, {101.1, 1.1, 11.2}, {100.1, 1.1, 10.2}, {100.1, 0.1, 10.2}})),
-            new LinearRing[]{ gf.createLinearRing(array(new double[][]{
-                {100.2, 0.2, 10.2}, {100.8, 0.2, 11.2}, {100.8, 0.8, 11.2}, {100.2, 0.8, 10.2}, {100.2, 0.2, 10.2}}))});
+    Surface polygon3() {
+    	Surface poly;
+    	SurfaceBoundary sb;
+    	
+    	Ring ext = gb3D.createRing(
+				Arrays.asList(
+						gb3D.createCurve( array(gb3D, new double[][]{ 
+							{100.1, 0.1, 10.2}, {101.1, 0.1, 11.2}, {101.1, 1.1, 11.2}, {100.1, 1.1, 10.2}, {100.1, 0.1, 10.2}
+							}))));
+    	
+    	List<Ring> interior = 
+    			Arrays.asList(
+    					gb3D.createRing(
+    							Arrays.asList(gb3D.createCurve(array(gb3D, new double[][]{
+            {100.2, 0.2, 10.2}, {100.8, 0.2, 11.2}, {100.8, 0.8, 11.2}, {100.2, 0.8, 10.2}, {100.2, 0.2, 10.2}})))));
+    	
+    	sb = gb3D.createSurfaceBoundary(ext, interior);
+    	poly = gb3D.createSurface(sb);
         return poly;
     }
     
@@ -162,22 +205,30 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
         "   }");
     }
 
-    Polygon polygon1() {
-        Polygon poly = 
-            gf.createPolygon(gf.createLinearRing(array(new double[][]{ 
-                {100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}})), null);
+    Surface polygon1() {
+    	Surface poly;
+    	SurfaceBoundary sb;
+    	
+    	Ring ext = gb.createRing(
+				Arrays.asList(
+						gb.createCurve( array(gb, new double[][]{ 
+							{100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}
+						}))));
+    	
+    	sb = gb3D.createSurfaceBoundary(ext);
+    	poly = gb3D.createSurface(sb);
         return poly;
     }
     
     public void testPolyRead() throws Exception {
-        assertTrue(polygon1().equals(gjson.readPolygon(reader(polygonText1()))));
-        assertTrue(polygon2().equals(gjson.readPolygon(reader(polygonText2()))));
-        assertTrue(polygon3().equals(gjson.readPolygon(reader(polygonText3()))));
+        assertTrue(polygon1().equals(gjson.readSurface(reader(polygonText1()))));
+        assertTrue(polygon2().equals(gjson.readSurface(reader(polygonText2()))));
+        assertTrue(polygon3().equals(gjson3D.readSurface(reader(polygonText3()))));
     }
     
     public void testMultiPointWrite() throws Exception {
         assertEquals(multiPointText(), gjson.toString(multiPoint()));
-        assertEquals(multiPoint3dText(), gjson.toString(multiPoint3d()));
+        assertEquals(multiPoint3dText(), gjson3D.toString(multiPoint3d()));
     }
 
     String multiPointText() {
@@ -188,7 +239,14 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
     }
 
     MultiPoint multiPoint() {
-        MultiPoint mpoint = gf.createMultiPoint(array(new double[][]{{100.1, 0.1}, {101.1, 1.1}}));
+    	PointArray pa = array(gb, new double[][]{{100.1, 0.1}, {101.1, 1.1}});
+    	
+    	Set<Point> ps = new HashSet<Point>();
+    	for(Position dp : pa) {
+    		ps.add(gb.createPoint(dp));
+    	}
+    	
+    	MultiPoint mpoint = gb.createMultiPoint(ps);
         return mpoint;
     }
     
@@ -200,18 +258,25 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
     }
 
     MultiPoint multiPoint3d() {
-        MultiPoint mpoint = gf.createMultiPoint(array(new double[][]{{100.1, 0.1, 10.2}, {101.1, 1.1, 11.2}}));
+    	PointArray pa = array(gb3D, new double[][]{{100.1, 0.1, 10.2}, {101.1, 1.1, 11.2}});
+    	
+    	Set<Point> ps = new HashSet<Point>();
+    	for(Position dp : pa) {
+    		ps.add(gb3D.createPoint(dp));
+    	}
+    	
+    	MultiPoint mpoint = gb3D.createMultiPoint(ps);
         return mpoint;
     }
     
     public void testMultiPointRead() throws Exception {
         assertTrue(multiPoint().equals(gjson.readMultiPoint(reader(multiPointText()))));
-        assertTrue(multiPoint3d().equals(gjson.readMultiPoint(reader(multiPoint3dText()))));
+        assertTrue(multiPoint3d().equals(gjson3D.readMultiPoint(reader(multiPoint3dText()))));
     }
     
     public void testMultiLineWrite() throws Exception {
         assertEquals(multiLineText(), gjson.toString(multiLine()));
-        assertEquals(multiLine3dText(), gjson.toString(multiLine3d()));
+        assertEquals(multiLine3dText(), gjson3D.toString(multiLine3d()));
     }
 
     String multiLineText() {
@@ -224,11 +289,12 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
             "    }");
     }
 
-    MultiLineString multiLine() {
-        MultiLineString mline = gf.createMultiLineString(new LineString[]{
-            gf.createLineString(array(new double[][]{{100.1, 0.1}, {101.1, 1.1}})), 
-            gf.createLineString(array(new double[][]{{102.1, 2.1}, {103.1, 3.1}}))
-        });
+    MultiCurve multiLine() {
+    	Set<Curve> ps = new HashSet<Curve>();
+    	ps.add(gb.createCurve(array(gb, new double[][]{{100.1, 0.1}, {101.1, 1.1}})));
+    	ps.add(gb.createCurve(array(gb, new double[][]{{102.1, 2.1}, {103.1, 3.1}})));
+    	
+    	MultiCurve mline = gb.createMultiCurve(ps);
         return mline;
     }
     
@@ -242,22 +308,23 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
             "    }");
     }
 
-    MultiLineString multiLine3d() {
-        MultiLineString mline = gf.createMultiLineString(new LineString[]{
-            gf.createLineString(array(new double[][]{{100.1, 0.1, 10.2}, {101.1, 1.1, 10.2}})), 
-            gf.createLineString(array(new double[][]{{102.1, 2.1, 11.2}, {103.1, 3.1, 11.2}}))
-        });
+    MultiCurve multiLine3d() {
+    	Set<Curve> ps = new HashSet<Curve>();
+    	ps.add(gb3D.createCurve(array(gb3D, new double[][]{{100.1, 0.1, 10.2}, {101.1, 1.1, 10.2}})));
+    	ps.add(gb3D.createCurve(array(gb3D, new double[][]{{102.1, 2.1, 11.2}, {103.1, 3.1, 11.2}})));
+    	
+    	MultiCurve mline = gb.createMultiCurve(ps);
         return mline;
     }
     
     public void testMultiLineRead() throws Exception {
-        assertTrue(multiLine().equals(gjson.readMultiLine(reader(multiLineText()))));
-        assertTrue(multiLine3d().equals(gjson.readMultiLine(reader(multiLine3dText()))));
+        assertTrue(multiLine().equals(gjson.readMultiCurve(reader(multiLineText()))));
+        assertTrue(multiLine3d().equals(gjson3D.readMultiCurve(reader(multiLine3dText()))));
     }
     
     public void testMultiPolygonWrite() throws Exception {
         assertEquals(multiPolygonText(), gjson.toString(multiPolygon()));
-        assertEquals(multiPolygon3dText(), gjson.toString(multiPolygon3d()));
+        assertEquals(multiPolygon3dText(), gjson3D.toString(multiPolygon3d()));
     }
 
     String multiPolygonText() {
@@ -271,15 +338,38 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
         "    }");
     }
 
-    MultiPolygon multiPolygon() {
-        MultiPolygon mpoly = gf.createMultiPolygon(new Polygon[]{
-            gf.createPolygon(gf.createLinearRing(
-                array(new double[][]{{102.1, 2.1}, {103.1, 2.1}, {103.1, 3.1}, {102.1, 3.1}, {102.1, 2.1}})),null),
-            gf.createPolygon(gf.createLinearRing(
-                array(new double[][]{{100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}})), 
-                new LinearRing[]{gf.createLinearRing(
-                    array(new double[][]{{100.2, 0.2}, {100.8, 0.2}, {100.8, 0.8}, {100.2, 0.8}, {100.2, 0.2}}))})
-        });
+    MultiSurface multiPolygon() {
+    	Surface poly1;
+    	SurfaceBoundary sb;
+    	Ring ext = gb.createRing(
+				Arrays.asList(
+						gb.createCurve( array(gb, new double[][]{ 
+							{102.1, 2.1}, {103.1, 2.1}, {103.1, 3.1}, {102.1, 3.1}, {102.1, 2.1}
+						}))));
+    	
+    	sb = gb.createSurfaceBoundary(ext);
+    	poly1 = gb.createSurface(sb);
+    	
+    	
+    	ext = gb.createRing(
+				Arrays.asList(
+						gb.createCurve( array(gb, new double[][]{ 
+							{100.1, 0.1}, {101.1, 0.1}, {101.1, 1.1}, {100.1, 1.1}, {100.1, 0.1}
+							}))));
+    	List<Ring> interior = 
+    			Arrays.asList(
+    					gb.createRing(
+    							Arrays.asList(gb.createCurve(array(gb, new double[][]{
+    								{100.2, 0.2}, {100.8, 0.2}, {100.8, 0.8}, {100.2, 0.8}, {100.2, 0.2}})))));
+    	
+    	sb = gb.createSurfaceBoundary(ext, interior);
+    	Surface poly2 = gb.createSurface(sb);
+    	
+    	Set<Surface> ss = new HashSet<Surface>();
+    	ss.add(poly1);
+    	ss.add(poly2);
+    	
+    	MultiSurface mpoly = gb.createMultiSurface(ss);
         return mpoly;
     }
     
@@ -294,31 +384,54 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
         "    }");
     }
 
-    MultiPolygon multiPolygon3d() {
-        MultiPolygon mpoly = gf.createMultiPolygon(new Polygon[]{
-            gf.createPolygon(gf.createLinearRing(
-                array(new double[][]{{102.1, 2.1, 10.2}, {103.1, 2.1, 10.2}, {103.1, 3.1, 10.2}, {102.1, 3.1, 10.2}, {102.1, 2.1, 10.2}})),null),
-            gf.createPolygon(gf.createLinearRing(
-                array(new double[][]{{100.1, 0.1, 10.2}, {101.1, 0.1, 10.2}, {101.1, 1.1, 10.2}, {100.1, 1.1, 10.2}, {100.1, 0.1, 10.2}})), 
-                new LinearRing[]{gf.createLinearRing(
-                    array(new double[][]{{100.2, 0.2, 10.2}, {100.8, 0.2, 10.2}, {100.8, 0.8, 10.2}, {100.2, 0.8, 10.2}, {100.2, 0.2, 10.2}}))})
-        });
+    MultiSurface multiPolygon3d() {
+    	Surface poly1;
+    	SurfaceBoundary sb;
+    	Ring ext = gb3D.createRing(
+				Arrays.asList(
+						gb3D.createCurve( array(gb3D, new double[][]{ 
+							{102.1, 2.1, 10.2}, {103.1, 2.1, 10.2}, {103.1, 3.1, 10.2}, {102.1, 3.1, 10.2}, {102.1, 2.1, 10.2}
+						}))));
+    	
+    	sb = gb3D.createSurfaceBoundary(ext);
+    	poly1 = gb3D.createSurface(sb);
+    	
+    	
+    	ext = gb3D.createRing(
+				Arrays.asList(
+						gb3D.createCurve( array(gb3D, new double[][]{ 
+							{100.1, 0.1, 10.2}, {101.1, 0.1, 10.2}, {101.1, 1.1, 10.2}, {100.1, 1.1, 10.2}, {100.1, 0.1, 10.2}
+							}))));
+    	List<Ring> interior = 
+    			Arrays.asList(
+    					gb3D.createRing(
+    							Arrays.asList(gb3D.createCurve(array(gb3D, new double[][]{
+    								{100.2, 0.2, 10.2}, {100.8, 0.2, 10.2}, {100.8, 0.8, 10.2}, {100.2, 0.8, 10.2}, {100.2, 0.2, 10.2}})))));
+    	
+    	sb = gb3D.createSurfaceBoundary(ext, interior);
+    	Surface poly2 = gb3D.createSurface(sb);
+    	
+    	Set<Surface> ss = new HashSet<Surface>();
+    	ss.add(poly1);
+    	ss.add(poly2);
+    	
+    	MultiSurface mpoly = gb3D.createMultiSurface(ss);
         return mpoly;
     }
     
     public void testMultiPolygonRead() throws IOException {
-        assertTrue(multiPolygon().equals(gjson.readMultiPolygon(reader(multiPolygonText()))));
-        assertTrue(multiPolygon3d().equals(gjson.readMultiPolygon(reader(multiPolygon3dText()))));
+        assertTrue(multiPolygon().equals(gjson.readMultiSurface(reader(multiPolygonText()))));
+        assertTrue(multiPolygon3d().equals(gjson3D.readMultiSurface(reader(multiPolygon3dText()))));
     }
     
     public void testGeometryCollectionWrite() throws Exception {
         assertEquals(collectionText(), gjson.toString(collection()));
-        assertEquals(collection3dText(), gjson.toString(collection3d()));
+        assertEquals(collection3dText(), gjson3D.toString(collection3d()));
     }
 
     private String collectionText() {
         return strip(
-            "{ 'type': 'GeometryCollection',"+
+            "{ 'type': 'MultiPrimitive',"+
             "    'geometries': ["+
             "      { 'type': 'Point',"+
             "        'coordinates': [100.1, 0.1]"+
@@ -341,21 +454,21 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
                         "        'coordinates': [ [101.1, 0.1], [102.1, 1.1] ]"+
                         "        }"+
                         "    ], "+
-                        "    'type': 'GeometryCollection'" +
+                        "    'type': 'MultiPrimitive'" +
                         "  }");
     }
 
-    GeometryCollection collection() {
-        GeometryCollection gcol = gf.createGeometryCollection(new Geometry[]{
-           gf.createPoint(new Coordinate(100.1,0.1)), 
-           gf.createLineString(array(new double[][]{{101.1, 0.1}, {102.1, 1.1}}))
-        });
+    MultiPrimitive collection() {
+    	Set<Primitive> ps = new HashSet<Primitive>();
+    	ps.add(gb.createPoint(gb.createDirectPosition(new double[] {100.1,0.1})));
+    	ps.add(gb.createCurve(array(gb, new double[][]{{101.1, 0.1}, {102.1, 1.1}})));
+        MultiPrimitive gcol = gb3D.createMultiPrimitive(ps);
         return gcol;
     }
     
     private String collection3dText() {
         return strip(
-            "{ 'type': 'GeometryCollection',"+
+            "{ 'type': 'MultiPrimitive',"+
             "    'geometries': ["+
             "      { 'type': 'Point',"+
             "        'coordinates': [100.1, 0.1, 10.2]"+
@@ -367,38 +480,38 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
             "  }");
     }
 
-    GeometryCollection collection3d() {
-        GeometryCollection gcol = gf.createGeometryCollection(new Geometry[]{
-           gf.createPoint(new Coordinate(100.1,0.1, 10.2)), 
-           gf.createLineString(array(new double[][]{{101.1, 0.1, 10.2}, {102.1, 1.1, 11.2}}))
-        });
+    MultiPrimitive collection3d() {
+    	Set<Primitive> ps = new HashSet<Primitive>();
+    	ps.add(gb3D.createPoint(gb3D.createDirectPosition(new double[] {100.1,0.1, 10.2})));
+    	ps.add(gb3D.createCurve(array(gb3D, new double[][]{{101.1, 0.1, 10.2}, {102.1, 1.1, 11.2}})));
+        MultiPrimitive gcol = gb3D.createMultiPrimitive(ps);
         return gcol;
     }
     
     public void testGeometryCollectionRead() throws Exception {
         assertEqual(collection(), 
-            (GeometryCollection)gjson.readGeometryCollection(reader(collectionText())));
+            (MultiPrimitive)gjson.readMultiPrimitive(reader(collectionText())));
         assertEqual(collection3d(), 
-            (GeometryCollection)gjson.readGeometryCollection(reader(collection3dText())));
+            (MultiPrimitive)gjson.readMultiPrimitive(reader(collection3dText())));
     }
     
     public void testRead() throws Exception {
         assertTrue(point().equals(gjson.read(reader(pointText()))));
-        assertTrue(point3d().equals(gjson.read(reader(point3dText()))));
+        assertTrue(point3d().equals(gjson3D.read(reader(point3dText()))));
         assertTrue(line().equals(gjson.read(reader(lineText()))));
-        assertTrue(line3d().equals(gjson.read(reader(line3dText()))));
+        assertTrue(line3d().equals(gjson3D.read(reader(line3dText()))));
         assertTrue(polygon1().equals(gjson.read(reader(polygonText1()))));
         assertTrue(polygon2().equals(gjson.read(reader(polygonText2()))));
-        assertTrue(polygon3().equals(gjson.read(reader(polygonText3()))));
+        assertTrue(polygon3().equals(gjson3D.read(reader(polygonText3()))));
         assertTrue(multiPoint().equals(gjson.read(reader(multiPointText()))));
-        assertTrue(multiPoint3d().equals(gjson.read(reader(multiPoint3dText()))));
+        assertTrue(multiPoint3d().equals(gjson3D.read(reader(multiPoint3dText()))));
         assertTrue(multiLine().equals(gjson.read(reader(multiLineText()))));
-        assertTrue(multiLine3d().equals(gjson.read(reader(multiLine3dText()))));
+        assertTrue(multiLine3d().equals(gjson3D.read(reader(multiLine3dText()))));
         assertTrue(multiPolygon().equals(gjson.read(reader(multiPolygonText()))));
-        assertTrue(multiPolygon3d().equals(gjson.read(reader(multiPolygon3dText()))));
+        assertTrue(multiPolygon3d().equals(gjson3D.read(reader(multiPolygon3dText()))));
         
-        assertEqual(collection(), (GeometryCollection) gjson.read(reader(collectionText())));
-        assertEqual(collection3d(), (GeometryCollection) gjson.read(reader(collection3dText())));
+        assertEqual(collection(), (MultiPrimitive) gjson.read(reader(collectionText())));
+        assertEqual(collection3d(), (MultiPrimitive) gjson3D.read(reader(collection3dText())));
     }
 
     public void testReadOrder() throws Exception {
@@ -413,7 +526,7 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
             "      [ [100.2, 0.2, 10.2], [100.8, 0.2, 11.2], [100.8, 0.8, 11.2], [100.2, 0.8, 10.2], [100.2, 0.2, 10.2] ]"+
             "      ]"+
             ", 'type': 'Polygon' }");
-        assertTrue(polygon3().equals(gjson.read(reader(json))));
+        assertTrue(polygon3().equals(gjson3D.read(reader(json))));
 
         json = strip(
             "{ 'coordinates': [ [100.1, 0.1], [101.1, 1.1] ], 'type': 'MultiPoint'}");
@@ -437,46 +550,45 @@ public class GeometryJSONTest extends GeoJSONTestSupport {
         assertTrue(multiPolygon().equals(gjson.read(reader(json))));
     }
 
-    void assertEqual(GeometryCollection col1, GeometryCollection col2) {
-        assertEquals(col1.getNumGeometries(), col2.getNumGeometries());
-        for (int i = 0; i < col1.getNumGeometries(); i++) {
-            assertTrue(col1.getGeometryN(i).equals(col2.getGeometryN(i)));
+    void assertEqual(MultiPrimitive col1, MultiPrimitive col2) {
+        assertEquals(col1.getElements().size(), col2.getElements().size());
+        for (int i = 0; i < col1.getElements().size(); i++) {
+        	assertTrue(col1.equals(col2));
         }
     }
-    Coordinate[] array(double[][] coords) {
-        Coordinate[] coordinates = new Coordinate[coords.length];
-        for (int i = 0; i < coords.length; i++) {
-            Coordinate c = new Coordinate(coords[i][0], coords[i][1]);
-            if (coords[i].length > 2) {
-                c.z = coords[i][2];
-            }
-            
-            coordinates[i] = c;
+    
+    PointArray array(ISOGeometryBuilder gb, double[][] coords) {
+    	PointArray pa = gb.createPointArray();
+    	for (int i = 0; i < coords.length; i++) {
+            DirectPosition c = gb.createDirectPosition(coords[i].clone());
+            pa.add(c);
         }
-        return coordinates;
+        return pa;
     }
 
     public void testGeometryCollectionReadTypeLast() throws IOException {
         Object obj = gjson.read(collectionTypeLastText());
-        assertTrue(obj instanceof GeometryCollection);
+        assertTrue(obj instanceof MultiPrimitive);
 
-        GeometryCollection gc = (GeometryCollection) obj;
-        assertEquals(2, gc.getNumGeometries());
+        MultiPrimitive gc = (MultiPrimitive) obj;
+        assertEquals(2, gc.getElements().size());
 
-        assertTrue(gc.getGeometryN(0) instanceof Point);
-        assertTrue(gc.getGeometryN(1) instanceof LineString);
+        Iterator<? extends Primitive> it = gc.getElements().iterator();
+        
+        assertTrue(it.next() instanceof Point);
+        assertTrue(it.next() instanceof Curve);
     }
     
     public void testPointOrderParsing() throws Exception {
         String input1 = "{\n" + "  \"type\": \"Point\",\n" + "  \"coordinates\": [10, 10]\n" + "}";
         String input2 = "{\n" + "  \"coordinates\": [10, 10],\n" + "  \"type\": \"Point\"\n" + "}";
-        org.geotools.geojson.geom.GeometryJSON geometryJSON = new org.geotools.geojson.geom.GeometryJSON();
+        org.geotools.geojson.geom.GeometryJSON geometryJSON = new org.geotools.geojson.geom.GeometryJSON(gb);
         Point p1 = geometryJSON.readPoint(input1);
-        assertEquals(10, p1.getX(), 0d);
-        assertEquals(10, p1.getY(), 0d);
+        assertEquals(10, p1.getDirectPosition().getOrdinate(0), 0d);
+        assertEquals(10, p1.getDirectPosition().getOrdinate(1), 0d);
         Point p2 = geometryJSON.readPoint(input2);
-        assertEquals(10, p2.getX(), 0d);
-        assertEquals(10, p2.getY(), 0d);
+        assertEquals(10, p2.getDirectPosition().getOrdinate(0), 0d);
+        assertEquals(10, p2.getDirectPosition().getOrdinate(1), 0d);
     }
     
 }

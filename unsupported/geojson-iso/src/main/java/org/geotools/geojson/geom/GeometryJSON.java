@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import java.util.Set;
 import org.geotools.geojson.GeoJSONUtil;
 import org.geotools.geojson.IContentHandler;
 import org.geotools.geometry.iso.util.PointArrayUtil;
-import org.geotools.geometry.jts.MultiSurface;
 import org.json.simple.JSONAware;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.DirectPosition;
@@ -41,15 +39,15 @@ import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
-import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
-import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * Reads and writes geometry objects to and from geojson.
@@ -84,17 +82,22 @@ public class GeometryJSON {
     /**
      * Constructs a geometry json instance.
      */
-    public GeometryJSON() {
-        this(4);
+    public GeometryJSON(ISOGeometryBuilder builder) {
+        this(builder, 4);
+    }
+    
+    public GeometryJSON(CoordinateReferenceSystem crs) {
+        this(new ISOGeometryBuilder(crs), 4);
     }
     
     /**
      * Constructs a geometry json instance specifying the number of decimals
      * to use when encoding floating point numbers.
      */
-    public GeometryJSON(int decimals) {
+    public GeometryJSON(ISOGeometryBuilder builder, int decimals) {
         this.decimals = decimals;
         this.scale = Math.pow(10, decimals);
+        this.builder = builder;
     }
     
     /**
@@ -752,7 +755,7 @@ public class GeometryJSON {
 	        	
 	        }
 	        
-	        sb.append("],");
+	        sb.append("]");
             
             return sb.toString();
         }

@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.geotools.data.crs.ForceCoordinateSystemFeatureResults;
+import org.geotools.data.crs.ISOForceCoordinateSystemFeatureResults;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -87,10 +87,6 @@ public class FeatureJSON {
     boolean encodeFeatureCRS = false;
     boolean encodeFeatureCollectionCRS = false;
     boolean encodeNullValues = false;
-    
-    public FeatureJSON() {
-        this(new GeometryJSON());
-    }
 
     public FeatureJSON(GeometryJSON gjson) {
         this.gjson = gjson; 
@@ -367,7 +363,7 @@ public class FeatureJSON {
                 && features.getSchema().getCoordinateReferenceSystem() == null 
                 && it.getHandler().getCRS() != null ) {
             try {
-                return new ForceCoordinateSystemFeatureResults(features, it.getHandler().getCRS());
+                return new ISOForceCoordinateSystemFeatureResults(features, it.getHandler().getCRS());
             } catch (SchemaException e) {
                 throw (IOException) new IOException().initCause(e);
             }

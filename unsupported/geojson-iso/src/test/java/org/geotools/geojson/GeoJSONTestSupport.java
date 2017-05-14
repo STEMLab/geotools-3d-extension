@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.opengis.feature.simple.SimpleFeature;
-
-import com.vividsolutions.jts.geom.Geometry;
+import org.opengis.geometry.Geometry;
 
 import junit.framework.TestCase;
 

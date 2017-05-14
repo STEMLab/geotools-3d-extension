@@ -8,12 +8,12 @@ import java.util.Date;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
 
 /**
  * 
@@ -22,7 +22,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class FeatureJSONExtendedTest extends GeoJSONTestSupport {
 
-    FeatureJSON fjson = new FeatureJSON();
+	ISOGeometryBuilder gb;
+	GeometryJSON gjson;
+    FeatureJSON fjson;
     SimpleFeatureType featureType;
     ISOSimpleFeatureBuilder fb;
     
@@ -40,9 +42,14 @@ public class FeatureJSONExtendedTest extends GeoJSONTestSupport {
         tb.add("geometry", Geometry.class);
         
         featureType = tb.buildFeatureType();
+
+        gb = new ISOGeometryBuilder(CRS.decode("EPSG:4326"));
+        gjson = new GeometryJSON(gb);
+        fjson = new FeatureJSON(gjson);
         fjson.setFeatureType(featureType);
         
         fb = new ISOSimpleFeatureBuilder(featureType);
+        
     }
     
     public void testFeatureWrite() throws Exception {
@@ -95,7 +102,7 @@ public class FeatureJSONExtendedTest extends GeoJSONTestSupport {
         }
         
         fb.add(toDate(val));
-        fb.add(new GeometryFactory().createPoint(new Coordinate(val+0.1,val+0.1)));
+        fb.add(gb.createPoint(gb.createDirectPosition(new double[] {val+0.1,val+0.1})));
         
         return fb.buildFeature("feature." + val);
     }

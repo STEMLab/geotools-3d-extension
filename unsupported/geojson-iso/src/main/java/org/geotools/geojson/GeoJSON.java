@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geojson.feature.FeatureJSON;
 import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.Geometry;
@@ -32,8 +33,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * @source $URL$
  */
 public class GeoJSON {
-    static GeometryJSON gjson = new GeometryJSON();
-    static FeatureJSON fjson = new FeatureJSON();
+    static GeometryJSON gjson = new GeometryJSON(DefaultGeographicCRS.WGS84);
+    static FeatureJSON fjson = new FeatureJSON(gjson);
     
     public static Object read(Object input) throws IOException {
         throw new UnsupportedOperationException();

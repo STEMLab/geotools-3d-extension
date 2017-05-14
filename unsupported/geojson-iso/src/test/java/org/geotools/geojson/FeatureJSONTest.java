@@ -18,9 +18,10 @@ package org.geotools.geojson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -29,22 +30,25 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.junit.Test;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * 
@@ -53,9 +57,11 @@ import com.vividsolutions.jts.io.WKTReader;
  */
 public class FeatureJSONTest extends GeoJSONTestSupport {
 
-    FeatureJSON fjson = new FeatureJSON();
+	GeometryJSON gjson;
+    FeatureJSON fjson;
     SimpleFeatureType featureType;
     ISOSimpleFeatureBuilder fb;
+    ISOGeometryBuilder gb;
     
     @Override
     protected void setUp() throws Exception {
@@ -63,7 +69,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         
         ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName("feature");
-        tb.setSRS("EPSG:4326");
+        tb.setSRS("EPSG:4329");
         tb.add("int", Integer.class);
         tb.add("double", Double.class);
         tb.add("string", String.class);
@@ -71,6 +77,10 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         
         featureType = tb.buildFeatureType();
         fb = new ISOSimpleFeatureBuilder(featureType);
+        gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+        
+        gjson = new GeometryJSON(gb);
+        fjson = new FeatureJSON(gjson);
     }
         
     public void testFeatureWrite() throws Exception {
@@ -83,17 +93,20 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
     
     public void testWriteReadNoProperties() throws Exception {
         ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
-        tb.add("geom", Point.class, CRS.decode("EPSG:4326"));
+        tb.add("geom", Point.class, CRS.decode("EPSG:4329"));
         tb.add("name", String.class);
         tb.add("quantity", Integer.class);
         tb.setName("outbreak");
         SimpleFeatureType schema = tb.buildFeatureType();
         
         ISOSimpleFeatureBuilder fb = new ISOSimpleFeatureBuilder(schema);
-        fb.add(new WKTReader().read("POINT(10 20)"));
+        fb.add(new WKTReader(CRS.decode("EPSG:4329")).read("POINT(10 20 10)"));
         SimpleFeature feature = fb.buildFeature("outbreak.1");
         
-        FeatureJSON fj = new FeatureJSON();
+        ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+        GeometryJSON gjson = new GeometryJSON(gb);
+        FeatureJSON fj = new FeatureJSON(gjson);
+        
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         fj.writeFeature(feature, os);
         
@@ -117,9 +130,9 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "  'geometry': {" + 
             "    'type':'GeometryCollection'," + 
             "    'geometries':[{" + 
-            "        'type':'Point','coordinates':[4,6]" + 
+            "        'type':'Point','coordinates':[4,6,3]" + 
             "      },{" + 
-            "        'type':'LineString','coordinates':[[4,6],[7,10]]" + 
+            "        'type':'LineString','coordinates':[[4,6,1],[7,10,5]]" + 
             "      }" + 
             "     ]" + 
             "  }," + 
@@ -134,12 +147,14 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         SimpleFeature f1 = fjson.readFeature(json);
         assertNotNull(f1.getDefaultGeometry());
 
-        GeometryCollection gc = (GeometryCollection) f1.getDefaultGeometry();
-        assertEquals(2, gc.getNumGeometries());
+        MultiPrimitive gc = (MultiPrimitive) f1.getDefaultGeometry();
+        assertEquals(2, gc.getElements().size());
 
-        WKTReader wkt = new WKTReader();
-        assertTrue(wkt.read("POINT (4 6)").equals(gc.getGeometryN(0)));
-        assertTrue(wkt.read("LINESTRING (4 6, 7 10)").equals(gc.getGeometryN(1)));
+        WKTReader wkt = new WKTReader(CRS.decode("EPSG:4329"));
+        
+        Iterator<? extends Primitive> it = gc.getElements().iterator();
+        assertTrue(wkt.read("Point (4 6 1)").equals(it.next()));
+        assertTrue(wkt.read("Curve (4 6 1, 7 10 5)").equals(it.next()));
 
         assertEquals("fid-7205cfc1_138e7ce8900_-7ffe", f1.getID());
         assertEquals("Name123", f1.getAttribute("name"));
@@ -155,11 +170,11 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "      'geometries':["+
             "         {"+
             "            'type':'Polygon',"+
-            "            'coordinates':[[[-28.1107, 142.998], [-28.1107, 148.623], [-30.2591, 148.623], [-30.2591, 142.998], [-28.1107, 142.998]]]"+
+            "            'coordinates':[[[-28.1107, 142.998, 5], [-28.1107, 148.623, 5], [-30.2591, 148.623, 5], [-30.2591, 142.998, 5], [-28.1107, 142.998, 5]]]"+
             "         },"+
             "         {"+
             "            'type':'Polygon',"+
-            "            'coordinates':[[[-27.1765, 142.998], [-25.6811, 146.4258], [-27.1765, 148.5352], [-27.1765, 142.998]]]"+
+            "            'coordinates':[[[-27.1765, 142.998, 5], [-25.6811, 146.4258, 5], [-27.1765, 148.5352, 5], [-27.1765, 142.998, 5]]]"+
             "         }"+
             "     ]"+
             "   },"+
@@ -174,12 +189,15 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         SimpleFeature f1 = fjson.readFeature(json);
         assertNotNull(f1.getDefaultGeometry());
 
-        GeometryCollection gc = (GeometryCollection) f1.getDefaultGeometry();
-        assertEquals(2, gc.getNumGeometries());
+        MultiPrimitive gc = (MultiPrimitive) f1.getDefaultGeometry();
+        assertEquals(2, gc.getElements().size());
 
-        WKTReader wkt = new WKTReader();
-        assertTrue(wkt.read("POLYGON ((-28.1107 142.998, -28.1107 148.623, -30.2591 148.623, -30.2591 142.998, -28.1107 142.998))").equals(gc.getGeometryN(0)));
-        assertTrue(wkt.read("POLYGON((-27.1765 142.998, -25.6811 146.4258, -27.1765 148.5352, -27.1765 142.998))").equals(gc.getGeometryN(1)));
+        WKTReader wkt = new WKTReader(CRS.decode("EPSG:4329"));
+        
+        Iterator<? extends Primitive> it = gc.getElements().iterator();
+        
+        assertTrue(wkt.read("Surface((-28.1107 142.998 5, -28.1107 148.623  5, -30.2591 148.623  5, -30.2591 142.998 5, -28.1107 142.998 5))").equals(it.next()));
+        assertTrue(wkt.read("Surface((-27.1765 142.998 5, -25.6811 146.4258 5, -27.1765 148.5352 5, -27.1765 142.998 5))").equals(it.next()));
 
         assertEquals("fid-397164b3_13880d348b9_-7a5c", f1.getID());
         assertEquals("", f1.getAttribute("name"));
@@ -193,7 +211,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         "   'type': 'Feature'," +
         "   'geometry': {" +
         "     'type': 'Point'," +
-        "     'coordinates': [0.1, 0.1]," +
+        "     'coordinates': [0.1, 0.2, 0.3]," +
         "   }," +
         "   'properties': {" +
         "     'int': 1," +
@@ -201,7 +219,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         "     'string': 'one'," +
         "     'otherGeometry': {" +
         "        'type': 'LineString'," +
-        "        'coordinates': [[1.1, 1.2], [1.3, 1.4]]" +
+        "        'coordinates': [[1.1, 1.2, 1.0], [1.3, 1.4, 1.0]]" +
         "     }"+
         "   }," +
         "   'id': 'feature.0'" +
@@ -211,12 +229,15 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         assertTrue(f.getDefaultGeometry() instanceof Point);
         
         Point p = (Point) f.getDefaultGeometry();
-        assertEquals(0.1, p.getX(), 0.1);
-        assertEquals(0.1, p.getY(), 0.1);
+        DirectPosition dp = p.getDirectPosition();
         
-        assertTrue(f.getAttribute("otherGeometry") instanceof LineString);
-        assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
-            new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals((LineString)f.getAttribute("otherGeometry")));
+        assertEquals(0.1, dp.getOrdinate(0), 0.1);
+        assertEquals(0.2, dp.getOrdinate(1), 0.1);
+        assertEquals(0.3, dp.getOrdinate(2), 0.1);
+        
+        assertTrue(f.getAttribute("otherGeometry") instanceof Curve);
+        /*assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
+            new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals((LineString)f.getAttribute("otherGeometry")));*/
         
         assertEquals(1, ((Number)f.getAttribute("int")).intValue());
         assertEquals(0.1, ((Number)f.getAttribute("double")).doubleValue());
@@ -259,15 +280,17 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         " }")));
         
         assertNotNull(f);
-        assertTrue(f.getDefaultGeometry() instanceof LineString);
+        assertTrue(f.getDefaultGeometry() instanceof Curve);
         
-        LineString l = (LineString) f.getDefaultGeometry();
-        assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
-                new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals(l));
+        Curve l = (Curve) f.getDefaultGeometry();
         
-        assertTrue(f.getAttribute("otherGeometry") instanceof LineString);
-        assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
-            new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals((LineString)f.getAttribute("otherGeometry")));
+        //TODO
+        //assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
+        //        new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals(l));
+        
+        assertTrue(f.getAttribute("otherGeometry") instanceof Curve);
+        //assertTrue(new GeometryFactory().createLineString(new Coordinate[]{
+        //    new Coordinate(1.1, 1.2), new Coordinate(1.3, 1.4)}).equals((LineString)f.getAttribute("otherGeometry")));
         
         assertEquals(1, ((Number)f.getAttribute("int")).intValue());
         assertEquals(0.1, ((Number)f.getAttribute("double")).doubleValue());
@@ -387,10 +410,10 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "   'type': 'Feature'," +
             "   'geometry': {" +
             "     'type': 'Point'," +
-            "     'coordinates': [1.1, 1.1]" +
+            "     'coordinates': [1.1, 1.1, 1.1]" +
             "   }," +
             "   'properties': {" +
-            "     'boundedBy': [-1.2, -1.3, 1.2, 1.3]," +
+            "     'boundedBy': [-1.2, -1.3, 0.0, 1.2, 1.3, 1.0]," +
             "     'int': 1," +
             "     'double': 1.1," +
             "     'string': 'one'" +
@@ -400,7 +423,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         return json;
     }
     
-    SimpleFeature featureWithBoundedByAttribute() {
+    SimpleFeature featureWithBoundedByAttribute() throws NoSuchAuthorityCodeException, FactoryException {
         ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
         tb.setName("feature");
         tb.add("geometry", Point.class);
@@ -411,8 +434,14 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         
         
         ISOSimpleFeatureBuilder b = new ISOSimpleFeatureBuilder(tb.buildFeatureType());
-        b.add(new GeometryFactory().createPoint(new Coordinate(1.1,1.1)));
-        b.add(new Envelope(-1.2, 1.2, -1.3, 1.3));
+        ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+        
+        b.add(gb.createPoint(gb.createDirectPosition(new double[] {1.1, 1.1, 1.1})));
+        
+        DirectPosition lower = gb.createDirectPosition(new double[] {-1.2, -1.3, 0.0});
+        DirectPosition upper = gb.createDirectPosition(new double[] {1.2, 1.3, 1.0});
+        
+        b.add(gb.createEnvelope(lower, upper));
         b.add(1);
         b.add(1.1);
         b.add("one");
@@ -434,8 +463,9 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         assertEquals(1, f.getFeatureType().getAttributeCount());
         assertEquals("geometry", f.getFeatureType().getDescriptor(0).getLocalName());
 
-        assertEquals(1.2, ((Point)f.getDefaultGeometry()).getX());
-        assertEquals(3.4, ((Point)f.getDefaultGeometry()).getY());
+        assertEquals(1.2, ((Point)f.getDefaultGeometry()).getDirectPosition().getOrdinate(0));
+        assertEquals(3.4, ((Point)f.getDefaultGeometry()).getDirectPosition().getOrdinate(1));
+        assertEquals(1.1, ((Point)f.getDefaultGeometry()).getDirectPosition().getOrdinate(2));
     }
 
     String featureWithoutPropertiesText() {
@@ -444,7 +474,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "   'type': 'Feature'," +
             "   'geometry': {" +
             "     'type': 'Point'," +
-            "     'coordinates': [1.2, 3.4]" +
+            "     'coordinates': [1.2, 3.4, 1.1]" +
             "   }," +
             "   'id': 'feature.1'" +
             " }";
@@ -551,7 +581,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "  'crs': {" +
             "    'type': 'name'," +
             "    'properties': {" +
-            "      'name': 'EPSG:3857'" +
+            "      'name': 'EPSG:4329'" +
             "    }" +
             "  }," +
             "  'features': [" +
@@ -559,7 +589,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "      'type': 'Feature'," +
             "      'geometry': {" +
             "        'type': 'Point', " +
-            "        'coordinates': [2.003750834E7, 2.003750834E7]" +
+            "        'coordinates': [2.003750834E7, 2.003750834E7, 2.003750834E7]" +
             "      }," +
             "      'properties': {" +
             "      }," +
@@ -569,7 +599,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
             "}";
 
         ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
-        tb.add("geom", Point.class, CRS.decode("EPSG:3857"));
+        tb.add("geom", Point.class, CRS.decode("EPSG:4329"));
         tb.add("name", String.class);
         tb.setName("xyz");
         SimpleFeatureType schema = tb.buildFeatureType();
@@ -577,10 +607,13 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         DefaultFeatureCollection fc = new DefaultFeatureCollection();
 
         ISOSimpleFeatureBuilder fb = new ISOSimpleFeatureBuilder(schema);
-        fb.add(new WKTReader().read("POINT(20037508.34 20037508.34)"));
+        fb.add(new WKTReader(CRS.decode("EPSG:4329")).read("Point(20037508.34 20037508.34 20037508.34)"));
         fc.add(fb.buildFeature("xyz.1"));
 
-        FeatureJSON fj = new FeatureJSON();
+        ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+        GeometryJSON gjson = new GeometryJSON(gb);
+        FeatureJSON fj = new FeatureJSON(gjson);
+        
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         fj.writeFeatureCollection(fc, os);
 
@@ -689,7 +722,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
 
     public void testFeatureCollectionWithTypePostFeaturesRead() throws Exception {
         String json = strip("{ " +
-            "  'features' : [{ " +"     'geometry' : { 'coordinates' : [ 17.633333, 59.85 ], 'type' : 'Point' }," +     
+            "  'features' : [{ " +"     'geometry' : { 'coordinates' : [ 17.633333, 59.85, 15.09], 'type' : 'Point' }," +     
             "     'type' : 'Feature'," +  
             "     'properties' : { 'name' : 'Station' }" +
             "  }]," + 
@@ -700,7 +733,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         assertTrue(it.hasNext());
 
         SimpleFeature f = (SimpleFeature) it.next();
-        assertTrue(new WKTReader().read("POINT (17.633333 59.85)").equals((Geometry)f.getDefaultGeometry()));
+        assertTrue(new WKTReader(CRS.decode("EPSG:4329")).read("POINT (17.633333 59.85 15.09)").equals((Geometry)f.getDefaultGeometry()));
         assertEquals("Station", f.getAttribute("name"));
         it.close();
     }
@@ -816,7 +849,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
           "  ]" +
           "}");
 
-      SimpleFeatureSource fs = DataUtilities.source(fjson.readFeatureCollection(json));
+      SimpleFeatureSource fs = ISODataUtilities.source(fjson.readFeatureCollection(json));
       fjson.toString(fs.getFeatures());
     }
     
@@ -886,7 +919,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         fb.add(val);
         fb.add(val + 0.1);
         fb.add(toString(val));
-        fb.add(new GeometryFactory().createPoint(new Coordinate(val+0.1,val+0.1)));
+        fb.add(gb.createPoint(gb.createDirectPosition(new double[] { val+0.1,val+0.1,val+0.1})));
         
         return fb.buildFeature("feature." + val);
     }
@@ -894,7 +927,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
     SimpleFeature featureMissingAttribute(int val) {
       fb.add(val);
       fb.add(val + 0.1);
-      fb.add(new GeometryFactory().createPoint(new Coordinate(val+0.1,val+0.1)));
+      fb.add(gb.createPoint(gb.createDirectPosition(new double[] { val+0.1,val+0.1,val+0.1})));
       
       return fb.buildFeature("feature." + val);
     }
@@ -903,7 +936,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
       fb.add(val);
       fb.add(null);
       fb.add(toString(val));
-      fb.add(new GeometryFactory().createPoint(new Coordinate(val+0.1,val+0.1)));
+      fb.add(gb.createPoint(gb.createDirectPosition(new double[] { val+0.1,val+0.1,val+0.1})));
       
       return fb.buildFeature("feature." + val);
     }

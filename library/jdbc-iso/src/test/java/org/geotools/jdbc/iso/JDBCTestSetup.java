@@ -88,7 +88,6 @@ public abstract class JDBCTestSetup {
     }
 
     public void setUp() throws Exception {
-        //
     }
 
     protected void initializeDatabase() throws Exception {

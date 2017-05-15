@@ -176,6 +176,7 @@
         <includePaths>
           <includePath>${basedir}/native/</includePath>
           <includePath>${basedir}/cppbuild/${javacpp.platform}/include/</includePath>
+          <includePath>/usr/local</includePath>
         </includePaths>
         <linkPath>${basedir}/cppbuild/${javacpp.platform}/lib/</linkPath>
         <preloadPath>${basedir}/cppbuild/${javacpp.platform}/bin/</preloadPath>
@@ -229,6 +230,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+            <argLine>-Djava.library.path=${project.build.outputDirectory}</argLine>
+     	</configuration>
       </plugin>
     </plugins>
   </build>

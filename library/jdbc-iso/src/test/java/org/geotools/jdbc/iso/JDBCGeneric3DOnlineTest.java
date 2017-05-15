@@ -120,19 +120,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		crs = CRS.decode("EPSG:" + getEpsgCode());
 	}
 	
-	private DataStore getTESTDataStore() throws IOException{
-		Map<String, Object> params = new HashMap<>();
-		params.put("dbtype", "postgis");
-		//params.put("url", "jdbc:postgresql://localhost/test2");
-		params.put("host", "localhost");
-		params.put("database", "test2");
-		params.put("schema", "public");
-		params.put("port", "5432");
-		params.put("user", "postgres");
-		params.put("password", "postgres");
-		DataStore dataStore = DataStoreFinder.getDataStore(params);
-		return dataStore;
-	}
+	protected abstract DataStore getTESTDataStore() throws IOException;
 	
 	protected Integer getNativeSRID() {
 		return new Integer(getEpsgCode());
@@ -164,49 +152,49 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	public void testWritePoint() throws Exception {
 		DataStore ds = getTESTDataStore();
 
-
 		//build 3D Point
 		DirectPosition dp = builder.createDirectPosition(new double[] {0, 10, 5});
 		Point p = builder.createPoint(dp);
 		
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.add("id", String.class);
 		b.add("loc", Point.class);
-		b.setName( "point3d" );
+		b.setName( getPoint3d() );
 		
 		SimpleFeatureType point3DType = b.buildFeatureType();
 		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(point3DType, new ISOFeatureFactoryImpl());
 
 		try{
-			ds.removeSchema("point3d");
+			ds.removeSchema(getPoint3d());
 		} catch (Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		try{
-			
 			ds.createSchema((SimpleFeatureType)point3DType);
-			SimpleFeature feature = sfb.buildFeature("p1_test",new Object[]{p});
-			//dataStore.createSchema((SimpleFeatureType) point3DType);
-			
+			SimpleFeature feature = sfb.buildFeature("p1_test",new Object[]{"p1_test",p});
+
 			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = ds.getFeatureWriterAppend(
 					point3DType.getTypeName(), Transaction.AUTO_COMMIT);
 			SimpleFeature newFeature = fw.next(); // new blank feature
-			//newFeature.setAttributes(features.getAttributes());
 			newFeature.setAttributes(feature.getAttributes());
 			fw.write();
 			fw.close();
 			
 			// retrieve it back
-//			try(SimpleFeatureIterator fi = fs.getFeatures(FF.id(new HashSet<FeatureId>(fids))).features()) {
-//				assertTrue(fi.hasNext());
-//				SimpleFeature f = fi.next();
-			//	assertTrue(p.equals((Geometry) f.getDefaultGeometry()));
-//			}
+			SimpleFeatureCollection fc = ds.getFeatureSource(tname(getPoint3d())).getFeatures();
+			try(SimpleFeatureIterator fr = fc.features()) {
+				assertTrue(fr.hasNext());
+				Point testp = (Point) fr.next().getDefaultGeometry();
+				DirectPosition c = builder.createDirectPosition(new double[] {0, 10, 5});
+				assertTrue(c.equals(testp.getDirectPosition()));
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		ds.dispose();
 	}
 
 	public void testReadLine() throws Exception {

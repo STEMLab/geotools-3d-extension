@@ -82,14 +82,12 @@ public abstract class JDBCTestSetup {
     }
     
     public DataSource getDataSource() throws IOException {
-    	//System.out.println("-----------getDataSource() in JDBCTestSetup-------------");
         if(dataSource == null)
             dataSource = createDataSource();
         return dataSource;
     }
 
     public void setUp() throws Exception {
-    	System.out.println("-----------setUp() in JDBCTestSetup-------------");
     }
 
     protected void initializeDatabase() throws Exception {

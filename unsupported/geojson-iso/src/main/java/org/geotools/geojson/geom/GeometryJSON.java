@@ -32,6 +32,7 @@ import org.geotools.geojson.IContentHandler;
 import org.geotools.geometry.iso.util.PointArrayUtil;
 import org.json.simple.JSONAware;
 import org.opengis.geometry.BoundingBox;
+import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
@@ -45,8 +46,10 @@ import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -310,7 +313,7 @@ public class GeometryJSON {
     Map<String,Object> createLine(Curve line) {
         LinkedHashMap obj = new LinkedHashMap();
         
-        obj.put("type", "Curve");
+        obj.put("type", "LineString");
         obj.put("coordinates", new PointArrayEncoder(PointArrayUtil.toList(builder, line), scale));
         return obj;
     }
@@ -368,7 +371,7 @@ public class GeometryJSON {
     Map<String,Object> createSurface(Surface poly) {
         LinkedHashMap obj = new LinkedHashMap();
         
-        obj.put("type", "Surface");
+        obj.put("type", "Polygon");
         obj.put("coordinates", toList(poly));
         return obj;
     }
@@ -485,7 +488,7 @@ public class GeometryJSON {
     Map<String,Object> createMultiCurve(MultiCurve mline) {
         LinkedHashMap obj = new LinkedHashMap();
         
-        obj.put("type", "MultiCurve");
+        obj.put("type", "MultiLineString");
         obj.put("coordinates", toList(mline));
         return obj;
     }
@@ -543,7 +546,7 @@ public class GeometryJSON {
     Map<String,Object> createMultiSurface(MultiSurface mpoly) {
         LinkedHashMap obj = new LinkedHashMap();
 
-        obj.put("type", "MultiSurface");
+        obj.put("type", "MultiPolygon");
         obj.put("coordinates", toList(mpoly));
         return obj;
     }
@@ -608,7 +611,7 @@ public class GeometryJSON {
         	geoms.add(create(p));
         }
         
-        obj.put("type", "MultiPrimitive");
+        obj.put("type", "GeometryCollection");
         obj.put("geometries", geoms);
         return obj;
     }
@@ -649,6 +652,15 @@ public class GeometryJSON {
      * @return The bounding box encoded as GeoJSON 
      */
     public String toString(BoundingBox bbox) {
+    	
+    	if(bbox instanceof BoundingBox3D) {
+    		BoundingBox3D bbox3D = (BoundingBox3D) bbox;
+    		return new StringBuffer().append("[").append(bbox3D.getMinX()).append(",")
+    	            .append(bbox3D.getMinY()).append(",").append(bbox3D.getMinZ()).append(",")
+    	            .append(bbox3D.getMaxX()).append(",").append(bbox3D.getMaxY()).append(",")
+    	            .append(bbox3D.getMaxZ()).append("]").toString();
+    	}
+    	
         return new StringBuffer().append("[").append(bbox.getMinX()).append(",")
             .append(bbox.getMinY()).append(",").append(bbox.getMaxX()).append(",")
             .append(bbox.getMaxY()).append("]").toString();
@@ -693,8 +705,14 @@ public class GeometryJSON {
     }
     
     List toList(Surface poly) {
+    	SurfaceBoundary sb = poly.getBoundary();
+    	
         ArrayList list = new ArrayList();
-        list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, poly), scale));
+        list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, sb.getExterior()), scale));
+        
+        for(Ring r : sb.getInteriors()) {
+        	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, r), scale));
+        }
         return list;
     }
     

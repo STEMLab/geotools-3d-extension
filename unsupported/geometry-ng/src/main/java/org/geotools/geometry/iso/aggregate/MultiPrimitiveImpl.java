@@ -54,7 +54,14 @@ public class MultiPrimitiveImpl extends AggregateImpl implements MultiPrimitive 
 	 * @see org.geotools.geometry.featgeom.root.GeometryImpl#getEnvelope()
 	 */
 	public Envelope getEnvelope() {
-		EnvelopeImpl env = new EnvelopeImpl(new DirectPositionImpl( getCoordinateReferenceSystem(), (new double[] {Double.NaN, Double.NaN})) );
+		int dimension = getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
+		
+		double[] coords = new double[dimension];
+		for(int i = 0; i < coords.length; i++) {
+			coords[i] = Double.NaN;
+		}
+		
+		EnvelopeImpl env = new EnvelopeImpl(new DirectPositionImpl( getCoordinateReferenceSystem(), (coords)) );
 		Iterator<? extends Geometry> elementIter = this.elements.iterator();
 		while (elementIter.hasNext()) {
 			env.add((EnvelopeImpl)((Primitive)elementIter.next()).getEnvelope());

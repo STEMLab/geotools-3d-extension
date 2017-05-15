@@ -2,8 +2,8 @@
 In order to support 3D spatial operations such as intersects, this module uses [Simple Feature CGAL(SFCGAL)](http://sfcgal.org), which is a C++ wrapper library around [CGAL](http://www.cgal.org) with the aim of supporting ISO 19107:2013 and OGC Simple Features Access 1.2 for 3D operations. Since SFCGAL is C++ library, this module employs [JavaCPP](https://github.com/bytedeco/javacpp) as a bridge between C++ and Java. Due to dependency on SFCGAL, there exist limitations such as supported platforms. If you need 3D operations in gt-geometry, you have to install [SFCGAL](http://sfcgal.org) manually.
 
 ## Prerequisites
-* CMake
-* SFCGAL
+ * CMake
+ * SFCGAL
  * CGAL
  * Boost
  * GMP
@@ -12,6 +12,13 @@ In order to support 3D spatial operations such as intersects, this module uses [
 ## License of third party libraries
 SFCGAL is distributed under the terms of the [LGPL](http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)(v2+). Starting from release 4.0. CGAL is available under the [GPL](http://www.gnu.org/copyleft/gpl.html)(v3+)/[LGPL](http://www.gnu.org/copyleft/lesser.html)(v3+). JavaCPP is available under Apache License(v2.0)/[GPL](http://www.gnu.org/copyleft/gpl.html)(v2+) with "Classpath" exception.
 
+## Installation on Linux
+
+- Run cppbuild.sh to install Boost, CGAL and SFCGAL
+   ```
+   sudo ./cppbuild.sh
+   ```
+   
 ## Installation on Windows 7 (64 bit)
 To use this extension, some open source libraries and tools([Mingw-w64](http://sourceforge.net/projects/mingw-w64/),[CMake](http://cmake.org),[Boost](http://www.boost.org),[CGAL](http://cgal.org),[SFCGAL](http://sfcgal.org)) are required.
 

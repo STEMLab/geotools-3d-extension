@@ -23,6 +23,7 @@ import org.geotools.geojson.RecordingHandler;
 import org.json.simple.parser.ParseException;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * 
@@ -31,11 +32,21 @@ import org.opengis.geometry.ISOGeometryBuilder;
  */
 public class ISOGeometryHandler extends DelegatingHandler<Geometry> {
 
+	CoordinateReferenceSystem crs;
     ISOGeometryBuilder builder;
     RecordingHandler proxy;
 
+    public ISOGeometryHandler(CoordinateReferenceSystem crs) {
+        this.crs = crs;
+    }
+    
     public ISOGeometryHandler(ISOGeometryBuilder builder) {
         this.builder = builder;
+    }
+    
+    public void setCrs(CoordinateReferenceSystem crs) {
+    	this.crs = crs;
+    	this.builder = new ISOGeometryBuilder(crs);
     }
     
     @Override

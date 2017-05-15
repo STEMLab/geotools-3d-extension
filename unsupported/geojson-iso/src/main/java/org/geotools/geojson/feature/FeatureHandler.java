@@ -82,7 +82,7 @@ public class FeatureHandler extends DelegatingHandler<SimpleFeature> {
             properties = new ArrayList();
         } else if (properties != null) {
             // start of a new object in properties means a geometry
-            delegate = new ISOGeometryHandler(new ISOGeometryBuilder(crs));
+            delegate = new ISOGeometryHandler(crs);
         }
 
         return super.startObject();
@@ -96,7 +96,7 @@ public class FeatureHandler extends DelegatingHandler<SimpleFeature> {
             delegate = new CRSHandler();
             return true;
         } else if ("geometry".equals(key)) {
-            delegate = new ISOGeometryHandler(new ISOGeometryBuilder(crs));
+            delegate = new ISOGeometryHandler(crs);
             return true;
         } else if ("properties".equals(key) && delegate == NULL) {
             properties = NULL_LIST;

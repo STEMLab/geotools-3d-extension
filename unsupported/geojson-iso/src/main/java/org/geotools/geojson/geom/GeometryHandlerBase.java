@@ -29,6 +29,7 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * 
@@ -37,6 +38,7 @@ import org.opengis.geometry.coordinate.PointArray;
  */
 public class GeometryHandlerBase<G extends Geometry> extends HandlerBase implements IContentHandler<G> {
     
+	protected CoordinateReferenceSystem crs;
     protected ISOGeometryBuilder builder;
     protected List<Object> ordinates;
     protected G value;
@@ -50,6 +52,11 @@ public class GeometryHandlerBase<G extends Geometry> extends HandlerBase impleme
     }
 
     protected DirectPosition coordinate(List ordinates) {
+    	if(builder == null) {
+    		
+    	}
+    	
+    	
         return createCoordinate(builder, ordinates);
     }
 

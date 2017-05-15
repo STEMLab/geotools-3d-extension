@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +53,7 @@ import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.LineSegment;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -104,6 +106,10 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	 */
 	protected abstract String getPoly3d();
 
+	protected abstract String getPoint3d_Write();
+
+	protected abstract String getLine3d_Write();
+
 
 	@Override
 	protected void connect() throws Exception {
@@ -120,7 +126,9 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		crs = CRS.decode("EPSG:" + getEpsgCode());
 	}
 	
-	protected abstract DataStore getTESTDataStore() throws IOException;
+	protected DataStore getTESTDataStore() throws IOException{
+		return dataStore;
+	}
 	
 	protected Integer getNativeSRID() {
 		return new Integer(getEpsgCode());
@@ -150,7 +158,14 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 
 	public void testWritePoint() throws Exception {
-		DataStore ds = getTESTDataStore();
+		//DataStore ds = getTESTDataStore();
+		try{
+			dataStore.removeSchema(getPoint3d_Write());
+		} catch (Exception e){
+			//e.printStackTrace();
+			System.out.println("Table was not removed");
+		}
+		
 
 		//build 3D Point
 		DirectPosition dp = builder.createDirectPosition(new double[] {0, 10, 5});
@@ -158,24 +173,19 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
-		b.add("id", String.class);
-		b.add("loc", Point.class);
-		b.setName( getPoint3d() );
+		b.add(aname(ID), String.class);
+		b.add(aname(GEOM), Point.class);
+		b.setName( getPoint3d_Write() );
 		
 		SimpleFeatureType point3DType = b.buildFeatureType();
 		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(point3DType, new ISOFeatureFactoryImpl());
 
+
 		try{
-			ds.removeSchema(getPoint3d());
-		} catch (Exception e){
-			//e.printStackTrace();
-		}
-		
-		try{
-			ds.createSchema((SimpleFeatureType)point3DType);
+			dataStore.createSchema((SimpleFeatureType)point3DType);
 			SimpleFeature feature = sfb.buildFeature("p1_test",new Object[]{"p1_test",p});
 
-			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = ds.getFeatureWriterAppend(
+			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 					point3DType.getTypeName(), Transaction.AUTO_COMMIT);
 			SimpleFeature newFeature = fw.next(); // new blank feature
 			newFeature.setAttributes(feature.getAttributes());
@@ -183,7 +193,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			fw.close();
 			
 			// retrieve it back
-			SimpleFeatureCollection fc = ds.getFeatureSource(tname(getPoint3d())).getFeatures();
+			SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getPoint3d_Write())).getFeatures();
 			try(SimpleFeatureIterator fr = fc.features()) {
 				assertTrue(fr.hasNext());
 				Point testp = (Point) fr.next().getDefaultGeometry();
@@ -194,8 +204,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ds.dispose();
 	}
+
 
 	public void testReadLine() throws Exception {
 		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getLine3d())).getFeatures();
@@ -222,32 +232,65 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 
 	public void testWriteLine() throws Exception {
-		System.out.println("testWriteLine");
+		try{
+			dataStore.removeSchema(getLine3d_Write());
+		} catch (Exception e){
+			//e.printStackTrace();
+			System.out.println("Table was not removed");
+		}
+		
 		// build a 3d line
 		DirectPosition c1 = builder.createDirectPosition(new double[] {0, 0, 0});
 		DirectPosition c2 = builder.createDirectPosition(new double[] {1, 1, 1});
 
-		PointArray pa = builder.createPointArray(new double[] {0, 0, 0,  1, 1, 1});
-		Curve c = builder.createCurve(pa);
+		List<LineSegment> segments = new ArrayList<>();
+		segments.add(builder.createLineSegment(c1, c2));
+		Curve c = builder.createCurve(segments);
 
-		// build a feature around it
-		//TODO : uses FeaturFactoryFinder
+		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
+		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.add(aname(ID), String.class);
+		b.add(aname(GEOM), Curve.class);
+		b.setName( getLine3d_Write() );
+		
+		SimpleFeatureType line3DType = b.buildFeatureType();
 		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(line3DType, new ISOFeatureFactoryImpl());
-		SimpleFeature newFeature = sfb.buildFeature("c1", new Object[] { 2, c,
-		"l3" });
 
-		// insert it
-		SimpleFeatureStore fs = (SimpleFeatureStore) dataStore.getFeatureSource(tname(getLine3d()),
-				Transaction.AUTO_COMMIT);
-		List<FeatureId> fids = fs.addFeatures(ISODataUtilities.collection(newFeature));
+		try{
+			dataStore.createSchema((SimpleFeatureType)line3DType);
+			SimpleFeature feature = sfb.buildFeature("c1_test", new Object[] { "c1_test", c });
 
-		// retrieve it back
-		try(SimpleFeatureIterator fi = fs.getFeatures(FF.id(new HashSet<FeatureId>(fids))).features()) {
-			assertTrue(fi.hasNext());
-			SimpleFeature f = fi.next();
-			assertTrue(c.equals((Geometry) f.getDefaultGeometry()));
+			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
+					line3DType.getTypeName(), Transaction.AUTO_COMMIT);
+			SimpleFeature newFeature = fw.next(); // new blank feature
+			newFeature.setAttributes(feature.getAttributes());
+			fw.write();
+			fw.close();
+			
+			// retrieve it back
+			SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getLine3d_Write())).getFeatures();
+			try(SimpleFeatureIterator fr = fc.features()) {
+				assertTrue(fr.hasNext());
+				Curve ls = (Curve) fr.next().getDefaultGeometry();
+				assertTrue(c.equals((Geometry)ls));
+//				List<? extends CurveSegment> test_segments = ls.getSegments();
+//
+//				int size = test_segments.size();
+//				assertEquals(1, size);
+//
+//				DirectPosition test_c1 = builder.createDirectPosition(new double[] {0, 0, 0});
+//				DirectPosition test_c2 = builder.createDirectPosition(new double[] {1, 1, 1});
+//
+//				assertTrue(test_c1.equals(segments.get(0).getStartPoint()));
+//				assertTrue(test_c2.equals(segments.get(1).getStartPoint()));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 	}
+
 
 	public void testReadPolygon() throws Exception {
 

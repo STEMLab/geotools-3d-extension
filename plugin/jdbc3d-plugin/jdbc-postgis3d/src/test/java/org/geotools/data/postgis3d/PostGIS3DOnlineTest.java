@@ -16,12 +16,6 @@
  */
 package org.geotools.data.postgis3d;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
 import org.geotools.jdbc.iso.JDBC3DOnlineTest;
 import org.geotools.jdbc.iso.JDBC3DTestSetup;
 
@@ -37,19 +31,18 @@ public class PostGIS3DOnlineTest extends JDBC3DOnlineTest  {
         return new PostGIS3DTestSetup(new PostGISTestSetup());
     }
     
-    @Override
-    protected DataStore getTESTDataStore() throws IOException{
-		Map<String, Object> params = new HashMap<>();
-		params.put("dbtype", "postgis");
-		//params.put("url", "jdbc:postgresql://localhost/test2");
-		params.put("host", "localhost");
-		params.put("database", "test2");
-		params.put("schema", "public");
-		params.put("port", 5432);
-		params.put("user", "postgres");
-		params.put("passwd", "postgres");
-		DataStore dataStore = DataStoreFinder.getDataStore(params);
-		return dataStore;
-	}
+//    protected DataStore getTESTDataStore() throws IOException{
+//		Map<String, Object> params = new HashMap<>();
+//		params.put("dbtype", "postgis");
+//		//params.put("url", "jdbc:postgresql://localhost/test2");
+//		params.put("host", "localhost");
+//		params.put("database", "test2");
+//		params.put("schema", "public");
+//		params.put("port", 5432);
+//		params.put("user", "postgres");
+//		params.put("passwd", "postgres");
+//		DataStore dataStore = DataStoreFinder.getDataStore(params);
+//		return dataStore;
+//	}
 
 }

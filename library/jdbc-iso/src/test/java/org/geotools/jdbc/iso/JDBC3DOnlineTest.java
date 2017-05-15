@@ -49,5 +49,16 @@ public abstract class JDBC3DOnlineTest extends JDBCGeneric3DOnlineTest {
     protected String getPoly3d() {
         return "poly3d";
     }
+    
+    @Override
+    protected String getLine3d_Write()
+	{
+		return "line3d_write";
+	}
+
+    @Override
+    protected String getPoint3d_Write(){
+		return "point3d_write";
+	}
 
 }

@@ -849,7 +849,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	                return Geometry3DOperation.equals(this, geom);
 	        }
 	        /* */
-		
 		IntersectionMatrix tIM = null;
 		try {
 			tIM = RelateOp.relate(this, geom);

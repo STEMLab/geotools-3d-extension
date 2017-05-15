@@ -303,10 +303,10 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         String json = 
             "{" + 
             "   'type': 'Feature'," +
-            "   'bbox': [1.1, 1.1, 1.1, 1.1], " + 
+            "   'bbox': [1.1, 1.1, 1.1, 1.1, 1.1, 1.1], " + 
             "   'geometry': {" +
             "     'type': 'Point'," +
-            "     'coordinates': [1.1, 1.1]" +
+            "     'coordinates': [1.1, 1.1, 1.1]" +
             "   }," +
             "   'properties': {" +
             "     'int': 1," +
@@ -954,7 +954,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         "  'type': 'Feature'," +
         "  'geometry': {" +
         "     'type': 'Point'," +
-        "     'coordinates': [" + (val+0.1) + "," + (val+0.1) + "]" +
+        "     'coordinates': [" + (val+0.1) + "," + (val+0.1) + "," + (val+0.1) + "]" +
         "   }, " +
         "'  properties': {" +
         "     'int': " + val + "," +

@@ -27,14 +27,13 @@ import org.geotools.referencing.ReferencingFactoryFinder;
 import org.opengis.feature.IllegalAttributeException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.MathTransform2D;
 import org.opengis.referencing.operation.OperationNotFoundException;
 import org.opengis.referencing.operation.TransformException;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -115,14 +114,14 @@ public class ISOReprojectingFeatureIterator implements SimpleFeatureIterator {
             if (object instanceof Geometry) {
                 // do the transformation
                 Geometry geometry = (Geometry) object;
-                try {
-                	//TODO
-                    attributes.set(i, tx.transform(geometry));
+                /*try {
+                	//TODO : transfoorm
+                    //attributes.set(i, tx.transform(geometry));
                 } catch (TransformException e) {
                     String msg = "Error occured transforming "
                             + geometry.toString();
                     throw (IOException) new IOException(msg).initCause(e);
-                }
+                }*/
             }
         }
 

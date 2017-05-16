@@ -19,7 +19,7 @@ package org.geotools.process.vector3d;
 
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.feature.collection.SortedSimpleFeatureCollection;
+import org.geotools.feature.collection.ISOSortedSimpleFeatureCollection;
 import org.geotools.process.vector.ProcessingCollection;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -39,7 +39,7 @@ public abstract class ISOSimpleProcessingCollection extends
 
     @Override
     public SimpleFeatureCollection sort(SortBy order) {
-        return new SortedSimpleFeatureCollection(this, new SortBy[] { order });
+        return new ISOSortedSimpleFeatureCollection(this, new SortBy[] { order });
     }
 
     @Override

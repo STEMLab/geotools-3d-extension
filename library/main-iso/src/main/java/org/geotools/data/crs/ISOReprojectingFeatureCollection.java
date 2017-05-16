@@ -14,24 +14,26 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.store;
+package org.geotools.data.crs;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.FeatureReader;
 import org.geotools.data.ISODataUtilities;
+import org.geotools.data.FeatureReader;
 import org.geotools.data.collection.DelegateFeatureReader;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.store.ISOReprojectingFeatureIterator;
+import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.ISODecoratingSimpleFeatureCollection;
 import org.geotools.feature.visitor.CountVisitor;
 import org.geotools.feature.visitor.FeatureAttributeVisitor;
-import org.geotools.filter.ISOFilterAttributeExtractor;
+import org.geotools.filter.FilterAttributeExtractor;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.spatial.ISODefaultCRSFilterVisitor;
 import org.geotools.filter.spatial.ISOReprojectingFilterVisitor;
@@ -58,16 +60,13 @@ import org.opengis.referencing.operation.MathTransform;
  * SimpleFeatureCollection decorator that reprojects the default geometry.
  * 
  * @author Justin
- * @author Hyung-Gyu Ryoo, Pusan National University
+ *
  *
  *
  * @source $URL$
  */
 public class ISOReprojectingFeatureCollection extends ISODecoratingSimpleFeatureCollection {
-	
-	//TODO uses CommonFactoryFinder
     static final FilterFactory2 FF = new ISOFilterFactoryImpl();
-
     /**
      * The transform to the target coordinate reference system
      */
@@ -170,7 +169,7 @@ public class ISOReprojectingFeatureCollection extends ISODecoratingSimpleFeature
             ISODefaultCRSFilterVisitor defaulter = new ISODefaultCRSFilterVisitor(FF, crs);
             filter = (Filter) filter.accept(defaulter, null);
             if(crsDelegate != null && !CRS.equalsIgnoreMetadata(crs, crsDelegate)) {
-                ISOReprojectingFilterVisitor reprojector = new ISOReprojectingFilterVisitor(FF, delegate.getSchema());
+            	ISOReprojectingFilterVisitor reprojector = new ISOReprojectingFilterVisitor(FF, delegate.getSchema());
                 filter = (Filter) filter.accept(reprojector, null);
             }
         }
@@ -220,17 +219,17 @@ public class ISOReprojectingFeatureCollection extends ISODecoratingSimpleFeature
     public ReferencedEnvelope getBounds() {
         SimpleFeatureIterator r = features();
         try {
-        	ReferencedEnvelope newBBox = ReferencedEnvelope.create(target);
-            Envelope internal;
+            ReferencedEnvelope newBBox = new ReferencedEnvelope();
+            ReferencedEnvelope internal;
             SimpleFeature feature;
 
             while (r.hasNext()) {
                 feature = r.next();
                 final Geometry geom = ((Geometry)feature.getDefaultGeometry());
                 if(geom != null) {
-                    internal = geom.getEnvelope();
-                    ReferencedEnvelope internalRef = ReferencedEnvelope.reference(internal);
-                    newBBox.include(internalRef);
+                    Envelope env = geom.getEnvelope();
+                    internal = ReferencedEnvelope.reference(env);
+                    newBBox.expandToInclude(internal);
                 }
             }
             return ReferencedEnvelope.create(newBBox, target);
@@ -255,7 +254,7 @@ public class ISOReprojectingFeatureCollection extends ISODecoratingSimpleFeature
     public static boolean isGeometryless(FeatureVisitor visitor, SimpleFeatureType schema) {
         if (visitor instanceof FeatureAttributeVisitor) {
             //pass through unless one of the expressions requires the geometry attribute
-            ISOFilterAttributeExtractor extractor = new ISOFilterAttributeExtractor(schema);
+            FilterAttributeExtractor extractor = new FilterAttributeExtractor(schema);
             for (Expression e : ((FeatureAttributeVisitor) visitor).getExpressions()) {
                 e.accept(extractor, null);
             }

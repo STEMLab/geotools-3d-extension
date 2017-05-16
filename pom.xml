@@ -1004,7 +1004,7 @@
 			<!-- ======================================================= -->
 			<!-- Tests. -->
 			<!-- ======================================================= -->
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.15</version>
@@ -1021,31 +1021,29 @@
 					<argLine>-Xmx${test.maxHeapSize} ${jvm.opts}
 						-Dorg.geotools.test.extensive=${extensive.tests}
 						-Dorg.geotools.test.interactive=${interactive.tests}
-						-Dorg.geotools.image.test.skip=${skip.image.tests}
-						-Dorg.geotools.image.test.interactive=${interactive.image}
-						-Djava.awt.headless=${java.awt.headless}
-						-Dsun.java2d.d3d=${sun.java2d.d3d}
-						-Djava.io.tmpdir="${java.io.tmpdir}"
 						-Djava.library.path="${java.library.path}" ${test.args}</argLine>
+					<!-- 					
 					Ignores test failure only if we are generating a
 					report for publication on the web site. See the
-					profiles section at the begining of this pom.xml file.
+					profiles section at the begining of this pom.xml file. 
+					-->
 					<testFailureIgnore>
 						${allow.test.failure.ignore}
 					</testFailureIgnore>
-
+					<!-- 
 					The two following options have the opposite value of what we would
 						like. They are that way because they don't seem to work as expected with
 						Surefire 2.3. TODO: Try again when Surefire 2.4 will be available.
 
 					Option to print summary of test suites or just print the test cases
-						that has errors.
+						that has errors. 
+					-->
 					<printSummary>true</printSummary>
-					Redirect the unit test standard output to a file.
+					<!-- Redirect the unit test standard output to a file. -->
 					<redirectTestOutputToFile>false</redirectTestOutputToFile>
 					<forkMode>${test.forkMode}</forkMode>
 				</configuration>
-			</plugin> -->
+			</plugin>
 
 			<!-- ======================================================= -->
 			<!-- JAR packaging. -->

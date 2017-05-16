@@ -30,7 +30,7 @@ public class PostGIS3DOnlineTest extends JDBC3DOnlineTest  {
     protected JDBC3DTestSetup createTestSetup() {
         return new PostGIS3DTestSetup(new PostGISTestSetup());
     }
-    
+
 //    protected DataStore getTESTDataStore() throws IOException{
 //		Map<String, Object> params = new HashMap<>();
 //		params.put("dbtype", "postgis");

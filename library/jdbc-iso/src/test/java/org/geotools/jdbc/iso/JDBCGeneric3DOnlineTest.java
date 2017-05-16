@@ -16,48 +16,37 @@
  */
 package org.geotools.jdbc.iso;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.ISODataUtilities;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory;
-import org.opengis.filter.identity.FeatureId;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineSegment;
-import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
+import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -105,23 +94,28 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	 * @return
 	 */
 	protected abstract String getPoly3d();
+	
+	protected abstract String getSolid();
 
 	protected abstract String getPoint3d_Write();
 
 	protected abstract String getLine3d_Write();
 
+	protected abstract String getPoly3d_Write();
+
+	protected abstract String getSolid_Write();
 
 	@Override
 	protected void connect() throws Exception {
 		super.connect();
 
-		line3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getLine3d()),
-				aname(ID) + ":0," + aname(GEOM) + ":Curve:srid=" + getEpsgCode() + "," + aname(NAME)
-				+ ":String");
-		line3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
-		poly3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getPoly3d()),
-				aname(ID) + ":0," + aname(GEOM) + ":Surface:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
-		poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+//		line3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getLine3d()),
+//				aname(ID) + ":0," + aname(GEOM) + ":Curve:srid=" + getEpsgCode() + "," + aname(NAME)
+//				+ ":String");
+//		line3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+//		poly3DType = ISODataUtilities.createType(dataStore.getNamespaceURI() + "." + tname(getPoly3d()),
+//				aname(ID) + ":0," + aname(GEOM) + ":Surface:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
+//		poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 
 		crs = CRS.decode("EPSG:" + getEpsgCode());
 	}
@@ -147,6 +141,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
 	}
 
+	// 1,1,1
 	public void testReadPoint() throws Exception {
 		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getPoint3d())).getFeatures();
 		try(SimpleFeatureIterator fr = fc.features()) {
@@ -173,17 +168,20 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
-		b.add(aname(ID), String.class);
+		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Point.class);
+		b.add(aname(NAME), String.class);
 		b.setName( getPoint3d_Write() );
 		
 		SimpleFeatureType point3DType = b.buildFeatureType();
+		point3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+		
 		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(point3DType, new ISOFeatureFactoryImpl());
 
 
 		try{
 			dataStore.createSchema((SimpleFeatureType)point3DType);
-			SimpleFeature feature = sfb.buildFeature("p1_test",new Object[]{"p1_test",p});
+			SimpleFeature feature = sfb.buildFeature("p1_test",new Object[]{10,p,"p1_test"});
 
 			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 					point3DType.getTypeName(), Transaction.AUTO_COMMIT);
@@ -206,13 +204,12 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		}
 	}
 
-
+	// 1 1 0, 2 2 0, 4 2 1, 5 1 1
 	public void testReadLine() throws Exception {
 		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getLine3d())).getFeatures();
 		try(SimpleFeatureIterator fr = fc.features()) {
 			assertTrue(fr.hasNext());
 			Curve ls = (Curve) fr.next().getDefaultGeometry();
-			// 1 1 0, 2 2 0, 4 2 1, 5 1 1
 
 			List<? extends CurveSegment> segments = ls.getSegments();
 
@@ -249,16 +246,19 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
-		b.add(aname(ID), String.class);
+		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Curve.class);
+		b.add(aname(NAME), String.class);
 		b.setName( getLine3d_Write() );
 		
 		SimpleFeatureType line3DType = b.buildFeatureType();
+		line3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+		
 		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(line3DType, new ISOFeatureFactoryImpl());
 
 		try{
 			dataStore.createSchema((SimpleFeatureType)line3DType);
-			SimpleFeature feature = sfb.buildFeature("c1_test", new Object[] { "c1_test", c });
+			SimpleFeature feature = sfb.buildFeature("c1_test", new Object[] { 10, c, "c1_test" });
 
 			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
 					line3DType.getTypeName(), Transaction.AUTO_COMMIT);
@@ -293,7 +293,103 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 
 	public void testReadPolygon() throws Exception {
+		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getPoly3d())).getFeatures();
+		try(SimpleFeatureIterator fr = fc.features()) {
+			assertTrue(fr.hasNext());
+			Surface test_surface = (Surface) fr.next().getDefaultGeometry();
+			//(1 1 0, 2 2 0, 4 2 1, 5 1 1, 1 1 0)
+			
+			DirectPosition dp1 = builder.createDirectPosition(new double[] {1, 1, 0});
+			DirectPosition dp2 = builder.createDirectPosition(new double[] {2, 2, 0});
+			DirectPosition dp3 = builder.createDirectPosition(new double[] {4, 2, 1});
+			DirectPosition dp4 = builder.createDirectPosition(new double[] {5, 1, 1});
+			
+			LineSegment edge1 = builder.createLineSegment(dp1, dp2);
+			LineSegment edge2 = builder.createLineSegment(dp2, dp3);
+			LineSegment edge3 = builder.createLineSegment(dp3, dp4);
+			LineSegment edge4 = builder.createLineSegment(dp4, dp1);
+			
+			List<OrientableCurve> edges = new ArrayList<OrientableCurve>();
+			edges.add( builder.createCurve( Arrays.asList(edge1) ));
+			edges.add( builder.createCurve( Arrays.asList(edge2) ));
+			edges.add( builder.createCurve( Arrays.asList(edge3) ));
+			edges.add( builder.createCurve( Arrays.asList(edge4) ));
+			
+			Ring exterior = builder.createRing(edges);
+			SurfaceBoundary sb = builder.createSurfaceBoundary(exterior);
+			Surface sf = builder.createSurface(sb);
+			
+			assertTrue(sf.equals(test_surface));
+		}
+	}
+	
+	public void testWritePolygon() throws Exception {
+		//remove previous table
+		try{
+			dataStore.removeSchema(getPoly3d_Write());
+		} catch (Exception e){
+			//e.printStackTrace();
+			System.out.println("getPoly3d_Write -- Table was empty");
+		}
+		
+		// build a 3d polygon
+		DirectPosition dp1 = builder.createDirectPosition(new double[] {1, 1, 0});
+		DirectPosition dp2 = builder.createDirectPosition(new double[] {2, 2, 0});
+		DirectPosition dp3 = builder.createDirectPosition(new double[] {4, 2, 1});
+		DirectPosition dp4 = builder.createDirectPosition(new double[] {5, 1, 1});
+		DirectPosition dp5 = builder.createDirectPosition(new double[] {4, 0, 2});
+		
+		LineSegment edge1 = builder.createLineSegment(dp1, dp2);
+		LineSegment edge2 = builder.createLineSegment(dp2, dp3);
+		LineSegment edge3 = builder.createLineSegment(dp3, dp4);
+		LineSegment edge4 = builder.createLineSegment(dp4, dp5);
+		LineSegment edge5 = builder.createLineSegment(dp5, dp1);
+		
+		List<OrientableCurve> edges = new ArrayList<OrientableCurve>();
+		edges.add( builder.createCurve( Arrays.asList(edge1) ));
+		edges.add( builder.createCurve( Arrays.asList(edge2) ));
+		edges.add( builder.createCurve( Arrays.asList(edge3) ));
+		edges.add( builder.createCurve( Arrays.asList(edge4) ));
+		edges.add( builder.createCurve( Arrays.asList(edge5) ));
+		
+		Ring exterior = builder.createRing(edges);
+		SurfaceBoundary sb = builder.createSurfaceBoundary(exterior);
+		Surface sf = builder.createSurface(sb);
+		
+		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
+		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.add(aname(ID), Integer.class);
+		b.add(aname(GEOM), Surface.class);
+		b.add(aname(NAME), String.class);
+		b.setName( getPoly3d_Write() );
 
+		SimpleFeatureType poly3dType = b.buildFeatureType();
+		poly3dType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
+		ISOSimpleFeatureBuilder sfb = new ISOSimpleFeatureBuilder(poly3dType, new ISOFeatureFactoryImpl());
+		
+		try{
+			dataStore.createSchema((SimpleFeatureType)poly3dType);
+			SimpleFeature feature = sfb.buildFeature("pl1_test", new Object[] { 10, sf, "pl1_test" });
+
+			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
+					poly3dType.getTypeName(), Transaction.AUTO_COMMIT);
+			SimpleFeature newFeature = fw.next(); // new blank feature
+			newFeature.setAttributes(feature.getAttributes());
+			fw.write();
+			fw.close();
+			
+			// retrieve it back
+			SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getPoly3d_Write())).getFeatures();
+			try(SimpleFeatureIterator fr = fc.features()) {
+				assertTrue(fr.hasNext());
+				Surface polygon = (Surface) fr.next().getDefaultGeometry();
+				assertTrue(sf.equals((Geometry)polygon));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void testCreateSchemaAndInsertPolyTriangle() throws Exception {

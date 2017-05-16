@@ -31,6 +31,7 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -40,11 +41,17 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineSegment;
+import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -54,7 +61,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * 
  * @author Andrea Aime - OpenGeo
  * @author Martin Davis - OpenGeo
- * 
+ * @author Dongmin Kim
  * 
  * 
  * @source $URL$
@@ -73,7 +80,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 	protected SimpleFeatureType line3DType;
 
-	protected ISOGeometryBuilder builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+	protected ISOGeometryBuilder builder;// = new ISOGeometryBuilder(new Hints()DefaultGeographicCRS.WGS84_3D);
 
 	protected CoordinateReferenceSystem crs;
 
@@ -117,13 +124,14 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 //				aname(ID) + ":0," + aname(GEOM) + ":Surface:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
 //		poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 
+		Hints h = new Hints();
+		h.put(Hints.GEOMETRY_VALIDATE, true);
+		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		builder = new ISOGeometryBuilder(h);
+		
 		crs = CRS.decode("EPSG:" + getEpsgCode());
 	}
-	
-	protected DataStore getTESTDataStore() throws IOException{
-		return dataStore;
-	}
-	
+		
 	protected Integer getNativeSRID() {
 		return new Integer(getEpsgCode());
 	}
@@ -299,25 +307,14 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			Surface test_surface = (Surface) fr.next().getDefaultGeometry();
 			//(1 1 0, 2 2 0, 4 2 1, 5 1 1, 1 1 0)
 			
-			DirectPosition dp1 = builder.createDirectPosition(new double[] {1, 1, 0});
-			DirectPosition dp2 = builder.createDirectPosition(new double[] {2, 2, 0});
-			DirectPosition dp3 = builder.createDirectPosition(new double[] {4, 2, 1});
-			DirectPosition dp4 = builder.createDirectPosition(new double[] {5, 1, 1});
+			List<Position> dp_list = new ArrayList<>();
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {2, 2, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {4, 2, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {5, 1, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
 			
-			LineSegment edge1 = builder.createLineSegment(dp1, dp2);
-			LineSegment edge2 = builder.createLineSegment(dp2, dp3);
-			LineSegment edge3 = builder.createLineSegment(dp3, dp4);
-			LineSegment edge4 = builder.createLineSegment(dp4, dp1);
-			
-			List<OrientableCurve> edges = new ArrayList<OrientableCurve>();
-			edges.add( builder.createCurve( Arrays.asList(edge1) ));
-			edges.add( builder.createCurve( Arrays.asList(edge2) ));
-			edges.add( builder.createCurve( Arrays.asList(edge3) ));
-			edges.add( builder.createCurve( Arrays.asList(edge4) ));
-			
-			Ring exterior = builder.createRing(edges);
-			SurfaceBoundary sb = builder.createSurfaceBoundary(exterior);
-			Surface sf = builder.createSurface(sb);
+			Surface sf = makeSimpleSurface(dp_list);
 			
 			assertTrue(sf.equals(test_surface));
 		}
@@ -333,28 +330,15 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		}
 		
 		// build a 3d polygon
-		DirectPosition dp1 = builder.createDirectPosition(new double[] {1, 1, 0});
-		DirectPosition dp2 = builder.createDirectPosition(new double[] {2, 2, 0});
-		DirectPosition dp3 = builder.createDirectPosition(new double[] {4, 2, 1});
-		DirectPosition dp4 = builder.createDirectPosition(new double[] {5, 1, 1});
-		DirectPosition dp5 = builder.createDirectPosition(new double[] {4, 0, 2});
+		List<Position> dp_list = new ArrayList<>();
+		dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
+		dp_list.add(builder.createDirectPosition(new double[] {2, 2, 0}));
+		dp_list.add(builder.createDirectPosition(new double[] {4, 2, 1}));
+		dp_list.add(builder.createDirectPosition(new double[] {5, 1, 1}));
+		dp_list.add(builder.createDirectPosition(new double[] {4, 0, 2}));
+		dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
 		
-		LineSegment edge1 = builder.createLineSegment(dp1, dp2);
-		LineSegment edge2 = builder.createLineSegment(dp2, dp3);
-		LineSegment edge3 = builder.createLineSegment(dp3, dp4);
-		LineSegment edge4 = builder.createLineSegment(dp4, dp5);
-		LineSegment edge5 = builder.createLineSegment(dp5, dp1);
-		
-		List<OrientableCurve> edges = new ArrayList<OrientableCurve>();
-		edges.add( builder.createCurve( Arrays.asList(edge1) ));
-		edges.add( builder.createCurve( Arrays.asList(edge2) ));
-		edges.add( builder.createCurve( Arrays.asList(edge3) ));
-		edges.add( builder.createCurve( Arrays.asList(edge4) ));
-		edges.add( builder.createCurve( Arrays.asList(edge5) ));
-		
-		Ring exterior = builder.createRing(edges);
-		SurfaceBoundary sb = builder.createSurfaceBoundary(exterior);
-		Surface sf = builder.createSurface(sb);
+		Surface sf = makeSimpleSurface(dp_list);
 		
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
@@ -391,7 +375,149 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		}
 		
 	}
+	
+	
+	public void testReadSolid() throws Exception {
+		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getSolid())).getFeatures();
+		try(SimpleFeatureIterator fr = fc.features()) {
+			assertTrue(fr.hasNext());
+			Solid sd_test = (Solid) fr.next().getDefaultGeometry();
+//			 "((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),"
+//			 "((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), "
+//			 "((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),"
+//			 "((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),"
+//			 "((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), "
+//			 "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1))"
+			
+			List<Position> dp_list = new ArrayList<>();
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, -1}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 2}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 1}));
+			
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list);
+			Solid solid = makeSolid(surfaces);
+			assertTrue(solid.equals(sd_test));
+		}
+	}
+	
+	public void testWriteSolid() throws Exception {
+		
+	}
+	
 
+/*
+ * make Simple(no interior boundary) Surface
+ */
+	protected Surface makeSimpleSurface(List<Position> dp) throws Exception{
+		int size = dp.size();
+		if (size < 3){
+			throw new Exception("cannot make surface. direct positions are at least 3");
+		}
+		
+		LineString line = builder.createLineString(dp);
+		
+		ArrayList<CurveSegment> edges = new ArrayList<>();
+		edges.add(line);
+
+		OrientableCurve curve = builder.createCurve(edges);
+		List<OrientableCurve> o_curves = new ArrayList<OrientableCurve>();
+		o_curves.add(curve);
+		
+		Ring exterior = builder.createRing(o_curves);
+		SurfaceBoundary sb = builder.createSurfaceBoundary(exterior, new ArrayList<Ring>() );
+		Surface sf = builder.createSurface(sb);
+		return sf;
+	}
+
+	/*
+	 * make SimpleSolid(Cube)
+	 */
+	protected Solid makeSolid(List<OrientableSurface> surfaces) throws Exception {
+		Shell exteriorShell = builder.createShell(surfaces);
+		List<Shell> interiors = new ArrayList<Shell>();
+
+		SolidBoundary solidBoundary = builder.createSolidBoundary(exteriorShell, interiors);
+		Solid solid = builder.createSolid(solidBoundary);
+
+		return solid;
+	}
+
+	protected List<OrientableSurface> makeOrientableSurfacesOfCube(List<Position> dp_list) throws Exception {
+		Position position1 = dp_list.get(0);
+		Position position2 = dp_list.get(1);
+		Position position3 = dp_list.get(2);
+		Position position4 = dp_list.get(3);
+		Position position5 = dp_list.get(4);
+		Position position6 = dp_list.get(5);
+		Position position7 = dp_list.get(6);
+		Position position8 = dp_list.get(7);
+
+		// create a list of connected positions
+		List<Position> dps1 = new ArrayList<Position>();
+		dps1.add(position1);
+		dps1.add(position4);
+		dps1.add(position3);
+		dps1.add(position2);
+		dps1.add(position1);
+		
+		List<Position> dps2 = new ArrayList<Position>();
+		dps2.add(position3);
+		dps2.add(position4);
+		dps2.add(position8);
+		dps2.add(position7);
+		dps2.add(position3);
+
+		List<Position> dps3 = new ArrayList<Position>();
+		dps3.add(position5);
+		dps3.add(position6);
+		dps3.add(position7);
+		dps3.add(position8);
+		dps3.add(position5);
+
+		List<Position> dps4 = new ArrayList<Position>();
+		dps4.add(position6);
+		dps4.add(position5);
+		dps4.add(position1);
+		dps4.add(position2);
+		dps4.add(position6);
+
+		List<Position> dps5 = new ArrayList<Position>();
+		dps5.add(position2);
+		dps5.add(position3);
+		dps5.add(position7);
+		dps5.add(position6);
+		dps5.add(position2);
+		
+		List<Position> dps6 = new ArrayList<Position>();
+		dps6.add(position1);
+		dps6.add(position5);
+		dps6.add(position8);
+		dps6.add(position4);
+		dps6.add(position1);
+		
+		// create the surface
+		Surface surface1 = makeSimpleSurface(dps1);
+		Surface surface2 = makeSimpleSurface(dps2);
+		Surface surface3 = makeSimpleSurface(dps3);
+		Surface surface4 = makeSimpleSurface(dps4);
+		Surface surface5 = makeSimpleSurface(dps5);
+		Surface surface6 = makeSimpleSurface(dps6);
+
+		List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+		surfaces.add(surface1);
+		surfaces.add(surface2);
+		surfaces.add(surface3);
+		surfaces.add(surface4);
+		surfaces.add(surface5);
+		surfaces.add(surface6);
+		return surfaces;
+	}
+	
 	public void testCreateSchemaAndInsertPolyTriangle() throws Exception {
 		/*LiteCoordinateSequenceFactory csf = new LiteCoordinateSequenceFactory();
         GeometryFactory gf = new GeometryFactory(csf);

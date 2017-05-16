@@ -51,7 +51,7 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.feature.visitor.MaxVisitor;
 import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.NearestVisitor;
-import org.geotools.filter.FilterAttributeExtractor;
+import org.geotools.filter.ISOFilterAttributeExtractor;
 import org.geotools.filter.visitor.PostPreProcessFilterSplittingVisitor;
 import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -707,7 +707,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
             SimpleFeatureType querySchema = returnedSchema;
             
             if (filter != null && !filter.equals(Filter.INCLUDE)) {
-                FilterAttributeExtractor extractor = new FilterAttributeExtractor(featureType);
+                ISOFilterAttributeExtractor extractor = new ISOFilterAttributeExtractor(featureType);
                 filter.accept(extractor, null);
                 
                 String[] extraAttributes = extractor.getAttributeNames();

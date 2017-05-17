@@ -203,9 +203,8 @@ public class Edge extends GraphComponent {
 			// Debug.println("next pt: " + nextPt);
 
 			// Normalize segment index if intPt falls on vertex
-			// The check for point equality is 2D only - Z values are ignored => not ignored
-			if (intPt.equals2D(nextPt)) {
-
+			// The check for point equality is 2D only - Z values are ignored
+			if (intPt.equals3D(nextPt)) {
 				// Debug.println("normalized distance");
 				normalizedSegmentIndex = nextSegIndex;
 				dist = 0.0;

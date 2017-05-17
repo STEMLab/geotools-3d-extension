@@ -390,11 +390,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 //			 "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1))"
 			
 			List<Position> dp_list = new ArrayList<>();
-			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 0}));
 			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {1, 1, -1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
 			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 2}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 1}));
 			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 1}));
 			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 1}));
 			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 1}));

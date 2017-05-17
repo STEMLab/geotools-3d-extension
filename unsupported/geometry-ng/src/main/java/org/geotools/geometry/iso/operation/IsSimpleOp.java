@@ -135,8 +135,15 @@ public class IsSimpleOp {
 			for (Iterator eiIt = e.getEdgeIntersectionList().iterator(); eiIt
 					.hasNext();) {
 				EdgeIntersection ei = (EdgeIntersection) eiIt.next();
-				if (!ei.isEndPoint(maxSegmentIndex))
-					return true;
+				
+				if (!ei.isEndPoint(maxSegmentIndex)){
+					//if coord is 3D, don't check intersect.
+					if (ei.coord.z != Double.NaN)
+						return false;
+					else
+						return true;
+				}
+
 			}
 		}
 		return false;

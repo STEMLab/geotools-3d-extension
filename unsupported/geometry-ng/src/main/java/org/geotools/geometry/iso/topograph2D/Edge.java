@@ -192,6 +192,7 @@ public class Edge extends GraphComponent {
 	public void addIntersection(LineIntersector li, int segmentIndex,
 			int geomIndex, int intIndex) {
 		Coordinate intPt = new Coordinate(li.getIntersection(intIndex));
+
 		int normalizedSegmentIndex = segmentIndex;
 		double dist = li.getEdgeDistance(geomIndex, intIndex);
 		// Debug.println("edge intpt: " + intPt + " dist: " + dist);
@@ -202,8 +203,9 @@ public class Edge extends GraphComponent {
 			// Debug.println("next pt: " + nextPt);
 
 			// Normalize segment index if intPt falls on vertex
-			// The check for point equality is 2D only - Z values are ignored
+			// The check for point equality is 2D only - Z values are ignored => not ignored
 			if (intPt.equals2D(nextPt)) {
+
 				// Debug.println("normalized distance");
 				normalizedSegmentIndex = nextSegIndex;
 				dist = 0.0;
@@ -213,7 +215,6 @@ public class Edge extends GraphComponent {
 		 * Add the intersection point to edge intersection list.
 		 */
 		EdgeIntersection ei = eiList.add(intPt, normalizedSegmentIndex, dist);
-		// ei.print(System.out);
 
 	}
 

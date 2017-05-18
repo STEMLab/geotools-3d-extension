@@ -213,13 +213,10 @@ public class GMLConfiguration_ISO extends Configuration {
             GMLCoordinatesTypeBinding.class);
         //container.registerComponentImplementation(GML.COORDTYPE,CoordTypeBinding.class);
         container.registerComponentImplementation(GML.CoordType, GMLCoordTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveArrayPropertyType,
-            CurveArrayPropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
-        container.registerComponentImplementation(GML.CurvePropertyType,
-            CurvePropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveSegmentArrayPropertyType,
-            CurveSegmentArrayPropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveArrayPropertyType, CurveArrayPropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurvePropertyType, CurvePropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveSegmentArrayPropertyType, CurveSegmentArrayPropertyTypeBinding.class);
         container.registerComponentImplementation(GML.DirectPositionListType,
             DirectPositionListTypeBinding.class);
         container.registerComponentImplementation(GML.DirectPositionType,

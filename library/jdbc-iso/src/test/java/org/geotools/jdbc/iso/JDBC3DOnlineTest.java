@@ -16,6 +16,32 @@
  */
 package org.geotools.jdbc.iso;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geotools.data.Query;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.factory.GeoTools;
+import org.geotools.factory.Hints;
+import org.geotools.feature.ISOFeatureFactoryImpl;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.FeatureType;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.coordinate.LineSegment;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+
 /**
  * Tests the ability of the datastore to cope with 3D data
  * 
@@ -78,5 +104,77 @@ public abstract class JDBC3DOnlineTest extends JDBCGeneric3DOnlineTest {
 		// TODO Auto-generated method stub
 		return "solid_write";
 	}
-    
+	
+	
+	// Surface True
+	
+	// Surface False
+	
+	// Solid True
+	
+	// Solid False
+	/*
+	public void testIntersectInCurveSchema(){
+		// Point True
+		
+		// Point False
+		
+		// Curve True
+		
+		// Curve False
+		
+		// Surface True
+		
+		// Surface False
+		
+		// Solid True
+		
+		// Solid False
+	}
+	
+	public void testIntersectInSurfaceSchema(){
+		// Point True
+		
+		// Point False
+		
+		// Curve True
+		
+		// Curve False
+		
+		// Surface True
+		
+		// Surface False
+		
+		// Solid True
+		
+		// Solid False
+	}
+	
+	public void testIntersectInSolidSchema(){
+		// Point True
+		
+		// Point False
+		
+		// Curve True
+		
+		// Curve False
+		
+		// Surface True
+		
+		// Surface False
+		
+		// Solid True
+		
+		// Solid False
+	}
+	
+	public void testContains(){
+		
+	}
+	
+	public void testWithIn(){
+		
+	}
+
+	*/
 }

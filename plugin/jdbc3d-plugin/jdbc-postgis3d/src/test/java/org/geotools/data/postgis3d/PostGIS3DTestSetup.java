@@ -104,6 +104,8 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
                 + "ST_GeomFromText('POINT(1 1 1)', 4979)," + "'p1')");
         run("INSERT INTO \"point3d\" (\"id\",\"geom\",\"name\") VALUES (1,"
                 + "ST_GeomFromText('POINT(3 0 1)', 4979)," + "'p2')");
+        run("INSERT INTO \"point3d\" (\"id\",\"geom\",\"name\") VALUES (2,"
+                + "ST_GeomFromText('POINT(4 2 1)', 4979)," + "'p3')");
     }
     
 	@Override

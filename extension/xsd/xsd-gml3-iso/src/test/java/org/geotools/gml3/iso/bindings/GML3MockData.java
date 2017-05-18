@@ -21,35 +21,30 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.jts.CurvedGeometryFactory;
-import org.geotools.geometry.jts.LiteCoordinateSequence;
-import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml3.iso.GML;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.XSD;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.Envelope;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
 
 /**
  * Utility class for creating test xml data for gml3 bindings.
@@ -62,12 +57,10 @@ import com.vividsolutions.jts.geom.Polygon;
  * @source $URL$
  */
 public class GML3MockData {
-    static CurvedGeometryFactory gf = new CurvedGeometryFactory(0.1);
-    
-    static LiteCoordinateSequenceFactory liteCSF = new LiteCoordinateSequenceFactory();
-    static GeometryFactory liteGF = new GeometryFactory(liteCSF);
-    
     static XSD gml = GML.getInstance();
+    
+    static ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+    static ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
     
     public static void setGML(XSD gml) {
         if (gml == null) {
@@ -116,9 +109,8 @@ public class GML3MockData {
     }
 
     public static Point point() {
-        Point p = gf.createPoint(new Coordinate(1, 2));
-        p.setUserData(crs());
-
+        Point p = gb.createPoint(gb.createDirectPosition(new double[] {1, 2}));
+        //p.setUserData(crs());
         return p;
     }
 
@@ -128,56 +120,29 @@ public class GML3MockData {
      * 
      * @return a 2D Point
      */
-    public static Point pointLite2D() {
-        return liteGF.createPoint(new LiteCoordinateSequence(new double[] { 1, 2}, 2));
+    public static Point point_3D() {
+        return gb3D.createPoint(gb3D.createDirectPosition(new double[] {1, 2, 100}));
     }
 
-    /**
-     * Creates a Point using a LiteCoordinateSequence
-     * with a 2D coordinate.
-     * 
-     * @return a 2D Point
-     */
-    public static Point pointLite3D() {
-        return liteGF.createPoint(new LiteCoordinateSequence(new double[] { 1, 2, 100}, 3));
+    public static Curve lineString() {
+    	PointArray pa = gb.createPointArray();
+    	pa.add(gb.createDirectPosition(new double[]{1, 2}));
+    	pa.add(gb.createDirectPosition(new double[]{3, 4}));
+    	
+        return gb.createCurve(pa);
     }
-
-    public static LineString lineString() {
-        return gf.createLineString(new Coordinate[] { new Coordinate(1, 2), new Coordinate(3, 4) });
-    }
-
-    /**
-     * Creates a LineString using a LiteCoordinateSequence
-     * with 2 2D coordinates.
-     * 
-     * @return a 2D LineString
-     */
-    public static LineString lineStringLite2D() {
-        return liteGF.createLineString(new Coordinate[] { new Coordinate(1, 2), new Coordinate(3, 4) });
-    }
-
-    /**
-     * Creates a LineString using a LiteCoordinateSequence
-     * with 2 2D coordinates.
-     * 
-     * @return a 2D LineString
-     */
-    public static LineString lineStringLite2D(int size) {
-    	Coordinate[] coords = new Coordinate[size];
-    	for (int i = 0; i < size; i++) {
-    		coords[i] = new Coordinate(i, i+1);
-    	}
-        return liteGF.createLineString(coords);
-    }
-
     /**
      * Creates a LineString using a LiteCoordinateSequence
      * with 2 3D coordinates.
      * 
      * @return a 3D LineString
      */
-    public static LineString lineStringLite3D() {
-        return liteGF.createLineString(liteCSF.create(new double[] { 1, 2, 100,  3, 4, 200}, 3));
+    public static Curve lineStringLite3D() {
+    	PointArray pa = gb3D.createPointArray();
+    	pa.add(gb3D.createDirectPosition(new double[]{1, 2, 100}));
+    	pa.add(gb3D.createDirectPosition(new double[]{3, 4, 200}));
+    	
+        return gb.createCurve(pa);
     }
 
     public static Element lineString(Document document, Node parent) {
@@ -240,7 +205,7 @@ public class GML3MockData {
         return lineString;
     }
 
-    public static Element arcWithPosList(Document document, Node parent) {
+    /*public static Element arcWithPosList(Document document, Node parent) {
         Element arc = element(qName("Arc"), document, parent);
         Element posList = element(qName("posList"), document, arc);
         posList.appendChild(document.createTextNode("1.0 1.0 2.0 2.0 3.0 1.0"));
@@ -262,13 +227,15 @@ public class GML3MockData {
         posList.appendChild(document.createTextNode("1.0 1.0 2.0 2.0 3.0 1.0"));
 
         return circle;
-    }
+    }*/
 
-    public static LinearRing linearRing() {
-        return gf.createLinearRing(new Coordinate[] {
+    public static Ring linearRing() {
+        /*return gf.createLinearRing(new Coordinate[] {
                 new Coordinate(1, 1), new Coordinate(2, 2), new Coordinate(3, 3),
                 new Coordinate(1, 1)
-            });
+            });*/
+    	//TODO
+    	return null;
     }
 
     public static Element linearRing(Document document, Node parent) {
@@ -339,21 +306,10 @@ public class GML3MockData {
         return linearRing;
     }
 
-    public static Polygon polygon() {
-        return gf.createPolygon(linearRing(), null);
-    }
-
-    /**
-     * Creates a Polygon using a LiteCoordinateSequence
-     * with 2D coordinates.
-     * 
-     * @return a 2D Polygon
-     */
-    public static Polygon polygonLite2D() {
-        return liteGF.createPolygon(
-        		liteGF.createLinearRing(liteCSF.create(
-        				new double[] { 1,1,  2,1, 2,2, 1,2, 1,1 }, 2 )),
-        				null);
+    public static Surface polygon() {
+        /*return gf.createPolygon(linearRing(), null);*/
+    	//TODO
+    	return null;
     }
 
     /**
@@ -362,11 +318,13 @@ public class GML3MockData {
      * 
      * @return a 3D Polygon
      */
-    public static Polygon polygonLite3D() {
-        return liteGF.createPolygon(
+    public static Surface polygonLite3D() {
+        /*return liteGF.createPolygon(
         		liteGF.createLinearRing(liteCSF.create(
         				new double[] { 1,1,100,  2,1,99, 2,2,98, 1,2,97, 1,1,100}, 3)),
-        				null);
+        				null);*/
+    	//TODO
+    	return null;
     }
 
     public static Element polygon(Document document, Node parent) {
@@ -448,7 +406,9 @@ public class GML3MockData {
     }
 
     public static MultiPoint multiPoint() {
-        return gf.createMultiPoint(new Coordinate[] { new Coordinate(1, 1), new Coordinate(2, 2) });
+        /*return gf.createMultiPoint(new Coordinate[] { new Coordinate(1, 1), new Coordinate(2, 2) });*/
+    	//TODO
+    	return null;
     }
 
     public static Element multiPoint(Document document, Node parent) {
@@ -488,18 +448,21 @@ public class GML3MockData {
         return multiPoint;
     }
 
-    public static MultiLineString multiLineString() {
-        return gf.createMultiLineString(new LineString[] { lineString(), lineString() });
+    public static MultiCurve multiLineString() {
+        //return gf.createMultiLineString(new LineString[] { lineString(), lineString() });
+    	//TODO
+    	return null;
     }
 
-    public static LineString compoundCurve() {
+    //TODO : now we don't support curved geometry
+    /*public static LineString compoundCurve() {
         CurvedGeometryFactory factory = new CurvedGeometryFactory(0.1);
         LineString curve = factory.createCurvedGeometry(new LiteCoordinateSequence(1, 1, 2, 2, 3,
                 1, 5, 5, 7, 3));
         LineString straight = factory.createLineString(new LiteCoordinateSequence(7, 3, 10, 15));
         LineString compound = factory.createCurvedGeometry(curve, straight);
         return compound;
-    }
+    }*/
 
     public static Element multiLineString(Document document, Node parent) {
         Element multiLineString = element(qName("MultiLineString"), document, parent);
@@ -549,18 +512,21 @@ public class GML3MockData {
         return multiCurve;
     }
     
-    public static MultiPolygon multiPolygon() {
-        return gf.createMultiPolygon(new Polygon[] { polygon(), polygon() });
+    public static MultiSurface multiPolygon() {
+        //return gf.createMultiPolygon(new Polygon[] { polygon(), polygon() });
+    	//TODO
+    	return null;
     }
 
-    public static Polygon curvePolygon() {
+    //TODO : now we don't support curved geometry
+    /*public static Polygon curvePolygon() {
         LineString curve1 = gf.createCurvedGeometry(2, 0, 0, 2, 0, 2, 1, 2, 3, 4, 3);
         LineString line1 = gf.createLineString(new LiteCoordinateSequence(4, 3, 4, 5, 1, 4, 0, 0));
         LinearRing shell = (LinearRing) gf.createCurvedGeometry(Arrays.asList(curve1, line1));
         LinearRing hole = (LinearRing) gf.createCurvedGeometry(2, 1.7, 1, 1.4, 0.4, 1.6, 0.4,
                 1.6, 0.5, 1.7, 1);
         return gf.createPolygon(shell, new LinearRing[] { hole });
-    }
+    }*/
 
     public static Element multiPolygon(Document document, Node parent) {
         Element multiPolygon = element(qName("MultiPolygon"), document, parent);
@@ -613,8 +579,10 @@ public class GML3MockData {
     }
     
     
-    public static GeometryCollection multiGeometry() {
-        return gf.createGeometryCollection(new Geometry[]{point(),lineString(),polygon()});
+    public static MultiPrimitive multiGeometry() {
+        //return gf.createGeometryCollection(new Geometry[]{point(),lineString(),polygon()});
+    	//TODO
+    	return null;
     }
     
     public static Element multiGeometry(Document document, Node parent ) {
@@ -653,7 +621,7 @@ public class GML3MockData {
     }
 
     public static SimpleFeature feature() throws Exception {
-        SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
+        ISOSimpleFeatureTypeBuilder typeBuilder = new ISOSimpleFeatureTypeBuilder();
         typeBuilder.setName(TEST.TestFeature.getLocalPart());
         typeBuilder.setNamespaceURI(TEST.TestFeature.getNamespaceURI());
 
@@ -665,7 +633,7 @@ public class GML3MockData {
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
 
-        SimpleFeatureBuilder builder = new SimpleFeatureBuilder(type);
+        ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(type);
         builder.add("theName");
         builder.add("theDescription");
         builder.add(point());

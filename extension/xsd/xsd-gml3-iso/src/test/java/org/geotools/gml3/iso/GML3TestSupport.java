@@ -21,8 +21,10 @@ import java.util.Map;
 
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.test.XMLTestSupport;
+import org.opengis.geometry.ISOGeometryBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -77,6 +79,9 @@ import org.w3c.dom.NodeList;
  */
 public abstract class GML3TestSupport extends XMLTestSupport {
 
+	protected ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+	protected ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+	
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -95,12 +100,20 @@ public abstract class GML3TestSupport extends XMLTestSupport {
         root.setAttribute("xmlns:gml", "http://www.opengis.net/gml");
     }
 
+    protected ISOGeometryBuilder getGeometryBuilder() {
+    	return gb;
+    }
+    
+    protected ISOGeometryBuilder getGeometryBuilder3D() {
+    	return gb3D;
+    }
+    
     /* 
      * binds to the GMLConfiguration in the current package 
      * i.e. this is a GML3 specific binding configuration. 
      */
     protected Configuration createConfiguration() {
-        return new GMLConfiguration(enableExtendedArcSurfaceSupport());
+        return new GMLConfiguration_ISO(enableExtendedArcSurfaceSupport());
     }
 
     protected void checkPosOrdinates(Document doc,  int expectedNumOrdinates) 

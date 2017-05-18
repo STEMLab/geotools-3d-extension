@@ -16,15 +16,13 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GML3TestSupport;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.geometry.primitive.Point;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-
 
 /**
  * 
@@ -38,9 +36,10 @@ public class PointTypeBindingTest extends GML3TestSupport {
 
         Point p = (Point) parse();
         assertNotNull(p);
-        assertEquals(new Coordinate(1d, 2d), p.getCoordinate());
+        assertEquals(gb.createDirectPosition(new double[] {1d, 2d})
+        		, p.getDirectPosition());
 
-        assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        assertEquals(p.getCoordinateReferenceSystem(), DefaultGeographicCRS.WGS84);
     }
     
     public void testPos3D() throws Exception {
@@ -48,9 +47,10 @@ public class PointTypeBindingTest extends GML3TestSupport {
 
         Point p = (Point) parse();
         assertNotNull(p);
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(p.getCoordinate()));
+        assertEquals(gb3D.createDirectPosition(new double[] {1d, 2d, 10d})
+        		, p.getDirectPosition());
 
-        assertTrue(p.getUserData() instanceof CoordinateReferenceSystem);
+        assertEquals(p.getCoordinateReferenceSystem(), DefaultGeographicCRS.WGS84_3D);
     }
 
     public void testEncode() throws Exception {
@@ -60,11 +60,11 @@ public class PointTypeBindingTest extends GML3TestSupport {
         assertEquals(1,
             dom.getElementsByTagNameNS(GML.NAMESPACE, GML.pos.getLocalPart()).getLength());
         //assertEquals("urn:x-ogc:def:crs:EPSG:6.11.2:4326",
-        assertEquals("urn:x-ogc:def:crs:EPSG:4326", dom.getDocumentElement().getAttribute("srsName"));
+        assertEquals(p.getCoordinateReferenceSystem(), CRS.decode(dom.getDocumentElement().getAttribute("srsName")));
     }
     
     public void testEncode2D() throws Exception {
-    	Point point = GML3MockData.pointLite2D();
+    	Point point = GML3MockData.point();
         Document doc = encode(point, GML.Point);
         
         checkDimension(doc, GML.Point.getLocalPart(), 2);
@@ -72,7 +72,7 @@ public class PointTypeBindingTest extends GML3TestSupport {
     }
 
     public void testEncode3D() throws Exception {
-    	Point point = GML3MockData.pointLite3D();
+    	Point point = GML3MockData.point_3D();
         Document doc = encode(point, GML.Point);
         
         checkDimension(doc, GML.Point.getLocalPart(), 3);

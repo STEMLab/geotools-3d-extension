@@ -22,17 +22,11 @@ import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml2.iso.FeatureTypeCache;
 import org.geotools.gml2.iso.bindings.GMLCoordTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLCoordinatesTypeBinding;
-import org.geotools.gml3.iso.ArcParameters;
-import org.geotools.gml3.iso.GML;
-import org.geotools.gml3.iso.XSDIdRegistry;
 import org.geotools.gml3.iso.bindings.AbstractFeatureCollectionTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractFeatureTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractGeometryTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractRingPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcStringTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcTypeBinding;
 import org.geotools.gml3.iso.bindings.BoundingShapeTypeBinding;
-import org.geotools.gml3.iso.bindings.CircleTypeBinding;
 import org.geotools.gml3.iso.bindings.ComplexSupportXSAnyTypeBinding;
 import org.geotools.gml3.iso.bindings.CompositeSurfaceTypeBinding;
 import org.geotools.gml3.iso.bindings.CurveArrayPropertyTypeBinding;
@@ -75,7 +69,6 @@ import org.geotools.gml3.iso.bindings.PolygonPatchTypeBinding;
 import org.geotools.gml3.iso.bindings.PolygonPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.PolygonTypeBinding;
 import org.geotools.gml3.iso.bindings.ReferenceTypeBinding;
-import org.geotools.gml3.iso.bindings.RingTypeBinding;
 import org.geotools.gml3.iso.bindings.SolidPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.SolidTypeBinding;
 import org.geotools.gml3.iso.bindings.SurfaceArrayPropertyTypeBinding;
@@ -321,8 +314,7 @@ public class GMLConfiguration_ISO extends Configuration {
         //extended bindings for arc/surface support
         if (isExtendedArcSurfaceSupport()) {
 
-            container.registerComponentImplementation(GML.CircleType,
-                    CircleTypeBinding.class);
+            //container.registerComponentImplementation(GML.CircleType, CircleTypeBinding.class);
             container.registerComponentImplementation(GML.SurfacePatchArrayPropertyType,
                     SurfacePatchArrayPropertyTypeBinding.class);
             container.registerComponentImplementation(GML.MultiPolygonType, 

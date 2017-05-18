@@ -29,10 +29,6 @@ import org.geotools.gml3.iso.bindings.AbstractRingPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.BoundingShapeTypeBinding;
 import org.geotools.gml3.iso.bindings.ComplexSupportXSAnyTypeBinding;
 import org.geotools.gml3.iso.bindings.CompositeSurfaceTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurvePropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveSegmentArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionListTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionTypeBinding;
 import org.geotools.gml3.iso.bindings.DoubleListBinding;
@@ -89,6 +85,7 @@ import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.geotools.xs.XS;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.picocontainer.MutablePicoContainer;
 
 
@@ -146,7 +143,9 @@ public class GMLConfiguration_ISO extends Configuration {
      */
     private ISOGeometryBuilder geometryBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
-
+    private CoordinateReferenceSystem crs;
+    
+    
     public GMLConfiguration_ISO() {
         this(false);
     }
@@ -168,6 +167,11 @@ public class GMLConfiguration_ISO extends Configuration {
         getProperties().add(Parser.Properties.PARSE_UNKNOWN_ATTRIBUTES);
     }
 
+    public void setCRS(CoordinateReferenceSystem crs) {
+    	this.crs = crs;
+    	geometryBuilder.setCoordinateReferenceSystem(crs);
+    }
+    
     /**
      * Sets the syntax to use for encoding srs uris.
      * <p>

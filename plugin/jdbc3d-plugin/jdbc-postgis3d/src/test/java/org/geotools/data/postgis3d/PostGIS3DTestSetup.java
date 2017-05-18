@@ -89,22 +89,46 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
     protected void createPoint3DTable() throws Exception {
         Version version = getVersion();
         boolean atLeastV2 = version.compareTo(V_2_0_0) >= 0;
-        String geometryType = atLeastV2 ? "geometry(POINTZ, 4326)" : "geometry";
+        String geometryType = atLeastV2 ? "geometry(POINTZ, 4979)" : "geometry";
         
         // setup table
         run("CREATE TABLE \"point3d\"(\"fid\" serial PRIMARY KEY, \"id\" int, "
                 + "\"geom\" " + geometryType + ", \"name\" varchar )");
         if(atLeastV2) {
-            run("INSERT INTO GEOMETRY_COLUMNS VALUES('', 'public', 'point3d', 'geom', 3, '4326', 'POINT')");
+            run("INSERT INTO GEOMETRY_COLUMNS VALUES('', 'public', 'point3d', 'geom', 3, '4979', 'POINT')");
         }
         run("CREATE INDEX POINT3D_GEOM_IDX ON \"point3d\" USING GIST (\"geom\") ");
     
         // insert data
         run("INSERT INTO \"point3d\" (\"id\",\"geom\",\"name\") VALUES (0,"
-                + "ST_GeomFromText('POINT(1 1 1)', 4326)," + "'p1')");
+                + "ST_GeomFromText('POINT(1 1 1)', 4979)," + "'p1')");
         run("INSERT INTO \"point3d\" (\"id\",\"geom\",\"name\") VALUES (1,"
-                + "ST_GeomFromText('POINT(3 0 1)', 4326)," + "'p2')");
+                + "ST_GeomFromText('POINT(3 0 1)', 4979)," + "'p2')");
     }
+    
+	@Override
+	protected void createPoly3DTable() throws Exception {
+		Version version = getVersion();
+		boolean atLeastV2 = version.compareTo(V_2_0_0) >= 0;
+		String geometryType = atLeastV2 ? "geometry(POLYGONZ, 4979)" : "geometry";
+
+		// setup table
+		run("CREATE TABLE \"poly3d\"(\"fid\" serial PRIMARY KEY, \"id\" int, "
+				+ "\"geom\" " + geometryType + ", \"name\" varchar )");
+		if(!atLeastV2) {
+			run("INSERT INTO GEOMETRY_COLUMNS VALUES('', 'public', 'poly3d', 'geom', 3, '4979', 'POLYGON')");
+		}
+		run("CREATE INDEX poly3d_GEOM_IDX ON \"poly3d\" USING GIST (\"geom\") ");
+
+		// insert data
+		run("INSERT INTO \"poly3d\" (\"id\",\"geom\",\"name\") VALUES (0,"
+				+ "ST_GeomFromText('POLYGON((1 1 0, 2 2 0, 4 2 1, 5 1 1, 1 1 0))', 4979),"
+				+ "'pl1')");
+		run("INSERT INTO \"poly3d\" (\"id\",\"geom\",\"name\") VALUES (1,"
+				+ "ST_GeomFromText('POLYGON((3 0 1, 3 2 2, 3 3 3, 3 4 5, 3 0 1))', 4979),"
+				+ "'pl2')");
+	}
+
 
     @Override
     protected void dropLine3DTable() throws Exception {
@@ -126,14 +150,49 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
 
 	@Override
 	protected void createSolidTable() throws Exception {
-		// TODO Auto-generated method stub
-		
+		Version version = getVersion();
+		boolean atLeastV2 = version.compareTo(V_2_0_0) >= 0;
+		String geometryType = atLeastV2 ? "geometry(POLYHEDRALSURFACEZ, 4979)" : "geometry";
+
+		// setup table
+		run("CREATE TABLE \"solid\"(\"fid\" serial PRIMARY KEY, \"id\" int, "
+				+ "\"geom\" " + geometryType + ", \"name\" varchar )");
+		if(!atLeastV2) {
+			run("INSERT INTO GEOMETRY_COLUMNS VALUES('', 'public', 'solid', 'geom', 3, '4979', 'POLYGON')");
+		}
+		run("CREATE INDEX solid_GEOM_IDX ON \"solid\" USING GIST (\"geom\") ");
+
+		// insert data
+		run("INSERT INTO \"solid\" (\"id\",\"geom\",\"name\") VALUES (0,"
+			+ "ST_GeomFromEWKT('SRID=4979;POLYHEDRALSURFACE( "
+			+ "((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),"
+			+ "((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), "
+			+ "((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),"
+			+ "((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),"
+			+ "((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), "
+			+ "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'),"
+			+ "'solid1')"
+		);
+		run("INSERT INTO \"solid\" (\"id\",\"geom\",\"name\") VALUES (1,"
+				+ "ST_GeomFromEWKT('SRID=4979;POLYHEDRALSURFACE( "
+				+ "((0 0 0, 9 0 0, 9 1 10, 1 2 10, 0 0 0)),"
+				+ "((0 0 0, 0 9 0, 11 13 11, 9 0 0, 0 0 0)), "
+				+ "((0 0 0, 1 2 10, 2 13 11,0 9 0 , 0 0 0)),"
+				+ "((9 0 0, 11 13 11 , 10 13 11, 9 1 10, 9 0 0 )),"
+				+ "((10 13 11,11 13 11 , 0 9 0, 2 13 11, 10 13 11)),"
+				+ "((0 0 0, 1 2 10, 2 13 11, 0 9 0, 0 0 0))"
+				+ ")'),"
+				+ "'solid2')"
+			);
 	}
 
 	@Override
 	protected void dropSolidTable() throws Exception {
-		// TODO Auto-generated method stub
+        run("DELETE FROM  GEOMETRY_COLUMNS WHERE F_TABLE_NAME = 'solid'");
+        run("DROP TABLE \"solid\"");
 		
 	}
+
+
 
 }

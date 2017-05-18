@@ -1,0 +1,3 @@
+org.geotools.filter.function.FilterFunction_ISOunion
+org.geotools.filter.function.FilterFunction_ISOintersection
+org.geotools.filter.function.FilterFunction_ISOdistance

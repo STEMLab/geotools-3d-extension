@@ -31,6 +31,9 @@ import java.util.Map;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.FilterCapabilities;
+import org.geotools.filter.function.FilterFunction_ISOdistance;
+import org.geotools.filter.function.FilterFunction_ISOintersection;
+import org.geotools.filter.function.FilterFunction_ISOunion;
 import org.geotools.filter.function.FilterFunction_strConcat;
 import org.geotools.filter.function.FilterFunction_strEndsWith;
 import org.geotools.filter.function.FilterFunction_strEqualsIgnoreCase;
@@ -44,6 +47,7 @@ import org.geotools.filter.function.FilterFunction_strToLowerCase;
 import org.geotools.filter.function.FilterFunction_strToUpperCase;
 import org.geotools.filter.function.FilterFunction_strTrim;
 import org.geotools.filter.function.FilterFunction_strTrim2;
+import org.geotools.filter.function.FilterFunction_union;
 import org.geotools.filter.function.math.FilterFunction_abs;
 import org.geotools.filter.function.math.FilterFunction_abs_2;
 import org.geotools.filter.function.math.FilterFunction_abs_3;
@@ -291,7 +295,18 @@ class FilterToSqlHelper {
     	boolean swap = false;
         String closingParenthesis = ")";
         if (filter instanceof Equals) {
-            out.write("ST_Equals");
+            //out.write("ST_Equals");
+        	out.write("ST_3DDWithin");
+        	out.write("(");
+        	e1.accept(delegate, extraData);
+            out.write(", ");
+            e2.accept(delegate, extraData);
+            out.write(",126.8");
+            out.write(closingParenthesis);
+            
+            out.write(" AND ST_3DDWithin");
+            isprecision = true;
+            swap = true;
         } else if (filter instanceof Disjoint) {
             out.write("NOT (ST_3DIntersects");
             closingParenthesis += ")";
@@ -481,6 +496,12 @@ class FilterToSqlHelper {
                 function instanceof FilterFunction_abs_3 ||
                 function instanceof FilterFunction_abs_4) {
             return "abs";
+        }else if(function instanceof FilterFunction_ISOunion) {
+            return "ST_3Dunion";
+        }else if(function instanceof FilterFunction_ISOintersection) {
+            return "ST_3DIntersection";
+        }else if(function instanceof FilterFunction_ISOdistance) {
+            return "ST_3DDistance";
         }
         return function.getName();
     }
@@ -581,14 +602,33 @@ class FilterToSqlHelper {
             out.write("trim(both ' ' from ");
             string.accept(delegate, String.class);
             out.write(")");
-        } else {
+        } else if(visitISOFunction( function, extraData)) {
+        	Expression s1 = getParameter(function, 0, true);
+            Expression s2 = getParameter(function, 1, true);
+            out.write("(");
+            s1.accept(delegate, Geometry.class);
+            out.write(" , ");
+            s2.accept(delegate, Geometry.class);
+            out.write(")");
+        }else {
             // function not supported
             return false;
         }
         
         return true;
     }
-
+    public boolean visitISOFunction(Function function, Object extraData) throws IOException {
+    	if(function instanceof FilterFunction_ISOunion) {
+            
+        }else if(function instanceof FilterFunction_ISOdistance) {
+        	
+        }else if(function instanceof FilterFunction_ISOintersection) {
+        	
+        }else {
+        	return false;
+        }
+    	return true;
+    }
     Expression getParameter(Function function, int idx, boolean mandatory) {
         final List<Expression> params = function.getParameters();
         if(params == null || params.size() <= idx) {

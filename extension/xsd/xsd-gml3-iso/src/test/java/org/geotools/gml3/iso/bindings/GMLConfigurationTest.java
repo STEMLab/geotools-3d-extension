@@ -20,11 +20,12 @@ package org.geotools.gml3.iso.bindings;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-import org.geotools.gml3.GML;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration;
+import org.geotools.gml3.iso.GML;
+import org.geotools.gml3.iso.GMLConfiguration_ISO;
 import org.geotools.xml.Binding;
+
+import junit.framework.TestCase;
 
 /**
  * Test {@link GMLConfiguration}.
@@ -40,7 +41,7 @@ public class GMLConfigurationTest extends TestCase {
      */
     @SuppressWarnings("unchecked")
     public void testBindingTypes() throws Exception {
-        GMLConfiguration configuration = new GMLConfiguration();
+        GMLConfiguration_ISO configuration = new GMLConfiguration_ISO();
         assertEquals(GML.NAMESPACE, configuration.getNamespaceURI());
         Map bindings = configuration.setupBindings();
         for (Object object : bindings.values()) {

@@ -847,13 +847,13 @@ public class DemoTest extends JFrame{
 			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
 			ArrayList<Solid> al = getSolids(builder);
-			FunctionFactory ff = new ISODefaultFunctionFactory();
+			//FunctionFactory ff = new ISODefaultFunctionFactory();
 			FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2(h);
 			 List<Expression> args = new ArrayList<Expression>();
 			 args.add(ff2.property("loc"));
 			 args.add(ff2.literal(al.get(0)));
-			Function union = ff2.function("ISOdistance", ff2.property("loc"), ff2.literal(al.get(0)));
-	
+			Function union = ff2.function("ISOunion", ff2.property("loc"), ff2.literal(al.get(1)));
+			Filter filter = ff2.equals(union, ff2.literal("zeroabc"));
 	        
 	        //StringWriter w = new StringWriter();
 	        

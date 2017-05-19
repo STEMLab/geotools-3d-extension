@@ -713,10 +713,10 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			//True
 			//make Solid
 			List<Position> dp_list1 = new ArrayList<Position>();
-			dp_list1.add(builder.createDirectPosition(new double[] {3,1,1}) );
-			dp_list1.add(builder.createDirectPosition(new double[] {5,1,1}) );
-			dp_list1.add(builder.createDirectPosition(new double[] {5,2.5,1}) );
-			dp_list1.add(builder.createDirectPosition(new double[] {3,2.5,1}) );
+			dp_list1.add(builder.createDirectPosition(new double[] {3,1,0}) );
+			dp_list1.add(builder.createDirectPosition(new double[] {5,1,0}) );
+			dp_list1.add(builder.createDirectPosition(new double[] {5,2.5,0}) );
+			dp_list1.add(builder.createDirectPosition(new double[] {3,2.5,0}) );
 			dp_list1.add(builder.createDirectPosition(new double[] {3, 1, 5}) );
 			dp_list1.add(builder.createDirectPosition(new double[] {5, 1, 5}) );
 			dp_list1.add(builder.createDirectPosition(new double[] {5, 2.5, 5}) );

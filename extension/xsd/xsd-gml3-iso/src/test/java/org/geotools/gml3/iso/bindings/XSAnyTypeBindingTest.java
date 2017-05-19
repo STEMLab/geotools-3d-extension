@@ -28,7 +28,7 @@ import org.geotools.feature.NameImpl;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.ComplexTypeImpl;
-import org.geotools.gml3.GMLConfiguration;
+import org.geotools.gml2.GMLConfiguration;
 import org.geotools.gml3.iso.GML3TestSupport;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.SchemaLocator;

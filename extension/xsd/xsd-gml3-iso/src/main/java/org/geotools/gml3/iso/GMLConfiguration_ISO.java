@@ -308,8 +308,7 @@ public class GMLConfiguration_ISO extends Configuration {
                 org.geotools.gml3.iso.bindings.ext.CurvePropertyTypeBinding.class);
         container.registerComponentImplementation(GML.CurveType,
                 org.geotools.gml3.iso.bindings.ext.CurveTypeBinding.class);*/
-        container.registerComponentImplementation(GML.MultiCurveType,
-                org.geotools.gml3.iso.bindings.ext.MultiCurveTypeBinding.class);
+        //container.registerComponentImplementation(GML.MultiCurveType, org.geotools.gml3.iso.bindings.ext.MultiCurveTypeBinding.class);
         
         
         //extended bindings for arc/surface support

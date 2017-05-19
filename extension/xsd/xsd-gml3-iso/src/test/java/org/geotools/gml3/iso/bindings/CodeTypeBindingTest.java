@@ -17,8 +17,8 @@
 
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.gml3.GML;
 import org.geotools.gml3.iso.ComplexAttributeTestSupport;
+import org.geotools.gml3.iso.GML;
 import org.opengis.feature.ComplexAttribute;
 import org.w3c.dom.Document;
 

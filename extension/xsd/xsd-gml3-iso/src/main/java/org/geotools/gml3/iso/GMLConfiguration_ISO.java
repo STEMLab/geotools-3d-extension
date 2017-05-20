@@ -22,23 +22,13 @@ import org.geotools.gml2.SrsSyntax;
 import org.geotools.gml2.iso.FeatureTypeCache;
 import org.geotools.gml2.iso.bindings.GMLCoordTypeBinding;
 import org.geotools.gml2.iso.bindings.GMLCoordinatesTypeBinding;
-import org.geotools.gml3.iso.ArcParameters;
-import org.geotools.gml3.iso.GML;
-import org.geotools.gml3.iso.XSDIdRegistry;
 import org.geotools.gml3.iso.bindings.AbstractFeatureCollectionTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractFeatureTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractGeometryTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractRingPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcStringTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcTypeBinding;
 import org.geotools.gml3.iso.bindings.BoundingShapeTypeBinding;
-import org.geotools.gml3.iso.bindings.CircleTypeBinding;
 import org.geotools.gml3.iso.bindings.ComplexSupportXSAnyTypeBinding;
 import org.geotools.gml3.iso.bindings.CompositeSurfaceTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurvePropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveSegmentArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionListTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionTypeBinding;
 import org.geotools.gml3.iso.bindings.DoubleListBinding;
@@ -75,7 +65,6 @@ import org.geotools.gml3.iso.bindings.PolygonPatchTypeBinding;
 import org.geotools.gml3.iso.bindings.PolygonPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.PolygonTypeBinding;
 import org.geotools.gml3.iso.bindings.ReferenceTypeBinding;
-import org.geotools.gml3.iso.bindings.RingTypeBinding;
 import org.geotools.gml3.iso.bindings.SolidPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.SolidTypeBinding;
 import org.geotools.gml3.iso.bindings.SurfaceArrayPropertyTypeBinding;
@@ -96,6 +85,7 @@ import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.geotools.xs.XS;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.picocontainer.MutablePicoContainer;
 
 
@@ -153,7 +143,9 @@ public class GMLConfiguration_ISO extends Configuration {
      */
     private ISOGeometryBuilder geometryBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
-
+    private CoordinateReferenceSystem crs;
+    
+    
     public GMLConfiguration_ISO() {
         this(false);
     }
@@ -175,6 +167,11 @@ public class GMLConfiguration_ISO extends Configuration {
         getProperties().add(Parser.Properties.PARSE_UNKNOWN_ATTRIBUTES);
     }
 
+    public void setCRS(CoordinateReferenceSystem crs) {
+    	this.crs = crs;
+    	geometryBuilder.setCoordinateReferenceSystem(crs);
+    }
+    
     /**
      * Sets the syntax to use for encoding srs uris.
      * <p>
@@ -220,13 +217,10 @@ public class GMLConfiguration_ISO extends Configuration {
             GMLCoordinatesTypeBinding.class);
         //container.registerComponentImplementation(GML.COORDTYPE,CoordTypeBinding.class);
         container.registerComponentImplementation(GML.CoordType, GMLCoordTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveArrayPropertyType,
-            CurveArrayPropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
-        container.registerComponentImplementation(GML.CurvePropertyType,
-            CurvePropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveSegmentArrayPropertyType,
-            CurveSegmentArrayPropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveArrayPropertyType, CurveArrayPropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurvePropertyType, CurvePropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveSegmentArrayPropertyType, CurveSegmentArrayPropertyTypeBinding.class);
         container.registerComponentImplementation(GML.DirectPositionListType,
             DirectPositionListTypeBinding.class);
         container.registerComponentImplementation(GML.DirectPositionType,
@@ -314,15 +308,13 @@ public class GMLConfiguration_ISO extends Configuration {
                 org.geotools.gml3.iso.bindings.ext.CurvePropertyTypeBinding.class);
         container.registerComponentImplementation(GML.CurveType,
                 org.geotools.gml3.iso.bindings.ext.CurveTypeBinding.class);*/
-        container.registerComponentImplementation(GML.MultiCurveType,
-                org.geotools.gml3.iso.bindings.ext.MultiCurveTypeBinding.class);
+        //container.registerComponentImplementation(GML.MultiCurveType, org.geotools.gml3.iso.bindings.ext.MultiCurveTypeBinding.class);
         
         
         //extended bindings for arc/surface support
         if (isExtendedArcSurfaceSupport()) {
 
-            container.registerComponentImplementation(GML.CircleType,
-                    CircleTypeBinding.class);
+            //container.registerComponentImplementation(GML.CircleType, CircleTypeBinding.class);
             container.registerComponentImplementation(GML.SurfacePatchArrayPropertyType,
                     SurfacePatchArrayPropertyTypeBinding.class);
             container.registerComponentImplementation(GML.MultiPolygonType, 

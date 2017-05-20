@@ -18,3 +18,4 @@ workspace
 *.dll
 *.tar.gz
 cppbuild
+/bin/

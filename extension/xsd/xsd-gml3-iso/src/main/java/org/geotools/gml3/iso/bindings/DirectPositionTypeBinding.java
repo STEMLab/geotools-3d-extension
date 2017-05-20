@@ -19,6 +19,7 @@ package org.geotools.gml3.iso.bindings;
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
@@ -99,6 +100,16 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
     	double[] dPos = new double[position.length];
     	for(int i = 0; i < position.length; i++) {
     		dPos[i] = position[i];
+    	}
+    	
+    	//TODO HACK
+    	if(gBuilder.getCoordinateReferenceSystem().getCoordinateSystem().getDimension() != dPos.length) {
+
+    		if(dPos.length == 2) {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84);
+    		} else {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
+    		}
     	}
     	
         DirectPosition dp = gBuilder.createDirectPosition(dPos);

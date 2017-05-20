@@ -14,11 +14,11 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.gml3.iso;
+package org.geotools.gml3.iso.bindings;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import org.geotools.gml3.iso.GMLConfiguration_ISO;
+import org.geotools.xml.Configuration;
+import org.picocontainer.MutablePicoContainer;
 
 
 /**
@@ -26,8 +26,12 @@ import com.vividsolutions.jts.geom.Polygon;
  *
  * @source $URL$
  */
-public class MultiSurface extends MultiPolygon {
-    public MultiSurface(Polygon[] polygons, GeometryFactory factory) {
-        super(polygons, factory);
+public class TestConfiguration extends Configuration {
+    public TestConfiguration() {
+        super(TEST.getInstance());
+        addDependency(new GMLConfiguration_ISO());
+    }
+
+    protected void registerBindings(MutablePicoContainer container) {
     }
 }

@@ -128,6 +128,19 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
         //set the crs
+    	if (node.hasAttribute("srsName")) {
+            URI srs = (URI) node.getAttributeValue("srsName");
+            CoordinateReferenceSystem crs = CRS.decode(srs.toString());
+            
+            if (crs != null) {
+                if(!builder.getCoordinateReferenceSystem().equals(crs)) {
+                	builder.setCoordinateReferenceSystem(crs);
+                }
+            } else {
+                //logger.warning("Could not create Coordinate Reference System for " + srs);
+            }
+            return crs;
+        }
         /*if (value instanceof Geometry) {
             CoordinateReferenceSystem crs = GML3ParsingUtils.crs(node);
 

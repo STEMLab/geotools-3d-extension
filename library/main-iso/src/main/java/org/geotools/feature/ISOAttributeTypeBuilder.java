@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.geotools.data.DataUtilities;
+import org.geotools.data.ISODataUtilities;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.filter.IllegalFilterException;
@@ -37,10 +37,9 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
+import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.util.InternationalString;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Builder for attribute types and descriptors.
@@ -589,7 +588,7 @@ public class ISOAttributeTypeBuilder {
     }
 	private Object defaultValue(){
 	    if( defaultValue == null && !isNillable && binding != null){
-	        defaultValue = DataUtilities.defaultValue( binding );
+	        defaultValue = ISODataUtilities.defaultValue( binding );
 	    }
 	    return defaultValue;
 	}

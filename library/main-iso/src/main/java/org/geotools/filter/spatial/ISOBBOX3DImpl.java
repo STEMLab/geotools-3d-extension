@@ -17,10 +17,12 @@
  */
 package org.geotools.filter.spatial;
 
+import org.geotools.factory.Hints;
 import org.geotools.filter.IllegalFilterException;
 import org.geotools.geometry.iso.topograph2D.TopologyException;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.geotools.util.Util;
 import org.opengis.feature.simple.SimpleFeature;
@@ -33,6 +35,7 @@ import org.opengis.geometry.BoundingBox3D;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 
@@ -114,39 +117,15 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// 3DBBOX must be run as a post-filter in order to support the third
 		// coordinate.
 
-		// Coordinate[] coords = new Coordinate[5];
-		double[] coords = new double[10];
-		coords[0] = envelope.getMinX();
-		coords[1] = envelope.getMinY();
-		coords[2] = envelope.getMinX();
-		coords[3] = envelope.getMaxY();
-		coords[4] = envelope.getMaxX();
-		coords[5] = envelope.getMaxZ();
-		coords[6] = envelope.getMaxX();
-		coords[7] = envelope.getMinY();
-		coords[8] = envelope.getMinX();
-		coords[9] = envelope.getMinY();
 		
-		// LinearRing ring = null;
-		Curve curve = null;
+		Hints h = new Hints();
+		h.put(Hints.GEOMETRY_VALIDATE, false);
+		h.put(Hints.CRS, envelope.getCoordinateReferenceSystem());
 
-		ISOGeometryBuilder gfac = new ISOGeometryBuilder(envelope.getCoordinateReferenceSystem());
-		try {
-			curve = gfac.createCurve(gfac.createPointArray(coords));// createLinearRing(coords);
-		} catch (TopologyException tex) {
-			throw new IllegalFilterException(tex.toString());
-		}
+		ISOGeometryBuilder gfac = new ISOGeometryBuilder(h);
+		Solid solid = Util.makeSolidFromEnvelope(gfac, envelope.getLowerCorner(), envelope.getUpperCorner());
 
-		// Polygon polygon = gfac.createPolygon(ring, null);
-		SurfaceBoundary surfaceboundary = gfac.createSurfaceBoundary(curve);
-		Surface surface = gfac.createSurface(surfaceboundary);
-		if (envelope instanceof ReferencedEnvelope3D) {
-			ReferencedEnvelope3D refEnv = (ReferencedEnvelope3D) envelope;
-			// polygon.setUserData(refEnv.getCoordinateReferenceSystem());
-
-		}
-
-		return factory.literal(surface);
+		return factory.literal(solid);
 	}
 
 	public Object accept(FilterVisitor visitor, Object context) {

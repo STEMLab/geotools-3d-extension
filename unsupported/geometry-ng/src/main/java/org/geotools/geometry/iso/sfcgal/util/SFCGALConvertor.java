@@ -291,9 +291,11 @@ public class SFCGALConvertor {
 
                 rings.add(ringToSFCGALLineString(exterior));
 
-                Iterator iter = interiors.iterator();
-                while (iter.hasNext()) {
-                        rings.add(ringToSFCGALLineString((Ring) iter.next()));
+                if(interiors != null) {
+	                Iterator iter = interiors.iterator();
+	                while (iter.hasNext()) {
+	                        rings.add(ringToSFCGALLineString((Ring) iter.next()));
+	                }
                 }
 
                 polygon = new SFPolygon(rings);

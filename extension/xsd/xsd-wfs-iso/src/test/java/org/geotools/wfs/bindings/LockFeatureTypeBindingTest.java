@@ -26,7 +26,7 @@ import net.opengis.wfs.AllSomeType;
 import net.opengis.wfs.LockFeatureType;
 import net.opengis.wfs.LockType;
 
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.test.TestData;
 import org.geotools.wfs.WFS;
 import org.geotools.wfs.WFSTestSupport;

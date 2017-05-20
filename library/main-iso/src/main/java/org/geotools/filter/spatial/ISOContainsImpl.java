@@ -16,14 +16,34 @@
  */
 package org.geotools.filter.spatial;
 
-import org.geotools.geometry.jts.ReferencedEnvelope;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.Contains;
-import org.opengis.geometry.BoundingBox;
-import org.opengis.geometry.Envelope;
+import org.opengis.geometry.BoundingBox3D;
+import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.LineSegment;
+import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.CurveSegment;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Primitive;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 //import com.vividsolutions.jts.geom.Envelope;
 //import com.vividsolutions.jts.geom.Geometry;
@@ -70,13 +90,12 @@ public class ISOContainsImpl extends ISOAbstractPreparedGeometryFilter implement
 		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
 		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
 		
-		if(envLeft.contains((BoundingBox)envRight)) {
-            //TODO previous code HACK!! sfcgal is so slow : return left.contains(right);
+		if(envLeft.contains((BoundingBox3D)envRight)) {
 			return true;
 		}
-        
         return false;
 	}
+    
 	public Object accept(FilterVisitor visitor, Object extraData) {
 		return visitor.visit(this,extraData);
 	}

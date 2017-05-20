@@ -28,7 +28,7 @@ import org.bytedeco.javacpp.annotation.StdString;
  * @author Donguk Seo
  *
  */
-@Platform(include = "cpp/SFMultiLineString.h")
+@Platform(include = "cpp/SFMultiLineString.h", link = "SFCGAL")
 public class SFMultiLineString extends SFGeometryCollection {
         static {
                 Loader.load();

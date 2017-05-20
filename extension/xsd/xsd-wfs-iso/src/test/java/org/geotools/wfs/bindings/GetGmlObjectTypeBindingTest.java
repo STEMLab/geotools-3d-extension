@@ -22,7 +22,7 @@ import java.net.URL;
 import net.opengis.wfs.GetGmlObjectType;
 
 import org.geotools.filter.v1_1.OGC;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.test.TestData;
 import org.geotools.wfs.WFS;
 import org.geotools.wfs.WFSTestSupport;

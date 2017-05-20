@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.type.BasicFeatureTypes;
@@ -44,12 +43,8 @@ import org.opengis.feature.type.Name;
 import org.opengis.feature.type.Schema;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.util.InternationalString;
-
-//import com.vividsolutions.jts.geom.Geometry;
-
 /**
  * A builder for simple feature types.
  * <p>
@@ -955,20 +950,14 @@ public class ISOSimpleFeatureTypeBuilder {
 		}
 		
 		if ( defGeom == null ) {
-			//none was set by name, look for first geometric type
-			for ( AttributeDescriptor att : attributes() ) {
-				if ( att instanceof GeometryDescriptor ) {
-					
-					attributeBuilder.init( att );
-					attributeBuilder.setCRS(defaultCrs);
-					GeometryType type = attributeBuilder.buildGeometryType();
-					
-					att = attributeBuilder.buildDescriptor(att.getName(),type);
-					defGeom = (GeometryDescriptor) att;
-					break;
-				}
-			}
-		}
+                    //none was set by name, look for first geometric type
+                    for ( AttributeDescriptor att : attributes() ) {
+                            if ( att instanceof GeometryDescriptor ) {
+                                    defGeom = (GeometryDescriptor) att;
+                                    break;
+                            }
+                    }
+                }
 		
 		SimpleFeatureType built = factory.createSimpleFeatureType(
 			name(), attributes(), defGeom, isAbstract,

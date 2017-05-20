@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.geometry.iso.primitive.ShellImpl;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
@@ -50,6 +51,7 @@ import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.coordinate.Tin;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.PrimitiveFactory;
@@ -188,7 +190,7 @@ public class ISOGeometryBuilder {
             if( hints.containsKey(Hints.PRIMITIVE_FACTORY)){
                 // check the hints for something explicit
                 Object factory = hints.get(Hints.PRIMITIVE_FACTORY);
-                if( factory instanceof PrimitiveFactory){
+                if( factory instanceof PrimitiveFactory2){
                     primitiveFactory = (PrimitiveFactory2) factory;
                     return primitiveFactory;
                 }
@@ -447,6 +449,10 @@ public class ISOGeometryBuilder {
 	    exterior.add( curve );
 	    Ring ring = createRing( exterior );
         return createSurfaceBoundary( ring );
+    }
+
+	public Shell createShell(List<OrientableSurface> orientableSurfaces) throws MismatchedReferenceSystemException, MismatchedDimensionException {
+	    return getPrimitiveFactory().createShell(orientableSurfaces);
     }
 	
 	public SolidBoundary createSolidBoundary(Shell exterior, List<Shell> interiors) throws MismatchedReferenceSystemException, MismatchedDimensionException {

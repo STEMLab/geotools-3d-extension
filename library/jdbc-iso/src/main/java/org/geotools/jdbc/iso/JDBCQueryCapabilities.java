@@ -22,8 +22,9 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.sort.SortBy;
 import org.opengis.filter.sort.SortOrder;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * A default QueryCapabilities implementation for JDBCFeatureSource.

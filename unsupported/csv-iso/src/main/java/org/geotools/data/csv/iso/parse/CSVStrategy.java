@@ -27,6 +27,7 @@ import org.geotools.data.csv.iso.CSVFileState;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.csvreader.CsvReader;
 
@@ -74,6 +75,7 @@ public abstract class CSVStrategy {
         try {
             csvReader = csvFileState.openCSVReader();
             headers = csvReader.getHeaders();
+            
             typesFromData = findMostSpecificTypesFromData(csvReader, headers);
         } catch (IOException e) {
             throw new RuntimeException("Failure reading csv file", e);

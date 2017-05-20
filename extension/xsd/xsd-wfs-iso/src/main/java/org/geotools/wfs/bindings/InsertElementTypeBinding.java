@@ -28,7 +28,7 @@ import org.geotools.data.DataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.gml2.bindings.GML2ParsingUtils;
-import org.geotools.gml3.GML;
+import org.geotools.gml3.iso.GML;
 import org.geotools.wfs.WFS;
 import org.geotools.xml.AbstractComplexEMFBinding;
 import org.geotools.xml.ElementInstance;

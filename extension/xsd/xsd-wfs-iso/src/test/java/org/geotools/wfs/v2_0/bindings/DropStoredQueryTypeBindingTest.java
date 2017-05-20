@@ -21,7 +21,7 @@ import net.opengis.wfs20.ParameterExpressionType;
 import net.opengis.wfs20.QueryExpressionTextType;
 import net.opengis.wfs20.StoredQueryDescriptionType;
 
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.wfs.v2_0.WFSTestSupport;
 
 public class DropStoredQueryTypeBindingTest extends WFSTestSupport {

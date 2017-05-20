@@ -66,7 +66,7 @@ import org.geotools.feature.AttributeImpl;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.FeatureTypes;
+import org.geotools.feature.ISOFeatureTypes;
 import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.ISOGeometryAttributeImpl;
@@ -75,6 +75,7 @@ import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.BridgeIterator;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.AttributeTypeImpl;
 import org.geotools.feature.type.GeometryDescriptorImpl;
@@ -120,6 +121,7 @@ import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
@@ -242,7 +244,6 @@ public class ISODataUtilities {
         typeEncode.put(Solid.class, "Solid");
         typeMap.put("Solid", Solid.class);
 
-        
         typeEncode.put(MultiPoint.class, "MultiPoint");
         typeMap.put("MultiPoint", MultiPoint.class);
 
@@ -252,6 +253,9 @@ public class ISODataUtilities {
         typeEncode.put(MultiSurface.class, "MultiPolygon");
         typeMap.put("MultiPolygon", MultiSurface.class);
 
+        typeEncode.put(MultiPrimitive.class, "GeometryCollection");
+        typeMap.put("GeometryCollection", MultiPrimitive.class);
+        
         typeEncode.put(Envelope.class, "Envelope");
         typeMap.put("Envelope", Envelope .class);
 
@@ -454,7 +458,24 @@ public class ISODataUtilities {
      */
     public static SimpleFeature reType(SimpleFeatureType featureType, SimpleFeature feature)
             throws IllegalAttributeException {
-        return DataUtilities.reType(featureType, feature);
+        SimpleFeatureType origional = feature.getFeatureType();
+
+        if (featureType.equals(origional)) {
+            return ISOSimpleFeatureBuilder.copy(feature);
+        }
+
+        String id = feature.getID();
+        int numAtts = featureType.getAttributeCount();
+        Object[] attributes = new Object[numAtts];
+        String xpath;
+
+        for (int i = 0; i < numAtts; i++) {
+            AttributeDescriptor curAttType = featureType.getDescriptor(i);
+            xpath = curAttType.getLocalName();
+            attributes[i] = duplicate(feature.getAttribute(xpath));
+        }
+
+        return ISOSimpleFeatureBuilder.build(featureType, attributes, id);
     }
 
     /**
@@ -479,7 +500,23 @@ public class ISODataUtilities {
      */
     public static SimpleFeature reType(SimpleFeatureType featureType, SimpleFeature feature,
             boolean duplicate) throws IllegalAttributeException {
-        return DataUtilities.reType(featureType, feature, duplicate);
+        if (duplicate) {
+            return reType(featureType, feature);
+        }
+
+        FeatureType origional = feature.getFeatureType();
+        if (featureType.equals(origional)) {
+            return feature;
+        }
+        String id = feature.getID();
+        int numAtts = featureType.getAttributeCount();
+        Object[] attributes = new Object[numAtts];
+        
+        for (int i = 0; i < numAtts; i++) {
+            AttributeDescriptor curAttType = featureType.getDescriptor(i);
+            attributes[i] = feature.getAttribute(curAttType.getLocalName());
+        }
+        return ISOSimpleFeatureBuilder.build(featureType, attributes, id);
     }
 
     /**
@@ -878,7 +915,7 @@ public class ISODataUtilities {
         final SimpleFeatureType featureType;
 
         if ((featureArray == null) || (featureArray.length == 0)) {
-            featureType = FeatureTypes.EMPTY;
+            featureType = ISOFeatureTypes.EMPTY;
         } else {
             featureType = featureArray[0].getFeatureType();
         }
@@ -1661,7 +1698,13 @@ public class ISODataUtilities {
         tb.setName(featureType.getName());
         tb.setCRS(null); // not interested in warnings from this simple method
         for (int i = 0; i < properties.length; i++) {
-            tb.add(featureType.getDescriptor(properties[i]));
+            // let's get the attribute descriptor corresponding to the current property
+            AttributeDescriptor attributeDescriptor = featureType.getDescriptor(properties[i]);
+            if (attributeDescriptor != null) {
+                // if the property doesn't map to an attribute descriptor we ignore it
+                // an attribute descriptor may be omitted for security proposes for example
+                tb.add(attributeDescriptor);
+            }
         }
         setDefaultGeometry(tb, properties, featureType);
         return tb.buildFeatureType();
@@ -2002,17 +2045,23 @@ public class ISODataUtilities {
                 return null; // it was an explicit "<null>"
             }
         }
-        // Use of Converters to convert from String to requested java binding
-        Object value = Converters.convert(stringValue, descriptor.getType().getBinding());
-
+        
+        Hints hints = new Hints();
         if (descriptor.getType() instanceof GeometryType) {
             // this is to be passed on in the geometry objects so the srs name gets encoded
             CoordinateReferenceSystem crs = ((GeometryType) descriptor.getType())
                     .getCoordinateReferenceSystem();
+            
             if (crs != null) {
-                //TODO
+                hints.put(Hints.CRS, crs);
+            } else {
+                //set default crs
+                hints.put(Hints.CRS, DefaultGeographicCRS.WGS84);
             }
         }
+        
+        // Use of Converters to convert from String to requested java binding
+        Object value = Converters.convert(stringValue, descriptor.getType().getBinding(), hints);
         return value;
     }
     /**
@@ -2590,7 +2639,7 @@ public class ISODataUtilities {
                 
                 if(featureEnvelope != null) {
                     if(bounds == null) {
-                        bounds = new ReferencedEnvelope(featureEnvelope);
+                        bounds = ReferencedEnvelope.reference(featureEnvelope);
                     } else {
                         bounds.expandToInclude(featureEnvelope);
                     }

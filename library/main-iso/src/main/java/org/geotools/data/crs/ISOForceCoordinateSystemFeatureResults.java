@@ -19,7 +19,7 @@ package org.geotools.data.crs;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.geotools.data.store.ReprojectingFeatureCollection;
+import org.geotools.data.store.ISOReprojectingFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.SchemaException;
@@ -132,7 +132,7 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
         if(env == null) {
             return null;
         }
-        env = new ReferencedEnvelope(env, getSchema().getCoordinateReferenceSystem());
+        env = ReferencedEnvelope.create(env, getSchema().getCoordinateReferenceSystem());
         return env;
     }
 
@@ -177,6 +177,6 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
     }
     
     protected boolean canDelegate(FeatureVisitor visitor) {
-        return ReprojectingFeatureCollection.isGeometryless(visitor, schema);
+        return ISOReprojectingFeatureCollection.isGeometryless(visitor, schema);
     }
 }

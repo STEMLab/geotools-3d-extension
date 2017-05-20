@@ -20,7 +20,6 @@ import java.io.InputStream;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.gml2.iso.GML;
 import org.geotools.xml.StreamingParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.DirectPosition;

@@ -25,7 +25,7 @@ import java.util.Map;
 import org.geotools.data.Join;
 import org.geotools.data.Query;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.filter.visitor.DuplicatingFilterVisitor;
+import org.geotools.filter.visitor.ISODuplicatingFilterVisitor;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
@@ -272,7 +272,7 @@ public class JoinInfo {
         }
     }
 
-    static class JoinPrefixRewriter extends DuplicatingFilterVisitor {
+    static class JoinPrefixRewriter extends ISODuplicatingFilterVisitor {
         Map<String, String> mappings;
         
         public JoinPrefixRewriter(Map<String, String> mappings) {
@@ -295,7 +295,7 @@ public class JoinInfo {
         }
     }
     
-    static class JoinQualifier extends DuplicatingFilterVisitor {
+    static class JoinQualifier extends ISODuplicatingFilterVisitor {
 
         SimpleFeatureType ft1, ft2;
         String alias1, alias2;

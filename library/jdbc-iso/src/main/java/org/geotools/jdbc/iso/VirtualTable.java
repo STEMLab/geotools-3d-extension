@@ -33,8 +33,9 @@ import org.geotools.factory.Hints;
 import org.geotools.jdbc.EscapeSql;
 import org.geotools.jdbc.VirtualTableParameter;
 import org.geotools.util.logging.Logging;
+import org.opengis.geometry.Geometry;
 
-import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Describes a virtual table, that is, a feature type created starting from a generic SQL query.

@@ -29,6 +29,7 @@ import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Converters;
 import org.opengis.feature.Property;
@@ -59,7 +60,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
             attributeBuilder.init(descriptor);
             
             //TODO HACK!! HACK!! we should specify CRS from file
-            attributeBuilder.setCRS(DefaultGeographicCRS.WGS84_3D);
+            attributeBuilder.setCRS(csvFileState.getCrs());
             attributeBuilder.binding(Geometry.class);
             
             AttributeDescriptor modified = attributeBuilder.buildDescriptor(wktField);
@@ -121,7 +122,7 @@ public class CSVSpecifiedWKTStrategy extends CSVStrategy {
                 String value = csvRecord[i].trim();
                 if (geometryDescriptor != null && header.equals(wktField)) {
                 	//TODO WKTReader wktReader = new WKTReader(GeoTools.getDefaultHints());
-                    WKTReader wktReader = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+                    WKTReader wktReader = new WKTReader(csvFileState.getCrs());
                     Geometry geometry;
                     try {
                         geometry = wktReader.read(value);

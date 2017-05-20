@@ -46,10 +46,18 @@ public abstract class JDBC3DTestSetup extends JDBCDelegatingTestSetup {
             dropPoly3DTable();
         } catch (SQLException e) {
         }
+        
+        try {
+            dropSolidTable();
+        } catch (SQLException e) {
+        }
+        
 
         //create all the data
         createPoint3DTable();
         createLine3DTable();
+        createPoly3DTable();
+        createSolidTable();
     }
 
 
@@ -58,6 +66,7 @@ public abstract class JDBC3DTestSetup extends JDBCDelegatingTestSetup {
      */
     protected abstract void dropPoly3DTable() throws Exception;
 
+    protected abstract void createPoly3DTable() throws Exception;
 
     /**
      * Creates a table with the following schema:
@@ -95,4 +104,10 @@ public abstract class JDBC3DTestSetup extends JDBCDelegatingTestSetup {
      * Drops the "point3D" table
      */
     protected abstract void dropPoint3DTable() throws Exception;
+
+
+	protected abstract void createSolidTable() throws Exception;
+
+
+	protected abstract void dropSolidTable() throws Exception;
 }

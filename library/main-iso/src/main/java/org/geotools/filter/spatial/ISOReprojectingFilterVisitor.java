@@ -325,7 +325,8 @@ public class ISOReprojectingFilterVisitor extends ISODuplicatingFilterVisitor {
 
         try {
             // reproject
-            Geometry transformed = geom.transform(propertyCrs);
+        	//TODO!!!!!
+            Geometry transformed = geom;
             return transformed;
         } catch(Exception e) {
             throw new RuntimeException("Could not reproject geometry " + value, e);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ======================================================================= 
-	Maven Project Configuration File The Geotools Project http://www.geotools.org/ 
+<!-- =======================================================================
+	Maven Project Configuration File The Geotools Project http://www.geotools.org/
 	Version: $Id$ ======================================================================= -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -576,7 +576,7 @@
 				<version>3.1.2</version>
 			</dependency>
 			<dependency>
-				<!-- Google Common Libraries. Featuring com.google.collect collection 
+				<!-- Google Common Libraries. Featuring com.google.collect collection
 					classes -->
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -826,8 +826,8 @@
 		</repository>
 
 		<!-- contained above -->
-		<!-- <repository> <snapshots> <enabled>false</enabled> </snapshots> <id>geosolutions</id> 
-			<name>geosolutions repository</name> <url>http://maven.geo-solutions.it/</url> 
+		<!-- <repository> <snapshots> <enabled>false</enabled> </snapshots> <id>geosolutions</id>
+			<name>geosolutions repository</name> <url>http://maven.geo-solutions.it/</url>
 			</repository> -->
 		<repository>
 			<snapshots>
@@ -1034,11 +1034,11 @@
 						${allow.test.failure.ignore}
 					</testFailureIgnore>
 
-					The two following options have the opposite value of what we would 
-						like. They are that way because they don't seem to work as expected with 
+					The two following options have the opposite value of what we would
+						like. They are that way because they don't seem to work as expected with
 						Surefire 2.3. TODO: Try again when Surefire 2.4 will be available.
 
-					Option to print summary of test suites or just print the test cases 
+					Option to print summary of test suites or just print the test cases
 						that has errors.
 					<printSummary>true</printSummary>
 					Redirect the unit test standard output to a file.
@@ -1244,11 +1244,12 @@
 		<module>library/data-iso</module>
 		<module>library/jdbc-iso</module>
 		<module>plugin/jdbc3d-plugin</module>
-		
-		<module>test</module>
-		
+
+		<!--<module>test</module>-->
+
 		<module>unsupported/csv-iso</module>
 		<module>extension/xsd</module>
+		<module>unsupported/process-feature3d</module>
+		
 	</modules>
 </project>
-

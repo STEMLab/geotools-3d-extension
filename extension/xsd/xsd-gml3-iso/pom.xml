@@ -92,11 +92,6 @@
       <artifactId>gt-xsd-gml2-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-    	<groupId>org.geotools</groupId>
-    	<artifactId>gt-jts-wrapper</artifactId>
-    	<version>${project.version}</version>
-   	</dependency>
    	<dependency>
     	<groupId>org.geotools</groupId>
     	<artifactId>gt-geometry-ng</artifactId>

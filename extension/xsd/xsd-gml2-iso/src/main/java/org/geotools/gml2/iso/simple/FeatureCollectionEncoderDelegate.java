@@ -33,7 +33,6 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.GMLConfiguration_ISO;
-import org.geotools.gml2.iso.bindings.GML2EncodingUtils;
 import org.geotools.gml2.iso.bindings.GMLEncodingUtils;
 import org.geotools.util.Converters;
 import org.geotools.xml.Binding;
@@ -96,7 +95,7 @@ public abstract class FeatureCollectionEncoderDelegate implements EncoderDelegat
                 gml.getGmlPrefix());
         boolean featureBounds = !encoder.getConfiguration().hasProperty(
                 GMLConfiguration_ISO.NO_FEATURE_BOUNDS);
-
+        
         try (SimpleFeatureIterator fi = features.features()) {
             if (!fi.hasNext()) {
                 return;
@@ -206,7 +205,7 @@ public abstract class FeatureCollectionEncoderDelegate implements EncoderDelegat
     }
 
     private GeometryEncoder getGeometryEncoder(Object value, AttributeContext attribute) {
-        Class<? extends Object> clazz = value.getClass();
+        Class<? extends Object> clazz = value.getClass().getInterfaces()[0];
         if(MultiCurve.class.equals(clazz)) {
             // we have a wrinkle with curve support, were we supposed to encode the
             // multi line string as a curve or not?

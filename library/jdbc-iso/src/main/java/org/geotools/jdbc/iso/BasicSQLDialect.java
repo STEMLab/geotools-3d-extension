@@ -29,7 +29,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.expression.Literal;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.primitive.Solid;
 
 //import com.vividsolutions.jts.geom.Geometry;
 

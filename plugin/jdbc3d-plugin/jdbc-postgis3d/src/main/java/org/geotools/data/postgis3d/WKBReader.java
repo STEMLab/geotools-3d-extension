@@ -38,6 +38,8 @@
 package org.geotools.data.postgis3d;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.referencing.CRS;
@@ -45,11 +47,21 @@ import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 
+import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
+import com.vividsolutions.jts.geom.LinearRing;
 //import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ByteArrayInStream;
 import com.vividsolutions.jts.io.ByteOrderDataInStream;
@@ -211,10 +223,11 @@ public class WKBReader {
             geom = readLineString();
             break;
         case WKBConstants.wkbPolygon:
-        	//TODO 
-        	throw new UnsupportedOperationException();
-            //geom = readPolygon();
-            //break;
+            geom = readPolygon();
+            break;
+        case WKBConstants.wkbPolyHedralSurface:
+            geom = readPolyHedralSurface();
+            break;
         case WKBConstants.wkbMultiPoint:
         	//TODO 
         	throw new UnsupportedOperationException();
@@ -293,8 +306,68 @@ public class WKBReader {
         PointArray parr = builder.createPointArray(pts);
         return builder.createCurve(parr);
     }
-    
-    /*
+    protected Surface readPolygon() throws IOException {
+    	int numRings = dis.readInt();
+        List<Ring> holes = new ArrayList<Ring>();
+
+        Ring shell = null;
+		try {
+			shell = readRing();
+			for (int i = 0; i < numRings - 1; i++) {
+	            holes.add(readRing());
+	        }
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+      SurfaceBoundary sb = builder.createSurfaceBoundary(shell, holes);
+        return builder.createSurface(sb);
+    }
+    protected Solid readPolyHedralSurface() throws IOException {
+    	int numRings = dis.readInt();
+    	
+        List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+        
+		for (int i = 0; i < numRings; i++) {
+			//SurfaceBoundary sb = builder.createSurfaceBoundary(readLineString());
+			//surfaces.add(builder.createSurface(sb));
+			//int num = dis.readByte();
+			try {
+				Surface s = (Surface) readGeometry();
+				surfaces.add(s);
+				
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		Shell exteriorShell = builder.createShell(surfaces);
+		List<Shell> interiors = new ArrayList<Shell>();
+		SolidBoundary sb = builder.createSolidBoundary(exteriorShell, interiors);
+        return builder.createSolid(sb);
+    }
+   private Ring readRing() throws IOException, ParseException {
+        Curve ls = (Curve) readLineString();
+        List<OrientableCurve> exterior = new ArrayList<OrientableCurve>(1);
+	    exterior.add( ls );
+        if (!(ls instanceof Ring)) {
+            
+            //ls = new Ring(ls.getCoordinateSequence(), ls.getFactory());
+              
+        }
+        
+        return (Ring) builder.createRing(exterior);
+
+    }/*
+   private LinearRing readLinearRing() throws IOException {
+       int size = dis.readInt();
+       double[] pts = readCoordinateSequenceRing(size);
+       return builder.createLinearRing(pts);
+   }
+   
+   
     private Geometry readCircularString() throws IOException {
         int size = dis.readInt();
         CoordinateSequence pts = readCoordinateSequenceCircularString(size);
@@ -313,24 +386,9 @@ public class WKBReader {
         return builder.createCurvedGeometry(geoms);
     }
 
-    private LinearRing readLinearRing() throws IOException {
-        int size = dis.readInt();
-        CoordinateSequence pts = readCoordinateSequenceRing(size);
-        return builder.createLinearRing(pts);
-    }
+    
 
-    protected Polygon readPolygon() throws IOException {
-        int numRings = dis.readInt();
-        LinearRing[] holes = null;
-        if (numRings > 1)
-            holes = new LinearRing[numRings - 1];
-
-        LinearRing shell = readLinearRing();
-        for (int i = 0; i < numRings - 1; i++) {
-            holes[i] = readLinearRing();
-        }
-        return builder.createPolygon(shell, holes);
-    }
+   
 
     protected Polygon readCurvePolygon() throws IOException, ParseException {
         int numRings = dis.readInt();
@@ -345,40 +403,7 @@ public class WKBReader {
         return builder.createPolygon(shell, holes);
     }
 
-    private LinearRing readRing() throws IOException, ParseException {
-        LineString ls = (LineString) readGeometry();
-        if (!(ls instanceof LinearRing)) {
-            if (!ls.isClosed()) {
-                if (ls instanceof CompoundCurve) {
-                    CompoundCurve cc = (CompoundCurve) ls;
-                    List<LineString> components = cc.getComponents();
-                    Coordinate start = components.get(0).getCoordinateN(0);
-                    LineString lastGeom = components.get(components.size() - 1);
-                    Coordinate end = lastGeom.getCoordinateN((lastGeom.getNumPoints() - 1));
-                    components.add(builder.createLineString(new Coordinate[] { start, end }));
-                    ls = builder.createCurvedGeometry(components);
-                } else {
-                    Coordinate start = ls.getCoordinateN(0);
-                    Coordinate end = ls.getCoordinateN((ls.getNumPoints() - 1));
-                    // turn it into a compound and add the segment that closes it
-                    LineString closer = builder.createLineString(new Coordinate[] { start, end });
-                    ls = builder.createCurvedGeometry(ls, closer);
-                }
-            } else {
-                if (ls instanceof CompoundCurve) {
-                    // this case should never happen, but let's be robust against
-                    // alternative geometry factories not behaving as expected
-                    CompoundCurve cc = (CompoundCurve) ls;
-                    ls = new CompoundRing(cc.getComponents(), cc.getFactory(), cc.getTolerance());
-                } else {
-                    ls = new LinearRing(ls.getCoordinateSequence(), ls.getFactory());
-                }
-            }
-        }
-        
-        return (LinearRing) ls;
-
-    }
+    
 
     private MultiPoint readMultiPoint() throws IOException, ParseException {
         int numGeom = dis.readInt();

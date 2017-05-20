@@ -25,13 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.geotools.feature.AttributeImpl;
 import org.geotools.feature.ISOGeometryAttributeImpl;
 import org.geotools.feature.IllegalAttributeException;
-import org.geotools.feature.PropertyImpl;
+import org.geotools.feature.simple.SimpleFeatureImpl.Attribute;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.util.Converters;
 import org.geotools.util.Utilities;
 import org.opengis.feature.GeometryAttribute;
@@ -46,7 +46,6 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.identity.Identifier;
 import org.opengis.geometry.BoundingBox;
-import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -408,11 +407,11 @@ public class ISOSimpleFeatureImpl implements SimpleFeature {
             return true;
         }
 
-        if (!(obj instanceof SimpleFeatureImpl)) {
+        if (!(obj instanceof ISOSimpleFeatureImpl)) {
             return false;
         }
 
-        SimpleFeatureImpl feat = (SimpleFeatureImpl) obj;
+        ISOSimpleFeatureImpl feat = (ISOSimpleFeatureImpl) obj;
         
         // this check shouldn't exist, by contract, 
         //all features should have an ID.
@@ -438,16 +437,9 @@ public class ISOSimpleFeatureImpl implements SimpleFeature {
                     return false;
                 }
             } else {
-                if(values[i] instanceof Geometry) {
-                    if(!(otherAtt instanceof Geometry)) {
-                        return false;
-                    }
-                    /* else if(!CoordinateSequences.equalsND((Geometry) values[i], (Geometry) otherAtt)) {
-                        return false;
-                    }*/
-                } else if (!values[i].equals(otherAtt)) {
+                if (!values[i].equals(otherAtt)) {
                     return false;
-                } 
+                }
             }
         }
 
@@ -485,7 +477,7 @@ public class ISOSimpleFeatureImpl implements SimpleFeature {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer("SimpleFeatureImpl:");
+        StringBuffer sb = new StringBuffer("ISOSimpleFeatureImpl:");
         sb.append( getType().getName().getLocalPart());
         sb.append("=");
         sb.append( getValue() );

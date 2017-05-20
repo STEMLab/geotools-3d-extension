@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,11 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
+import org.geotools.data.postgis3d.PostGISDialect;
+import org.geotools.data.postgis3d.PostgisFilterToSQL;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -38,11 +42,15 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.filter.FunctionFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
+import org.geotools.filter.function.FilterFunction_ISOunion;
+import org.geotools.filter.function.ISODefaultFunctionFactory;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
+import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 //import org.geotools.gml2.GMLConfiguration_ISO;
@@ -57,11 +65,15 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
@@ -83,8 +95,6 @@ public class DemoTest extends JFrame{
 
 
 	private static ISOGeometryBuilder builder;
-	/*public static void main(String[] args) throws Exception {
-	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
@@ -93,7 +103,7 @@ public class DemoTest extends JFrame{
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
-	}*/
+	}
 	public DemoTest() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -127,13 +137,19 @@ public class DemoTest extends JFrame{
 				connect(new CSVDataStoreFactory());
 			}
 		});
-		fileMenu.add(new SafeAction("Connect to Kairos database...") {
+		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new PostgisNGDataStoreFactory());
 				System.out.println("Connection succeeded");
 			}
 		});
-		fileMenu.add(new SafeAction("Insert to Kairos database...") {
+		fileMenu.add(new SafeAction("Connect to Kairos database...") {
+			public void action(ActionEvent e) throws Throwable {
+				//connect(new KairosNGDataStoreFactory());
+				System.out.println("Connection succeeded");
+			}
+		});
+		fileMenu.add(new SafeAction("Insert to PostGIS database...") {
 			public void action(ActionEvent e) throws Throwable {
 				insertTable();
 			}
@@ -148,9 +164,10 @@ public class DemoTest extends JFrame{
 				boxToSolid();
 			}
 		});
-		fileMenu.add(new SafeAction("memorycollection...") {
+		
+		fileMenu.add(new SafeAction("function...") {
 			public void action(ActionEvent e) throws Throwable {
-				memorycollection();
+				functionfilter();
 			}
 		});
 		/*fileMenu.add(new SafeAction("gmlToGeometry...") {
@@ -523,14 +540,24 @@ public class DemoTest extends JFrame{
 		return solidPoints;
 	}
 	private void pointToTable() {
-		String typeName = "newFlag";
+		String typeName = "newFlag2";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		//hints.put(Hints.GEOMETRY_VALIDATE, false);
 		//hints.put(Hints.COORDINATE_DIMENSION, 3);
 		//builder = new GeometryBuilder(hints);
-		//ArrayList<Solid> al = getSolids(builder);
-		Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+		ArrayList<Solid> al = getSolids(builder);
+
+		//List<DirectPosition> l = new ArrayList<DirectPosition>();
+		/*PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+		for(int i = 2;i < 3;i++) {
+			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
+		}
+		lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+		Curve al = builder.createCurve(lp);
+		SurfaceBoundary s = builder.createSurfaceBoundary(al);
+		Surface sf = builder.createSurface(s);*/
+		//Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
 		//b.userData(Hints.COORDINATE_DIMENSION, 3);
@@ -540,24 +567,27 @@ public class DemoTest extends JFrame{
 		//add a geometry property
 		//b.setCRS( DefaultGeographicCRS.WSG84 );
 		//b.add( "location", Solid.class );
-		b.add("loc", Point.class);
+		//b.add("loc", Point.class);
+
+		b.add("loc", Solid.class);
+
 		SimpleFeatureType schema = b.buildFeatureType();
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
 		//builder.userData(Hints.COORDINATE_DIMENSION, 3);
-		builder.add( al );
+		builder.add( al.get(0) );
 		SimpleFeature feature = builder.buildFeature( "fid.1" );
 		try {
 			//source = dataStore.getFeatureSource(typeName);
 			//DataStore dataStore1;
 			//JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
-			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
+			/*JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
 				if (dataStore == null) {
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
-				}
+				}*/
 				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				//jds.setDatabaseSchema(null);
 				dataStore.createSchema((SimpleFeatureType) schema);
@@ -586,7 +616,7 @@ public class DemoTest extends JFrame{
 
 				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 				table.setModel(model);*/
-			}
+			//}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -596,65 +626,6 @@ public class DemoTest extends JFrame{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	private void memorycollection() {
-		hints = GeoTools.getDefaultHints();
-		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		hints.put(Hints.GEOMETRY_VALIDATE, false);
-		
-		builder = new ISOGeometryBuilder(hints);
-		ArrayList<Solid> al = getSolids(builder);
-		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-
-		//set the name
-		b.setName( "Flag" );
-		//add some properties
-		//add a geometry property
-		//b.setCRS( DefaultGeographicCRS.WSG84 );
-		b.add( "location", Solid.class );
-
-		//build the type
-		SimpleFeatureType schema = b.buildFeatureType();
-		//create the builder
-		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
-
-		//add the values
-		builder.add( al.get(0) );
-
-		//build the feature with provided ID
-		SimpleFeature feature = builder.buildFeature( "fid.1" );
-
-		MemoryDataStore data = new MemoryDataStore();
-		//DataStore data = new DataStore();
-		data.addFeature(feature);
-		/**
-		 * Filter f = CQL.toFilter(&quot;ATTR1 &lt; 10 AND ATTR2 &lt; 2 OR ATTR3 &gt; 10&quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME = 'New York' &quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME LIKE 'New%' &quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME IS NULL&quot;);
-		 * Filter f = CQL.toFilter(&quot;DATE BEFORE 2006-11-30T01:30:00Z&quot;);
-		 * Filter f = CQL.toFilter(&quot;NAME DOES-NOT-EXIST&quot;);
-		 * Filter f = CQL.toFilter(&quot;QUANTITY BETWEEN 10 AND 20&quot;);
-		 * Filter f = CQL.toFilter(&quot;CROSSES(SHAPE, LINESTRING(1 2, 10 15))&quot;);
-		 * Filter f = CQL.toFilter(&quot;BBOX(SHAPE, 10,20,30,40)&quot;);
-		 * Filter filter = ECQL.toFilter("area( SHAPE ) BETWEEN 10000 AND 30000");
-		 * List filters = CQL.toFilterList(&quot;NAME IS NULL;BBOX(SHAPE, 10,20,30,40);INCLUDE&quot;);
-		 */
-		try {
-			Filter filter = ECQL.toFilter("area( SHAPE ) BETWEEN 6 AND 9");
-			String name = schema.getGeometryDescriptor().getLocalName();
-			Query query = new Query("fid.1", filter, new String[] { name });
-			ContentFeatureSource source = data.getFeatureSource("Flag");
-
-			SimpleFeatureCollection features = source.getFeatures(query);
-
-			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
-			table.setModel(model);
-		} catch (IOException | CQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-
 	}
 	/*private void gmlToGeometry() {
 		/*GMLConfiguration configuration = new GMLConfiguration();
@@ -708,13 +679,20 @@ public class DemoTest extends JFrame{
 		}
 	}*/
 	private void constainsfilter() {
-		String typeName = "Flag";
+		String typeName = (String) featureTypeCBox.getSelectedItem();;
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
    			FeatureType schema = source.getSchema();
 			//String name = schema.getGeometryDescriptor().getLocalName();
-		
+   			PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+   			for(int i = 2;i < 3;i++) {
+   				lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
+   			}
+   			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+   			//Curve al = builder.createCurve(lp);
+   			//SurfaceBoundary s = builder.createSurfaceBoundary(al);
+   			//Surface sf = builder.createSurface(s);
 			//Filter filter = CQL.toFilter(text.getText());
    			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
@@ -722,8 +700,9 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
-   		    Filter filter = ff.within("geom", (Geometry)al.get(0));
-			Query query = new Query(typeName, filter, new String[] { "geom" });
+   			//Filter filter = ff.contains("loc", (Geometry)sf);
+   			Filter filter = ff.equals("loc", al.get(1));
+			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 
@@ -736,7 +715,7 @@ public class DemoTest extends JFrame{
 		} 
 	}
 	private void boxToSolid() {
-		String typeName = "newFlag";
+		String typeName = "newFlag2";
 		SimpleFeatureSource source;
 		try {
 			source = dataStore.getFeatureSource(typeName);
@@ -775,7 +754,6 @@ public class DemoTest extends JFrame{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 	private void insertTable() {
@@ -855,6 +833,45 @@ public class DemoTest extends JFrame{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} 
+	}
+	private void functionfilter()  {
+		String typeName = (String) featureTypeCBox.getSelectedItem();
+		SimpleFeatureSource source = null;
+		
+			try {
+				source = dataStore.getFeatureSource(typeName);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Hints h = new Hints();
+   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
+			ArrayList<Solid> al = getSolids(builder);
+			//FunctionFactory ff = new ISODefaultFunctionFactory();
+			FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2(h);
+			 List<Expression> args = new ArrayList<Expression>();
+			 args.add(ff2.property("loc"));
+			 args.add(ff2.literal(al.get(0)));
+			Function union = ff2.function("ISOunion", ff2.property("loc"), ff2.literal(al.get(1)));
+			Filter filter = ff2.equals(union, ff2.literal("zeroabc"));
+	        
+	        //StringWriter w = new StringWriter();
+	        
+			//FilterToSQL fs = new PostgisFilterToSQL(new PostGISDialect((JDBCDataStore) dataStore));
+			//fs.setWriter(w);
+			//union.accept(fs, null);
+			SimpleFeatureCollection features;
+			try {
+				features = source.getFeatures();
+				Object value = union.evaluate(features);
+				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+				table.setModel(model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	
 	}
 	private void countFeatures() throws Exception {
 		String typeName = (String) featureTypeCBox.getSelectedItem();

@@ -19,10 +19,9 @@ import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Point;
 
 public class CSVSpecifiedWKTStrategyTest {
 
@@ -54,9 +53,9 @@ public class CSVSpecifiedWKTStrategyTest {
         assertEquals("Invalid feature property", "car", feature.getAttribute("morx"));
         assertNotNull("Expected geometry", feature.getDefaultGeometry());
         Point point = (Point) feature.getAttribute("zoo");
-        Coordinate coordinate = point.getCoordinate();
-        assertEquals("Invalid x coordinate", coordinate.x, 3.14, 0.1);
-        assertEquals("Invalid y coordinate", coordinate.y, 1.59, 0.1);
+        DirectPosition coordinate = point.getDirectPosition();
+        assertEquals("Invalid x coordinate", coordinate.getOrdinate(0), 3.14, 0.1);
+        assertEquals("Invalid y coordinate", coordinate.getOrdinate(1), 1.59, 0.1);
     }
 
     public void testCreateFeatureBadGeometry() throws IOException {

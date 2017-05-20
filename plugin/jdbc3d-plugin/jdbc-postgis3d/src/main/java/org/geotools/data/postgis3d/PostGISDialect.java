@@ -38,7 +38,6 @@ import java.util.logging.Level;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.iso.io.wkt.GeometryToWKTString;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.CircularRing;
@@ -64,6 +63,10 @@ import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.Surface;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /*import com.vividsolutions.jts.geom.Envelope;
@@ -99,23 +102,25 @@ public class PostGISDialect extends BasicSQLDialect {
             put("POINTM", Point.class);
             put("POINTZM", Point.class);
             
-            put("CURVE", Curve.class);
+            /*put("CURVE", Curve.class);
             put("CURVEZ", Curve.class);
             put("CURVEM", Curve.class);
-            put("CURVEZM", Curve.class);
+            put("CURVEZM", Curve.class);*/
             
-            /*put("LINESTRING", LineString.class);
-            put("LINESTRINGM", LineString.class);
-            put("POLYGON", Polygon.class);
-            put("POLYGONM", Polygon.class);
+            put("LINESTRING", Curve.class);
+            put("LINESTRINGM", Curve.class);
+            put("POLYGON", Surface.class);
+            put("POLYGONM", Surface.class);
+            put("POLYHEDRALSURFACE", Solid.class);
             put("MULTIPOINT", MultiPoint.class);
             put("MULTIPOINTM", MultiPoint.class);
-            put("MULTILINESTRING", MultiLineString.class);
-            put("MULTILINESTRINGM", MultiLineString.class);
-            put("MULTIPOLYGON", MultiPolygon.class);
-            put("MULTIPOLYGONM", MultiPolygon.class);
-            put("GEOMETRYCOLLECTION", GeometryCollection.class);
-            put("GEOMETRYCOLLECTIONM", GeometryCollection.class);*/
+            put("MULTILINESTRING", MultiCurve.class);
+            put("MULTILINESTRINGM", MultiCurve.class);
+            put("MULTIPOLYGON", MultiSurface.class);
+            put("MULTIPOLYGONM", MultiSurface.class);
+            
+            //put("GEOMETRYCOLLECTION", GeometryCollection.class);
+            //put("GEOMETRYCOLLECTIONM", GeometryCollection.class);
             put("COMPOUNDCURVE", CompoundCurve.class);
             put("MULTICURVE", MultiCurve.class);
             put("CURVEPOLYGON", CurvePolygon.class);
@@ -132,11 +137,12 @@ public class PostGISDialect extends BasicSQLDialect {
         {
             add(Point.class);
             add(MultiPoint.class);
-            /*add(LineString.class);
-            add(LinearRing.class);
-            add(MultiLineString.class);
-            add(Polygon.class);
-            add(MultiPolygon.class);*/
+            add(Curve.class);
+            add(Ring.class);
+            add(MultiCurve.class);
+            add(Surface.class);
+            add(MultiSurface.class);
+            add(Solid.class);
         }
     };
 
@@ -144,14 +150,13 @@ public class PostGISDialect extends BasicSQLDialect {
     final static Map<Class, String> CLASS_TO_TYPE_MAP = new HashMap<Class, String>() {
         {
             put(Geometry.class, "GEOMETRY");
-            put(Point.class, "POINT");
-            put(Curve.class, "CURVE");
-            
-            //put(LineString.class, "LINESTRING");
-            //put(Polygon.class, "POLYGON");
+            put(Point.class, "POINT");            
+            put(Curve.class, "LINESTRING");
+            put(Surface.class, "POLYGON");
+            put(Solid.class, "POLYHEDRALSURFACE");
             put(MultiPoint.class, "MULTIPOINT");
-            //put(MultiLineString.class, "MULTILINESTRING");
-            //put(MultiPolygon.class, "MULTIPOLYGON");
+            put(MultiCurve.class, "MULTILINESTRING");
+            put(MultiSurface.class, "MULTIPOLYGON");
             //put(GeometryCollection.class, "GEOMETRYCOLLECTION");
             put(CircularString.class, "CIRCULARSTRING");
             put(CircularRing.class, "CIRCULARSTRING");
@@ -1076,7 +1081,7 @@ public class PostGISDialect extends BasicSQLDialect {
                 value = value.getFactory().createLineString(((LinearRing) value).getCoordinateSequence());
             }*/
         	
-        	GeometryToWKTString writer = new GeometryToWKTString(false);
+        	GeometryToPostGISWKTString writer = new GeometryToPostGISWKTString(false);
             String wkt = writer.getString(value);
             sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
             

@@ -9,7 +9,7 @@ import net.opengis.wfs20.InsertType;
 import net.opengis.wfs20.Wfs20Factory;
 
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.geotools.gml3.v3_2.GML;
+import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.wfs.v2_0.WFS;
 import org.geotools.xml.AbstractComplexEMFBinding;
 

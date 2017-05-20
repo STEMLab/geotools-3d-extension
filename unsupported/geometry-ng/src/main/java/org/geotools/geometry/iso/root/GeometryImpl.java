@@ -497,7 +497,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		// Ring: the average of the weighted line segments of the contained curves
 		if (this instanceof CurveImpl ||
 			this instanceof MultiCurveImpl ||
-			this instanceof RingImpl) {
+			this instanceof RingImplUnsafe) {
 			CentroidLine cl = new CentroidLine(this.crs);
 			cl.add(this);
 			return cl.getCentroid();
@@ -815,8 +815,21 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		}
 
 	}
+	
+	@Override
+        public boolean equals(Object obj) {
+	    if (this == obj)
+	        return true;
+	    if (obj == null)
+	        return false;
+	    if (!(obj instanceof TransfiniteSet))
+	        return false;
+	    
+	    TransfiniteSet set = (TransfiniteSet) obj;
+	    return this.equals(set);
+        }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.opengis.geometry.coordinate.TransfiniteSet#equals(org.opengis.geometry.coordinate.TransfiniteSet)
@@ -836,7 +849,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	                return Geometry3DOperation.equals(this, geom);
 	        }
 	        /* */
-		
 		IntersectionMatrix tIM = null;
 		try {
 			tIM = RelateOp.relate(this, geom);

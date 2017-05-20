@@ -97,11 +97,11 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
     
     @Override
     public String getDisplayName() {
-        return "PostGIS";
+        return "PostGIS SFCGAL";
     }
 
     public String getDescription() {
-        return "PostGIS Database";
+        return "PostGIS Database with SFCGAL Extension";
     }
     
     @Override
@@ -265,7 +265,29 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
                     closer.closeSafe(st);
                     closer.closeSafe(cx);
                 }
+                
+                //checking sfcgal extension
+                rs = null;
+                try {
+                    String url = "jdbc:postgresql" + "://" + host + ":" + port + "/" + db;
+                    cx = DriverManager.getConnection(url, user, password);
 
+                    // check we have postgis
+                    st = cx.createStatement();
+                    try {
+                        rs = st.executeQuery("select postgis_sfcgal_version()");
+                        rs.close();
+                    } catch (SQLException e) {
+                        // not available eh? create it
+                        st.execute("create extension postgis_sfcgal");
+                    }
+                } catch (SQLException e) {
+                    throw new IOException("Failed to create the target database", e);
+                } finally {
+                    closer.closeSafe(st);
+                    closer.closeSafe(cx);
+                }
+                
                 // and finally re-create the connection pool
                 ds = super.createDataSource(params, dialect);
             }

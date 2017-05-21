@@ -100,7 +100,7 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
         this.results = origionalCollection( results );
         
         CoordinateReferenceSystem originalCs = null;
-        if(results instanceof ForceCoordinateSystemFeatureResults)
+        if(results instanceof ISOForceCoordinateSystemFeatureResults)
             originalCs = results.getSchema().getGeometryDescriptor().getCoordinateReferenceSystem();
         else
             originalCs = this.results.getSchema().getGeometryDescriptor().getCoordinateReferenceSystem();
@@ -108,13 +108,13 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
     }
     
 	public Iterator openIterator() {
-	        return new ReprojectFeatureIterator( results.features(), getSchema(), transform );
+	        return new ISOReprojectFeatureIterator( results.features(), getSchema(), transform );
 	 }
  			    
 	 public void closeIterator( Iterator close ) {
 	        if( close == null ) return;
-	        if( close instanceof ReprojectFeatureIterator){
-	            ReprojectFeatureIterator iterator = (ReprojectFeatureIterator) close;
+	        if( close instanceof ISOReprojectFeatureIterator){
+	            ISOReprojectFeatureIterator iterator = (ISOReprojectFeatureIterator) close;
 	            iterator.close();
 	        }
 	    }
@@ -129,7 +129,7 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
                 results = ((ISOReprojectFeatureResults) results).getOrigin();
             }        
             if ( results instanceof ForceCoordinateSystemFeatureResults ) {
-                results = ((ForceCoordinateSystemFeatureResults) results).getOrigin();
+                results = ((ISOForceCoordinateSystemFeatureResults) results).getOrigin();
             }
             break;
         }
@@ -141,7 +141,7 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
                 results = ((ISOReprojectFeatureResults) results).getOrigin();
             }        
             if ( results instanceof ForceCoordinateSystemFeatureResults ) {
-                results = ((ForceCoordinateSystemFeatureResults) results).getOrigin();
+                results = ((ISOForceCoordinateSystemFeatureResults) results).getOrigin();
             }
             break;
         }
@@ -178,7 +178,7 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
     public ReferencedEnvelope getBounds() {
         SimpleFeatureIterator r = features();
         try {            
-        	ReferencedEnvelope newBBox = new ReferencedEnvelope();
+        	ReferencedEnvelope newBBox = null;
         	ReferencedEnvelope internal;
             SimpleFeature feature;
 
@@ -188,6 +188,9 @@ public class ISOReprojectFeatureResults extends AbstractFeatureCollection {
                 if(geometry != null) {
                 	Envelope env = geometry.getEnvelope();
                     internal = ReferencedEnvelope.reference(env);
+                    if(newBBox == null) {
+                    	newBBox = ReferencedEnvelope.create(internal);
+                    }
                     newBBox.expandToInclude(internal);
                 }
             }

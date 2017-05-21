@@ -136,14 +136,8 @@ public class IsSimpleOp {
 					.hasNext();) {
 				EdgeIntersection ei = (EdgeIntersection) eiIt.next();
 				
-				if (!ei.isEndPoint(maxSegmentIndex)){
-					//if coord is 3D, don't check intersect.
-					if (ei.coord.z != Double.NaN)
-						return false;
-					else
-						return true;
-				}
-
+				if (!ei.isEndPoint(maxSegmentIndex))
+					return true;
 			}
 		}
 		return false;

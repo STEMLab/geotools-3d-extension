@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.data.store.ISOReprojectingFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.ISOFeatureTypes;
 import org.geotools.feature.SchemaException;

@@ -550,54 +550,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 	
 	
-	public void testReadSolid() throws Exception {
-		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getSolid())).getFeatures();
-		try(SimpleFeatureIterator fr = fc.features()) {
-			assertTrue(fr.hasNext());
-			Solid sd_test = (Solid) fr.next().getDefaultGeometry();
-//			 "((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),"
-//			 "((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), "
-//			 "((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),"
-//			 "((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),"
-//			 "((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), "
-//			 "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1))"
-			
-			List<Position> dp_list = new ArrayList<>();
-			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 0}));
-			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 1}));
-			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 1}));
-			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 1}));
-			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 1}));
-			
-			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list);
-			Solid solid = makeSolid(surfaces);
-			assertTrue(solid.equals(sd_test));
-		}
-	}
 	
-	public void testWriteSolid() throws Exception {
-		try{
-			dataStore.removeSchema(getSolid_Write());
-		} catch (Exception e){
-			//e.printStackTrace();
-			System.out.println("Table was not removed");
-		}
-		
-		List<Position> dp_list = new ArrayList<>();
-		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -0.5, 0.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -1.5, 0.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -1.5, 0.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -0.5, 0.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -0.5, 1.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -1.5, 1.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -1.5, 1.5 }) );
-		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -0.5, 1.5 }) );
-		try{
-			Solid sld = writeSolid(dp_list, getSolid_Write(), 12, "sl1_test");
-
 	/*
 	 * dp_list is counter-clockwise
 	 */

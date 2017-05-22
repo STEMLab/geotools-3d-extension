@@ -81,7 +81,7 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
                 + "ST_GeomFromText('LINESTRING(1 1 0, 2 2 0, 4 2 1, 5 1 1)', 4326),"
                 + "'l1')");
         run("INSERT INTO \"line3d\" (\"id\",\"geom\",\"name\") VALUES (1,"
-                + "ST_GeomFromText('LINESTRING(3 0 1, 3 2 2, 3 3 3, 3 4 5)', 4326),"
+                + "ST_GeomFromText('LINESTRING(13 10 12, 13 12 12, 13 13 23, 13 14 25)', 4326),"
                 + "'l2')");
     }
 
@@ -124,7 +124,7 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
 
 		// insert data
 		run("INSERT INTO \"poly3d\" (\"id\",\"geom\",\"name\") VALUES (0,"
-				+ "ST_GeomFromText('POLYGON((1 1 0, 2 2 0, 4 2 1, 5 1 1, 1 1 0))', 4979),"
+				+ "ST_GeomFromText('POLYGON((1 1 0, 2 2 0, 4 2 0, 5 1 0, 1 1 0))', 4979),"
 				+ "'pl1')");
 		run("INSERT INTO \"poly3d\" (\"id\",\"geom\",\"name\") VALUES (1,"
 				+ "ST_GeomFromText('POLYGON((3 0 1, 3 2 2, 3 3 3, 3 4 5, 3 0 1))', 4979),"
@@ -175,17 +175,17 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
 			+ "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'),"
 			+ "'solid1')"
 		);
-		run("INSERT INTO \"solid\" (\"id\",\"geom\",\"name\") VALUES (1,"
-				+ "ST_GeomFromEWKT('SRID=4979;POLYHEDRALSURFACE( "
-				+ "((0 0 0, 9 0 0, 9 1 10, 1 2 10, 0 0 0)),"
-				+ "((0 0 0, 0 9 0, 11 13 11, 9 0 0, 0 0 0)), "
-				+ "((0 0 0, 1 2 10, 2 13 11,0 9 0 , 0 0 0)),"
-				+ "((9 0 0, 11 13 11 , 10 13 11, 9 1 10, 9 0 0 )),"
-				+ "((10 13 11,11 13 11 , 0 9 0, 2 13 11, 10 13 11)),"
-				+ "((0 0 0, 1 2 10, 2 13 11, 0 9 0, 0 0 0))"
-				+ ")'),"
-				+ "'solid2')"
-			);
+//		run("INSERT INTO \"solid\" (\"id\",\"geom\",\"name\") VALUES (1,"
+//				+ "ST_GeomFromEWKT('SRID=4979;POLYHEDRALSURFACE( "
+//				+ "((0 0 0, 9 0 0, 9 1 10, 1 2 10, 0 0 0)),"
+//				+ "((0 0 0, 0 9 0, 11 13 11, 9 0 0, 0 0 0)), "
+//				+ "((0 0 0, 1 2 10, 2 13 11,0 9 0 , 0 0 0)),"
+//				+ "((9 0 0, 11 13 11 , 10 13 11, 9 1 10, 9 0 0 )),"
+//				+ "((10 13 11,11 13 11 , 0 9 0, 2 13 11, 10 13 11)),"
+//				+ "((0 0 0, 1 2 10, 2 13 11, 0 9 0, 0 0 0))"
+//				+ ")'),"
+//				+ "'solid2')"
+//			);
 	}
 
 	@Override

@@ -18,11 +18,13 @@ package org.geotools.jdbc.iso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.ISODataUtilities;
+
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
@@ -35,6 +37,7 @@ import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -135,7 +138,6 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 //				aname(ID) + ":0," + aname(GEOM) + ":Surface:srid=" + getEpsgCode() + "," + aname(NAME) + ":String");
 //		poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION, 3);
 
-		
 		h.put(Hints.GEOMETRY_VALIDATE, false);
 		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		builder = new ISOGeometryBuilder(h);
@@ -284,6 +286,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 
 	protected Curve writeCurve(List<DirectPosition> dp_list, String schema, int id, String name) throws IOException {
+
 		Curve c = makeCurve(dp_list);
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
@@ -310,6 +313,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		return c;
 	}
 
+
 	/**
 	 * @param dp_list
 	 * @return
@@ -324,13 +328,15 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 
 
+
 	public void testReadPolygon() throws Exception {
 		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getPoly3d())).getFeatures();
 		try(SimpleFeatureIterator fr = fc.features()) {
 			assertTrue(fr.hasNext());
 			Surface test_surface = (Surface) fr.next().getDefaultGeometry();
+
 			//(1 1 0, 2 2 0, 4 2 0, 5 1 0, 1 1 0)
-			
+
 			List<Position> dp_list = new ArrayList<>();
 			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
 			dp_list.add(builder.createDirectPosition(new double[] {2, 2, 0}));
@@ -371,7 +377,6 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				Surface polygon = (Surface) fr.next().getDefaultGeometry();
 				assertTrue(sf.equals((Geometry)polygon));
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -463,6 +468,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				assertTrue(sld.equals((Geometry)test_solid));
 			}
 
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -540,7 +546,57 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Solid solid = builder.createSolid(solidBoundary);
 
 		return solid;
+
 	}
+	
+	
+	public void testReadSolid() throws Exception {
+		SimpleFeatureCollection fc = dataStore.getFeatureSource(tname(getSolid())).getFeatures();
+		try(SimpleFeatureIterator fr = fc.features()) {
+			assertTrue(fr.hasNext());
+			Solid sd_test = (Solid) fr.next().getDefaultGeometry();
+//			 "((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),"
+//			 "((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), "
+//			 "((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),"
+//			 "((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),"
+//			 "((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), "
+//			 "((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1))"
+			
+			List<Position> dp_list = new ArrayList<>();
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 0}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 0, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 0, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {1, 1, 1}));
+			dp_list.add(builder.createDirectPosition(new double[] {0, 1, 1}));
+			
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list);
+			Solid solid = makeSolid(surfaces);
+			assertTrue(solid.equals(sd_test));
+		}
+	}
+	
+	public void testWriteSolid() throws Exception {
+		try{
+			dataStore.removeSchema(getSolid_Write());
+		} catch (Exception e){
+			//e.printStackTrace();
+			System.out.println("Table was not removed");
+		}
+		
+		List<Position> dp_list = new ArrayList<>();
+		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -0.5, 0.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -1.5, 0.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -1.5, 0.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -0.5, 0.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -0.5, 1.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 0.5, -1.5, 1.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -1.5, 1.5 }) );
+		dp_list.add(builder.createDirectPosition(new double[] { 1.5, -0.5, 1.5 }) );
+		try{
+			Solid sld = writeSolid(dp_list, getSolid_Write(), 12, "sl1_test");
 
 	/*
 	 * dp_list is counter-clockwise
@@ -652,6 +708,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			e.printStackTrace();
 		}
 
+
 	}
 	
 	/*
@@ -683,6 +740,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 
 	}
 	
@@ -723,7 +781,6 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	/*
@@ -876,6 +933,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 	/*
 	 * Surface & Curve
@@ -1011,6 +1069,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			Curve c_result = makeCurve(dp_list);
 
 			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getLine3d()));
+
 			FeatureType schema = fc.getSchema();
 			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
 			
@@ -1097,6 +1156,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				SimpleFeature iter_feature = iterator.next();
 				assertTrue(c_result.equals((Geometry)iter_feature.getDefaultGeometry()));
 			}	
+
 		}  catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
@@ -1105,6 +1165,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 	
 	/*
@@ -1143,6 +1204,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				assertTrue(sf_result.equals((Geometry)iter_feature.getDefaultGeometry()));
 			}
 				
+
 		}  catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
@@ -1153,6 +1215,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		}
 	}
 	
+
 	/**
 	 * @param fc
 	 * @param geom_descriptor
@@ -1167,6 +1230,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Query query = new Query(getPoint3d(), filter, new String[] { geom_descriptor });
 		SimpleFeatureCollection features = fc.getFeatures(query);
 		SimpleFeatureIterator iterator = features.features();
+
 		iterator_is_open = true;
 		return iterator;
 	}
@@ -1175,6 +1239,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		if (iterator_is_open)
 			iterator.close();	
 	}
+
 //
 //	public void testCreateSchemaAndInsertPolyTriangle() throws Exception {
 //		/*LiteCoordinateSequenceFactory csf = new LiteCoordinateSequenceFactory();

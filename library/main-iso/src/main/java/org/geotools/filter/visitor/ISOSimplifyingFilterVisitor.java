@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.geotools.filter.FilterAttributeExtractor;
+import org.geotools.filter.ISOFilterAttributeExtractor;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.And;
@@ -142,7 +142,7 @@ public class ISOSimplifyingFilterVisitor extends ISODuplicatingFilterVisitor {
         }
     }
 
-    FilterAttributeExtractor attributeExtractor = new FilterAttributeExtractor();
+    ISOFilterAttributeExtractor attributeExtractor = new ISOFilterAttributeExtractor();
 
     protected FeatureType featureType;
 
@@ -472,7 +472,7 @@ public class ISOSimplifyingFilterVisitor extends ISODuplicatingFilterVisitor {
 
         // stable function, is it using attributes?
         if (attributeExtractor == null) {
-            attributeExtractor = new FilterAttributeExtractor();
+            attributeExtractor = new ISOFilterAttributeExtractor();
         } else {
             attributeExtractor.clear();
         }

@@ -28,10 +28,10 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.SchemaException;
-import org.geotools.feature.collection.DecoratingSimpleFeatureCollection;
+import org.geotools.feature.collection.ISODecoratingSimpleFeatureCollection;
 import org.geotools.feature.visitor.CountVisitor;
 import org.geotools.feature.visitor.FeatureAttributeVisitor;
-import org.geotools.filter.FilterAttributeExtractor;
+import org.geotools.filter.ISOFilterAttributeExtractor;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.spatial.ISODefaultCRSFilterVisitor;
 import org.geotools.filter.spatial.ISOReprojectingFilterVisitor;
@@ -63,7 +63,7 @@ import org.opengis.referencing.operation.MathTransform;
  *
  * @source $URL$
  */
-public class ISOReprojectingFeatureCollection extends DecoratingSimpleFeatureCollection {
+public class ISOReprojectingFeatureCollection extends ISODecoratingSimpleFeatureCollection {
 	
 	//TODO uses CommonFactoryFinder
     static final FilterFactory2 FF = new ISOFilterFactoryImpl();
@@ -255,7 +255,7 @@ public class ISOReprojectingFeatureCollection extends DecoratingSimpleFeatureCol
     public static boolean isGeometryless(FeatureVisitor visitor, SimpleFeatureType schema) {
         if (visitor instanceof FeatureAttributeVisitor) {
             //pass through unless one of the expressions requires the geometry attribute
-            FilterAttributeExtractor extractor = new FilterAttributeExtractor(schema);
+            ISOFilterAttributeExtractor extractor = new ISOFilterAttributeExtractor(schema);
             for (Expression e : ((FeatureAttributeVisitor) visitor).getExpressions()) {
                 e.accept(extractor, null);
             }

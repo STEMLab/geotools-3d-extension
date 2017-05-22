@@ -135,11 +135,9 @@ public class IsSimpleOp {
 			for (Iterator eiIt = e.getEdgeIntersectionList().iterator(); eiIt
 					.hasNext();) {
 				EdgeIntersection ei = (EdgeIntersection) eiIt.next();
-				
-				if (!ei.isEndPoint(maxSegmentIndex)){
-						return true;
-				}
 
+				if (!ei.isEndPoint(maxSegmentIndex))
+					return true;
 			}
 		}
 		return false;

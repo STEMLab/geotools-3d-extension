@@ -186,6 +186,7 @@ public class PostGIS3DTestSetup extends JDBC3DTestSetup {
 //				+ ")'),"
 //				+ "'solid2')"
 //			);
+
 	}
 
 	@Override

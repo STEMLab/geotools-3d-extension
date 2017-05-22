@@ -24,14 +24,9 @@ import org.geotools.gml3.iso.bindings.AbstractFeatureCollectionTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractFeatureTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractGeometryTypeBinding;
 import org.geotools.gml3.iso.bindings.AbstractRingPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcStringTypeBinding;
-import org.geotools.gml3.iso.bindings.ArcTypeBinding;
 import org.geotools.gml3.iso.bindings.BoundingShapeTypeBinding;
-import org.geotools.gml3.iso.bindings.CircleTypeBinding;
 import org.geotools.gml3.iso.bindings.ComplexSupportXSAnyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveArrayPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.CurveSegmentArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.CurveTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionListTypeBinding;
 import org.geotools.gml3.iso.bindings.DirectPositionTypeBinding;
 import org.geotools.gml3.iso.bindings.FeatureArrayPropertyTypeBinding;
@@ -53,21 +48,17 @@ import org.geotools.gml3.iso.bindings.MultiSurfaceTypeBinding;
 import org.geotools.gml3.iso.bindings.PointArrayPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.PointPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.PointTypeBinding;
-import org.geotools.gml3.iso.bindings.PolygonPatchTypeBinding;
 import org.geotools.gml3.iso.bindings.PolygonTypeBinding;
 import org.geotools.gml3.iso.bindings.ReferenceTypeBinding;
 import org.geotools.gml3.iso.bindings.RingTypeBinding;
 import org.geotools.gml3.iso.bindings.SurfaceArrayPropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.SurfacePatchArrayPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.SurfacePropertyTypeBinding;
-import org.geotools.gml3.iso.bindings.SurfaceTypeBinding;
 import org.geotools.gml3.iso.bindings.TimeInstantPropertyTypeBinding;
 import org.geotools.gml3.iso.bindings.TimeInstantTypeBinding;
 import org.geotools.gml3.iso.bindings.TimePeriodTypeBinding;
 import org.geotools.gml3.iso.bindings.TimePositionTypeBinding;
 import org.geotools.gml3.iso.bindings.TimePositionUnionBinding;
 import org.geotools.gml3.iso.bindings.ext.CompositeCurveTypeBinding;
-import org.geotools.gml3.iso.v3_2.GML;
 import org.geotools.gml3.iso.v3_2.bindings.AbstractRingTypeBinding;
 import org.geotools.gml3.iso.v3_2.bindings.DoubleListBinding;
 import org.geotools.gml3.iso.v3_2.bindings.EnvelopeTypeBinding;
@@ -177,9 +168,8 @@ public class GMLConfiguration_ISO extends Configuration {
         container.registerComponentImplementation(GML.CoordinatesType,
             GMLCoordinatesTypeBinding.class);
 
-        container.registerComponentImplementation(GML.CurveArrayPropertyType,
-            CurveArrayPropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveArrayPropertyType, CurveArrayPropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurveType, CurveTypeBinding.class);
         container.registerComponentImplementation(GML.CurveSegmentArrayPropertyType,
             CurveSegmentArrayPropertyTypeBinding.class);
         container.registerComponentImplementation(GML.DirectPositionListType,
@@ -238,10 +228,9 @@ public class GMLConfiguration_ISO extends Configuration {
         container.registerComponentImplementation(GML.TimePositionType, TimePositionTypeBinding.class);
         container.registerComponentImplementation(GML.TimePositionUnion, TimePositionUnionBinding.class);
 
-        container.registerComponentImplementation(GML.CurvePropertyType, 
-                org.geotools.gml3.iso.bindings.ext.CurvePropertyTypeBinding.class);
-        container.registerComponentImplementation(GML.ArcStringType, ArcStringTypeBinding.class);
-        container.registerComponentImplementation(GML.ArcType, ArcTypeBinding.class);
+        //container.registerComponentImplementation(GML.CurvePropertyType, org.geotools.gml3.iso.bindings.ext.CurvePropertyTypeBinding.class);
+        //container.registerComponentImplementation(GML.ArcStringType, ArcStringTypeBinding.class);
+        //container.registerComponentImplementation(GML.ArcType, ArcTypeBinding.class);
         container.registerComponentImplementation(GML.RingType, RingTypeBinding.class);
         container.registerComponentImplementation(GML.CompositeCurveType,
                 CompositeCurveTypeBinding.class);
@@ -254,7 +243,7 @@ public class GMLConfiguration_ISO extends Configuration {
                 SolidTypeBinding.class);
         
         //extended bindings for arc/surface support
-        if (isExtendedArcSurfaceSupport()) {
+        /*if (isExtendedArcSurfaceSupport()) {
             container.registerComponentImplementation(GML.ArcStringType,
                     ArcStringTypeBinding.class);
             container.registerComponentImplementation(GML.ArcType,
@@ -289,7 +278,7 @@ public class GMLConfiguration_ISO extends Configuration {
                     org.geotools.gml3.iso.bindings.ext.SurfacePropertyTypeBinding.class);
             container.registerComponentImplementation(GML.SurfaceType, 
                     org.geotools.gml3.iso.bindings.ext.SurfaceTypeBinding.class);
-        }
+        }*/
     }
     
     @Override

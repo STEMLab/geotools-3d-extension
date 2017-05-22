@@ -81,8 +81,8 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
     
     private static SimpleFeatureType origionalType( FeatureCollection<SimpleFeatureType,SimpleFeature> results ){
         while( true ){
-            if ( results instanceof ReprojectFeatureResults ) {
-                results = ((ReprojectFeatureResults) results).getOrigin();
+            if ( results instanceof ISOReprojectFeatureResults ) {
+                results = ((ISOReprojectFeatureResults) results).getOrigin();
             }        
             if ( results instanceof ForceCoordinateSystemFeatureResults ) {
                 results = ((ForceCoordinateSystemFeatureResults) results).getOrigin();

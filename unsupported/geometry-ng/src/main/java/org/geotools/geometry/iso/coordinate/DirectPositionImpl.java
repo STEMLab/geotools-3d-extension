@@ -72,7 +72,8 @@ public class DirectPositionImpl implements DirectPosition, Cloneable, Serializab
 	 */
 	public DirectPositionImpl(CoordinateReferenceSystem crs, double[] coord) {
 		this.crs = crs;
-		assert (coord.length == crs.getCoordinateSystem().getDimension());
+		assert (coord.length <= crs.getCoordinateSystem().getDimension());
+		//assert (coord.length == crs.getCoordinateSystem().getDimension());
 		this.coordinate = coord;
 	}
 

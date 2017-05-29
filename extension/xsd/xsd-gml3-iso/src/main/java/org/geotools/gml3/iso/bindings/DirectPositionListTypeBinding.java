@@ -17,6 +17,7 @@
 package org.geotools.gml3.iso.bindings;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
@@ -129,7 +130,10 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             throw new IllegalArgumentException("dimension must be greater or equal to 1");
         }
 
-        PointArray pa = gBuilder.createPointArray();
+        //PointArray pa = gBuilder.createPointArray();
+        //Change PointArray to DirectPosition ArrayList because there is no reason to implement this part by PointArray. 
+        ArrayList<DirectPosition> pa = new ArrayList<DirectPosition>();
+        
         
         if (dim == 1) {
             for (int i = 0; i < coordCount; i++) {
@@ -175,8 +179,11 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             }
 
         }
-
-        return pa;
+        
+        DirectPosition[] res = new DirectPosition[pa.size()];
+        res = pa.toArray(res);
+        //return pa;
+        return res;
     }
 
     /**

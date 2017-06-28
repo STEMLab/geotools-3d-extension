@@ -16,8 +16,11 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.gml3.GML;
-import org.geotools.gml3.GML3TestSupport;
+import org.geotools.geometry.iso.util.PointArrayUtil;
+import org.geotools.gml3.iso.GML;
+import org.geotools.gml3.iso.GML3TestSupport;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -34,41 +37,59 @@ public class LineStringTypeBindingTest extends GML3TestSupport {
     public void testPos() throws Exception {
         document.appendChild(GML3MockData.lineStringWithPos(document, null));
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
         assertNotNull(line);
-
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(0).getCoordinate());
-        assertEquals(new Coordinate(3d, 4d), line.getPointN(1).getCoordinate());
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1.0, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2.0, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(3.0, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4.0, seq.get(1).getDirectPosition().getCoordinate()[1]);
     }
     
     public void testPos3D() throws Exception {
         document.appendChild(GML3MockData.lineStringWithPos3D(document, null));
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
         assertNotNull(line);
 
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(0).getCoordinate()));
-        assertTrue(new Coordinate(3d, 4d, 20d).equals3D(line.getPointN(1).getCoordinate()));
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(0).getDirectPosition().getCoordinate()[2]);
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(1).getDirectPosition().getCoordinate()[2]);
     }
 
     public void testPosList() throws Exception {
         document.appendChild(GML3MockData.lineStringWithPosList(document, null));
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
         assertNotNull(line);
 
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(0).getCoordinate());
-        assertEquals(new Coordinate(3d, 4d), line.getPointN(1).getCoordinate());
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1.0, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2.0, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(3.0, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4.0, seq.get(1).getDirectPosition().getCoordinate()[1]);
     }
     
     public void testPosList3D() throws Exception {
         document.appendChild(GML3MockData.lineStringWithPosList3D(document, null));
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
         assertNotNull(line);
 
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(0).getCoordinate()));
-        assertTrue(new Coordinate(3d, 4d, 20d).equals3D(line.getPointN(1).getCoordinate()));
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(0).getDirectPosition().getCoordinate()[2]);
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(1).getDirectPosition().getCoordinate()[2]);
     }
     
     /**
@@ -77,41 +98,16 @@ public class LineStringTypeBindingTest extends GML3TestSupport {
      * @throws Exception
      */
     public void testEncodeLineString() throws Exception {
-    	LineString line = GML3MockData.lineString();
+    	Curve line = GML3MockData.lineString();
         Document doc = encode(line, GML.LineString);
-        
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
         checkDimension(doc, GML.LineString.getLocalPart(), 2);
-        checkPosListOrdinates(doc, 2 * line.getNumPoints());
+        checkPosListOrdinates(doc, 2 * seq.size());
     }
     
-    public void testEncodeLite2D() throws Exception {
-    	LineString line = GML3MockData.lineStringLite2D();
-        Document doc = encode(line, GML.LineString);
-        
-        checkDimension(doc, GML.LineString.getLocalPart(), 2);
-        checkPosListOrdinates(doc, 2 * line.getNumPoints());
-    }
     
-    public void testEncodeLite3D() throws Exception {
-    	LineString line = GML3MockData.lineStringLite3D();
-        Document doc = encode(line, GML.LineString);
-        
-        checkDimension(doc, GML.LineString.getLocalPart(), 3);
-        checkPosListOrdinates(doc, 3 * line.getNumPoints());
-    }
     
-    /**
-     * Test a long LineString to catch problems that only show up with large numbers of ordinates
-     * 
-     * @throws Exception
-     */
-    public void testEncode2DLong() throws Exception {
-    	LineString line = GML3MockData.lineStringLite2D(10);
-        Document doc = encode(line, GML.LineString);
-        
-        checkDimension(doc, GML.LineString.getLocalPart(), 2);
-        checkPosListOrdinates(doc, 2 * line.getNumPoints());
-    }
+  
     
 
 }

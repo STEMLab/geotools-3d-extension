@@ -234,7 +234,7 @@ public class GML3MockData {
     	PointArray pa = gb.createPointArray();
     	pa.add(gb.createDirectPosition(new double[]{1, 1}));
     	pa.add(gb.createDirectPosition(new double[]{2, 2}));
-    	pa.add(gb.createDirectPosition(new double[]{3, 3}));
+    	pa.add(gb.createDirectPosition(new double[]{3, 1}));
     	pa.add(gb.createDirectPosition(new double[]{1, 1}));
     	
     	Curve c = gb.createCurve(pa);

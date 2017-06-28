@@ -51,7 +51,7 @@ public class LineStringTypeBindingTest extends GML3TestSupport {
         document.appendChild(GML3MockData.lineStringWithPos3D(document, null));
 
         Curve line = (Curve) parse();
-        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb3D,line);
         assertNotNull(line);
 
         assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
@@ -82,7 +82,7 @@ public class LineStringTypeBindingTest extends GML3TestSupport {
         Curve line = (Curve) parse();
         assertNotNull(line);
 
-        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb3D,line);
         
         assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
         assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);

@@ -93,7 +93,7 @@ public class PolygonTypeBindingTest extends GML3TestSupport {
         Document doc = encode(poly, GML.Polygon);
         
         checkDimension(doc, GML.Polygon.getLocalPart(), 3);
-        //checkPosListOrdinates(doc, 3 * poly.get);
+        //checkPosListOrdinates(doc, 3 * poly);
     }
     
     public void testEncode2D() throws Exception {

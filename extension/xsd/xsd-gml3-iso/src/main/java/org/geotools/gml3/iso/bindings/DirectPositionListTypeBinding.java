@@ -27,6 +27,7 @@ import org.geotools.geometry.DirectPosition3D;
 import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.bindings.GML3ParsingUtils;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
@@ -110,6 +111,16 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         int crsDimension = GML3ParsingUtils.dimensions(node);
 
+    	//TODO HACK
+    	if(gBuilder.getCoordinateReferenceSystem().getCoordinateSystem().getDimension() != crsDimension) {
+
+    		if(crsDimension == 2) {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84);
+    		} else {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
+    		}
+    	}
+        
         Double[] values = (Double[]) value;
         BigInteger coordinatesCount = (BigInteger) node.getAttributeValue("count");
 

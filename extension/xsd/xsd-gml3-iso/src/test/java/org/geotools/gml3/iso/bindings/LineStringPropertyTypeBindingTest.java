@@ -16,9 +16,10 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.gml3.GML;
-import org.geotools.gml3.GML3TestSupport;
+import org.geotools.gml3.iso.GML;
+import org.geotools.gml3.iso.GML3TestSupport;
 import org.geotools.xml.Binding;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -31,7 +32,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class LineStringPropertyTypeBindingTest extends GML3TestSupport {
 
     public void testType() {
-        assertEquals(LineString.class, binding(GML.LineStringPropertyType).getType());
+        assertEquals(Curve.class, binding(GML.LineStringPropertyType).getType());
     }
 
     public void testExecutionMode() {
@@ -41,7 +42,7 @@ public class LineStringPropertyTypeBindingTest extends GML3TestSupport {
     public void testParse() throws Exception {
         GML3MockData.lineStringProperty(document, document);
 
-        LineString line = (LineString) parse();
+        Curve line = (Curve) parse();
         assertNotNull(line);
     }
 

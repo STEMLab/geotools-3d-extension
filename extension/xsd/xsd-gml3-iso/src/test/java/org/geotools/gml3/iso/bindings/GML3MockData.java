@@ -16,6 +16,7 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -242,6 +244,13 @@ public class GML3MockData {
     	return r;
     }
     
+    public static Ring linearRing(PointArray pa) {
+    	Curve c = gb.createCurve(pa);
+    	Ring r = gb.createRing(Arrays.asList(c));
+    	return r;
+    }
+    
+    
     public static Ring linearRing3D() {
     	PointArray pa = gb3D.createPointArray();
     	pa.add(gb3D.createDirectPosition(new double[]{1.0, 2.0, 10.0}));
@@ -249,6 +258,12 @@ public class GML3MockData {
     	pa.add(gb3D.createDirectPosition(new double[]{5.0, 2.0, 20.0}));
     	pa.add(gb3D.createDirectPosition(new double[]{1.0, 2.0, 10.0}));
     	
+    	Curve c = gb3D.createCurve(pa);
+    	Ring r = gb3D.createRing(Arrays.asList(c));
+    	return r;
+    }
+    
+    public static Ring linearRing3D(PointArray pa) {
     	Curve c = gb3D.createCurve(pa);
     	Ring r = gb3D.createRing(Arrays.asList(c));
     	return r;
@@ -276,6 +291,25 @@ public class GML3MockData {
         return linearRing;
     }
     
+    public static Element interiorLinearRingWithPos(Document document, Node parent) {
+        Element linearRing = element(qName("LinearRing"), document, parent);
+
+        Element pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.5 1.7"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("2.0 3.2"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("4.0 1.9"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.5 1.7"));
+
+        return linearRing;
+    }
+    
+    
     public static Element linearRingWithPos3D(Document document, Node parent, boolean addSrsDimension) {
         Element linearRing = element(qName("LinearRing"), document, parent);
         if(addSrsDimension) {
@@ -296,6 +330,27 @@ public class GML3MockData {
 
         return linearRing;
     }
+    
+    public static Element interiorLinearRingWithPos3D(Document document, Node parent, boolean addSrsDimension) {
+        Element linearRing = element(qName("LinearRing"), document, parent);
+        if(addSrsDimension) {
+            linearRing.setAttribute("srsDimension", "3");
+        }
+
+        Element pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.5 1.7 10.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("2.0 3.2 20.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("4.0 1.9 20.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.5 1.7 10.0"));
+
+        return linearRing;
+    }
 
     public static Element linearRingWithPosList(Document document, Node parent) {
         Element linearRing = element(qName("LinearRing"), document, parent);
@@ -303,7 +358,7 @@ public class GML3MockData {
         Element posList = element(qName("posList"), document, linearRing);
 
         linearRing.appendChild(posList);
-        posList.appendChild(document.createTextNode("1.0 2.0 3.0 4.0 5.0 6.0 1.0 2.0"));
+        posList.appendChild(document.createTextNode("1.0 2.0 3.0 4.0 5.0 2.0 1.0 2.0"));
 
         return linearRing;
     }
@@ -317,15 +372,38 @@ public class GML3MockData {
         Element posList = element(qName("posList"), document, linearRing);
 
         linearRing.appendChild(posList);
-        posList.appendChild(document.createTextNode("1.0 2.0 10.0 3.0 4.0 20.0 5.0 6.0 30.0 1.0 2.0 10.0"));
+        posList.appendChild(document.createTextNode("1.0 2.0 10.0 3.0 4.0 20.0 5.0 2.0 20.0 1.0 2.0 10.0"));
 
         return linearRing;
     }
 
     public static Surface polygon() {
-        /*return gf.createPolygon(linearRing(), null);*/
-    	//TODO
-    	return null;
+    	PointArray extPa = gb.createPointArray();
+    	extPa.add(gb.createDirectPosition(new double[]{0.0, 0.0}));
+    	extPa.add(gb.createDirectPosition(new double[]{0.0, 10.0}));
+    	extPa.add(gb.createDirectPosition(new double[]{10.0, 10.0}));
+    	extPa.add(gb.createDirectPosition(new double[]{10.0, 0.0}));
+    	extPa.add(gb.createDirectPosition(new double[]{0.0, 0.0}));
+    	Ring extR = linearRing(extPa);
+    	
+    	PointArray intPa1 = gb.createPointArray();
+    	intPa1.add(gb.createDirectPosition(new double[]{1.0, 1.0}));
+    	intPa1.add(gb.createDirectPosition(new double[]{1.0, 5.0}));
+    	intPa1.add(gb.createDirectPosition(new double[]{5.0, 5.0}));
+    	intPa1.add(gb.createDirectPosition(new double[]{5.0, 1.0}));
+    	intPa1.add(gb.createDirectPosition(new double[]{1.0, 1.0}));
+    	Ring intR1 = linearRing(intPa1);
+    	
+    	PointArray intPa2 = gb.createPointArray();
+    	intPa2.add(gb.createDirectPosition(new double[]{6.0, 3.0}));
+    	intPa2.add(gb.createDirectPosition(new double[]{6.0, 8.0}));
+    	intPa2.add(gb.createDirectPosition(new double[]{9.0, 8.0}));
+    	intPa2.add(gb.createDirectPosition(new double[]{9.0, 3.0}));
+    	intPa2.add(gb.createDirectPosition(new double[]{6.0, 3.0}));
+    	Ring intR2 = linearRing(intPa2);
+
+    	SurfaceBoundary sb = gb.createSurfaceBoundary(extR, Arrays.asList(intR1, intR2));
+    	return gb.createSurface(sb);
     }
 
     /**
@@ -334,13 +412,33 @@ public class GML3MockData {
      * 
      * @return a 3D Polygon
      */
-    public static Surface polygonLite3D() {
-        /*return liteGF.createPolygon(
-        		liteGF.createLinearRing(liteCSF.create(
-        				new double[] { 1,1,100,  2,1,99, 2,2,98, 1,2,97, 1,1,100}, 3)),
-        				null);*/
-    	//TODO
-    	return null;
+    public static Surface polygon_3D() {
+    	PointArray extPa = gb3D.createPointArray();
+    	extPa.add(gb3D.createDirectPosition(new double[]{0.0, 0.0, 10.0}));
+    	extPa.add(gb3D.createDirectPosition(new double[]{0.0, 10.0, 10.0}));
+    	extPa.add(gb3D.createDirectPosition(new double[]{10.0, 10.0, 10.0}));
+    	extPa.add(gb3D.createDirectPosition(new double[]{10.0, 0.0, 10.0}));
+    	extPa.add(gb3D.createDirectPosition(new double[]{0.0, 0.0, 10.0}));
+    	Ring extR = linearRing3D(extPa);
+    	
+    	PointArray intPa1 = gb3D.createPointArray();
+    	intPa1.add(gb3D.createDirectPosition(new double[]{1.0, 1.0, 10.0}));
+    	intPa1.add(gb3D.createDirectPosition(new double[]{1.0, 5.0, 10.0}));
+    	intPa1.add(gb3D.createDirectPosition(new double[]{5.0, 5.0, 10.0}));
+    	intPa1.add(gb3D.createDirectPosition(new double[]{5.0, 1.0, 10.0}));
+    	intPa1.add(gb3D.createDirectPosition(new double[]{1.0, 1.0, 10.0}));
+    	Ring intR1 = linearRing3D(intPa1);
+    	
+    	PointArray intPa2 = gb3D.createPointArray();
+    	intPa2.add(gb3D.createDirectPosition(new double[]{6.0, 3.0, 10.0}));
+    	intPa2.add(gb3D.createDirectPosition(new double[]{6.0, 8.0, 10.0}));
+    	intPa2.add(gb3D.createDirectPosition(new double[]{9.0, 8.0, 10.0}));
+    	intPa2.add(gb3D.createDirectPosition(new double[]{9.0, 3.0, 10.0}));
+    	intPa2.add(gb3D.createDirectPosition(new double[]{6.0, 3.0, 10.0}));
+    	Ring intR2 = linearRing3D(intPa2);
+
+    	SurfaceBoundary sb = gb3D.createSurfaceBoundary(extR, Arrays.asList(intR1, intR2));
+    	return gb3D.createSurface(sb);
     }
 
     public static Element polygon(Document document, Node parent) {
@@ -363,7 +461,7 @@ public class GML3MockData {
         
         if ( withInterior ) {
             Element interior = element(qName("interior"), document, polygon);
-            linearRing(document,interior);
+            interiorLinearRingWithPos(document,interior);
         }
 
         return polygon;
@@ -383,7 +481,7 @@ public class GML3MockData {
         linearRingWithPos3D(document, exterior, false);
         
         Element interior = element(qName("interior"), document, polygon);
-        linearRingWithPos3D(document, interior, false);
+        interiorLinearRingWithPos3D(document, interior, false);
 
         return polygon;
     }

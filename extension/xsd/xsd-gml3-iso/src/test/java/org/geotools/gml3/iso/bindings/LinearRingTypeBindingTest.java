@@ -77,7 +77,7 @@ public class LinearRingTypeBindingTest extends GML3TestSupport {
         Ring line = (Ring) parse();
         assertNotNull(line);
 
-        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb3D,line);
         
         assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
         assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
@@ -99,7 +99,7 @@ public class LinearRingTypeBindingTest extends GML3TestSupport {
         Ring line = (Ring) parse();
         assertNotNull(line);
 
-PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb3D,line);
         
         assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
         assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);

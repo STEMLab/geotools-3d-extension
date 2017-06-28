@@ -16,7 +16,10 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.gml3.GML3TestSupport;
+import org.geotools.geometry.iso.util.PointArrayUtil;
+import org.geotools.gml3.iso.GML3TestSupport;
+import org.opengis.geometry.coordinate.PointArray;
+import org.opengis.geometry.primitive.Ring;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -32,49 +35,84 @@ public class LinearRingTypeBindingTest extends GML3TestSupport {
     public void testPos() throws Exception {
         document.appendChild(GML3MockData.linearRingWithPos(document, null));
 
-        LinearRing line = (LinearRing) parse();
+        Ring line = (Ring) parse();
         assertNotNull(line);
+        
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
 
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(0).getCoordinate());
-        assertEquals(new Coordinate(3d, 4d), line.getPointN(1).getCoordinate());
-        assertEquals(new Coordinate(5d, 6d), line.getPointN(2).getCoordinate());
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(3).getCoordinate());
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);
+        assertEquals(5d, seq.get(2).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(2).getDirectPosition().getCoordinate()[1]);
+        assertEquals(1d, seq.get(3).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(3).getDirectPosition().getCoordinate()[1]);
+        
+        
     }
 
     public void testPosList() throws Exception {
         document.appendChild(GML3MockData.linearRingWithPosList(document, null));
 
-        LinearRing line = (LinearRing) parse();
+        Ring line = (Ring) parse();
         assertNotNull(line);
 
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(0).getCoordinate());
-        assertEquals(new Coordinate(3d, 4d), line.getPointN(1).getCoordinate());
-        assertEquals(new Coordinate(5d, 6d), line.getPointN(2).getCoordinate());
-        assertEquals(new Coordinate(1d, 2d), line.getPointN(3).getCoordinate());
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);       
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);       
+        assertEquals(5d, seq.get(2).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(2).getDirectPosition().getCoordinate()[1]);     
+        assertEquals(1d, seq.get(3).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(3).getDirectPosition().getCoordinate()[1]);
+       
     }
     
     public void testPos3D() throws Exception {
         document.appendChild(GML3MockData.linearRingWithPos3D(document, null, true));
 
-        LinearRing line = (LinearRing) parse();
+        Ring line = (Ring) parse();
         assertNotNull(line);
 
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(0).getCoordinate()));
-        assertTrue(new Coordinate(3d, 4d, 20d).equals3D(line.getPointN(1).getCoordinate()));
-        assertTrue(new Coordinate(5d, 6d, 30d).equals3D(line.getPointN(2).getCoordinate()));
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(3).getCoordinate()));
+        PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(0).getDirectPosition().getCoordinate()[2]);
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(1).getDirectPosition().getCoordinate()[2]);
+        assertEquals(5d, seq.get(2).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(2).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(2).getDirectPosition().getCoordinate()[2]);
+        assertEquals(1d, seq.get(3).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(3).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(3).getDirectPosition().getCoordinate()[2]);
     }
 
     public void testPosList3D() throws Exception {
         document.appendChild(GML3MockData.linearRingWithPosList3D(document, null, true));
 
-        LinearRing line = (LinearRing) parse();
+        Ring line = (Ring) parse();
         assertNotNull(line);
 
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(0).getCoordinate()));
-        assertTrue(new Coordinate(3d, 4d, 20d).equals3D(line.getPointN(1).getCoordinate()));
-        assertTrue(new Coordinate(5d, 6d, 30d).equals3D(line.getPointN(2).getCoordinate()));
-        assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(3).getCoordinate()));
+PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
+        
+        assertEquals(1d, seq.get(0).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(0).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(0).getDirectPosition().getCoordinate()[2]);
+        assertEquals(3d, seq.get(1).getDirectPosition().getCoordinate()[0]);
+        assertEquals(4d, seq.get(1).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(1).getDirectPosition().getCoordinate()[2]);
+        assertEquals(5d, seq.get(2).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(2).getDirectPosition().getCoordinate()[1]);
+        assertEquals(20d, seq.get(2).getDirectPosition().getCoordinate()[2]);
+        assertEquals(1d, seq.get(3).getDirectPosition().getCoordinate()[0]);
+        assertEquals(2d, seq.get(3).getDirectPosition().getCoordinate()[1]);
+        assertEquals(10d, seq.get(3).getDirectPosition().getCoordinate()[2]);
     }
     
     

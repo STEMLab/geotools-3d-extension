@@ -18,6 +18,7 @@ package org.geotools.gml3.iso.bindings;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -230,12 +231,27 @@ public class GML3MockData {
     }*/
 
     public static Ring linearRing() {
-        /*return gf.createLinearRing(new Coordinate[] {
-                new Coordinate(1, 1), new Coordinate(2, 2), new Coordinate(3, 3),
-                new Coordinate(1, 1)
-            });*/
-    	//TODO
-    	return null;
+    	PointArray pa = gb.createPointArray();
+    	pa.add(gb.createDirectPosition(new double[]{1, 1}));
+    	pa.add(gb.createDirectPosition(new double[]{2, 2}));
+    	pa.add(gb.createDirectPosition(new double[]{3, 3}));
+    	pa.add(gb.createDirectPosition(new double[]{1, 1}));
+    	
+    	Curve c = gb.createCurve(pa);
+    	Ring r = gb.createRing(Arrays.asList(c));
+    	return r;
+    }
+    
+    public static Ring linearRing3D() {
+    	PointArray pa = gb3D.createPointArray();
+    	pa.add(gb3D.createDirectPosition(new double[]{1.0, 2.0, 10.0}));
+    	pa.add(gb3D.createDirectPosition(new double[]{3.0, 4.0, 20.0}));
+    	pa.add(gb3D.createDirectPosition(new double[]{5.0, 2.0, 20.0}));
+    	pa.add(gb3D.createDirectPosition(new double[]{1.0, 2.0, 10.0}));
+    	
+    	Curve c = gb3D.createCurve(pa);
+    	Ring r = gb3D.createRing(Arrays.asList(c));
+    	return r;
     }
 
     public static Element linearRing(Document document, Node parent) {
@@ -252,7 +268,7 @@ public class GML3MockData {
         pos.appendChild(document.createTextNode("3.0 4.0"));
 
         pos = element(qName("pos"), document, linearRing);
-        pos.appendChild(document.createTextNode("5.0 6.0"));
+        pos.appendChild(document.createTextNode("5.0 2.0"));
 
         pos = element(qName("pos"), document, linearRing);
         pos.appendChild(document.createTextNode("1.0 2.0"));
@@ -273,7 +289,7 @@ public class GML3MockData {
         pos.appendChild(document.createTextNode("3.0 4.0 20.0"));
 
         pos = element(qName("pos"), document, linearRing);
-        pos.appendChild(document.createTextNode("5.0 6.0 30.0"));
+        pos.appendChild(document.createTextNode("5.0 2.0 20.0"));
 
         pos = element(qName("pos"), document, linearRing);
         pos.appendChild(document.createTextNode("1.0 2.0 10.0"));

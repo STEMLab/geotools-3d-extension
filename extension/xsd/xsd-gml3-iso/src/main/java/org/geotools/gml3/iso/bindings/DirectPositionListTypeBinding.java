@@ -99,7 +99,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return PointArray.class;
+        return DirectPosition[].class;
     }
 
     /**
@@ -110,7 +110,6 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         int crsDimension = GML3ParsingUtils.dimensions(node);
 
-        // double[] values = (double[]) value;
         Double[] values = (Double[]) value;
         BigInteger coordinatesCount = (BigInteger) node.getAttributeValue("count");
 
@@ -194,27 +193,32 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      */
     public Element encode(Object object, Document document, Element value) throws Exception {
         // TODO: remove this when the parser can do lists
-        PointArray pa = (PointArray) object;
+        DirectPosition[] dp = (DirectPosition[]) object;
         StringBuffer sb = new StringBuffer();
 
-        int dim = pa.getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
-        int size = pa.size();
-        int nOrdWithSpace = size * dim - 1;
-        int count = 0;
-        for (int i = 0; i < size; i++) {
-            Position p = pa.get(i);
-            double[] coords = p.getDirectPosition().getCoordinate();
-            for(int j = 0; j < coords.length; j++) {
-                sb.append(coords[j]);
-                
-                if (count < nOrdWithSpace) {
-                    sb.append(" ");
-                }
-                count++;
-            }
+        if(dp != null && dp.length > 0) {
+        	
+        	int dim = dp[0].getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
+	        int len = dp.length;
+	        int nOrdWithSpace = len * dim - 1;
+	        int count = 0;
+	        for (int i = 0; i < len; i++) {
+	            DirectPosition p = dp[i];
+	            double[] coords = p.getDirectPosition().getCoordinate();
+	            for(int j = 0; j < coords.length; j++) {
+	                sb.append(coords[j]);
+	                
+	                if (count < nOrdWithSpace) {
+	                    sb.append(" ");
+	                }
+	                count++;
+	            }
+	        }
+	
+	        value.appendChild(document.createTextNode(sb.toString()));
+        } else {
+        	throw new IllegalArgumentException("DirectPosition[] is null or empty");
         }
-
-        value.appendChild(document.createTextNode(sb.toString()));
 
         return value;
     }

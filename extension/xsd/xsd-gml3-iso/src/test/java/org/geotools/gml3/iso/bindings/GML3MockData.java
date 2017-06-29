@@ -19,7 +19,9 @@ package org.geotools.gml3.iso.bindings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -520,9 +522,15 @@ public class GML3MockData {
     }
 
     public static MultiPoint multiPoint() {
-        /*return gf.createMultiPoint(new Coordinate[] { new Coordinate(1, 1), new Coordinate(2, 2) });*/
+    	Point p = gb.createPoint(gb.createDirectPosition(new double[] {1, 2}));
+    	Point p2 = gb.createPoint(gb.createDirectPosition(new double[] {3, 4}));
+    	
+    	Set<Point>pl = new HashSet<Point>();
+    	pl.add(p);
+    	pl.add(p2);
+    	return gb.createMultiPoint(pl);
+    	/*return gf.createMultiPoint(new Coordinate[] { new Coordinate(1, 1), new Coordinate(2, 2) });*/
     	//TODO
-    	return null;
     }
 
     public static Element multiPoint(Document document, Node parent) {
@@ -563,9 +571,25 @@ public class GML3MockData {
     }
 
     public static MultiCurve multiLineString() {
+    	
+        PointArray pa = gb.createPointArray();
+        pa.add(gb.createDirectPosition(new double[]{1, 2}));
+        pa.add(gb.createDirectPosition(new double[]{3, 4}));
+        PointArray pa2 = gb.createPointArray();
+        pa2.add(gb.createDirectPosition(new double[]{5, 6}));       
+        pa2.add(gb.createDirectPosition(new double[]{7, 8}));
+        
+        Curve line = gb.createCurve(pa);
+        Curve line2 = gb.createCurve(pa2);
+        
+        Set<Curve>ml = new HashSet<Curve>();
+        ml.add(line);
+        ml.add(line2);
+        return gb.createMultiCurve(ml);
+        
         //return gf.createMultiLineString(new LineString[] { lineString(), lineString() });
     	//TODO
-    	return null;
+    	//return null;
     }
 
     //TODO : now we don't support curved geometry

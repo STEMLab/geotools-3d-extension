@@ -16,15 +16,18 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import org.geotools.geometry.iso.io.wkt.Coordinate;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GML3TestSupport;
+import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
-import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.vividsolutions.jts.geom.MultiLineString;
+
+
+
 
 
 
@@ -38,25 +41,31 @@ public class MultiLineStringTypeBindingTest extends GML3TestSupport {
     public void test() throws Exception {
         GML3MockData.multiLineString(document, document);
 
-        MultiLineString multiLineString = (MultiLineString) parse();
+        MultiCurve multiLineString = (MultiCurve) parse();
         assertNotNull(multiLineString);
 
-        assertEquals(2, multiLineString.getNumGeometries());
+        assertEquals(2, multiLineString.getElements().size());
     }
     
     public void test3D() throws Exception {
         GML3MockData.multiLineString3D(document, document);
 
-        MultiLineString multiLineString = (MultiLineString) parse();
+        MultiCurve multiLineString = (MultiCurve) parse();
         assertNotNull(multiLineString);
 
-        assertEquals(2, multiLineString.getNumGeometries());
-        
-        LineString line = (LineString) multiLineString.getGeometryN(0);
-        //assertTrue(new Coordinate(1d, 2d, 10d).equals3D(line.getPointN(0).getCoordinate()));
-        //assertTrue(new Coordinate(3d, 4d, 20d).equals3D(line.getPointN(1).getCoordinate()));
+        assertEquals(2, multiLineString.getElements().size());
+        Curve[] lines = new Curve[multiLineString.getElements().size()];
+        multiLineString.getElements().toArray(lines);
+        Curve line = lines[0];
+   
+        DirectPosition p = line.getStartPoint();
+        double[] tp = {1.0,2.0,10.0};
+        assertEquals(tp,p.getCoordinate());
+        double[] tp2 = {3d,4d,20d};
+        p = line.getEndPoint();
+        assertEquals(tp2, p.getCoordinate());
     }
-
+   
     public void testEncode() throws Exception {
         Geometry geometry = GML3MockData.multiLineString();
         //GML3EncodingUtils.setID(geometry, "geometry");

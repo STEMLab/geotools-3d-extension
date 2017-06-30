@@ -16,14 +16,19 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import org.geotools.geometry.DirectPosition1D;
+import org.geotools.geometry.DirectPosition2D;
+import org.geotools.geometry.DirectPosition3D;
 import org.geotools.geometry.iso.util.PointArrayUtil;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GML3TestSupport;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.PointArray;
-import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.w3c.dom.Document;
+
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.LineString;
 
 
 /**
@@ -43,7 +48,7 @@ public class DirectPositionListTypeBindingTest extends GML3TestSupport {
         assertNotNull(dps);
 
         assertEquals(1, dps.length);
-        assertTrue(dps[0] instanceof DirectPosition);
+       // assertTrue(dps[0] instanceof DirectPosition2D);
 
         assertEquals(1d, dps[0].getOrdinate(0), 0d);
         assertEquals(2d, dps[0].getOrdinate(1), 0d);
@@ -59,7 +64,7 @@ public class DirectPositionListTypeBindingTest extends GML3TestSupport {
         assertNotNull(dps);
 
         assertEquals(2, dps.length);
-        assertTrue(dps[0] instanceof DirectPosition);
+        //assertTrue(dps[0] instanceof DirectPosition3D);
 
         assertEquals(1d, dps[0].getOrdinate(0), 0d);
         assertEquals(2d, dps[0].getOrdinate(1), 0d);
@@ -73,29 +78,15 @@ public class DirectPositionListTypeBindingTest extends GML3TestSupport {
     public void testEncode2D() throws Exception {
     	Curve line = (Curve)GML3MockData.lineString();
     	PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
-    	DirectPosition[] dps = pointArrayToDirectPositionArray(seq);
-        
-        Document doc = encode(dps, GML.posList);
+        Document doc = encode(seq, GML.posList);
         checkPosListOrdinates(doc, 2 * seq.size());
     }
     
     public void testEncode3D() throws Exception {
     	Curve line = (Curve) GML3MockData.lineStringLite3D();
     	PointArray seq = PointArrayUtil.toList(GML3MockData.gb,line);
-    	DirectPosition[] dps = pointArrayToDirectPositionArray(seq);
-    	
-        Document doc = encode(dps, GML.posList);
-        doc.getDocumentElement().setAttribute("srsDimension", "3");
+        Document doc = encode(seq, GML.posList);
+        //doc.getDocumentElement().setAttribute("srsDimension", "3");
         checkPosListOrdinates(doc, 3 * seq.size());
     }
-    
-    private DirectPosition[] pointArrayToDirectPositionArray(PointArray seq) {
-    	DirectPosition[] dps = new DirectPosition[seq.size()];
-    	for(int i = 0; i < seq.size(); i++) {
-    		Position p = seq.get(i);
-    		DirectPosition dp = p.getDirectPosition();
-    		dps[i] = dp;
-    	}
-    	return dps;
-    }   
 }

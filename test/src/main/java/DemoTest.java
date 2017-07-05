@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,11 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
+import org.geotools.data.jdbc.iso.FilterToSQL;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
+import org.geotools.data.postgis3d.PostGISDialect;
+import org.geotools.data.postgis3d.PostgisFilterToSQL;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -38,7 +42,10 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.filter.FunctionFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
+import org.geotools.filter.function.FilterFunction_ISOunion;
+import org.geotools.filter.function.ISODefaultFunctionFactory;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
@@ -58,6 +65,8 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -153,6 +162,12 @@ public class DemoTest extends JFrame{
 		fileMenu.add(new SafeAction("boxToSolid...") {
 			public void action(ActionEvent e) throws Throwable {
 				boxToSolid();
+			}
+		});
+		
+		fileMenu.add(new SafeAction("function...") {
+			public void action(ActionEvent e) throws Throwable {
+				functionfilter();
 			}
 		});
 		/*fileMenu.add(new SafeAction("gmlToGeometry...") {
@@ -676,17 +691,24 @@ public class DemoTest extends JFrame{
    				lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
    			}
    			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
-   			Curve al = builder.createCurve(lp);
-   			SurfaceBoundary s = builder.createSurfaceBoundary(al);
-   			Surface sf = builder.createSurface(s);*/
-			//Filter filter = CQL.toFilter(text.getText());
+
+   			//Curve al = builder.createCurve(lp);
+   			//SurfaceBoundary s = builder.createSurfaceBoundary(al);
+   			//Surface sf = builder.createSurface(s);
+
+			//Filter filter = CQL.toFilter(text.getText());*/
    			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+
    			//ArrayList<Solid> al = getSolids(builder);
    			Filter filter = ff.contains("loc", (Geometry)al.get(0));
+
+   			//Filter filter = ff.contains("loc", (Geometry)sf);
+   			//Filter filter = ff.equals("loc", al.get(1));
+
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
@@ -818,6 +840,45 @@ public class DemoTest extends JFrame{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} 
+	}
+	private void functionfilter()  {
+		String typeName = (String) featureTypeCBox.getSelectedItem();
+		SimpleFeatureSource source = null;
+		
+			try {
+				source = dataStore.getFeatureSource(typeName);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Hints h = new Hints();
+   			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
+			ArrayList<Solid> al = getSolids(builder);
+			FunctionFactory ff = new ISODefaultFunctionFactory();
+			FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2(h);
+			 List<Expression> args = new ArrayList<Expression>();
+			 args.add(ff2.property("loc"));
+			 args.add(ff2.literal(al.get(0)));
+			Function union = ff2.function("ISOdistance", ff2.property("loc"), ff2.literal(al.get(0)));
+	
+	        
+	        //StringWriter w = new StringWriter();
+	        
+			//FilterToSQL fs = new PostgisFilterToSQL(new PostGISDialect((JDBCDataStore) dataStore));
+			//fs.setWriter(w);
+			//union.accept(fs, null);
+			SimpleFeatureCollection features;
+			try {
+				features = source.getFeatures();
+				Object value = union.evaluate(features);
+				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+				table.setModel(model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	
 	}
 	private void countFeatures() throws Exception {
 		String typeName = (String) featureTypeCBox.getSelectedItem();

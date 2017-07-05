@@ -669,15 +669,16 @@ public class DemoTest extends JFrame{
 		try {
 			source = dataStore.getFeatureSource(typeName);
    			FeatureType schema = source.getSchema();
+   			ArrayList<Solid> al = getSolids(builder);
 			//String name = schema.getGeometryDescriptor().getLocalName();
-   			PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+   			/*PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
    			for(int i = 2;i < 3;i++) {
    				lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
    			}
    			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
    			Curve al = builder.createCurve(lp);
    			SurfaceBoundary s = builder.createSurfaceBoundary(al);
-   			Surface sf = builder.createSurface(s);
+   			Surface sf = builder.createSurface(s);*/
 			//Filter filter = CQL.toFilter(text.getText());
    			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
@@ -685,7 +686,7 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			//ArrayList<Solid> al = getSolids(builder);
-   			Filter filter = ff.contains("loc", (Geometry)sf);
+   			Filter filter = ff.contains("loc", (Geometry)al.get(0));
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);

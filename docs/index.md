@@ -1,20 +1,9 @@
-.. geotools 3d documentation master file, created by
-   sphinx-quickstart on Fri Jun 30 07:00:14 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. _mainindex:
 
-Welcome to geotools 3d's documentation!
-=======================================
+# GeoTools 3D Extension's Documentation
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Welcome to GeoTools 3D Extension's Documentation.
 
+This project is an extension of GeoTools library to support 3D spatial operations.
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+# Table of Contents

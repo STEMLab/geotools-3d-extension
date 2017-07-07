@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.CoordinateList;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.CoordinateList;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;

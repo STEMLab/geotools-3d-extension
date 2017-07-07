@@ -40,7 +40,6 @@ public class Geometry3DOperation {
         public static Geometry getConvexHull(GeometryImpl geom) {
                 SFGeometry g = SFCGALConvertor.geometryToSFCGALGeometry((Geometry) geom);
                 SFGeometry convex = SFAlgorithm.convexHull3D(g);
-
                 return SFCGALConvertor.geometryFromSFCGALGeometry(convex);
         }
 

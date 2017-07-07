@@ -20,16 +20,16 @@ package org.geotools.geometry.iso.operation.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.DirectedEdge;
-import org.geotools.geometry.iso.topograph2D.DirectedEdgeStar;
-import org.geotools.geometry.iso.topograph2D.EdgeRing;
-import org.geotools.geometry.iso.topograph2D.Node;
+import org.geotools.geometry.iso.topograph.DirectedEdge;
+import org.geotools.geometry.iso.topograph.DirectedEdgeStar;
+import org.geotools.geometry.iso.topograph.EdgeRing;
+import org.geotools.geometry.iso.topograph.Node;
 import org.geotools.geometry.iso.util.algorithm2D.CGAlgorithms;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 
 /**
- * A ring of {@link org.geotools.geometry.iso.topograph2D.Edge}s which may contain nodes of degree > 2. A
+ * A ring of {@link org.geotools.geometry.iso.topograph.Edge}s which may contain nodes of degree > 2. A
  * MaximalEdgeRing may represent two different spatial entities:
  * <ul>
  * <li>a single polygon possibly containing inversions (if the ring is oriented

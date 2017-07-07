@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.EdgeEnd;
-import org.geotools.geometry.iso.topograph2D.EdgeIntersection;
-import org.geotools.geometry.iso.topograph2D.EdgeIntersectionList;
-import org.geotools.geometry.iso.topograph2D.Label;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.EdgeEnd;
+import org.geotools.geometry.iso.topograph.EdgeIntersection;
+import org.geotools.geometry.iso.topograph.EdgeIntersectionList;
+import org.geotools.geometry.iso.topograph.Label;
 
 /**
  * An EdgeEndBuilder creates EdgeEnds for all the "split edges" created by the

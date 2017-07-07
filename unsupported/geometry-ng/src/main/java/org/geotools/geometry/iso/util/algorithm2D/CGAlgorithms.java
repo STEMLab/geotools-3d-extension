@@ -20,7 +20,7 @@ package org.geotools.geometry.iso.util.algorithm2D;
 import java.util.List;
 
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.topograph.Coordinate;
 import org.geotools.geometry.iso.topograph2D.util.CoordinateArrays;
 import org.opengis.geometry.DirectPosition;
 

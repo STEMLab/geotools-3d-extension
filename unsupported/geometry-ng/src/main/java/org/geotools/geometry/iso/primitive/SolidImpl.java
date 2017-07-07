@@ -77,7 +77,6 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
 	 */
 	public double area() {
 		SFPolyhedralSurface polyhedral = SFCGALConvertor.shellToSFCGALPolyhedralSurface(this.boundary.getExterior());
-		
 		return SFAlgorithm.area3D(polyhedral);
 	}
 

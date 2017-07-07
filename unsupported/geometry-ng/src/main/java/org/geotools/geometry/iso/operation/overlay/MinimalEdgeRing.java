@@ -17,9 +17,9 @@
  */
 package org.geotools.geometry.iso.operation.overlay;
 
-import org.geotools.geometry.iso.topograph2D.DirectedEdge;
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.EdgeRing;
+import org.geotools.geometry.iso.topograph.DirectedEdge;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.EdgeRing;
 import org.geotools.geometry.iso.util.algorithm2D.CGAlgorithms;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 

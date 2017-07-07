@@ -18,7 +18,7 @@
 package org.geotools.geometry.iso.util.algorithm2D;
 
 import org.geotools.geometry.iso.PrecisionModel;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.topograph.Coordinate;
 import org.geotools.geometry.iso.util.Assert;
 
 /**

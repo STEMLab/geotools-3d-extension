@@ -20,8 +20,8 @@ package org.geotools.geometry.iso.topograph2D.index;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Quadrant;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Quadrant;
 
 /**
  * MonotoneChains are a way of partitioning the segments of an edge to allow for

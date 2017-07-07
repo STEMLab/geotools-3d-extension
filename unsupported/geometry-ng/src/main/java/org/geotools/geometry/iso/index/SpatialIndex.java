@@ -19,7 +19,7 @@ package org.geotools.geometry.iso.index;
 
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Envelope;
+import org.geotools.geometry.iso.topograph.Envelope;
 
 /**
  * The basic operations supported by classes implementing spatial index

@@ -17,15 +17,10 @@
  */
 package org.geotools.geometry.iso.operation.relate;
 
-/**
- * A RelateNode is a Node that maintains a list of EdgeStubs for the edges that
- * are incident on it.
- */
-
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.EdgeEndStar;
-import org.geotools.geometry.iso.topograph2D.IntersectionMatrix;
-import org.geotools.geometry.iso.topograph2D.Node;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.EdgeEndStar;
+import org.geotools.geometry.iso.topograph.IntersectionMatrix;
+import org.geotools.geometry.iso.topograph.Node;
 
 /**
  * Represents a node in the topological graph used to compute spatial

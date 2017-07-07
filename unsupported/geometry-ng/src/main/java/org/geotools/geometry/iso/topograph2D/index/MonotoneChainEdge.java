@@ -17,9 +17,9 @@
  */
 package org.geotools.geometry.iso.topograph2D.index;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.Envelope;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.Envelope;
 
 /**
  * MonotoneChains are a way of partitioning the segments of an edge to allow for

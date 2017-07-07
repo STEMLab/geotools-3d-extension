@@ -23,13 +23,13 @@ package org.geotools.geometry.iso.operation.relate;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.EdgeEnd;
-import org.geotools.geometry.iso.topograph2D.EdgeIntersection;
-import org.geotools.geometry.iso.topograph2D.GeometryGraph;
-import org.geotools.geometry.iso.topograph2D.Location;
-import org.geotools.geometry.iso.topograph2D.Node;
-import org.geotools.geometry.iso.topograph2D.NodeMap;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.EdgeEnd;
+import org.geotools.geometry.iso.topograph.EdgeIntersection;
+import org.geotools.geometry.iso.topograph.GeometryGraph;
+import org.geotools.geometry.iso.topograph.Location;
+import org.geotools.geometry.iso.topograph.Node;
+import org.geotools.geometry.iso.topograph.NodeMap;
 
 /**
  * Implements the simple graph of Nodes and EdgeEnd which is all that is

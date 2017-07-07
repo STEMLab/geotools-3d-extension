@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Label;
-import org.geotools.geometry.iso.topograph2D.Node;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Label;
+import org.geotools.geometry.iso.topograph.Node;
 import org.geotools.geometry.iso.util.algorithm2D.PointLocator;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 

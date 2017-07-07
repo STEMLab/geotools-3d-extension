@@ -17,8 +17,8 @@
  */
 package org.geotools.geometry.iso.index.quadtree;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Envelope;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Envelope;
 import org.geotools.geometry.iso.util.Assert;
 
 /**

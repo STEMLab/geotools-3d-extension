@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Edge;
+import org.geotools.geometry.iso.topograph.Edge;
 
 /**
  * Finds all intersections in one or two sets of edges, using an x-axis

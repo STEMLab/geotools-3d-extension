@@ -20,9 +20,9 @@ package org.geotools.geometry.iso.topograph2D.index;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.Node;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.Node;
 import org.geotools.geometry.iso.util.algorithm2D.LineIntersector;
 
 

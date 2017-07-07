@@ -20,7 +20,7 @@ package org.geotools.geometry.iso.operation;
 import org.geotools.geometry.iso.PrecisionModel;
 import org.geotools.geometry.iso.UnsupportedDimensionException;
 import org.geotools.geometry.iso.root.GeometryImpl;
-import org.geotools.geometry.iso.topograph2D.GeometryGraph;
+import org.geotools.geometry.iso.topograph.GeometryGraph;
 import org.geotools.geometry.iso.util.algorithm2D.CGAlgorithms;
 import org.geotools.geometry.iso.util.algorithm2D.LineIntersector;
 import org.geotools.geometry.iso.util.algorithm2D.RobustLineIntersector;

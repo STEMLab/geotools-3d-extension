@@ -28,8 +28,8 @@ import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiPoint;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFPoint;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFPolygon;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFSolid;
-import org.geotools.geometry.iso.topograph2D.Dimension;
-import org.geotools.geometry.iso.topograph2D.Location;
+import org.geotools.geometry.iso.topograph.Dimension;
+import org.geotools.geometry.iso.topograph.Location;
 
 /**
  * @author Donguk Seo

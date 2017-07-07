@@ -17,7 +17,7 @@
  */
 package org.geotools.geometry.iso.topograph2D.util;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.topograph.Coordinate;
 
 
 /**

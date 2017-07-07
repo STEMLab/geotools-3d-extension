@@ -20,7 +20,7 @@ package org.geotools.geometry.iso.topograph2D.util;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.topograph.Coordinate;
 
 
 /**

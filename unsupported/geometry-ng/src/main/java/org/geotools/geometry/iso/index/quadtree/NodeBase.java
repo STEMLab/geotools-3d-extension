@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.geotools.geometry.iso.index.ItemVisitor;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Envelope;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Envelope;
 
 /**
  * The base class for nodes in a {@link Quadtree}.

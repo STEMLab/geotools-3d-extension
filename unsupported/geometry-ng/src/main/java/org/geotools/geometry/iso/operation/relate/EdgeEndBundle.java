@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.geotools.geometry.iso.topograph2D.Edge;
-import org.geotools.geometry.iso.topograph2D.EdgeEnd;
-import org.geotools.geometry.iso.topograph2D.GeometryGraph;
-import org.geotools.geometry.iso.topograph2D.IntersectionMatrix;
-import org.geotools.geometry.iso.topograph2D.Label;
-import org.geotools.geometry.iso.topograph2D.Location;
-import org.geotools.geometry.iso.topograph2D.Position;
+import org.geotools.geometry.iso.topograph.Edge;
+import org.geotools.geometry.iso.topograph.EdgeEnd;
+import org.geotools.geometry.iso.topograph.GeometryGraph;
+import org.geotools.geometry.iso.topograph.IntersectionMatrix;
+import org.geotools.geometry.iso.topograph.Label;
+import org.geotools.geometry.iso.topograph.Location;
+import org.geotools.geometry.iso.topograph.Position;
 
 /**
  * A collection of EdgeStubs which obey the following invariant: They originate

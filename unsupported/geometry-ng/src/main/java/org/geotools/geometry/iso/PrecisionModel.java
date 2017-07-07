@@ -19,7 +19,7 @@ package org.geotools.geometry.iso;
 
 import java.io.Serializable;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.topograph.Coordinate;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.Precision;

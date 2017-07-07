@@ -17,10 +17,10 @@
  */
 package org.geotools.geometry.iso.operation.relate;
 
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.Node;
-import org.geotools.geometry.iso.topograph2D.NodeFactory;
-import org.geotools.geometry.iso.topograph2D.NodeMap;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.Node;
+import org.geotools.geometry.iso.topograph.NodeFactory;
+import org.geotools.geometry.iso.topograph.NodeMap;
 
 /**
  * Used by the {@link NodeMap} in a {@link RelateNodeGraph} to create

@@ -19,9 +19,9 @@ package org.geotools.geometry.iso.operation.relate;
 
 import java.util.Iterator;
 
-import org.geotools.geometry.iso.topograph2D.EdgeEnd;
-import org.geotools.geometry.iso.topograph2D.EdgeEndStar;
-import org.geotools.geometry.iso.topograph2D.IntersectionMatrix;
+import org.geotools.geometry.iso.topograph.EdgeEnd;
+import org.geotools.geometry.iso.topograph.EdgeEndStar;
+import org.geotools.geometry.iso.topograph.IntersectionMatrix;
 
 /**
  * An ordered list of {@link EdgeEndBundle}s around a {@link RelateNode}. They

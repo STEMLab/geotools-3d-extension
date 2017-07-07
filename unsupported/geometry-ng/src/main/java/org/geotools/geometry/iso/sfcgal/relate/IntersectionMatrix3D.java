@@ -16,8 +16,8 @@
  */
 package org.geotools.geometry.iso.sfcgal.relate;
 
-import org.geotools.geometry.iso.topograph2D.Dimension;
-import org.geotools.geometry.iso.topograph2D.Location;
+import org.geotools.geometry.iso.topograph.Dimension;
+import org.geotools.geometry.iso.topograph.Location;
 
 /**
  * @author Donguk Seo

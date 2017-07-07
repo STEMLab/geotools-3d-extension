@@ -19,7 +19,7 @@ package org.geotools.filter.spatial;
 
 import org.geotools.factory.Hints;
 import org.geotools.filter.IllegalFilterException;
-import org.geotools.geometry.iso.topograph2D.TopologyException;
+import org.geotools.geometry.iso.topograph.TopologyException;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;

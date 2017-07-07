@@ -17,15 +17,11 @@
  */
 package org.geotools.geometry.iso.operation.overlay;
 
-/**
- * @version 1.7.2
- */
-// import com.vividsolutions.jts.geomgraph.*;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
-import org.geotools.geometry.iso.topograph2D.DirectedEdgeStar;
-import org.geotools.geometry.iso.topograph2D.Node;
-import org.geotools.geometry.iso.topograph2D.NodeFactory;
-import org.geotools.geometry.iso.topograph2D.PlanarGraph;
+import org.geotools.geometry.iso.topograph.Coordinate;
+import org.geotools.geometry.iso.topograph.DirectedEdgeStar;
+import org.geotools.geometry.iso.topograph.Node;
+import org.geotools.geometry.iso.topograph.NodeFactory;
+import org.geotools.geometry.iso.topograph.PlanarGraph;
 
 /**
  * Creates nodes for use in the {@link PlanarGraph}s constructed during overlay

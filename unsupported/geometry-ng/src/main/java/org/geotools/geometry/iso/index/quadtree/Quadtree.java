@@ -23,7 +23,7 @@ import java.util.List;
 import org.geotools.geometry.iso.index.ArrayListVisitor;
 import org.geotools.geometry.iso.index.ItemVisitor;
 import org.geotools.geometry.iso.index.SpatialIndex;
-import org.geotools.geometry.iso.topograph2D.Envelope;
+import org.geotools.geometry.iso.topograph.Envelope;
 
 /**
  * A Quadtree is a spatial index structure for efficient querying of 2D

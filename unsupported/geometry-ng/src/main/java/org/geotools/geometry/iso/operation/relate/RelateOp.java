@@ -20,7 +20,7 @@ package org.geotools.geometry.iso.operation.relate;
 import org.geotools.geometry.iso.UnsupportedDimensionException;
 import org.geotools.geometry.iso.operation.GeometryGraphOperation;
 import org.geotools.geometry.iso.root.GeometryImpl;
-import org.geotools.geometry.iso.topograph2D.IntersectionMatrix;
+import org.geotools.geometry.iso.topograph.IntersectionMatrix;
 import org.opengis.geometry.Geometry;
 
 /**

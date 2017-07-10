@@ -456,7 +456,8 @@ public class GML3MockData {
     	return Solid;
     }
     public static Element SolidWithPos(Document document, Node parent){
-    	Element member = element(qName("SurfaceMember"),document,parent);
+    	Element compositeSurface = element(qName("CompositeSurfaceType"),document,parent);
+    	Element member = element(qName("SurfaceMember"),document,compositeSurface);
     	Element pol1 = element(qName("polygon"),document,member);
     	pol1.setAttribute("srsDimension", "3");
     	

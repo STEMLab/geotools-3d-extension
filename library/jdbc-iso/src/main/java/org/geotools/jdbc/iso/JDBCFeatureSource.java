@@ -47,7 +47,8 @@ import org.geotools.data3d.store.ContentFeatureSource;
 import org.geotools.factory.Hints;
 import org.geotools.factory.Hints.Key;
 import org.geotools.feature.AttributeTypeBuilder;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.feature.ISOAttributeTypeBuilder;
+import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.visitor.MaxVisitor;
 import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.NearestVisitor;
@@ -86,8 +87,6 @@ import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-//import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * 
@@ -186,8 +185,8 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         PrimaryKey pkey = getDataStore().getPrimaryKey(entry);
         VirtualTable virtualTable = getDataStore().getVirtualTables().get(entry.getTypeName());
         
-        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
-        AttributeTypeBuilder ab = new AttributeTypeBuilder();
+        ISOSimpleFeatureTypeBuilder tb = new ISOSimpleFeatureTypeBuilder();
+        ISOAttributeTypeBuilder ab = new ISOAttributeTypeBuilder();
         
         // setup the read only marker if no pk or null pk or it's a view
         boolean readOnly = false;
@@ -522,7 +521,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
 
                 // grab the 2d part of the crs 
                 CoordinateReferenceSystem flatCRS = CRS.getHorizontalCRS(getSchema().getCoordinateReferenceSystem());
-                ReferencedEnvelope bounds = new ReferencedEnvelope(flatCRS);
+                ReferencedEnvelope bounds = ReferencedEnvelope.create(flatCRS);
 
                 // grab a reader
                 DefaultQuery q = new DefaultQuery(query);
@@ -703,7 +702,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         if(propertyNames == Query.ALL_NAMES) {
             return new SimpleFeatureType[]{featureType, featureType};
         } else {
-            SimpleFeatureType returnedSchema = SimpleFeatureTypeBuilder.retype(featureType, propertyNames);
+            SimpleFeatureType returnedSchema = ISOSimpleFeatureTypeBuilder.retype(featureType, propertyNames);
             SimpleFeatureType querySchema = returnedSchema;
             
             if (filter != null && !filter.equals(Filter.INCLUDE)) {
@@ -719,7 +718,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
                     }
                     String[] allAttributeArray = 
                         allAttributes.toArray(new String[allAttributes.size()]);
-                    querySchema = SimpleFeatureTypeBuilder.retype(getSchema(), allAttributeArray);
+                    querySchema = ISOSimpleFeatureTypeBuilder.retype(getSchema(), allAttributeArray);
                 }
             }
             types = new SimpleFeatureType[]{querySchema, returnedSchema};

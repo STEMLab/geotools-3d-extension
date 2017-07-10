@@ -4159,7 +4159,19 @@ public class GMLSchema extends SchemaImpl {
      *
      * @generated
      */
-    public static final ComplexType SOLIDPROPERTYTYPE_TYPE = build_SOLIDPROPERTYTYPE_TYPE();
+    
+    public static final AttributeType SOLIDPROPERTYTYPE_TYPE = build_SOLIDPROPERTYTYPE_TYPE();
+    
+    private static AttributeType build_SOLIDPROPERTYTYPE_TYPE() {
+        AttributeType builtType;
+        builtType = new AttributeTypeImpl(
+            new NameImpl("http://www.opengis.net/gml","SolidPropertyType"), Solid.class, false,
+            false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
+        );
+        return builtType;
+    }
+    
+    /*public static final ComplexType SOLIDPROPERTYTYPE_TYPE = build_SOLIDPROPERTYTYPE_TYPE();
     
     private static ComplexType build_SOLIDPROPERTYTYPE_TYPE() {
         ComplexType builtType;
@@ -4214,7 +4226,7 @@ public class GMLSchema extends SchemaImpl {
             false, Collections.<Filter>emptyList(), XSSchema.ANYTYPE_TYPE, null
         );
         return builtType;
-    }
+    }*/
 
     /**
      * <p>

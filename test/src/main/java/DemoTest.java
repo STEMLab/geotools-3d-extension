@@ -704,12 +704,12 @@ public class DemoTest extends JFrame{
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
 
    			//ArrayList<Solid> al = getSolids(builder);
-   			DirectPosition dp1 = new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{-5, -5, -5});
-   			DirectPosition dp2 = new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{5, 5, 5});
-   			Filter filter = ff.contains("loc", (Geometry)makeFromEnvelope(gb, dp1, dp2));
+   			//DirectPosition dp1 = new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{-5, -5, -5});
+   			//DirectPosition dp2 = new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{5, 5, 5});
+   			//Filter filter = ff.contains("loc", (Geometry)makeFromEnvelope(gb, dp1, dp2));
 
    			//Filter filter = ff.contains("loc", (Geometry)sf);
-   			//Filter filter = ff.equals("loc", al.get(1));
+   			Filter filter = ff.equals("loc", al.get(0));
 
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 

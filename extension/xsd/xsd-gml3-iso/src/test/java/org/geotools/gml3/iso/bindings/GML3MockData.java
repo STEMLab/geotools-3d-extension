@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+import org.geotools.geometry.iso.util.SolidUtil;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.gml3.iso.GML;
 import org.geotools.referencing.CRS;
@@ -34,6 +34,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.XSD;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
@@ -44,6 +45,7 @@ import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -442,7 +444,49 @@ public class GML3MockData {
     	SurfaceBoundary sb = gb3D.createSurfaceBoundary(extR, Arrays.asList(intR1, intR2));
     	return gb3D.createSurface(sb);
     }
-
+    public static Element Solid(Document document, Node parent, boolean withInterior){
+    	Element Solid = element(qName("Solid"), document, parent);
+    	Element ext = element(qName("exterior"),document, Solid);
+    	
+    	if(withInterior){
+    		Element interior = element(qName("interior"), document, Solid);
+            interiorSolidWithPos(document,interior);
+    	}
+    	return Solid;
+    }
+    public static Solid solid(){
+    	ArrayList<DirectPosition>pl = new ArrayList();
+    	DirectPosition p1 = gb3D.createDirectPosition(new double[]{0,0,0});
+    	DirectPosition p2 = gb3D.createDirectPosition(new double[]{0,10,0});
+    	DirectPosition p3 = gb3D.createDirectPosition(new double[]{10,10,0});
+    	DirectPosition p4 = gb3D.createDirectPosition(new double[]{10,0,0});
+    	DirectPosition p5 = gb3D.createDirectPosition(new double[]{0,0,10});
+    	DirectPosition p6 = gb3D.createDirectPosition(new double[]{0,10,10});
+    	DirectPosition p7 = gb3D.createDirectPosition(new double[]{10,10,10});
+    	DirectPosition p8 = gb3D.createDirectPosition(new double[]{10,0,10});
+    	
+    	pl.add(p1);
+    	pl.add(p2);
+    	pl.add(p3);
+    	pl.add(p4);
+    	pl.add(p5);
+    	pl.add(p6);
+    	pl.add(p7);
+    	pl.add(p8);
+    	
+		return SolidUtil.makeSolid(gb3D, pl);
+    	
+    }
+    public static Element SolidWithPos(Document document, Node parent){
+		return null;
+    	
+    }
+    public static Element interiorSolidWithPos(Document document, Node parent){
+		
+    	return null;
+    	
+    }
+    
     public static Element polygon(Document document, Node parent) {
         return polygon(document,parent,qName("Polygon"),false); 
     }
@@ -601,7 +645,8 @@ public class GML3MockData {
         LineString compound = factory.createCurvedGeometry(curve, straight);
         return compound;
     }*/
-
+    
+   
     public static Element multiLineString(Document document, Node parent) {
         Element multiLineString = element(qName("MultiLineString"), document, parent);
 

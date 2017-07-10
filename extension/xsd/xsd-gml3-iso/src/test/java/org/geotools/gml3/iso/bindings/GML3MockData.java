@@ -448,11 +448,121 @@ public class GML3MockData {
     	Element Solid = element(qName("Solid"), document, parent);
     	Element ext = element(qName("exterior"),document, Solid);
     	
+    	SolidWithPos(document,ext);
     	if(withInterior){
     		Element interior = element(qName("interior"), document, Solid);
             interiorSolidWithPos(document,interior);
     	}
     	return Solid;
+    }
+    public static Element SolidWithPos(Document document, Node parent){
+    	Element member = element(qName("SurfaceMember"),document,parent);
+    	Element pol1 = element(qName("polygon"),document,member);
+    	pol1.setAttribute("srsDimension", "3");
+    	
+    	Element pos = element(qName("pos"),document,pol1);
+    	pos.appendChild(document.createTextNode("0,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol1);
+    	pos.appendChild(document.createTextNode("0,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol1);
+    	pos.appendChild(document.createTextNode("10,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol1);
+    	pos.appendChild(document.createTextNode("10,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol1);
+    	pos.appendChild(document.createTextNode("0,0,0"));
+    	
+    	Element pol2 = element(qName("polygon"),document,member);
+    	pos = element(qName("pos"),document,pol2);
+    	pos.appendChild(document.createTextNode("10,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol2);
+    	pos.appendChild(document.createTextNode("10,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol2);
+    	pos.appendChild(document.createTextNode("10,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol2);
+    	pos.appendChild(document.createTextNode("10,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol2);
+    	pos.appendChild(document.createTextNode("10,10,0"));
+    	
+    	Element pol3 = element(qName("polygon"),document,member);
+    	pos = element(qName("pos"),document,pol3);
+    	pos.appendChild(document.createTextNode("0,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol3);
+    	pos.appendChild(document.createTextNode("0,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol3);
+    	pos.appendChild(document.createTextNode("10,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol3);
+    	pos.appendChild(document.createTextNode("10,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol3);
+    	pos.appendChild(document.createTextNode("0,0,10"));
+    	
+    	Element pol4 = element(qName("polygon"),document,member);
+    	pos = element(qName("pos"),document,pol4);
+    	pos.appendChild(document.createTextNode("0,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol4);
+    	pos.appendChild(document.createTextNode("0,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol4);
+    	pos.appendChild(document.createTextNode("0,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol4);
+    	pos.appendChild(document.createTextNode("0,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol4);
+    	pos.appendChild(document.createTextNode("0,10,10"));
+    	
+    	Element pol5 = element(qName("polygon"),document,member);
+    	pos = element(qName("pos"),document,pol5);
+    	pos.appendChild(document.createTextNode("0,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol5);
+    	pos.appendChild(document.createTextNode("10,10,0"));
+    	
+    	pos = element(qName("pos"),document,pol5);
+    	pos.appendChild(document.createTextNode("10,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol5);
+    	pos.appendChild(document.createTextNode("0,10,10"));
+    	
+    	pos = element(qName("pos"),document,pol5);
+    	pos.appendChild(document.createTextNode("0,10,0"));
+    	
+    	Element pol6 = element(qName("polygon"),document,member);
+    	pos = element(qName("pos"),document,pol6);
+    	pos.appendChild(document.createTextNode("0,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol6);
+    	pos.appendChild(document.createTextNode("0,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol6);
+    	pos.appendChild(document.createTextNode("10,0,10"));
+    	
+    	pos = element(qName("pos"),document,pol6);
+    	pos.appendChild(document.createTextNode("10,0,0"));
+    	
+    	pos = element(qName("pos"),document,pol6);
+    	pos.appendChild(document.createTextNode("0,0,0"));
+    	
+
+		return member;
+    	
+    }
+    public static Element interiorSolidWithPos(Document document, Node parent){
+		
+    	return null;
+    	
     }
     public static Solid solid(){
     	ArrayList<DirectPosition>pl = new ArrayList();
@@ -477,15 +587,7 @@ public class GML3MockData {
 		return SolidUtil.makeSolid(gb3D, pl);
     	
     }
-    public static Element SolidWithPos(Document document, Node parent){
-		return null;
-    	
-    }
-    public static Element interiorSolidWithPos(Document document, Node parent){
-		
-    	return null;
-    	
-    }
+    
     
     public static Element polygon(Document document, Node parent) {
         return polygon(document,parent,qName("Polygon"),false); 

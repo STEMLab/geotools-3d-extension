@@ -23,3 +23,5 @@ This project is an extension of GeoTools library to support 3D spatial operation
 - How to extend your DataStore
 	- Database
 	- File
+	
+* :doc:`Quick Installation Guide <tutorials/index>`

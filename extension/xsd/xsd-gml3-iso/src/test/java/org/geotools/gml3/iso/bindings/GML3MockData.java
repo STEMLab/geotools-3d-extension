@@ -450,15 +450,15 @@ public class GML3MockData {
     	
     	SolidWithPos(document,ext);
     	if(withInterior){
-    		Element interior = element(qName("interior"), document, Solid);
+    		Element interior = element(qName("QKSEOFinterior"), document, Solid);
             interiorSolidWithPos(document,interior);
     	}
     	return Solid;
     }
     public static Element SolidWithPos(Document document, Node parent){
     	Element compositeSurface = element(qName("CompositeSurface"),document,parent);
-    	Element member = element(qName("SurfaceMember"),document,compositeSurface);
-    	Element pol1 = element(qName("polygon"),document,member);
+    	Element member = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol1 = element(qName("Polygon"),document,member);
     	Element pol1ex = element(qName("exterior"),document,pol1);
     	Element lr = element(qName("LinearRing"),document, pol1ex);
     	lr.setAttribute("srsDimension", "3");
@@ -478,9 +478,10 @@ public class GML3MockData {
     	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 0 0"));
     	
-    	Element pol2 = element(qName("polygon"),document,member);
+    	Element member2 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol2 = element(qName("Polygon"),document,member2);
     	Element pol2ex = element(qName("exterior"),document, pol2);
-    	 lr = element(qName("LinearRing"),document, pol2ex);
+    	lr = element(qName("LinearRing"),document, pol2ex);
     	lr.setAttribute("srsDimension", "3");
     	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("10 10 0"));
@@ -497,26 +498,28 @@ public class GML3MockData {
     	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("10 10 0"));
     	
-    	Element pol3 = element(qName("polygon"),document,member);
+    	Element member3 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol3 = element(qName("Polygon"),document,member3);
     	Element pol3ex = element(qName("exterior"),document,pol3);
     	lr = element(qName("LinearRing"),document, pol3ex);
     	lr.setAttribute("srsDimension", "3");
-    	pos = element(qName("pos"),document,pol3ex);
+    	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 0 10"));
     	
-    	pos = element(qName("pos"),document,pol3ex);
+    	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 10 10"));
     	
-    	pos = element(qName("pos"),document,pol3ex);
+    	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("10 10 10"));
     	
-    	pos = element(qName("pos"),document,pol3ex);
+    	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("10 0 10"));
     	
-    	pos = element(qName("pos"),document,pol3ex);
+    	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 0 10"));
     	
-    	Element pol4 = element(qName("polygon"),document,member);
+    	Element member4 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol4 = element(qName("Polygon"),document,member4);
     	Element pol4ex = element(qName("exterior"),document,pol4);
     	lr = element(qName("LinearRing"),document, pol4ex);
     	lr.setAttribute("srsDimension", "3");
@@ -535,7 +538,8 @@ public class GML3MockData {
     	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 10 10"));
     	
-    	Element pol5 = element(qName("polygon"),document,member);
+    	Element member5 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol5 = element(qName("Polygon"),document,member5);
     	Element pol5ex = element(qName("exterior"),document,pol5);
     	 lr = element(qName("LinearRing"),document, pol5ex);
     	lr.setAttribute("srsDimension", "3");
@@ -554,7 +558,8 @@ public class GML3MockData {
     	pos = element(qName("pos"),document,lr);
     	pos.appendChild(document.createTextNode("0 10 0"));
     	
-    	Element pol6 = element(qName("polygon"),document,member);
+    	Element member6 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol6 = element(qName("Polygon"),document,member6);
     	Element pol6ex = element(qName("exterior"),document,pol6);
     	lr = element(qName("LinearRing"),document, pol6ex);
     	lr.setAttribute("srsDimension", "3");

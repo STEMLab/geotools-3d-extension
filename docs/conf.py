@@ -46,7 +46,7 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'geotools'
+project = u'geotools-3d-extension'
 copyright = u'2017, SoojinKim'
 author = u'SoojinKim'
 
@@ -115,7 +115,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'geotoolsdoc'
+htmlhelp_basename = 'geotools-3d-extensiondoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -142,7 +142,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'geotools.tex', u'geotools Documentation',
+    (master_doc, 'geotools-3d-extension.tex', u'geotools-3d-extension Documentation',
      u'SoojinKim', 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'geotools', u'geotools Documentation',
+    (master_doc, 'geotools-3d-extension', u'geotools-3d-extension Documentation',
      [author], 1)
 ]
 
@@ -163,8 +163,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'geotools', u'geotools Documentation',
-     author, 'geotools', 'One line description of project.',
+    (master_doc, 'geotools-3d-extension', u'geotools-3d-extension Documentation',
+     author, 'geotools-3d-extension', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -75,7 +75,8 @@ public class SolidTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
 
-    	CompositeSurface exterior = (CompositeSurface) node.getChildValue("exterior");
+    	CompositeSurface exterior = (CompositeSurface) node.getChild("exterior").getChildValue(0);
+    	
     	CompositeSurface[] interiors = null;
     	
     	if (node.hasChild("interior")) {

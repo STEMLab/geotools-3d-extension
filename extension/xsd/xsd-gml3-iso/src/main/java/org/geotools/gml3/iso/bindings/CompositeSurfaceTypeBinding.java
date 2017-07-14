@@ -83,15 +83,16 @@ public class CompositeSurfaceTypeBinding extends AbstractComplexBinding implemen
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        
-        List multiPolygons = node.getChildValues(Surface.class);
+       
         List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
-        
-        for (Object object : multiPolygons) {
-            Surface surface = (Surface) object;
-            surfaces.add(surface);
-        }        
-        
+    	List surfaceMembers = node.getChildren();
+    	
+    	for(int i = 0; i < surfaceMembers.size(); i++) {
+    		Node n = (Node) surfaceMembers.get(i);
+    		Surface s = (Surface) n.getChildValue(Surface.class);
+    		surfaces.add(s);
+    	}
+
         return gBuilder.createCompositeSurface(surfaces);
     }
 

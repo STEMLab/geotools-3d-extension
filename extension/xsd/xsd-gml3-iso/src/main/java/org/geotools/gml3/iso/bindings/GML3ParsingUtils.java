@@ -209,11 +209,10 @@ public class GML3ParsingUtils {
             boolean ring) {
         if (node.hasChild(DirectPosition.class)) {
             List dps = node.getChildValues(DirectPosition.class);
-            DirectPosition dp = (DirectPosition) dps.get(0);
 
             PointArray pa = gb.createPointArray();
             for (int i = 0; i < dps.size(); i++) {
-                dp = (DirectPosition) dps.get(i);
+            	DirectPosition dp = (DirectPosition) dps.get(i);
                 pa.add(dp);
             }
             

@@ -7,9 +7,9 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=python -msphinx
 )
-set SOURCEDIR=source
-set BUILDDIR=build
-set SPHINXPROJ=geotools3d
+set SOURCEDIR=.
+set BUILDDIR=.build
+set SPHINXPROJ=geotools
 
 if "%1" == "" goto help
 

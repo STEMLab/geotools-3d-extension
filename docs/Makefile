@@ -4,10 +4,9 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = geotools3d
-
-SOURCEDIR     = source
-BUILDDIR      = build
+SPHINXPROJ    = geotools
+SOURCEDIR     = .
+BUILDDIR      = .build
 
 # Put it first so that "make" without argument is like "make help".
 help:

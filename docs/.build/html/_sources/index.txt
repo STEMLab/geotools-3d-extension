@@ -1,0 +1,20 @@
+.. geotools documentation master file, created by
+   sphinx-quickstart on Thu Jul 13 10:39:28 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to geotools's documentation!
+====================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+	<tutorial/index>
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

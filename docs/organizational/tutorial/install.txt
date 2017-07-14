@@ -1,0 +1,5 @@
+.. _install:
+
+Installation
+====================================
+Welcome to the GeoTools 3d-extension 'Installation' documentation.

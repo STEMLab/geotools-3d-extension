@@ -21,7 +21,12 @@ GeoTools 3D installation on Ubuntu 16.04
 =======================
 
     $ sudo apt-get install -y cmake libgmp3-dev libmpfr-dev
+    
     $ cd unsupported/geometry-ng
+    
     $ sudo ./cppbuild.sh
+
     $ cd ../../
+
     $ mvn clean install
+    

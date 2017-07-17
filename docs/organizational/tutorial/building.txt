@@ -1,0 +1,27 @@
+.. _install:
+
+Building
+=======================
+
+이 장에서는 이 프로젝트를 빌드하기 위한 방법을 소개합니다.
+이 프로젝트가 사용하는 몇 가지 라이브러리가 c++ 언어 기반이기 때문에
+이 프로젝트를 빌드하기 이전에 이 라이브러리들을 우선적으로 설치하는 과정이 필요합니다.
+
+Prerequisites
+=============
+
+- CMAKE
+- GMP
+- MPFR
+- Boost 
+- CGAL
+- SFCGAL
+
+GeoTools 3D installation on Ubuntu 16.04
+=======================
+
+    $ sudo apt-get install -y cmake libgmp3-dev libmpfr-dev
+    $ cd unsupported/geometry-ng
+    $ sudo ./cppbuild.sh
+    $ cd ../../
+    $ mvn clean install

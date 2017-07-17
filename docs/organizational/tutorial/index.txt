@@ -9,8 +9,8 @@ Tutorials
 .. toctree::
    :maxdepth: 5
    
-   quickstart
    install
+   quickstart
    datastore
 
 

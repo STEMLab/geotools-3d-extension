@@ -584,11 +584,13 @@ public class GML3MockData {
     }
     public static Element interiorSolidWithPos(Document document, Node parent){
 		
+
     	double[] upper = {5,5,5};
     	double[] lower = {3,3,3};
     	//Element ie = element(qName("Solid"), document, parent);
     	//Element ie_ex = element(qName("exterior"),document, ie);
     	return (Element)makeFromEnvelope(document,parent, upper, lower);
+
     	
     }
     public static Solid solid(){

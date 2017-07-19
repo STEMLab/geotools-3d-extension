@@ -69,7 +69,7 @@ public class SolidTypeBindingTest extends GML3TestSupport {
     }
     
      
-    public void testEncode3D() throws Exception {
+    public void testEncode() throws Exception {
     	Surface poly = GML3MockData.polygon_3D();
         Document doc = encode(poly, GML.Polygon);
         

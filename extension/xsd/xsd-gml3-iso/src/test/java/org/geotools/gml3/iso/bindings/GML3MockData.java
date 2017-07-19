@@ -235,6 +235,8 @@ public class GML3MockData {
 
         return circle;
     }*/
+    
+    
 
     public static Ring linearRing() {
     	PointArray pa = gb.createPointArray();
@@ -443,6 +445,13 @@ public class GML3MockData {
 
     	SurfaceBoundary sb = gb3D.createSurfaceBoundary(extR, Arrays.asList(intR1, intR2));
     	return gb3D.createSurface(sb);
+    }
+    public static Solid Solid(){
+    	DirectPosition l = gb3D.createDirectPosition(new double[]{0, 0, 0});
+    	DirectPosition u = gb3D.createDirectPosition(new double[]{10,10,10});
+        	
+		return SolidUtil.makeFromEnvelope(gb3D, l, u);
+    	
     }
     public static Element Solid(Document document, Node parent, boolean withInterior){
     	Element Solid = element(qName("Solid"), document, parent);

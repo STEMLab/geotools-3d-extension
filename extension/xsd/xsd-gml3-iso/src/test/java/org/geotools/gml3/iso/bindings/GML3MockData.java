@@ -450,7 +450,7 @@ public class GML3MockData {
     	
     	SolidWithPos(document,ext);
     	if(withInterior){
-    		Element interior = element(qName("QKSEOFinterior"), document, Solid);
+    		Element interior = element(qName("interior"), document, Solid);
             interiorSolidWithPos(document,interior);
     	}
     	return Solid;
@@ -584,7 +584,11 @@ public class GML3MockData {
     }
     public static Element interiorSolidWithPos(Document document, Node parent){
 		
-    	return null;
+    	double[] upper = {5,5,5};
+    	double[] lower = {3,3,3};
+    	//Element ie = element(qName("Solid"), document, parent);
+    	//Element ie_ex = element(qName("exterior"),document, ie);
+    	return (Element)makeFromEnvelope(document,parent, upper, lower);
     	
     }
     public static Solid solid(){
@@ -907,7 +911,148 @@ public class GML3MockData {
         
         return multiGeometry;
     }
+    public static Element makeFromEnvelope(Document document, Node parent, double[] upper, double[] lower){
+    	Element compositeSurface = element(qName("CompositeSurface"),document,parent);
+    	Element member = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol1 = element(qName("Polygon"),document,member);
+    	Element pol1ex = element(qName("exterior"),document,pol1);
+    	Element lr = element(qName("LinearRing"),document, pol1ex);
+    	lr.setAttribute("srsDimension", "3");
+    	
+    	
+    	String Point1 = Double.toString(lower[0]) + " " + Double.toString(upper[1]) + " " + Double.toString(lower[2]);
+    	String Point2 = Double.toString(lower[0]) + " " + Double.toString(lower[1]) + " " + Double.toString(lower[2]);
+    	String Point3 = Double.toString(upper[0]) + " " + Double.toString(lower[1]) +" " +Double.toString(lower[2]);
+    	String Point4 = Double.toString(upper[0]) + " " + Double.toString(upper[1]) + " " + Double.toString(lower[2]);
+    	String Point5 = Double.toString(lower[0]) + " " + Double.toString(upper[1]) + " " + Double.toString(upper[2]);
+    	String Point6 = Double.toString(lower[0]) + " " + Double.toString(lower[1]) + " " + Double.toString(upper[2]);
+    	String Point7 = Double.toString(upper[0]) + " " + Double.toString(lower[1]) + " " + Double.toString(upper[2]);
+    	String Point8 = Double.toString(upper[0]) + " " + Double.toString(upper[1]) + " " + Double.toString(upper[2]);
+    	
 
+    	
+    	
+    	
+    	Element pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point1));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point4));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point3));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point2));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point1));
+    	
+    	Element member2 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol2 = element(qName("Polygon"),document,member2);
+    	Element pol2ex = element(qName("exterior"),document, pol2);
+    	lr = element(qName("LinearRing"),document, pol2ex);
+    	lr.setAttribute("srsDimension", "3");
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point3));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point4));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point8));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point7));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point3));
+    	
+    	Element member3 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol3 = element(qName("Polygon"),document,member3);
+    	Element pol3ex = element(qName("exterior"),document,pol3);
+    	lr = element(qName("LinearRing"),document, pol3ex);
+    	lr.setAttribute("srsDimension", "3");
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point5));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point6));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point7));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point8));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point5));
+    	
+    	Element member4 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol4 = element(qName("Polygon"),document,member4);
+    	Element pol4ex = element(qName("exterior"),document,pol4);
+    	lr = element(qName("LinearRing"),document, pol4ex);
+    	lr.setAttribute("srsDimension", "3");
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point6));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point5));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point1));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point2));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point6));
+    	
+    	Element member5 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol5 = element(qName("Polygon"),document,member5);
+    	Element pol5ex = element(qName("exterior"),document,pol5);
+    	 lr = element(qName("LinearRing"),document, pol5ex);
+    	lr.setAttribute("srsDimension", "3");
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point2));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point3));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point7));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point6));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point2));
+    	
+    	Element member6 = element(qName("surfaceMember"),document,compositeSurface);
+    	Element pol6 = element(qName("Polygon"),document,member6);
+    	Element pol6ex = element(qName("exterior"),document,pol6);
+    	lr = element(qName("LinearRing"),document, pol6ex);
+    	lr.setAttribute("srsDimension", "3");
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point1));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point5));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point8));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point4));
+    	
+    	pos = element(qName("pos"),document,lr);
+    	pos.appendChild(document.createTextNode(Point1));
+    	
+
+    	return member;
+
+    	
+    }
     public static Element surface(Document document, Node parent) {
         Element surface = element(qName("Surface"), document ,parent);
         Element patches = element(qName("patches"), document, surface);

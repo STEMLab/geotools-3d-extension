@@ -1,3 +1,6 @@
 Quickstart Manual
 ====================================
-Quickstart Manual
+Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자를 대상으로 설명한다.
+자바와 이클립스 설치 및 quickstart 프로젝트 생성은 `GeoTools Eclipse Quickstart`_를 참고하라.
+
+.. _GeoTools Eclipse Quickstart: http://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

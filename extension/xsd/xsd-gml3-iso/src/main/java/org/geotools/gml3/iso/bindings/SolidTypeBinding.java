@@ -76,13 +76,12 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
 
     	CompositeSurface exterior = (CompositeSurface) node.getChild("exterior").getChildValue(0);
+    	List tempinteriors = node.getChildren("interior");
+    	
     	
     	CompositeSurface[] interiors = null;
+    	//CompositeSurface[] list = null;
     	
-    	if (node.hasChild("interior")) {
-            List list = node.getChildValues("interior");
-            interiors = (CompositeSurface[]) list.toArray(new CompositeSurface[list.size()]);
-        }
     	
     	List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
     	for(Primitive p : exterior.getElements()) {
@@ -91,8 +90,23 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     	
     	Shell exteriorShell = gBuilder.createShell(surfaces);
     	List<Shell> interiorShells = null;
+    	if (node.hasChild("interior")) {
+    		
+    		int interior_num = node.getChildren("interior").size();
     	
+    		ArrayList<CompositeSurface> temp_list = new ArrayList<CompositeSurface>();
+        	for(int i = 0 ; i < interior_num ; i++){
+        		Node temp = (Node) tempinteriors.get(i);
+        		temp_list.add((CompositeSurface) temp.getChildValue(0));
+        	}
+            
+        	interiors = (CompositeSurface[])temp_list.toArray(new CompositeSurface[interior_num]);
+        	
+            //List list = node.getChildValues("interior");
+            //interiors = (CompositeSurface[]) list.toArray(new CompositeSurface[list.size()]);
+        }
     	if(interiors != null) {
+    		
 	    	for(CompositeSurface cs : interiors) {
 	    		if(interiorShells == null) {
 	    			interiorShells = new ArrayList<Shell>();

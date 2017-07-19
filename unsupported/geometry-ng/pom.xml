@@ -132,11 +132,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    <groupId>org.geotools.xsd</groupId>
-    <artifactId>gt-xsd-core</artifactId>
-    <version>15.0</version>
-</dependency>
-    <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
       <version>${project.version}</version>
@@ -152,16 +147,6 @@
 	    <groupId>org.bytedeco</groupId>
 	    <artifactId>javacpp</artifactId>
 	    <version>1.3.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.geotools.xsd</groupId>
-		<artifactId>gt-xsd-gml3-iso</artifactId>
-		<version>15-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>org.geotools.xsd</groupId>
-		<artifactId>gt-xsd-gml2-iso</artifactId>
-		<version>15-SNAPSHOT</version>
 	</dependency>
   </dependencies>
 

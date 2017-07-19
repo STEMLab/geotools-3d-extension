@@ -55,7 +55,6 @@ public class SolidTypeBindingTest extends GML3TestSupport {
         
         SolidBoundary sb = solid.getBoundary();
         CompositeSurface exterior = sb.getExterior();
-        //TODO : test
         
         Shell[] interior = sb.getInteriors();
         assertEquals(interior.length, 1);
@@ -70,10 +69,10 @@ public class SolidTypeBindingTest extends GML3TestSupport {
     
      
     public void testEncode() throws Exception {
-    	Surface poly = GML3MockData.polygon_3D();
-        Document doc = encode(poly, GML.Polygon);
+    	Solid solid = GML3MockData.solid();
+    	Document doc = encode(solid, GML.Solid);    	
         
-        checkDimension(doc, GML.Polygon.getLocalPart(), 3);
+        checkDimension(doc, GML.Solid.getLocalPart(), 3);
         //checkPosListOrdinates(doc, 3 * poly);
     }
     

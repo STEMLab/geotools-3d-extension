@@ -446,13 +446,7 @@ public class GML3MockData {
     	SurfaceBoundary sb = gb3D.createSurfaceBoundary(extR, Arrays.asList(intR1, intR2));
     	return gb3D.createSurface(sb);
     }
-    public static Solid Solid(){
-    	DirectPosition l = gb3D.createDirectPosition(new double[]{0, 0, 0});
-    	DirectPosition u = gb3D.createDirectPosition(new double[]{10,10,10});
-        	
-		return SolidUtil.makeFromEnvelope(gb3D, l, u);
-    	
-    }
+   
     public static Element Solid(Document document, Node parent, boolean withInterior){
     	Element Solid = element(qName("Solid"), document, parent);
     	Element ext = element(qName("exterior"),document, Solid);
@@ -585,11 +579,13 @@ public class GML3MockData {
     	pos.appendChild(document.createTextNode("10 0 0"));
     	
     	pos = element(qName("pos"),document,lr);
-    	pos.appendChild(document.createTextNode("0 0 0"));
-    	
-
-		return member;
-    	
+    	pos.appendChild(document.createTextNode("0 0 0"));  
+		return member;   	
+    }
+    public static Solid Solid(){
+    	DirectPosition l = gb3D.createDirectPosition(new double[]{0, 0, 0});
+    	DirectPosition u = gb3D.createDirectPosition(new double[]{10,10,10});        	
+		return SolidUtil.makeFromEnvelope(gb3D, l, u);    	
     }
     public static Element interiorSolidWithPos(Document document, Node parent){
 		
@@ -602,6 +598,7 @@ public class GML3MockData {
 
     	
     }
+    
     public static Solid solid(){
     	ArrayList<DirectPosition>pl = new ArrayList();
     	DirectPosition p1 = gb3D.createDirectPosition(new double[]{0,0,0});

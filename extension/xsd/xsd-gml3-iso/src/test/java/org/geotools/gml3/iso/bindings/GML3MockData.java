@@ -450,7 +450,7 @@ public class GML3MockData {
     	
     	SolidWithPos(document,ext);
     	if(withInterior){
-    		Element interior = element(qName("QKSEOFinterior"), document, Solid);
+    		Element interior = element(qName("interior"), document, Solid);
             interiorSolidWithPos(document,interior);
     	}
     	return Solid;
@@ -584,7 +584,9 @@ public class GML3MockData {
     }
     public static Element interiorSolidWithPos(Document document, Node parent){
 		
-    	return null;
+    	double[] upper = {0,0,0};
+    	double[] lower = {10,10,10};
+    	return (Element)SolidUtil.makeFromEnvelope(document, parent, upper, lower);
     	
     }
     public static Solid solid(){

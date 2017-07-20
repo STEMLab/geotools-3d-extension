@@ -16,18 +16,14 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import java.util.List;
-
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.GML3TestSupport;
-import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.Shell;
+import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
-import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.w3c.dom.Document;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 
 
 /**
@@ -43,24 +39,25 @@ public class SolidTypeBindingTest extends GML3TestSupport {
     }
 
     public void testNoInterior() throws Exception {
-        GML3MockData.polygon(document, document);
+        GML3MockData.Solid(document, document,false);
+        
+        Solid solid = (Solid)parse();
 
-        Surface polygon = (Surface) parse();
-        assertNotNull(polygon);
+        
+        assertNotNull(solid);
     }
 
-    public void testPolygon3D() throws Exception {
-        GML3MockData.polygon3D(document, document, true);
+    public void testWithInterior() throws Exception {
+        GML3MockData.Solid(document, document, true);
 
-        Surface polygon = (Surface) parse();
-        assertNotNull(polygon);
+        Solid solid = (Solid) parse();
+        assertNotNull(solid);
         
-        SurfaceBoundary sb = polygon.getBoundary();
-        Ring exterior = sb.getExterior();
-        //TODO : test
+        SolidBoundary sb = solid.getBoundary();
+        CompositeSurface exterior = sb.getExterior();
         
-        List<Ring> interior = sb.getInteriors();
-        assertEquals(interior.size(), 1);
+        Shell[] interior = sb.getInteriors();
+        assertEquals(interior.length, 1);
         
         /*
         LineString exterior = polygon.getExteriorRing();
@@ -70,39 +67,15 @@ public class SolidTypeBindingTest extends GML3TestSupport {
         */
     }
     
-    public void testPolygonPosList3D() throws Exception {
-        GML3MockData.polygonWithPosList3D(document, document, true);
-
-        Surface polygon = (Surface) parse();
-        assertNotNull(polygon);
+     
+    public void testEncode() throws Exception {
+    	Solid solid = GML3MockData.solid();
+    	Document doc = encode(solid, GML.Solid);    	
         
-        SurfaceBoundary sb = polygon.getBoundary();
-        
-        Ring exterior = sb.getExterior();
-        //TODO : test
-        
-        List<Ring> interior = sb.getInteriors();
-        assertEquals(interior.size(), 1);
-        
-        //assertTrue(new Coordinate(1d, 2d, 10d).equals3D(exterior.getCoordinateN(0)));
-        //assertTrue(new Coordinate(1d, 2d, 10d).equals3D(interior.getCoordinateN(0)));
-    }
-    
-    public void testEncode3D() throws Exception {
-    	Surface poly = GML3MockData.polygon_3D();
-        Document doc = encode(poly, GML.Polygon);
-        
-        checkDimension(doc, GML.Polygon.getLocalPart(), 3);
+        checkDimension(doc, GML.Solid.getLocalPart(), 3);
         //checkPosListOrdinates(doc, 3 * poly);
     }
     
-    public void testEncode2D() throws Exception {
-    	Surface poly = GML3MockData.polygon();
-        Document doc = encode(poly, GML.Polygon);
-        
-        checkDimension(doc, GML.Polygon.getLocalPart(), 2);
-        //checkPosListOrdinates(doc, 2 * poly.getNumPoints());
-    }
     
     //Curved polygon is not supported yet
     /*public void testEncodeCurved() throws Exception {

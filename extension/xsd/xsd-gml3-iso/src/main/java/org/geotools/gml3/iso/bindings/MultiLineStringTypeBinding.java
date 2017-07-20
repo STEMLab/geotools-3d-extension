@@ -16,7 +16,8 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -26,7 +27,10 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableCurve;
+import org.opengis.geometry.primitive.Point;
 
 
 /**
@@ -94,27 +98,42 @@ public class MultiLineStringTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        List lines = node.getChildValues(Curve.class);
-
-        /*return gBuilder.createMultiLineString((MultiCurve[]) lines.toArray(
-                new LineString[lines.size()]));*/
-        return null;
+    	
+    	Set lines = new HashSet();
+    	if(node.hasChild(Curve.class)){
+    		lines.addAll(node.getChildValues(Curve.class));
+    	}
+    	if(node.hasChild(Curve[].class)){
+    		Curve[] l = (Curve[])node.getChildValue(Curve[].class);
+    		for(int i = 0; i < l.length; i++){
+    			lines.add(l[i]);
+    		}
+    	}
+    	
+    	
+        return gBuilder.createMultiCurve(lines);
+        
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-        if (GML.lineStringMember.equals(name)) {
-            /*MultiLineString multiLineString = (MultiLineString) object;
-            LineString[] members = new LineString[multiLineString.getNumGeometries()];
-
-            for (int i = 0; i < members.length; i++) {
-                members[i] = (LineString) multiLineString.getGeometryN(i);
+    	
+    	
+        if (GML.lineStringMember.equals(name.getLocalPart())) {
+        	
+        	MultiCurve multiLine = (MultiCurve) object;
+        	Curve[] members = new Curve[multiLine.getElements().size()];
+        	int i = 0;
+            for (OrientableCurve line : multiLine.getElements()) {
+                members[i++] = (Curve)line;
             }
+            
+            GML3EncodingUtils.setChildIDs(multiLine);
 
-            GML3EncodingUtils.setChildIDs(multiLineString);
-            */
-            return null;
+            return members;
+            
         }
+        
 
         return null;
     }

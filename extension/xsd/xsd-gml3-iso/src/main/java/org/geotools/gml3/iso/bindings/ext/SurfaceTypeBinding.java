@@ -22,6 +22,9 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -34,12 +37,12 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class SurfaceTypeBinding extends AbstractComplexBinding {
 
-    GeometryFactory gf;
-    
-    public SurfaceTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    ISOGeometryBuilder gBuilder;
+
+    public SurfaceTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
-    
+
     /**
      * @generated
      */
@@ -49,7 +52,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
     
     @Override
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -58,7 +61,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return Surface.class;
     }
 
     /**
@@ -68,7 +71,9 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         Polygon[] patches = (Polygon[])node.getChildValue(Polygon[].class);
-        return gf.createMultiPolygon(patches);
+        
+        SurfaceBoundary boundary = gBuilder.createSurfaceBoundary(null);
+        return gBuilder.createSurface(boundary);
     }
     
     @Override

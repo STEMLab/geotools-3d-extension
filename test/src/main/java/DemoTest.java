@@ -46,6 +46,7 @@ import org.geotools.filter.FunctionFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.function.FilterFunction_ISOunion;
 import org.geotools.filter.function.ISODefaultFunctionFactory;
+import org.geotools.filter.spatial.ISOEqualsImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.text.ecql.ECQL;
@@ -701,7 +702,8 @@ public class DemoTest extends JFrame{
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
    			//Filter filter = ff.contains("loc", (Geometry)sf);
-   			Filter filter = ff.equals("loc", al.get(1));
+   			Filter filter = ff.equals("loc", al.get(0));
+   		   
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);

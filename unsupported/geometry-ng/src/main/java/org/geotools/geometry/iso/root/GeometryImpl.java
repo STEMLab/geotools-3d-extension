@@ -845,10 +845,11 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d1 = getCoordinateDimension();
 	        int d2 = geom.getCoordinateDimension();
 	        
+	        //return Geometry3DOperation.equals(this, geom);
 	        if(d1 == 3 && d2 == 3) {
 	                return Geometry3DOperation.equals(this, geom);
 	        }
-	        /* */
+	         
 		IntersectionMatrix tIM = null;
 		try {
 			tIM = RelateOp.relate(this, geom);

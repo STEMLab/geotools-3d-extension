@@ -18,7 +18,7 @@ Prerequisites
 - SFCGAL
 
 GeoTools 3D installation on Ubuntu 16.04
-=======================
+========================================
 
     $ sudo apt-get install -y cmake libgmp3-dev libmpfr-dev
     

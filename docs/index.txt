@@ -14,7 +14,7 @@ First Steps
 The following sections give an overview of GeoTools-3d-extension from different perspectives.
 
 
-* :doc:`see installation<organizational/tutorial/install>`
+* :doc:`see installation<organizational/tutorial/building>`
 * :doc:`organizational/tutorial/quickstart`
 
 

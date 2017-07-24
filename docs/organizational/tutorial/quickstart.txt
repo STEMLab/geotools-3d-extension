@@ -1,7 +1,8 @@
 Quickstart Manual
 ====================================
 Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자를 대상으로 설명한다.
-자바와 이클립스 설치 및 프로젝트 생성은 `GeoTools Eclipse Quickstart`_를 참고하라.
+자바와 이클립스 설치 및 프로젝트 생성은 GeoTools 페이지를 참고하라 `GeoTools Eclipse Quickstart`_.
+
 
 1. Fill in the following code:
 .. code-block:: guess
@@ -59,6 +60,7 @@ public class DemoTest extends JFrame{
 	private JTextField text;
 	private static ISOGeometryBuilder builder;
 	public static void main(String[] args) throws Exception {
+
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
@@ -66,8 +68,11 @@ public class DemoTest extends JFrame{
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
+
 	}
+
 	public DemoTest() {
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 
@@ -96,59 +101,96 @@ public class DemoTest extends JFrame{
 		menubar.add(dataMenu);
 		pack();
 		fileMenu.add(new SafeAction("Open csvfile...") {
+
 			public void action(ActionEvent e) throws Throwable {
+
 				connect(new CSVDataStoreFactory());
+
 			}
+
 		});
+
 		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+
 			public void action(ActionEvent e) throws Throwable {
+
 				connect(new PostgisNGDataStoreFactory());
+
 			}
+
 		});
 		fileMenu.add(new SafeAction("Insert to PostGIS database...") {
+
 			public void action(ActionEvent e) throws Throwable {
+
 				insertTable();
+
 			}
+
 		});
 
 		fileMenu.addSeparator();
 		fileMenu.add(new SafeAction("Exit") {
+
 			public void action(ActionEvent e) throws Throwable {
+
 				System.exit(0);
+
 			}
+
 		});
 		dataMenu.add(new SafeAction("Get features") {
+
 			public void action(ActionEvent e) throws Throwable {
+
 				filterFeatures();
+
 			}
+
 		});
+
 	}
 	
 	private void connect(DataStoreFactorySpi format) {
 		JDataStoreWizard wizard = new JDataStoreWizard(format);
 		int result = wizard.showModalDialog();
 		if (result == JWizard.FINISH) {
+
 			Map<String, Object> connectionParameters = wizard.getConnectionParameters();
 			try {
+
 				dataStore = DataStoreFinder.getDataStore(connectionParameters);
 
 				if (dataStore == null) {
+
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+
 				}
+
 				updateUI();
+
 			} catch (IOException e) {
+
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			} catch (Exception e) {
+
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
+
 		}
+
 	}
+
 	private void insertTable() {
+
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 
 		try {
+
 			SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
 
 			FeatureType schema = dataStore.getSchema(typeName);
@@ -156,68 +198,94 @@ public class DemoTest extends JFrame{
 			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
+
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
 
 				dataStore1 = DataStoreFinder.getDataStore(connectionParameters);
 
 				if (dataStore1 == null) {
+
 					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+
 				}
 
 				dataStore1.createSchema((SimpleFeatureType) schema);
 
 				// insert the feature
-				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(
-						typeName, Transaction.AUTO_COMMIT);
+				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(typeName, Transaction.AUTO_COMMIT);
 
 				SimpleFeatureCollection sfc = source.getFeatures();
 				SimpleFeatureIterator iterator = sfc.features();
 				while (iterator.hasNext()) {
+
 					SimpleFeature feature = iterator.next();
 					SimpleFeature newFeature = fw.next(); 
 					newFeature.setAttributes(feature.getAttributes());
 					fw.write();
+
 				}
+
 				fw.close();
+
 			}
 
 		} catch (IOException e) {
+
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+
 		} catch (Exception e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}
+
 	}
 	private void updateUI()  {
+	
 		ComboBoxModel cbm;
+
 		try {
+
 			cbm = new DefaultComboBoxModel(dataStore.getTypeNames());
 			featureTypeCBox.setModel(cbm);
+
 		} catch (IOException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}
 
-
 		table.setModel(new DefaultTableModel(5, 5));
+
 	}
+
 	private void filterFeatures()  {
+
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
+
 		try {
+
 			source = dataStore.getFeatureSource(typeName);
 			Filter filter = CQL.toFilter(text.getText());
 			SimpleFeatureCollection features = source.getFeatures(filter);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
+
 		} catch (IOException | CQLException e) {
+
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+
 		} 
+
 	}
+
 }
 
 .. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

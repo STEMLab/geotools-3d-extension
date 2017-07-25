@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.geotools.data.Diff;
 import org.geotools.data.DiffFeatureReader;
 import org.geotools.data.FeatureListener;
@@ -49,8 +51,11 @@ import org.geotools.data.ResourceInfo;
 import org.geotools.data.Transaction;
 import org.geotools.data.crs.ISOForceCoordinateSystemFeatureReader;
 import org.geotools.data.crs.ISOReprojectFeatureReader;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.sort.SortedFeatureReader;
+import org.geotools.data3d.store.ContentFeatureCollection;
 import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
@@ -73,11 +78,18 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.Id;
+import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.sort.SortBy;
+import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.geometry.BoundingBox;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.w3c.dom.Document;
 
 
 /**
@@ -582,7 +594,6 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
     public final  FeatureReader<SimpleFeatureType, SimpleFeature> getReader() throws IOException {
         return getReader(Query.ALL);
     }
-    
     /**
      * Returns the feature collection if the features of the feature source which 
      * meet the specified query criteria.

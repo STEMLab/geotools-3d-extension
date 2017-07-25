@@ -38,6 +38,10 @@ import java.util.logging.Level;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.filter.FilterCapabilities;
+import org.geotools.filter.spatial.ISOContainsImpl;
+import org.geotools.filter.spatial.ISOEqualsImpl;
+import org.geotools.filter.spatial.ISOWithinImpl;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.CircularRing;
@@ -57,6 +61,7 @@ import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.filter.Filter;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -129,7 +134,6 @@ public class PostGISDialect extends BasicSQLDialect {
             put("BYTEA", byte[].class);
         }
     };
-    
     // geometry types that will not contain curves (we map to curved types
     // if the db type is supposed to contain curves, that leaves out
     // geometry and geometry collection as potential curve containers)
@@ -167,7 +171,16 @@ public class PostGISDialect extends BasicSQLDialect {
         }
     };
     
-    
+    public boolean acceptable(Filter filter, Geometry type) {
+    	boolean acceptable = false;
+    	if(TYPE_TO_CLASS_MAP.get(type) != null) {
+    		FilterCapabilities fc = FilterToSqlHelper.createFilterCapabilities(false);
+    		if(fc.supports(filter) && type instanceof Solid) {
+    			acceptable = true;
+    		}
+    	}
+    	return acceptable;
+    }
     
     @Override
     public boolean isAggregatedSortSupported(String function) {

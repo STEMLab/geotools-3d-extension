@@ -84,7 +84,9 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
+import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -113,7 +115,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         //TODO: cache this
         primaryKey = ((JDBCDataStore) entry.getDataStore()).getPrimaryKey(entry);
     }
-    
+
     /**
      * Copy existing feature source
      * @param featureSource jdbc feature source
@@ -624,8 +626,23 @@ public class JDBCFeatureSource extends ContentFeatureSource {
             if(getState().getTransaction() == Transaction.AUTO_COMMIT) {
                 cx.setAutoCommit(dialect.isAutoCommitQuery());
             }
-
-            if (query.getJoins().isEmpty()) {
+            Literal lt = null;
+            if(preFilter instanceof BinarySpatialOperator) {
+            	BinarySpatialOperator op = (BinarySpatialOperator)query.getFilter();
+            	Expression e1 = op.getExpression1();
+            	Expression e2 = op.getExpression2();
+            	if(e1 instanceof Literal) {
+            		lt = (Literal)e1;
+            	}else if(e2 instanceof Literal) {
+            		lt = (Literal)e2;
+            	}
+            }
+            Geometry g = (Geometry) lt.getValue();
+            if(!dialect.acceptable(preFilter, g)) {
+            	String sql = getDataStore().selectSQL(querySchema, preQuery.ALL);
+            	reader = new JDBCunsupportedQueryReader(sql, cx, this, querySchema, query.getHints(), preFilter, g);
+            }
+            else if (query.getJoins().isEmpty()) {
                 //regular query
                 if ( dialect instanceof PreparedStatementSQLDialect ) {
                     PreparedStatement ps = getDataStore().selectSQLPS(querySchema, preQuery, cx);

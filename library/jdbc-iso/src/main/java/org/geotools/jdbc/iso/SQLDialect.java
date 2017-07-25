@@ -52,6 +52,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.ExcludeFilter;
+import org.opengis.filter.Filter;
 import org.opengis.filter.Id;
 import org.opengis.filter.IncludeFilter;
 import org.opengis.filter.PropertyIsBetween;
@@ -200,7 +201,9 @@ public abstract class SQLDialect {
         throws SQLException {
         return true;
     }
-    
+    public boolean acceptable(Filter filter, Geometry type) {
+    	return true;
+    }
     /**
      * Registers the sql type name to java type mappings that the dialect uses when
      * reading and writing objects to and from the database.

@@ -16,6 +16,9 @@
  */
 package org.geotools.gml3.iso.bindings.ext;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
@@ -26,7 +29,6 @@ import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -70,23 +72,22 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        Polygon[] patches = (Polygon[])node.getChildValue(Polygon[].class);
-        
-        SurfaceBoundary boundary = gBuilder.createSurfaceBoundary(null);
-        return gBuilder.createSurface(boundary);
+        Surface[] patches = (Surface[])node.getChildValue(Surface[].class);
+        List<Surface> l = Arrays.asList(patches);
+        return gBuilder.createSurface(l);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
         if ("patches".equals(name.getLocalPart())) {
-            MultiPolygon multiSurface = (MultiPolygon) object;
-            Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
+            Surface s = (Surface) object;
+            /*Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
 
             for (int i = 0; i < members.length; i++) {
                 members[i] = (Polygon) multiSurface.getGeometryN(i);
             }
 
-            return members;
+            return members;*/
         }
 
         return null;

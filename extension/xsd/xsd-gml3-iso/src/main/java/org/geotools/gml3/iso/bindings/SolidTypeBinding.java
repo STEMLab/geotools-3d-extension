@@ -89,8 +89,6 @@ public class SolidTypeBinding extends AbstractComplexBinding {
         		Node temp = (Node) interiorNodes.get(i);
         		interiors.add((CompositeSurface) temp.getChildValue(0));
         	}
-            //List list = node.getChildValues("interior");
-            //interiors = (CompositeSurface[]) list.toArray(new CompositeSurface[list.size()]);
         }
     	if(interiors != null && interiors.size() > 0) {
     		interiorShells = new ArrayList<Shell>();
@@ -131,33 +129,4 @@ public class SolidTypeBinding extends AbstractComplexBinding {
     	
     	return gBuilder.createShell(surfaces);
     }
-    
-    /*private com.vividsolutions.jts.geom.MultiPolygon shellToPolygons(Shell shell) {
-        List elements = (List) shell.getElements();
-        
-        List polygons = new ArrayList();
-        Iterator iter = elements.iterator();
-        while (iter.hasNext()) {
-            OrientableSurface surface = (OrientableSurface) iter.next();
-            Object geometry = JTSUtilsNG.surfaceToPolygon((Surface) surface);
-            
-            if (geometry instanceof com.vividsolutions.jts.geom.Polygon) {
-                polygons.add(geometry);
-            } else if (geometry instanceof com.vividsolutions.jts.geom.MultiPolygon) {
-                com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
-                        (com.vividsolutions.jts.geom.MultiPolygon) geometry;
-                
-                for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
-                    polygons.add(multiPolygon.getGeometryN(i));
-                }
-            }
-        }
-        
-        com.vividsolutions.jts.geom.Polygon[] polygonMembers =
-                new com.vividsolutions.jts.geom.Polygon[polygons.size()];
-        polygons.toArray(polygonMembers);
-        com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
-                gf.createMultiPolygon(polygonMembers);
-        return multiPolygon;
-    }*/
 }

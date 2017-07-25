@@ -26,6 +26,7 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
+import org.geotools.data.geojson.GeoJSONDataStoreFactory;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 //import org.geotools.data.kairos.KairosNGDataStoreFactory;
 import org.geotools.data.memory.MemoryDataStore;
@@ -136,6 +137,11 @@ public class DemoTest extends JFrame{
 		fileMenu.add(new SafeAction("Open csvfile...") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
+			}
+		});
+		fileMenu.add(new SafeAction("Open GeoJSON File...") {
+			public void action(ActionEvent e) throws Throwable {
+				connect(new GeoJSONDataStoreFactory());
 			}
 		});
 		fileMenu.add(new SafeAction("Connect to PostGIS database...") {

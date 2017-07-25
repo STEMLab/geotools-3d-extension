@@ -58,6 +58,12 @@
       <artifactId>gt-jdbc-postgis-iso</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-geojsondatastore-iso</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Provides GUI components -->
     <dependency>

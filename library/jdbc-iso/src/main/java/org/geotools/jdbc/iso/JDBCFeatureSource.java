@@ -636,13 +636,14 @@ public class JDBCFeatureSource extends ContentFeatureSource {
             	}else if(e2 instanceof Literal) {
             		lt = (Literal)e2;
             	}
+            	Geometry g = (Geometry) lt.getValue();
+                if(!dialect.acceptable(preFilter, g)) {
+                	String sql = getDataStore().selectSQL(querySchema, preQuery.ALL);
+                	reader = new JDBCunsupportedQueryReader(sql, cx, this, querySchema, query.getHints(), preFilter, g);
+                }
             }
-            Geometry g = (Geometry) lt.getValue();
-            if(!dialect.acceptable(preFilter, g)) {
-            	String sql = getDataStore().selectSQL(querySchema, preQuery.ALL);
-            	reader = new JDBCunsupportedQueryReader(sql, cx, this, querySchema, query.getHints(), preFilter, g);
-            }
-            else if (query.getJoins().isEmpty()) {
+            
+            if (query.getJoins().isEmpty()) {
                 //regular query
                 if ( dialect instanceof PreparedStatementSQLDialect ) {
                     PreparedStatement ps = getDataStore().selectSQLPS(querySchema, preQuery, cx);

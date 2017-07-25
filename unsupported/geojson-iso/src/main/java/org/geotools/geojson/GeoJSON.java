@@ -34,7 +34,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 public class GeoJSON {
     static GeometryJSON gjson = new GeometryJSON(DefaultGeographicCRS.WGS84);
-    static FeatureJSON fjson = new FeatureJSON(gjson);
+    static FeatureJSON fjson = new FeatureJSON();
     
     public static Object read(Object input) throws IOException {
         throw new UnsupportedOperationException();

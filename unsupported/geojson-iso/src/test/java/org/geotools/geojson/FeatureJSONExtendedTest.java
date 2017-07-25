@@ -45,7 +45,7 @@ public class FeatureJSONExtendedTest extends GeoJSONTestSupport {
 
         gb = new ISOGeometryBuilder(CRS.decode("EPSG:4326"));
         gjson = new GeometryJSON(gb);
-        fjson = new FeatureJSON(gjson);
+        fjson = new FeatureJSON();
         fjson.setFeatureType(featureType);
         
         fb = new ISOSimpleFeatureBuilder(featureType);

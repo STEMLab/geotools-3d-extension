@@ -38,6 +38,7 @@ public class ISOGeometryHandler extends DelegatingHandler<Geometry> {
 
     public ISOGeometryHandler(CoordinateReferenceSystem crs) {
         this.crs = crs;
+        this.builder = new ISOGeometryBuilder(crs);
     }
     
     public ISOGeometryHandler(ISOGeometryBuilder builder) {

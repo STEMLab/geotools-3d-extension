@@ -80,7 +80,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
         
         gjson = new GeometryJSON(gb);
-        fjson = new FeatureJSON(gjson);
+        fjson = new FeatureJSON();
     }
         
     public void testFeatureWrite() throws Exception {
@@ -105,7 +105,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
         
         ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
         GeometryJSON gjson = new GeometryJSON(gb);
-        FeatureJSON fj = new FeatureJSON(gjson);
+        FeatureJSON fj = new FeatureJSON();
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         fj.writeFeature(feature, os);
@@ -612,7 +612,7 @@ public class FeatureJSONTest extends GeoJSONTestSupport {
 
         ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
         GeometryJSON gjson = new GeometryJSON(gb);
-        FeatureJSON fj = new FeatureJSON(gjson);
+        FeatureJSON fj = new FeatureJSON();
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         fj.writeFeatureCollection(fc, os);

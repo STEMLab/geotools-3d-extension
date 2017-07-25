@@ -26,6 +26,8 @@ import org.geotools.geojson.DelegatingHandler;
 import org.geotools.geojson.IContentHandler;
 import org.geotools.geojson.geom.ISOGeometryHandler;
 import org.geotools.geojson.geom.MultiPrimitiveHandler;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.json.simple.parser.ParseException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -96,6 +98,9 @@ public class FeatureHandler extends DelegatingHandler<SimpleFeature> {
             delegate = new CRSHandler();
             return true;
         } else if ("geometry".equals(key)) {
+        	if(crs == null) {
+        		setCRS(DefaultGeographicCRS.WGS84);
+        	}
             delegate = new ISOGeometryHandler(crs);
             return true;
         } else if ("properties".equals(key) && delegate == NULL) {

@@ -40,6 +40,7 @@ import org.geotools.geojson.GeoJSONUtil;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONStreamAware;
@@ -88,8 +89,13 @@ public class FeatureJSON {
     boolean encodeFeatureCollectionCRS = false;
     boolean encodeNullValues = false;
 
-    public FeatureJSON(GeometryJSON gjson) {
-        this.gjson = gjson; 
+    public FeatureJSON() {
+        this.gjson = new GeometryJSON(DefaultGeographicCRS.WGS84);
+        attio = new DefaultAttributeIO();
+    }
+    
+    public FeatureJSON(CoordinateReferenceSystem crs) {
+        this.gjson = new GeometryJSON(crs);
         attio = new DefaultAttributeIO();
     }
 

@@ -39,7 +39,6 @@ import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data3d.store.ContentState;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.feature.FeatureVisitor;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -47,8 +46,6 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.Geometry;
-
-//import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -366,7 +363,7 @@ public final class JDBCFeatureStore extends ContentFeatureStore {
                     throw (IOException) new IOException().initCause( e );
                 }
                 ContentState state = getEntry().getState(transaction);
-                ReferencedEnvelope bounds = new ReferencedEnvelope( getSchema().getCoordinateReferenceSystem() );
+                ReferencedEnvelope bounds = ReferencedEnvelope.create( getSchema().getCoordinateReferenceSystem() );
                 if( state.hasListener() ){
                     // gather bounds before modification
                     ReferencedEnvelope before = getBounds( new DefaultQuery( getSchema().getTypeName(), preFilter ) );                
@@ -385,7 +382,7 @@ public final class JDBCFeatureStore extends ContentFeatureStore {
                     for( Object value : values ){
                         if( value instanceof Geometry ){
                             Geometry geometry = (Geometry) value; 
-                            bounds.expandToInclude( new ReferencedEnvelope3D(geometry.getEnvelope()) );
+                            bounds.expandToInclude( ReferencedEnvelope.reference(geometry.getEnvelope()) );
                         }
                     }
                     // issue notificaiton
@@ -427,7 +424,7 @@ public final class JDBCFeatureStore extends ContentFeatureStore {
                     throw (IOException) new IOException().initCause( e );
                 }
                 ContentState state = getEntry().getState(transaction);
-                ReferencedEnvelope bounds = new ReferencedEnvelope( getSchema().getCoordinateReferenceSystem() );
+                ReferencedEnvelope bounds = ReferencedEnvelope.create( getSchema().getCoordinateReferenceSystem() );
                 if( state.hasListener() ){
                     // gather bounds before modification
                     ReferencedEnvelope before = getBounds( new DefaultQuery( getSchema().getTypeName(), preFilter ) );                

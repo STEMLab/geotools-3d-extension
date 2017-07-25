@@ -76,12 +76,17 @@ public class PostgisFilterToSQL extends FilterToSQL {
             geom = geom.getFactory().createLineString(((LinearRing) geom).getCoordinateSequence());
         }*/
         GeometryToPostGISWKTString writer = new GeometryToPostGISWKTString(false);
-        Object typename = currentGeometry.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME);
+        Object typename = "";
+        if(currentGeometry != null) {
+        	typename = currentGeometry.getUserData().get(JDBCDataStore.JDBC_NATIVE_TYPENAME);
+        	
+        }
         if("geography".equals(typename)) {
             out.write("ST_GeogFromText('");
             out.write(writer.getString(geom));//geom.toText());
             out.write("')");
-        } else {
+        }
+         else {
         	if(geom instanceof Solid) {
         		out.write("ST_makeSolid(");
         	}

@@ -627,7 +627,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
                 cx.setAutoCommit(dialect.isAutoCommitQuery());
             }
             Literal lt = null;
-            if(preFilter instanceof BinarySpatialOperator) {
+            if(postFilter instanceof BinarySpatialOperator) {
             	BinarySpatialOperator op = (BinarySpatialOperator)query.getFilter();
             	Expression e1 = op.getExpression1();
             	Expression e2 = op.getExpression2();
@@ -640,6 +640,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
                 if(!dialect.acceptable(preFilter, g)) {
                 	String sql = getDataStore().selectSQL(querySchema, preQuery.ALL);
                 	reader = new JDBCunsupportedQueryReader(sql, cx, this, querySchema, query.getHints(), preFilter, g);
+                	postFilterRequired = false;
                 }
             }
             

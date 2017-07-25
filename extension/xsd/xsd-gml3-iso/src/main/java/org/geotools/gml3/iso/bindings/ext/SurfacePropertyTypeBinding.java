@@ -26,6 +26,8 @@ import org.geotools.xml.Node;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.aggregate.MultiSurface;
+import org.opengis.geometry.complex.CompositeSurface;
+import org.opengis.geometry.primitive.Surface;
 /**
  * 
  *
@@ -63,9 +65,14 @@ public class SurfacePropertyTypeBinding extends org.geotools.gml3.iso.bindings.S
     public Object getProperty(Object object, QName name)
         throws Exception {
         if ("_Surface".equals(name.getLocalPart()) || "AbstractSurface".equals(name.getLocalPart())) {
-        	MultiSurface multiPolygon = (MultiSurface) object;
+        	if(object instanceof Surface){
+        		Surface single_polygon = (Surface) object;
+        		return super.getProperty(single_polygon, name);
+        	}
+        	CompositeSurface multiPolygon = (CompositeSurface) object;
+        	return super.getProperty(multiPolygon,name);
             // this MultiPolygon consists of a single Polygon wrapped in a MultiPolygon:
-            return null;
+            //return null;
         }
 
         return super.getProperty(object, name);

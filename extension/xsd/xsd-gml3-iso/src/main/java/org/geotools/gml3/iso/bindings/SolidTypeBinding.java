@@ -75,34 +75,25 @@ public class SolidTypeBinding extends AbstractComplexBinding {
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
 
-    	CompositeSurface exterior = (CompositeSurface) node.getChildValue("exterior");
-    	CompositeSurface[] interiors = null;
+    	CompositeSurface exterior = (CompositeSurface) node.getChild("exterior").getChildValue(0);
+    	Shell exteriorShell = compositeSurfaceToShell(exterior);
     	
-    	if (node.hasChild("interior")) {
-            List list = node.getChildValues("interior");
-            interiors = (CompositeSurface[]) list.toArray(new CompositeSurface[list.size()]);
-        }
+    	List interiorNodes = node.getChildren("interior");
     	
-    	List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
-    	for(Primitive p : exterior.getElements()) {
-    		surfaces.add((OrientableSurface) p);
-    	}
-    	
-    	Shell exteriorShell = gBuilder.createShell(surfaces);
+    	List<CompositeSurface> interiors = null;
     	List<Shell> interiorShells = null;
-    	
-    	if(interiors != null) {
+    	if (node.hasChild("interior")) {
+    		int numInteriors = node.getChildren("interior").size();
+    		interiors = new ArrayList<CompositeSurface>();
+        	for(int i = 0 ; i < numInteriors ; i++){
+        		Node temp = (Node) interiorNodes.get(i);
+        		interiors.add((CompositeSurface) temp.getChildValue(0));
+        	}
+        }
+    	if(interiors != null && interiors.size() > 0) {
+    		interiorShells = new ArrayList<Shell>();
 	    	for(CompositeSurface cs : interiors) {
-	    		if(interiorShells == null) {
-	    			interiorShells = new ArrayList<Shell>();
-	    		}
-	    		
-	        	surfaces = new ArrayList<OrientableSurface>();
-	        	for(Primitive p : cs.getElements()) {
-	        		surfaces.add((OrientableSurface) p);
-	        	}
-	    		
-	    		Shell intShell = gBuilder.createShell(surfaces);
+	    		Shell intShell = compositeSurfaceToShell(cs);
 	    		interiorShells.add(intShell);
 	    	}
     	}
@@ -130,32 +121,12 @@ public class SolidTypeBinding extends AbstractComplexBinding {
         return null;
     }
     
-    /*private com.vividsolutions.jts.geom.MultiPolygon shellToPolygons(Shell shell) {
-        List elements = (List) shell.getElements();
-        
-        List polygons = new ArrayList();
-        Iterator iter = elements.iterator();
-        while (iter.hasNext()) {
-            OrientableSurface surface = (OrientableSurface) iter.next();
-            Object geometry = JTSUtilsNG.surfaceToPolygon((Surface) surface);
-            
-            if (geometry instanceof com.vividsolutions.jts.geom.Polygon) {
-                polygons.add(geometry);
-            } else if (geometry instanceof com.vividsolutions.jts.geom.MultiPolygon) {
-                com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
-                        (com.vividsolutions.jts.geom.MultiPolygon) geometry;
-                
-                for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
-                    polygons.add(multiPolygon.getGeometryN(i));
-                }
-            }
-        }
-        
-        com.vividsolutions.jts.geom.Polygon[] polygonMembers =
-                new com.vividsolutions.jts.geom.Polygon[polygons.size()];
-        polygons.toArray(polygonMembers);
-        com.vividsolutions.jts.geom.MultiPolygon multiPolygon =
-                gf.createMultiPolygon(polygonMembers);
-        return multiPolygon;
-    }*/
+    protected Shell compositeSurfaceToShell(CompositeSurface cSurface) {
+       	List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+    	for(Primitive p : cSurface.getElements()) {
+    		surfaces.add((OrientableSurface) p);
+    	}
+    	
+    	return gBuilder.createShell(surfaces);
+    }
 }

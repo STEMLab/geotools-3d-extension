@@ -20,10 +20,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.geotools.gml3.iso.GML;
-import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.primitive.Surface;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -41,7 +40,7 @@ public class SurfacePatchArrayPropertyTypeBinding
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon[].class;
+        return Surface[].class;
     }
 
     /**
@@ -50,8 +49,8 @@ public class SurfacePatchArrayPropertyTypeBinding
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        List l = node.getChildValues(Polygon.class);
-        return l.toArray(new Polygon[l.size()]);
+        List l = node.getChildValues(Surface.class);
+        return l.toArray(new Surface[l.size()]);
     }
     
     @Override

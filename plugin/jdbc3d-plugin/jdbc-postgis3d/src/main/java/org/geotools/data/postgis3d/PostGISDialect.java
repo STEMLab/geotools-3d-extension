@@ -171,14 +171,13 @@ public class PostGISDialect extends BasicSQLDialect {
         }
     };
     
-    public boolean acceptable(Filter filter, Geometry type) {
+    public boolean acceptable(Geometry type) {
     	boolean acceptable = false;
-    	if(TYPE_TO_CLASS_MAP.get(type) != null) {
-    		FilterCapabilities fc = FilterToSqlHelper.createFilterCapabilities(false);
-    		if(fc.supports(filter) && type instanceof Solid) {
-    			acceptable = true;
-    		}
-    	}
+
+		if(!(type instanceof Solid)) {
+			acceptable = true;
+		}
+    	
     	return acceptable;
     }
     

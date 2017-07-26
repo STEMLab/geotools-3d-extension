@@ -7,7 +7,6 @@
 		<version>15-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
-	<groupId>org.geotools</groupId>
 	<artifactId>gt-geojsondatastore-iso</artifactId>
 	<name>GeoJSON Datastore</name>
 	<dependencies>

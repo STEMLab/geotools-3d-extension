@@ -24,7 +24,7 @@ import java.net.URL;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.DefaultFeatureCollection;
-import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.iso.geojson.feature.FeatureJSON;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 

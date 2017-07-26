@@ -53,7 +53,7 @@ import org.geotools.feature.visitor.MaxVisitor;
 import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.NearestVisitor;
 import org.geotools.filter.ISOFilterAttributeExtractor;
-import org.geotools.filter.visitor.PostPreProcessFilterSplittingVisitor;
+import org.geotools.filter.visitor.ISOPostPreProcessFilterSplittingVisitor;
 import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.iso.ColumnMetadata;
@@ -414,12 +414,26 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         else {
             featureSource = ((JDBCFeatureStore)source).getFeatureSource();
         }
-
+        
+        boolean issupported = false;
+        if(original instanceof BinarySpatialOperator) {
+        	Literal lt = null;
+        	BinarySpatialOperator op = (BinarySpatialOperator)original;
+        	Expression e1 = op.getExpression1();
+        	Expression e2 = op.getExpression2();
+        	if(e1 instanceof Literal) {
+        		lt = (Literal)e1;
+        	}else if(e2 instanceof Literal) {
+        		lt = (Literal)e2;
+        	}
+        	Geometry g = (Geometry) lt.getValue();
+            issupported = getDataStore().getSQLDialect().acceptable(g);
+        }
         Filter[] split = new Filter[2];
         if ( original != null ) {
             //create a filter splitter
-            PostPreProcessFilterSplittingVisitor splitter = new PostPreProcessFilterSplittingVisitor(getDataStore()
-                    .getFilterCapabilities(), featureSource.getSchema(), null);
+        	ISOPostPreProcessFilterSplittingVisitor splitter = new ISOPostPreProcessFilterSplittingVisitor(getDataStore()
+                    .getFilterCapabilities(), featureSource.getSchema(), issupported);
             original.accept(splitter, null);
         
             split[0] = splitter.getFilterPre();
@@ -619,29 +633,13 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         //create the reader
         FeatureReader<SimpleFeatureType, SimpleFeature> reader;
         
+        SQLDialect dialect = getDataStore().getSQLDialect();
         try {            
-            SQLDialect dialect = getDataStore().getSQLDialect();
+            
 
             // allow dialect to override this if needed
             if(getState().getTransaction() == Transaction.AUTO_COMMIT) {
                 cx.setAutoCommit(dialect.isAutoCommitQuery());
-            }
-            Literal lt = null;
-            if(postFilter instanceof BinarySpatialOperator) {
-            	BinarySpatialOperator op = (BinarySpatialOperator)query.getFilter();
-            	Expression e1 = op.getExpression1();
-            	Expression e2 = op.getExpression2();
-            	if(e1 instanceof Literal) {
-            		lt = (Literal)e1;
-            	}else if(e2 instanceof Literal) {
-            		lt = (Literal)e2;
-            	}
-            	Geometry g = (Geometry) lt.getValue();
-                if(!dialect.acceptable(preFilter, g)) {
-                	String sql = getDataStore().selectSQL(querySchema, preQuery.ALL);
-                	reader = new JDBCunsupportedQueryReader(sql, cx, this, querySchema, query.getHints(), preFilter, g);
-                	postFilterRequired = false;
-                }
             }
             
             if (query.getJoins().isEmpty()) {
@@ -691,6 +689,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
 
         // if post filter, wrap it
         if (postFilterRequired) {
+        	
             reader = new ISOFilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
             if(!returnedSchema.equals(querySchema)) {
                 reader = new ISOReTypeFeatureReader(reader, returnedSchema);

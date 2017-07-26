@@ -25,7 +25,7 @@ import org.geotools.data.Query;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.iso.geojson.feature.FeatureJSON;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;

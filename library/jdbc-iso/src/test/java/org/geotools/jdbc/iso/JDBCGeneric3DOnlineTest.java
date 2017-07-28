@@ -140,7 +140,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		// "," + aname(NAME) + ":String");
 		// poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION,
 		// 3);
-		crs = CRS.decode("EPSG:" + getEpsgCode());
+		//crs = CRS.decode("EPSG:" + getEpsgCode());
+		crs = DefaultGeographicCRS.WGS84_3D;
 		builder = new ISOGeometryBuilder(crs);
 	}
 

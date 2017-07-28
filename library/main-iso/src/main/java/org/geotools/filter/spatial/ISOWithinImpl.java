@@ -16,6 +16,7 @@
  */
 package org.geotools.filter.spatial;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
@@ -71,8 +72,8 @@ public class ISOWithinImpl extends ISOAbstractPreparedGeometryFilter implements 
 
 		//Envelope envLeft = left.getEnvelopeInternal();
 		//Envelope envRight = right.getEnvelopeInternal();
-		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
-		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
+		ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
+    	ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
 		
 		 if(envRight.contains((BoundingBox)envLeft)) {
 			//TODO previous code HACK!! sfcgal is so slow : return left.within(right);

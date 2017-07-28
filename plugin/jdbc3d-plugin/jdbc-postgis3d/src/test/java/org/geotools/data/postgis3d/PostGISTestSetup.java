@@ -88,12 +88,12 @@ public class PostGISTestSetup extends JDBCTestSetup {
 	protected Properties createOfflineFixture() {
 		Properties fixture = new Properties();
 		fixture.put("driver", "org.postgresql.Driver");
-		fixture.put("url", "jdbc:postgresql://localhost/test");
+		fixture.put("url", "jdbc:postgresql://localhost/gisdb");
 		fixture.put("host", "localhost");
 		fixture.put("database", "test");
 		fixture.put("port", "5432");
-		fixture.put("user", "postgres");
-		fixture.put("password", "postgres");
+		fixture.put("user", "gis");
+		fixture.put("password", "gis");
 		return fixture;
 	}
 

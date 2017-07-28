@@ -58,7 +58,7 @@ public abstract class JDBC3DOnlineTest extends JDBCGeneric3DOnlineTest {
 
     @Override
     protected int getEpsgCode() {
-        return 4326;
+        return 4329;
     }
     
     @Override

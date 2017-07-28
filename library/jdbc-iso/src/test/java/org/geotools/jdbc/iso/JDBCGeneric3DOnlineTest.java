@@ -1100,6 +1100,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			assertTrue(iterator.hasNext());
 
 			while (iterator.hasNext()) {
+				System.out.println("has Next");
 				SimpleFeature iter_feature = iterator.next();
 				assertTrue(sf_result.equals((Geometry) iter_feature.getDefaultGeometry()));
 			}
@@ -1130,8 +1131,10 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	}
 
 	protected void tearDownInternal() {
-		if (iterator_is_open)
+		if (iterator_is_open){
+			System.out.println("tearDown");
 			iterator.close();
+		}
 	}
 
 	//

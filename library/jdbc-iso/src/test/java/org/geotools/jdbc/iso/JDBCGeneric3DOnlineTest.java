@@ -18,26 +18,19 @@ package org.geotools.jdbc.iso;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import java.util.Arrays;
 import java.util.List;
-import org.geotools.data.DataStore;
-import org.geotools.data.FeatureWriter;
-import org.geotools.data.ISODataUtilities;
 
+import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -83,7 +76,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 	protected static final String NAME = "name";
 
-	protected static final FilterFactory FF = CommonFactoryFinder.getFilterFactory(null);
+	protected static final FilterFactory FF = new ISOFilterFactoryImpl();
 
 	protected static Hints h = new Hints();
 	// protected SimpleFeatureType poly3DType;
@@ -147,12 +140,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		// "," + aname(NAME) + ":String");
 		// poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION,
 		// 3);
-
-		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-		builder = new ISOGeometryBuilder(h);
-
 		crs = CRS.decode("EPSG:" + getEpsgCode());
+		builder = new ISOGeometryBuilder(crs);
 	}
 
 	protected Integer getNativeSRID() {
@@ -213,7 +202,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Point p = builder.createPoint(dp);
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.setCRS(crs);
 		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Point.class);
 		b.add(aname(NAME), String.class);
@@ -297,7 +286,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Curve c = makeCurve(dp_list);
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.setCRS(crs);
 		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Curve.class);
 		b.add(aname(NAME), String.class);
@@ -392,7 +381,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Surface sf = makeSimpleSurface(dp_list);
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.setCRS(crs);
 		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Surface.class);
 		b.add(aname(NAME), String.class);
@@ -487,7 +476,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		Solid sld = makeSolid(surfaces);
 
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.setCRS(crs);
 		b.add(aname(ID), Integer.class);
 		b.add(aname(GEOM), Solid.class);
 		b.add(aname(NAME), String.class);
@@ -1120,7 +1109,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 	 */
 	protected SimpleFeatureIterator getIntersectionQuery(SimpleFeatureSource fc, String geom_descriptor,
 			Geometry geometry) throws IOException {
-		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
+		FilterFactory2 ff = new ISOFilterFactoryImpl();
 		Filter filter = ff.intersects(ff.property(geom_descriptor), ff.literal(geometry));
 		Query query = new Query(getPoint3d(), filter, new String[] { geom_descriptor });
 		SimpleFeatureCollection features = fc.getFeatures(query);

@@ -1,4 +1,4 @@
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
@@ -29,6 +29,7 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
+import org.geotools.iso.data.geojson.GeoJSONDataStore;
 import org.geotools.test.TestData;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org

@@ -1,4 +1,4 @@
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
@@ -27,6 +27,7 @@ import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.iso.data.geojson.GeoJSONDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.test.TestData;
 import org.junit.Before;

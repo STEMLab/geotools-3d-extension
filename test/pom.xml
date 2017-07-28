@@ -65,6 +65,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-geojson-iso</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Provides GUI components -->
     <dependency>
         <groupId>org.geotools</groupId>

@@ -1,4 +1,4 @@
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
@@ -42,7 +42,7 @@ public class GeoJSONDataStoreFactory implements DataStoreFactorySpi {
 
 	@Override
 	public String getDisplayName() {
-		return "GeoJSON";
+		return "GeoJSON for ISO";
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class GeoJSONDataStoreFactory implements DataStoreFactorySpi {
 	public synchronized boolean isAvailable() {
 		if (isAvailable == null) {
 			try {
-				Class geoJSONReaderType = Class.forName("org.geotools.geojson.feature.FeatureJSON");
+				Class geoJSONReaderType = Class.forName("org.geotools.iso.geojson.feature.FeatureJSON");
 				isAvailable = true;
 			} catch (ClassNotFoundException e) {
 				isAvailable = false;

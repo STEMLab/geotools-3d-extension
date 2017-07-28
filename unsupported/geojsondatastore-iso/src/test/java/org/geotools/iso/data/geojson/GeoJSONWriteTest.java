@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 
 import static org.junit.Assert.*;
 
@@ -47,6 +47,8 @@ import org.geotools.factory.FactoryFinder;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.geotools.iso.data.geojson.GeoJSONDataStoreFactory;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.test.TestData;
 import org.junit.After;
 import org.junit.Before;
@@ -55,10 +57,8 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Point;
 
 /**
  * Informal test used to document expected functionality for workshop.
@@ -166,8 +166,9 @@ public class GeoJSONWriteTest {
 
         // new feature to add!
         // 45.52, -122.681944, Portland, 800, 2014
-        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-        Point point = geometryFactory.createPoint(new Coordinate(-122.681944, 45.52));
+        
+        ISOGeometryBuilder gBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+        Point point = gBuilder.createPoint(gBuilder.createDirectPosition(new double[]{-122.681944, 45.52}));
         SimpleFeature feature = SimpleFeatureBuilder.build(type,
                 new Object[] { 45.52, -122.681944, "Portland", 800, 2014, point }, "feature-10");
         System.out.println(feature);
@@ -264,9 +265,9 @@ public class GeoJSONWriteTest {
         DefaultFeatureCollection collection = new DefaultFeatureCollection();
 
         // 45.52, -122.681944, Portland, 800, 2014
-        GeometryFactory gf = JTSFactoryFinder.getGeometryFactory();
-        Point portland = gf.createPoint(new Coordinate(45.52, -122.681944));
-
+        ISOGeometryBuilder gBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+        Point portland = gBuilder.createPoint(gBuilder.createDirectPosition(new double[]{45.52, -122.681944}));
+        
         f = SimpleFeatureBuilder.build(type,
                 new Object[] { 45.52, -122.681944, "Portland", 800, 2014, portland },
                 "locations.1");

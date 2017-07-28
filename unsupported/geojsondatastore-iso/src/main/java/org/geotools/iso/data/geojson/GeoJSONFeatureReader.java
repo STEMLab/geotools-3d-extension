@@ -1,4 +1,4 @@
-package org.geotools.data.geojson;
+package org.geotools.iso.data.geojson;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;

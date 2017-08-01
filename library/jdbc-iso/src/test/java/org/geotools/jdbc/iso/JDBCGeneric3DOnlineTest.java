@@ -50,6 +50,7 @@ import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
@@ -141,7 +142,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		// poly3DType.getGeometryDescriptor().getUserData().put(Hints.COORDINATE_DIMENSION,
 		// 3);
 		crs = CRS.decode("EPSG:" + getEpsgCode());
-		//crs = DefaultGeographicCRS.WGS84_3D;
+		// crs = DefaultGeographicCRS.WGS84_3D;
 		builder = new ISOGeometryBuilder(crs);
 	}
 
@@ -157,19 +158,19 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		assertEquals(new Integer(getEpsgCode()), CRS.lookupEpsgCode(crs, false));
 		assertEquals(getNativeSRID(), schema.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
 		assertEquals(3, schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
-		
+
 		schema = dataStore.getSchema(tname(getLine3d()));
 		crs = schema.getGeometryDescriptor().getCoordinateReferenceSystem();
 		assertEquals(new Integer(getEpsgCode()), CRS.lookupEpsgCode(crs, false));
 		assertEquals(getNativeSRID(), schema.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
 		assertEquals(3, schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
-		
+
 		schema = dataStore.getSchema(tname(getPoly3d()));
 		crs = schema.getGeometryDescriptor().getCoordinateReferenceSystem();
 		assertEquals(new Integer(getEpsgCode()), CRS.lookupEpsgCode(crs, false));
 		assertEquals(getNativeSRID(), schema.getGeometryDescriptor().getUserData().get(JDBCDataStore.JDBC_NATIVE_SRID));
 		assertEquals(3, schema.getGeometryDescriptor().getUserData().get(Hints.COORDINATE_DIMENSION));
-		
+
 		schema = dataStore.getSchema(tname(getSolid()));
 		crs = schema.getGeometryDescriptor().getCoordinateReferenceSystem();
 		assertEquals(new Integer(getEpsgCode()), CRS.lookupEpsgCode(crs, false));
@@ -212,6 +213,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			}
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -295,6 +297,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			}
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -390,6 +393,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 				assertTrue(sf.equals((Geometry) polygon));
 			}
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -479,6 +483,7 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			}
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -650,18 +655,17 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, c1);
 			assertTrue(iterator.hasNext());
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(point.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
-
+			
+			checkGeometryinQueryResult(point);
+			
 		} catch (Exception e) {
-			fail();
-			// TODO Auto-generated catch block
+			fail(e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
+
+
 
 	/*
 	 * Curve & Point False
@@ -684,10 +688,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			assertFalse(iterator.hasNext());
 
 		} catch (Exception e) {
-			
-			// TODO Auto-generated catch block
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 
 	}
@@ -716,14 +718,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, surf);
 			assertTrue(iterator.hasNext());
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(point.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+			checkGeometryinQueryResult(point);
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -749,8 +748,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			assertFalse(iterator.hasNext());
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 
 	}
@@ -784,16 +783,13 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, sld);
 
-			//assertTrue(iterator.hasNext());
+			// assertTrue(iterator.hasNext());
 
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(point.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+			checkGeometryinQueryResult(point);
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 
 	}
@@ -829,13 +825,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, c_test);
 			assertTrue(iterator.hasNext());
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(c_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
-		}catch (Exception e) {
+
+			checkGeometryinQueryResult(c_result);
+		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -858,8 +852,8 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			assertFalse(iterator.hasNext());
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 
 	}
@@ -892,13 +886,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, q_sf);
 			assertTrue(iterator.hasNext());
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(c_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+
+			checkGeometryinQueryResult(c_result);
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -930,13 +922,13 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, q_sf);
 			assertTrue(iterator.hasNext());
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(c_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+
+
+			checkGeometryinQueryResult(c_result);
+			
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -961,9 +953,9 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 			iterator = getIntersectionQuery(fc, geom_descriptor, q_sf);
 			assertFalse(iterator.hasNext());
 
-		}catch (Exception e) {
+		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -1007,23 +999,16 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, sld);
 
-			if (!iterator.hasNext()) {
-				System.out.println("Query don't make Result..");
-				assertTrue(false);
-			}
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(c_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+			checkGeometryinQueryResult(c_result);
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
 	/*
-	 * Solid Contains Curve
+	 * Solid & Curve
 	 */
 	public void testIntersectSolidInCurveSchema2() {
 		try {
@@ -1061,18 +1046,11 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			iterator = getIntersectionQuery(fc, geom_descriptor, sld);
 
-			if (!iterator.hasNext()) {
-				System.out.println("Query don't make Result..");
-				assertTrue(false);
-			}
-			while (iterator.hasNext()) {
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(c_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+			checkGeometryinQueryResult(c_result);
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
@@ -1107,25 +1085,383 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 
 			assertTrue(iterator.hasNext());
 
-			while (iterator.hasNext()) {
-				System.out.println("has Next");
-				SimpleFeature iter_feature = iterator.next();
-				assertTrue(sf_result.equals((Geometry) iter_feature.getDefaultGeometry()));
-			}
+			checkGeometryinQueryResult(sf_result);
 
 		} catch (Exception e) {
+			fail(e.getMessage());
 			e.printStackTrace();
-			fail();
 		}
 	}
 
-	/**
-	 * @param fc
-	 * @param geom_descriptor
-	 * @param geometry
-	 * @return
-	 * @throws IOException
+	
+	/*
+	 * Within Curve & Point True
 	 */
+	public void testWithinCurveInPointSchema() {
+		try {
+			DirectPosition p1 = builder.createDirectPosition(new double[] { 4, 2, 1 });
+			Point p_result = builder.createPoint(p1);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoint3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+			// Curve True
+
+			List<DirectPosition> dp_list1 = new ArrayList<DirectPosition>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 3, 2, 1 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 2, 1 }));
+
+			Curve c1 = makeCurve(dp_list1);
+
+			iterator = getWithinQuery(fc, geom_descriptor, c1);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(p_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	/*
+	 * Within Surface & Point True
+	 */
+	public void testWithinSurfaceInPointSchema() {
+		try {
+			DirectPosition p1 = builder.createDirectPosition(new double[] { 4, 2, 1 });
+			Point p_result = builder.createPoint(p1);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoint3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+			
+			// Surface True
+			List<Position> dp_list2 = new ArrayList<Position>();
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 0, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 5, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 5, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 1 }));
+			Surface q_sf = makeSimpleSurface(dp_list2);
+			
+			iterator = getWithinQuery(fc, geom_descriptor, q_sf);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(p_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	
+	/*
+	 * Within Solid & Curve Schema
+	 */
+	public void testWithinSolidInCurveSchema() {
+		try {
+			DirectPosition c1 = builder.createDirectPosition(new double[] { 1, 1, 0 });
+			DirectPosition c2 = builder.createDirectPosition(new double[] { 2, 2, 0 });
+			DirectPosition c3 = builder.createDirectPosition(new double[] { 4, 2, 1 });
+			DirectPosition c4 = builder.createDirectPosition(new double[] { 5, 1, 1 });
+
+			List<DirectPosition> dp_list = new ArrayList<DirectPosition>();
+			dp_list.add(c1);
+			dp_list.add(c2);
+			dp_list.add(c3);
+			dp_list.add(c4);
+
+			Curve c_result = makeCurve(dp_list);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getLine3d()));
+
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// True
+			// make Solid
+			List<Position> dp_list1 = new ArrayList<Position>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 0, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 5, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 5, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 5, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 5, 5 }));
+
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list1);
+			Solid sld = makeSolid(surfaces);
+
+			iterator = getWithinQuery(fc, geom_descriptor, sld);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(c_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Within Surface & Curve Schema
+	 */
+	public void testWithinSurfaceInCurveSchema() {
+		try {
+			DirectPosition c1 = builder.createDirectPosition(new double[] { 1, 1, 0 });
+			DirectPosition c2 = builder.createDirectPosition(new double[] { 2, 2, 0 });
+			DirectPosition c3 = builder.createDirectPosition(new double[] { 4, 2, 1 });
+			DirectPosition c4 = builder.createDirectPosition(new double[] { 5, 1, 1 });
+
+			List<DirectPosition> dp_list = new ArrayList<DirectPosition>();
+			dp_list.add(c1);
+			dp_list.add(c2);
+			dp_list.add(c3);
+			dp_list.add(c4);
+
+			Curve c_result = makeCurve(dp_list);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getLine3d()));
+
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// Surface True
+			List<Position> dp_list2 = new ArrayList<Position>();
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 0, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 5, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 5, 1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 1 }));
+			Surface q_sf = makeSimpleSurface(dp_list2);
+
+			iterator = getWithinQuery(fc, geom_descriptor, q_sf);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(c_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Surface & Surface True
+	 */
+	public void testWithinSurfaceInSurfaceSchema() {
+		try {
+			List<Position> dp_list = new ArrayList<>();
+			dp_list.add(builder.createDirectPosition(new double[] { 1, 1, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 2, 2, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 4, 2, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 5, 1, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 1, 1, 0 }));
+
+			Surface sf_result = makeSimpleSurface(dp_list);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoly3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// Surface True
+			List<Position> dp_list2 = new ArrayList<Position>();
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 0 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 1, 0 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 2, 0 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 2, 0 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 0 }));
+			Surface q_sf = makeSimpleSurface(dp_list2);
+
+			iterator = getWithinQuery(fc, geom_descriptor, q_sf);
+
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(sf_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Within Solid & Surface True
+	 */
+	public void testWithinSolidInSurfaceSchema() {
+		try {
+			List<Position> dp_list = new ArrayList<>();
+			dp_list.add(builder.createDirectPosition(new double[] { 1, 1, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 2, 2, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 4, 2, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 5, 1, 0 }));
+			dp_list.add(builder.createDirectPosition(new double[] { 1, 1, 0 }));
+
+			Surface sf_result = makeSimpleSurface(dp_list);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoly3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// make Solid True
+			List<Position> dp_list1 = new ArrayList<Position>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 0, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 5, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 5, -5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 5, 5, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 5, 5 }));
+
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list1);
+			Solid sld = makeSolid(surfaces);
+
+			iterator = getWithinQuery(fc, geom_descriptor, sld);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(sf_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Within Solid & Solid True
+	 */
+	public void testWithinSolidInSolidSchema() {
+		try {
+			List<Position> dp_list1 = new ArrayList<Position>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 1, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 1, 1, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 1, 0, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 0, 1 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 0, 1, 1 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 1, 1, 1 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 1, 0, 1 }));
+
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list1);
+			Solid sl_result = makeSolid(surfaces);
+
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getSolid()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// make Solid True
+			List<Position> dp_list2 = new ArrayList<Position>();
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, -5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 0, -5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 5, -5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 5, -5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 0, 5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 0, 5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 5, 5, 5 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 0, 5, 5 }));
+
+			List<OrientableSurface> surfaces2 = makeOrientableSurfacesOfCube(dp_list2);
+			Solid sld = makeSolid(surfaces2);
+
+			iterator = getWithinQuery(fc, geom_descriptor, sld);
+			assertTrue(iterator.hasNext());
+			checkGeometryinQueryResult(sl_result);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Within Curve & Point False
+	 */
+	public void testWithinCurveInPointSchemaFalse() {
+		try {
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoint3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+
+			// Curve False
+			List<DirectPosition> dp_list1 = new ArrayList<DirectPosition>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 13, 12, 1 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 15, 12, 1 }));
+
+			Curve c2 = makeCurve(dp_list1);
+
+			iterator = getWithinQuery(fc, geom_descriptor, c2);
+
+			assertFalse(iterator.hasNext());
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	
+	/*
+	 * Within Surface & Surface False
+	 */
+	public void testWithinSurfaceInSurfaceSchemaFalse() {
+		try {
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoly3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+	
+			// Surface True
+			List<Position> dp_list2 = new ArrayList<Position>();
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 0, -1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 2, -1 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 2, 2 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 0, 2 }));
+			dp_list2.add(builder.createDirectPosition(new double[] { 1, 0, -1 }));
+			Surface q_sf = makeSimpleSurface(dp_list2);
+	
+			iterator = getWithinQuery(fc, geom_descriptor, q_sf);
+	
+			assertFalse(iterator.hasNext());
+	
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Within Solid & Surface False
+	 */
+	public void testWithinSolidInSurfaceSchemaFalse() {
+		try {
+			SimpleFeatureSource fc = dataStore.getFeatureSource(tname(getPoly3d()));
+			FeatureType schema = fc.getSchema();
+			String geom_descriptor = schema.getGeometryDescriptor().getLocalName();
+	
+			// make Solid True
+			List<Position> dp_list1 = new ArrayList<Position>();
+			dp_list1.add(builder.createDirectPosition(new double[] { 4, 0, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 8, 0, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 8, 4, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 4, 4, 0 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 4, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 8, 0, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 8, 4, 5 }));
+			dp_list1.add(builder.createDirectPosition(new double[] { 4, 4, 5 }));
+
+			List<OrientableSurface> surfaces = makeOrientableSurfacesOfCube(dp_list1);
+			Solid sld = makeSolid(surfaces);
+
+			iterator = getWithinQuery(fc, geom_descriptor, sld);
+
+			assertFalse(iterator.hasNext());
+	
+		} catch (Exception e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	
+	
 	protected SimpleFeatureIterator getIntersectionQuery(SimpleFeatureSource fc, String geom_descriptor,
 			Geometry geometry) throws IOException {
 		FilterFactory2 ff = new ISOFilterFactoryImpl();
@@ -1138,13 +1474,51 @@ public abstract class JDBCGeneric3DOnlineTest extends JDBCTestSupport {
 		return iterator;
 	}
 
+	protected SimpleFeatureIterator getContainsQuery(SimpleFeatureSource fc, String geom_descriptor, Geometry geometry)
+			throws IOException {
+		FilterFactory2 ff = new ISOFilterFactoryImpl();
+		Filter filter = ff.contains(ff.property(geom_descriptor), ff.literal(geometry));
+		Query query = new Query(getPoint3d(), filter, new String[] { geom_descriptor });
+		SimpleFeatureCollection features = fc.getFeatures(query);
+		SimpleFeatureIterator iterator = features.features();
+
+		iterator_is_open = true;
+		return iterator;
+	}
+	
+	protected SimpleFeatureIterator getWithinQuery(SimpleFeatureSource fc, String geom_descriptor, Geometry geometry)
+			throws IOException {
+		FilterFactory2 ff = new ISOFilterFactoryImpl();
+		Filter filter = ff.within(ff.property(geom_descriptor), ff.literal(geometry));
+		Query query = new Query(getPoint3d(), filter, new String[] { geom_descriptor });
+		SimpleFeatureCollection features = fc.getFeatures(query);
+		SimpleFeatureIterator iterator = features.features();
+
+		iterator_is_open = true;
+		return iterator;
+	}
+	
+
 	protected void tearDownInternal() {
-		if (iterator_is_open){
-			System.out.println("tearDown");
+		if (iterator_is_open) {
 			iterator.close();
 		}
 	}
 
+	/**
+	 * @param geom
+	 */
+	protected void checkGeometryinQueryResult(Primitive geom) {
+		boolean match = false;
+		while (iterator.hasNext()) {
+			SimpleFeature iter_feature = iterator.next();
+			if (geom.equals((Geometry) iter_feature.getDefaultGeometry())){
+				match = true;
+			}
+		}
+		assertTrue(match);
+	}
+	
 	//
 	// public void testCreateSchemaAndInsertPolyTriangle() throws Exception {
 	// /*LiteCoordinateSequenceFactory csf = new

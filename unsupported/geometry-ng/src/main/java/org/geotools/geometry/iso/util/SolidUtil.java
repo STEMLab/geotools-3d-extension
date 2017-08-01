@@ -443,8 +443,8 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 			 sfList.add(createSurface(temp));			 
 		 }
 		 //for more fast creating, I don't add below in loop.
-		 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(points.size()-1),points.get(0),h);
-		 sfList.add(createSurface(temp));
+		 //List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(points.size()-1),points.get(0),h);
+		 //sfList.add(createSurface(temp));
 		 
 		 Surface[] lids = makeLid(points,h);
 		 sfList.add(lids[0]);

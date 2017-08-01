@@ -171,14 +171,13 @@ public class PostGISDialect extends BasicSQLDialect {
         }
     };
     
-    public boolean acceptable(Filter filter, Geometry type) {
+    public boolean acceptable(Geometry type) {
     	boolean acceptable = false;
-    	if(TYPE_TO_CLASS_MAP.get(type) != null) {
-    		FilterCapabilities fc = FilterToSqlHelper.createFilterCapabilities(false);
-    		if(fc.supports(filter) && type instanceof Solid) {
-    			acceptable = true;
-    		}
-    	}
+
+		if(!(type instanceof Solid)) {
+			acceptable = true;
+		}
+    	
     	return acceptable;
     }
     
@@ -440,12 +439,7 @@ public class PostGISDialect extends BasicSQLDialect {
                         if (env != null){
                             CoordinateReferenceSystem crs = ((GeometryDescriptor) att)
                                     .getCoordinateReferenceSystem();
-                            double[] lowerCorner = env.getLowerCorner().getDirectPosition().getCoordinate();
-                            double[] upperCorner = env.getUpperCorner().getDirectPosition().getCoordinate();
-                            if(env.getDimension() == 2) 
-                            	result.add(new ReferencedEnvelope(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], crs));
-                            else if(env.getDimension() == 3)
-                            	result.add(new ReferencedEnvelope3D(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], lowerCorner[2], upperCorner[2], crs));
+                            result.add(ReferencedEnvelope.create(env, crs));
                         }
                     }
                     rs.close();

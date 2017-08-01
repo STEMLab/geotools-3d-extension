@@ -201,7 +201,7 @@ public abstract class SQLDialect {
         throws SQLException {
         return true;
     }
-    public boolean acceptable(Filter filter, Geometry type) {
+    public boolean acceptable(Geometry type) {
     	return true;
     }
     /**

@@ -131,14 +131,14 @@ class FilterToSqlHelper {
 
         // adding the spatial filters support
         //caps.addType(BBOX.class);
-        caps.addType(Contains.class);
+        //caps.addType(Contains.class);
         //caps.addType(Crosses.class);
         //caps.addType(Disjoint.class);
-        caps.addType(Equals.class);
-        //caps.addType(Intersects.class);
+        //caps.addType(Equals.class);
+        caps.addType(Intersects.class);
         //caps.addType(Overlaps.class);
         //caps.addType(Touches.class);
-        caps.addType(Within.class);
+        //caps.addType(Within.class);
         //caps.addType(DWithin.class);
         //caps.addType(Beyond.class);
         

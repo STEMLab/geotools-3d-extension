@@ -169,11 +169,11 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
         
         //set up hints
         hints = new HashSet<Hints.Key>();
-        hints.add( Hints.JTS_GEOMETRY_FACTORY );
-        hints.add( Hints.JTS_COORDINATE_SEQUENCE_FACTORY );
+        //hints.add( Hints.JTS_GEOMETRY_FACTORY );
+        //hints.add( Hints.JTS_COORDINATE_SEQUENCE_FACTORY );
         
         //add subclass specific hints
-        addHints( hints );
+        //addHints( hints );
         
         //make hints unmodifiable
         hints = Collections.unmodifiableSet( hints );

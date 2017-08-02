@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,33 +26,22 @@ import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.csv.iso.CSVDataStoreFactory;
 import org.geotools.data.geojson.GeoJSONDataStoreFactory;
-import org.geotools.data.jdbc.iso.FilterToSQL;
-//import org.geotools.data.kairos.KairosNGDataStoreFactory;
-import org.geotools.data.memory.MemoryDataStore;
-import org.geotools.data.postgis3d.PostGISDialect;
-import org.geotools.data.postgis3d.PostgisFilterToSQL;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.FunctionFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
-import org.geotools.filter.function.FilterFunction_ISOunion;
 import org.geotools.filter.function.ISODefaultFunctionFactory;
-import org.geotools.filter.spatial.ISOEqualsImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
-import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
-import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 //import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
@@ -70,16 +58,13 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
-import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
-import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
@@ -620,7 +605,6 @@ public class DemoTest extends JFrame{
 				Query query = new Query(typeName, filter, new String[] { name });
 				SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
 				SimpleFeatureCollection features = source.getFeatures(query);
-
 				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 				table.setModel(model);*/
 			//}
@@ -638,7 +622,6 @@ public class DemoTest extends JFrame{
 		/*GMLConfiguration configuration = new GMLConfiguration();
 		InputStream input = getClass().getResourceAsStream("geometry.xml");
         String xpath = "/pointMember | /lineStringMember | /polygonMember";
-
         //String xpath = "/child::*";
         StreamingParser parser = new StreamingParser(configuration, input, xpath);
         Object o = parser.parse();//point
@@ -657,7 +640,6 @@ public class DemoTest extends JFrame{
 		
 			document = factory.newDocumentBuilder().parse(in);
 		
-
 	        //update hte schema location
 	        document.getDocumentElement().removeAttribute("xsi:schemaLocation");
 	

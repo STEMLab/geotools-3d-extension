@@ -2,12 +2,11 @@ package org.geotools.geometry.iso.util;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
@@ -21,13 +20,13 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class SolidUtil {
 	
-
 public static Solid makeFromEnvelope(ISOGeometryBuilder builder, DirectPosition l, DirectPosition u) {
 	    
 	    DirectPosition position1 = builder.createDirectPosition(new double[] { l.getOrdinate(0), u.getOrdinate(1), l.getOrdinate(2) }); //LUL
@@ -154,7 +153,7 @@ public static Solid makeFromEnvelope(ISOGeometryBuilder builder, DirectPosition 
             surfaces.add(surface4);
             surfaces.add(surface5);
             surfaces.add(surface6);
-
+ 
             Shell exteriorShell = builder.createShell(surfaces);
             List<Shell> interiors = new ArrayList<Shell>();
 
@@ -302,4 +301,238 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 
 	return solid;
 }
+
+/////ForTest
+
+
+	public static List<DirectPosition> make3DPositions(ISOGeometryBuilder gb3D,DirectPosition pa, DirectPosition pb, double height){
+		DirectPosition p1 = gb3D.createDirectPosition(new double[]{pa.getOrdinate(0),pa.getOrdinate(1),0});
+		DirectPosition p2 = gb3D.createDirectPosition(new double[]{pa.getOrdinate(0),pa.getOrdinate(1),height});
+		DirectPosition p3 = gb3D.createDirectPosition(new double[]{pb.getOrdinate(0),pb.getOrdinate(1),0});
+		DirectPosition p4 = gb3D.createDirectPosition(new double[]{pb.getOrdinate(0),pb.getOrdinate(1),height});
+		
+		List<DirectPosition> pointList = new ArrayList<DirectPosition>();
+		pointList.add(p1);
+		pointList.add(p3);
+		pointList.add(p4);
+		pointList.add(p2);
+		pointList.add(p1);
+		
+		return pointList;
+	}
+	public static Surface createSurface(ISOGeometryBuilder gb3D, List<DirectPosition> upper){ //create one surface
+		
+		LineString line = gb3D.createLineString(upper);
+		
+		ArrayList<CurveSegment>cs1 = new ArrayList();
+		cs1.add(line);
+		
+				
+		OrientableCurve curve1 = gb3D.createCurve(cs1);
+       List<OrientableCurve> orientableCurves1 = new ArrayList<OrientableCurve>();
+       orientableCurves1.add(curve1);
+       
+            
+       Ring extRing1 = gb3D.createRing(orientableCurves1);
+      
+       SurfaceBoundary sb1 = gb3D.createSurfaceBoundary(extRing1, new ArrayList<Ring>());
+       
+       Surface surface = gb3D.createSurface(sb1);
+       
+		
+		return surface;
+	}
+	public static Solid createSolid(ISOGeometryBuilder gb3D, List<Surface> list){
+			
+		List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
+		for(int i = 0 ; i < list.size(); i++){
+			surfaces.add(list.get(i));
+		}
+		Shell exteriorShell = gb3D.createShell(surfaces);
+       List<Shell> interiors = new ArrayList<Shell>();
+
+       SolidBoundary solidBoundary = gb3D.createSolidBoundary(exteriorShell, interiors);
+       Solid solid = gb3D.createSolid(solidBoundary);
+       
+		return solid;
+	}
+	public static Surface[] makeLid(ISOGeometryBuilder gb3D,List<DirectPosition> coordList, double height){
+		List<DirectPosition> upper = new ArrayList<DirectPosition>();
+		List<DirectPosition> lower = new ArrayList<DirectPosition>();
+		List<DirectPosition> reversedLower = new ArrayList<DirectPosition>();
+		Surface upSurface = null;
+		Surface downSurface = null;
+		try{
+			for(int i = 0 ; i < coordList.size(); i++){
+				double[] point = coordList.get(i).getCoordinate();
+				DirectPosition tempUpper = gb3D.createDirectPosition(new double[]{point[0],point[1],height});
+				DirectPosition tempLower = gb3D.createDirectPosition(new double[]{point[0],point[1],0});
+				upper.add(tempUpper);	
+				lower.add(tempLower);
+			}
+			DirectPosition firstPointLower = gb3D.createDirectPosition(new double[]{coordList.get(0).getCoordinate()[0],coordList.get(0).getCoordinate()[1],0});
+			DirectPosition firstPointUpper = gb3D.createDirectPosition(new double[]{coordList.get(0).getCoordinate()[0],coordList.get(0).getCoordinate()[1],height});
+			
+			lower.add(firstPointLower);
+			upper.add(firstPointUpper);
+				
+			Collections.reverse(lower);
+			upSurface = createSurface(gb3D,upper);
+			downSurface = createSurface(gb3D, lower);
+		}
+		catch (Exception e) {
+				// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+				e.printStackTrace();
+		}
+		return new Surface[]{upSurface,downSurface};
+	}
+	
+	public static Solid createSolidWithHeightForTest(){
+		Solid s;
+		double h = 10;
+		
+		List<DirectPosition>points = new ArrayList<DirectPosition>();
+		ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		//DirectPosition p1 = gb.createDirectPosition(new double[]{0,0});
+		//DirectPosition p2 = gb.createDirectPosition(new double[]{10,0});
+		//DirectPosition p3 = gb.createDirectPosition(new double[]{10,10});
+		//DirectPosition p4 = gb.createDirectPosition(new double[]{0,10});
+		
+		DirectPosition p1 = gb3D.createDirectPosition(new double[]{5,0,0});
+		DirectPosition p2 = gb3D.createDirectPosition(new double[]{2,5,0});
+		DirectPosition p3 = gb3D.createDirectPosition(new double[]{7,10,0});
+		DirectPosition p4 = gb3D.createDirectPosition(new double[]{12,5,0});
+		DirectPosition p5 = gb3D.createDirectPosition(new double[]{10,0,0});
+		
+		
+		points.add(p5);
+		points.add(p4);
+		points.add(p3);
+		points.add(p2);
+		points.add(p1);
+		points.add(p5);
+	
+		List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
+					
+		return s;
+	}
+	public static List<Surface> makeSurfaces(ISOGeometryBuilder gb3D,List<DirectPosition>points, double h){
+		List<Surface>sfList = new ArrayList<Surface>();
+		 for(int i = 0 ; i < points.size()-1; i++){
+			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(gb3D,points.get(i),points.get(i+1),h);
+			 sfList.add(createSurface(gb3D,temp));			 
+		 }		 
+		 Surface[] lids = makeLid(gb3D,points,h);
+		 sfList.add(lids[0]);
+		 sfList.add(lids[1]);
+		 
+		 return sfList;
+	}
+	public static List<DirectPosition>makeDirectPositions(ISOGeometryBuilder gb3D,Object geometry){
+		List<DirectPosition>points = null;
+		if(geometry instanceof com.vividsolutions.jts.geom.MultiPolygon){
+			points = makeDirectPositionsFromMultiPolygon(gb3D,(MultiPolygon)geometry);
+		}
+		else if(geometry instanceof com.vividsolutions.jts.geom.Polygon){
+			points = makeDirectPositionsFromPolygon(gb3D,(Polygon)geometry);
+		}
+		
+		return points;
+		
+	}
+	/*
+	public static List<DirectPositioionsFromSurface(Surface s){
+		List<DirectPosition>points;
+		OrientableSurface os = (OrientableSurface)s.getBoundary();
+		List<OrientableCurve>cl = (List<OrientableCurve>) os.getBoundary();
+		
+	}
+	 * */
+	public static List<DirectPosition>makeDirectPositionsFromMultiPolygon(ISOGeometryBuilder gb,MultiPolygon mp){
+		Coordinate[] coordList = mp.getCoordinates();
+		 //PointArray points = gb.createPointArray();
+		 List<DirectPosition> points = new ArrayList<DirectPosition>();
+		 
+		 for(int i = 0 ; i < coordList.length ; i++){
+			 //change jts.Coordinate to primitive.DirectPosition
+			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y,0});
+			 points.add(temp);
+		 }
+		return points;
+	}
+	public static List<DirectPosition>makeDirectPositionsFromPolygon(ISOGeometryBuilder gb, Polygon p){
+		Coordinate[] coordList = p.getCoordinates();
+		 //PointArray points = gb.createPointArray();
+		 List<DirectPosition> points = new ArrayList<DirectPosition>();
+		 
+		 for(int i = 0 ; i < coordList.length ; i++){
+			 //change jts.Coordinate to primitive.DirectPosition
+			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y,0});
+			 points.add(temp);
+		 }
+		return points;
+	}
+	public static List<DirectionPoint>makeDirectPositionsFromSurface(ISOGeometryBuilder gb, Surface s){
+		List<DirectPosition>points = new ArrayList<DirectPosition>();
+		return points
+	}
+	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Object geometry, double h){
+		Solid s;
+		List<DirectPosition> points = makeDirectPositions(gb3D,geometry);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
+		return s;
+	}
+	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Polygon p, double h){
+		 Solid s;		 
+		 List<DirectPosition> points = makeDirectPositionsFromPolygon(gb3D,p);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
+		 return s;
+	}
+	 public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,MultiPolygon mp, double h){
+		 Solid s;
+		 List<DirectPosition> points = makeDirectPositionsFromMultiPolygon(gb3D,mp);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
+		 return s;
+		 //PointArray points = gb.createPointArray();
+		 /*
+		  List<DirectPosition> points = new ArrayList<DirectPosition>();
+		 
+		 for(int i = 0 ; i < coordList.length ; i++){
+			 //change jts.Coordinate to primitive.DirectPosition
+			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y});
+			 points.add(temp);
+		 } 
+		  */
+		 
+		 //List<LineString>lsList = new ArrayList<LineString>();
+		 
+		 /*
+		  List<Surface>sfList = new ArrayList<Surface>();
+		 for(int i = 0 ; i < points.size()-1; i++){
+			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(i),points.get(i+1),h);
+			 sfList.add(createSurface(temp));			 
+		 }
+
+		 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(points.size()-1),points.get(0),h);
+		 sfList.add(createSurface(temp));
+		 
+		 Surface[] lids = makeLid(points,h);
+		 sfList.add(lids[0]);
+		 sfList.add(lids[1]);
+		  */
+		 
+		 //create list of LineString
+		 //call createLineStringWithHeight with input each 2 temp
+		 //call createSolidWithHeight with input of upper.
+		
+	 }
+
+	
+
+   /////ForTest
 }

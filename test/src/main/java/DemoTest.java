@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,36 +24,27 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
-import org.geotools.data.csv.iso.CSVDataStoreFactory;
-import org.geotools.data.geojson.GeoJSONDataStoreFactory;
-import org.geotools.data.jdbc.iso.FilterToSQL;
-//import org.geotools.data.kairos.KairosNGDataStoreFactory;
-import org.geotools.data.memory.MemoryDataStore;
-import org.geotools.data.postgis3d.PostGISDialect;
-import org.geotools.data.postgis3d.PostgisFilterToSQL;
 import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
+import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
+import org.geotools.feature.simple.ISOSimpleFeatureBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.FunctionFactory;
 import org.geotools.filter.ISOFilterFactoryImpl;
-import org.geotools.filter.function.FilterFunction_ISOunion;
 import org.geotools.filter.function.ISODefaultFunctionFactory;
-import org.geotools.filter.spatial.ISOEqualsImpl;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
-import org.geotools.filter.text.ecql.ECQL;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
-import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.util.SolidUtil;
 //import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -70,22 +60,21 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.coordinate.Position;
-import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
-import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 
 public class DemoTest extends JFrame{
@@ -136,12 +125,7 @@ public class DemoTest extends JFrame{
 		pack();
 		fileMenu.add(new SafeAction("Open csvfile...") {
 			public void action(ActionEvent e) throws Throwable {
-				connect(new CSVDataStoreFactory());
-			}
-		});
-		fileMenu.add(new SafeAction("Open GeoJSON File...") {
-			public void action(ActionEvent e) throws Throwable {
-				connect(new GeoJSONDataStoreFactory());
+				connect(new ShapefileDataStoreFactory());
 			}
 		});
 		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
@@ -209,6 +193,168 @@ public class DemoTest extends JFrame{
 				queryFeatures();
 			}
 		});
+		dataMenu.add(new SafeAction("saveExtrudedPolygon"){
+			public void action(ActionEvent e)throws Throwable{
+				saveFeatures();
+			}
+		});
+	}
+	private void SolidToTable(List<Solid>solidList, List<String>idList, List<String>partIDList, List<Double>heightList,DataStore dataStore1) {
+	
+		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
+		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+
+		b.setName( "footprint" );
+		
+		b.add("geom", Solid.class);
+		b.length(100).add("building_id",String.class);
+		b.length(150).add("part_id",String.class);
+		b.add("height",Double.class);
+		SimpleFeatureType schema = b.buildFeatureType();
+		ISOSimpleFeatureBuilder builder = new ISOSimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
+		
+		try {							
+				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(
+						schema.getTypeName(), Transaction.AUTO_COMMIT);	
+										
+				for(int i = 0 ; i < solidList.size(); i++){
+					builder.add(solidList.get(i));
+					builder.add(idList.get(i));
+					builder.add(partIDList.get(i));
+					builder.add(heightList.get(i));
+					SimpleFeature tempFeature = builder.buildFeature(null);
+					SimpleFeature writtenFeature = fw.next();
+					writtenFeature.setAttribute("geom", tempFeature.getAttribute("geom"));
+					writtenFeature.setAttribute("building_id", tempFeature.getAttribute("building_id"));
+					writtenFeature.setAttribute("part_id", tempFeature.getAttribute("part_id"));
+					writtenFeature.setAttribute("height", tempFeature.getAttribute("height"));
+					fw.write();
+				}
+				fw.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void saveFeatures()  {
+		String typeName = (String) featureTypeCBox.getSelectedItem();
+		
+		SimpleFeatureSource source;
+		try {
+			
+			source = dataStore.getFeatureSource(typeName);
+			Filter filter = CQL.toFilter(text.getText());
+			SimpleFeatureCollection features = source.getFeatures(filter);
+			FeatureType schema = dataStore.getSchema(typeName);
+			
+			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+			DataStore dataStore1;
+			
+						
+			JDataStoreWizard wizard = new JDataStoreWizard(new PostgisNGDataStoreFactory());
+			int result = wizard.showModalDialog();
+			
+			if (result == JWizard.FINISH) {
+				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
+
+				dataStore1 = DataStoreFinder.getDataStore(connectionParameters);
+
+				if (dataStore1 == null) {
+					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+				}
+				//dataStore1.getSchema()
+				SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+				builder.setName("footprint");
+				builder.setCRS(DefaultGeographicCRS.WGS84);
+				builder.length(100).add("building_id",String.class);
+				builder.length(150).add("part_id",String.class);
+				builder.add("geom",Solid.class);				
+				builder.add("height",Double.class);
+				
+				SimpleFeatureType forSchema = builder.buildFeatureType();
+				dataStore1.createSchema(forSchema);
+				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				//jds.setDatabaseSchema(null);
+			
+				//dataStore1.createSchema((SimpleFeatureType) schema);
+				
+				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
+		
+				// insert the feature
+			
+				//SimpleFeature f = fw.next();
+				SimpleFeatureCollection sfc = source.getFeatures();
+				SimpleFeatureIterator iterator = sfc.features();
+								
+				while (iterator.hasNext()) {
+					List<Solid>solidList = new ArrayList<Solid>();
+					List<String>idList = new ArrayList<String>();
+					List<String>partIDList = new ArrayList<String>();
+					List<Double>heightList = new ArrayList<Double>();
+					int counter = 0;
+					while(counter <100){
+					SimpleFeature feature = iterator.next();			          	          
+			        
+					double tempHeight = (double) feature.getAttribute("BUILDING_H");
+			          if(tempHeight < 2 && tempHeight > 300)
+			        	  continue;
+			          
+			          MultiPolygon tempMultiPolygon = (MultiPolygon) feature.getAttribute("the_geom");
+			          //System.out.println(tempMultiPolygon);
+			          //String tempID = (String)feature.getAttribute("FeatureIdentifer");
+			          String tempID = (String)feature.getID();
+			          String tempPartID = (String)feature.getAttribute("BUILDING_I");
+			          Solid temp = SolidUtil.createSolidWithHeight(tempMultiPolygon, tempHeight);
+			         
+			          solidList.add(temp);
+			          idList.add(tempID);
+			          partIDList.add(tempPartID);
+			          heightList.add(tempHeight);
+
+					/*
+					 * 
+					SimpleFeature feature1 = iterator.next();
+					SimpleFeature newFeature = fw.next(); // new blank feature
+					newFeature.setAttributes(feature1.getAttributes());
+					fw.write();
+					 * */
+			          counter++;
+				}
+				SolidToTable(solidList,idList,partIDList,heightList,dataStore1);
+				
+				//fw.write();
+				
+			}
+		}
+			/*
+			 SimpleFeatureIterator iterator=features.features();
+			 try {
+			     while( iterator.hasNext()  ){
+			          SimpleFeature feature = iterator.next();			          	          
+			          double tempHeight = (double) feature.getAttribute("BUILDING_H");
+			          if(tempHeight < 2 && tempHeight > 300)
+			        	  continue;
+			          MultiPolygon tempMultiPolygon = (MultiPolygon) feature.getAttribute("the_geom");		
+			          String tempID = (String)feature.getAttribute("FeatureIdentifer");
+			          //save this at table			          
+			     }
+			 }
+			 finally {
+			     iterator.close();
+			 }
+			 */
+			
+			table.setModel(model);
+		} catch (IOException | CQLException e) {
+			// TODO Auto-generated catch blocka
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} 
 	}
 	public ArrayList<Solid> getSolids(ISOGeometryBuilder builder) {
 		ArrayList<Solid> solids = new ArrayList<Solid>();
@@ -358,6 +504,7 @@ public class DemoTest extends JFrame{
 
 		return solid;
 	}
+	
 	public ArrayList<ArrayList<DirectPosition>> getSolidPoints(ISOGeometryBuilder builder) {
 		ArrayList<ArrayList<DirectPosition>> solidPoints = new ArrayList<ArrayList<DirectPosition>>();
 
@@ -542,10 +689,11 @@ public class DemoTest extends JFrame{
 		solidPoints.add(points6);
 		solidPoints.add(points7);
 		solidPoints.add(points8);
-		solidPoints.add(points9);
+		solidPoints.add(points9); 
 
 		return solidPoints;
 	}
+
 	private void pointToTable() {
 		String typeName = "newFlag2";
 		//hints = GeoTools.getDefaultHints();
@@ -708,8 +856,7 @@ public class DemoTest extends JFrame{
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
    			//Filter filter = ff.contains("loc", (Geometry)sf);
-   			Filter filter = ff.equals("loc", al.get(0));
-   		   
+   			Filter filter = ff.equals("loc", al.get(1));
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
@@ -764,6 +911,7 @@ public class DemoTest extends JFrame{
 			}
 		}
 	}
+	
 	private void insertTable() {
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 
@@ -785,10 +933,18 @@ public class DemoTest extends JFrame{
 				}
 				JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				jds.setDatabaseSchema(null);
-
+				SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+				builder.setName("geom");
+				builder.setCRS(DefaultGeographicCRS.WGS84);
+				builder.length(100).add("building_id",Character[].class);
+				builder.add("geom",MultiPolygon.class);
+				builder.add("height",Float.class);
+				
+				
+				
 				dataStore1.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
-
+				
 				// insert the feature
 				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(
 						typeName, Transaction.AUTO_COMMIT);
@@ -827,6 +983,7 @@ public class DemoTest extends JFrame{
 
 		table.setModel(new DefaultTableModel(5, 5));
 	}
+	
 	private void filterFeatures()  {
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
@@ -836,6 +993,18 @@ public class DemoTest extends JFrame{
 			SimpleFeatureCollection features = source.getFeatures(filter);
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
+			
+			SimpleFeatureIterator iterator = features.features();
+			while (iterator.hasNext()) {
+				SimpleFeature feature = iterator.next();
+				//System.out.println(feature.getAttribute("the_geom"));
+				Solid s = SolidUtil.createSolidWithHeight((MultiPolygon)feature.getAttribute("the_geom"), (double)feature.getAttribute("BUILDING_H"));
+				
+				//SimpleFeature newFeature = fw.next(); // new blank feature
+				//newFeature.setAttributes(feature.getAttributes());
+				//fw.write();
+			}
+			
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());

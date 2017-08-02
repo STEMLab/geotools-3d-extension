@@ -474,6 +474,10 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		 }
 		return points;
 	}
+	public static List<DirectionPoint>makeDirectPositionsFromSurface(ISOGeometryBuilder gb, Surface s){
+		List<DirectPosition>points = new ArrayList<DirectPosition>();
+		return points
+	}
 	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Object geometry, double h){
 		Solid s;
 		List<DirectPosition> points = makeDirectPositions(gb3D,geometry);

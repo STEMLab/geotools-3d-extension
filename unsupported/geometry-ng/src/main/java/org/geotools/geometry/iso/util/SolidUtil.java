@@ -358,7 +358,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
        
 		return solid;
 	}
-	public static Surface[] makeLid(List<DirectPosition> coordList, float height){
+	public static Surface[] makeLid(List<DirectPosition> coordList, double height){
 		List<DirectPosition> upper = new ArrayList<DirectPosition>();
 		List<DirectPosition> lower = new ArrayList<DirectPosition>();
 		List<DirectPosition> reversedLower = new ArrayList<DirectPosition>();
@@ -377,8 +377,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 			
 			lower.add(firstPointLower);
 			upper.add(firstPointUpper);
-	
-			
+				
 			Collections.reverse(lower);
 			upSurface = createSurface(upper);
 			downSurface = createSurface(lower);
@@ -393,7 +392,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 	
 	public static Solid createSolidWithHeightForTest(){
 		Solid s;
-		float h = 10;
+		double h = 10;
 		List<DirectPosition>points = new ArrayList<DirectPosition>();
 		
 		//DirectPosition p1 = gb.createDirectPosition(new double[]{0,0});
@@ -413,7 +412,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		points.add(p3);
 		points.add(p2);
 		points.add(p1);
-		
+		points.add(p5);
 		/*
 		List<Surface>sfList = new ArrayList<Surface>();
 		 for(int i = 0 ; i < points.size()-1; i++){
@@ -436,16 +435,12 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 					
 		return s;
 	}
-	public static List<Surface> makeSurfaces(List<DirectPosition>points, float h){
+	public static List<Surface> makeSurfaces(List<DirectPosition>points, double h){
 		List<Surface>sfList = new ArrayList<Surface>();
 		 for(int i = 0 ; i < points.size()-1; i++){
 			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(i),points.get(i+1),h);
 			 sfList.add(createSurface(temp));			 
-		 }
-		 //for more fast creating, I don't add below in loop.
-		 //List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(points.size()-1),points.get(0),h);
-		 //sfList.add(createSurface(temp));
-		 
+		 }		 
 		 Surface[] lids = makeLid(points,h);
 		 sfList.add(lids[0]);
 		 sfList.add(lids[1]);
@@ -496,14 +491,14 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		 }
 		return points;
 	}
-	public static Solid createSolidWithHeight(Object geometry, float h){
+	public static Solid createSolidWithHeight(Object geometry, double h){
 		Solid s;
 		List<DirectPosition> points = makeDirectPositions(geometry);
 		 List<Surface>sfList = makeSurfaces(points,h);
 		 s = createSolid(sfList);
 		return s;
 	}
-	public static Solid createSolidWithHeight(Polygon p, float h){
+	public static Solid createSolidWithHeight(Polygon p, double h){
 		 Solid s;		 
 		 //Coordinate[] coordList = p.getCoordinates();
 		 List<DirectPosition> points = makeDirectPositionsFromPolygon(p);
@@ -511,10 +506,8 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		 s = createSolid(sfList);
 		 return s;
 	}
-	 public static Solid createSolidWithHeight(MultiPolygon mp, float h){
+	 public static Solid createSolidWithHeight(MultiPolygon mp, double h){
 		 Solid s;
-
-		 Coordinate[] coordList = mp.getCoordinates();
 		 List<DirectPosition> points = makeDirectPositionsFromMultiPolygon(mp);
 		 List<Surface>sfList = makeSurfaces(points,h);
 		 s = createSolid(sfList);

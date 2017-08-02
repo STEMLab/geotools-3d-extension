@@ -27,8 +27,6 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class SolidUtil {
 	
-	static ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
-	static ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 public static Solid makeFromEnvelope(ISOGeometryBuilder builder, DirectPosition l, DirectPosition u) {
 	    
 	    DirectPosition position1 = builder.createDirectPosition(new double[] { l.getOrdinate(0), u.getOrdinate(1), l.getOrdinate(2) }); //LUL
@@ -307,7 +305,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 /////ForTest
 
 
-	public static List<DirectPosition> make3DPositions(DirectPosition pa, DirectPosition pb, double height){
+	public static List<DirectPosition> make3DPositions(ISOGeometryBuilder gb3D,DirectPosition pa, DirectPosition pb, double height){
 		DirectPosition p1 = gb3D.createDirectPosition(new double[]{pa.getOrdinate(0),pa.getOrdinate(1),0});
 		DirectPosition p2 = gb3D.createDirectPosition(new double[]{pa.getOrdinate(0),pa.getOrdinate(1),height});
 		DirectPosition p3 = gb3D.createDirectPosition(new double[]{pb.getOrdinate(0),pb.getOrdinate(1),0});
@@ -322,7 +320,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		
 		return pointList;
 	}
-	public static Surface createSurface(List<DirectPosition> upper){ //create one surface
+	public static Surface createSurface(ISOGeometryBuilder gb3D, List<DirectPosition> upper){ //create one surface
 		
 		LineString line = gb3D.createLineString(upper);
 		
@@ -344,7 +342,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		
 		return surface;
 	}
-	public static Solid createSolid(List<Surface> list){
+	public static Solid createSolid(ISOGeometryBuilder gb3D, List<Surface> list){
 			
 		List<OrientableSurface> surfaces = new ArrayList<OrientableSurface>();
 		for(int i = 0 ; i < list.size(); i++){
@@ -358,7 +356,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
        
 		return solid;
 	}
-	public static Surface[] makeLid(List<DirectPosition> coordList, double height){
+	public static Surface[] makeLid(ISOGeometryBuilder gb3D,List<DirectPosition> coordList, double height){
 		List<DirectPosition> upper = new ArrayList<DirectPosition>();
 		List<DirectPosition> lower = new ArrayList<DirectPosition>();
 		List<DirectPosition> reversedLower = new ArrayList<DirectPosition>();
@@ -379,8 +377,8 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 			upper.add(firstPointUpper);
 				
 			Collections.reverse(lower);
-			upSurface = createSurface(upper);
-			downSurface = createSurface(lower);
+			upSurface = createSurface(gb3D,upper);
+			downSurface = createSurface(gb3D, lower);
 		}
 		catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -393,18 +391,19 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 	public static Solid createSolidWithHeightForTest(){
 		Solid s;
 		double h = 10;
-		List<DirectPosition>points = new ArrayList<DirectPosition>();
 		
+		List<DirectPosition>points = new ArrayList<DirectPosition>();
+		ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 		//DirectPosition p1 = gb.createDirectPosition(new double[]{0,0});
 		//DirectPosition p2 = gb.createDirectPosition(new double[]{10,0});
 		//DirectPosition p3 = gb.createDirectPosition(new double[]{10,10});
 		//DirectPosition p4 = gb.createDirectPosition(new double[]{0,10});
 		
-		DirectPosition p1 = gb.createDirectPosition(new double[]{5,0});
-		DirectPosition p2 = gb.createDirectPosition(new double[]{2,5});
-		DirectPosition p3 = gb.createDirectPosition(new double[]{7,10});
-		DirectPosition p4 = gb.createDirectPosition(new double[]{12,5});
-		DirectPosition p5 = gb.createDirectPosition(new double[]{10,0});
+		DirectPosition p1 = gb3D.createDirectPosition(new double[]{5,0,0});
+		DirectPosition p2 = gb3D.createDirectPosition(new double[]{2,5,0});
+		DirectPosition p3 = gb3D.createDirectPosition(new double[]{7,10,0});
+		DirectPosition p4 = gb3D.createDirectPosition(new double[]{12,5,0});
+		DirectPosition p5 = gb3D.createDirectPosition(new double[]{10,0,0});
 		
 		
 		points.add(p5);
@@ -413,47 +412,31 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		points.add(p2);
 		points.add(p1);
 		points.add(p5);
-		/*
-		List<Surface>sfList = new ArrayList<Surface>();
-		 for(int i = 0 ; i < points.size()-1; i++){
-			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(i),points.get(i+1),h);
-			 sfList.add(createSurface(temp));			 
-		 }
-		 //for more fast creating, I don't add below in loop.
-		 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(points.size()-1),points.get(0),h);
-		 sfList.add(createSurface(temp));
-		 
-		 Surface[] lids = makeLid(points,h);
-		 sfList.add(lids[0]);
-		 sfList.add(lids[1]); 
-		 */
-		List<Surface>sfList = makeSurfaces(points,h);
-		 s = createSolid(sfList);
-		 //create list of LineString
-		 //call createLineStringWithHeight with input each 2 temp
-		 //call createSolidWithHeight with input of upper.
+	
+		List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
 					
 		return s;
 	}
-	public static List<Surface> makeSurfaces(List<DirectPosition>points, double h){
+	public static List<Surface> makeSurfaces(ISOGeometryBuilder gb3D,List<DirectPosition>points, double h){
 		List<Surface>sfList = new ArrayList<Surface>();
 		 for(int i = 0 ; i < points.size()-1; i++){
-			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(points.get(i),points.get(i+1),h);
-			 sfList.add(createSurface(temp));			 
+			 List<DirectPosition>temp = (List<DirectPosition>) make3DPositions(gb3D,points.get(i),points.get(i+1),h);
+			 sfList.add(createSurface(gb3D,temp));			 
 		 }		 
-		 Surface[] lids = makeLid(points,h);
+		 Surface[] lids = makeLid(gb3D,points,h);
 		 sfList.add(lids[0]);
 		 sfList.add(lids[1]);
 		 
 		 return sfList;
 	}
-	public static List<DirectPosition>makeDirectPositions(Object geometry){
+	public static List<DirectPosition>makeDirectPositions(ISOGeometryBuilder gb3D,Object geometry){
 		List<DirectPosition>points = null;
 		if(geometry instanceof com.vividsolutions.jts.geom.MultiPolygon){
-			points = makeDirectPositionsFromMultiPolygon((MultiPolygon)geometry);
+			points = makeDirectPositionsFromMultiPolygon(gb3D,(MultiPolygon)geometry);
 		}
 		else if(geometry instanceof com.vividsolutions.jts.geom.Polygon){
-			points = makeDirectPositionsFromPolygon((Polygon)geometry);
+			points = makeDirectPositionsFromPolygon(gb3D,(Polygon)geometry);
 		}
 		
 		return points;
@@ -467,50 +450,49 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		
 	}
 	 * */
-	public static List<DirectPosition>makeDirectPositionsFromMultiPolygon(MultiPolygon mp){
+	public static List<DirectPosition>makeDirectPositionsFromMultiPolygon(ISOGeometryBuilder gb,MultiPolygon mp){
 		Coordinate[] coordList = mp.getCoordinates();
 		 //PointArray points = gb.createPointArray();
 		 List<DirectPosition> points = new ArrayList<DirectPosition>();
 		 
 		 for(int i = 0 ; i < coordList.length ; i++){
 			 //change jts.Coordinate to primitive.DirectPosition
-			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y});
+			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y,0});
 			 points.add(temp);
 		 }
 		return points;
 	}
-	public static List<DirectPosition>makeDirectPositionsFromPolygon(Polygon p){
+	public static List<DirectPosition>makeDirectPositionsFromPolygon(ISOGeometryBuilder gb, Polygon p){
 		Coordinate[] coordList = p.getCoordinates();
 		 //PointArray points = gb.createPointArray();
 		 List<DirectPosition> points = new ArrayList<DirectPosition>();
 		 
 		 for(int i = 0 ; i < coordList.length ; i++){
 			 //change jts.Coordinate to primitive.DirectPosition
-			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y});
+			 DirectPosition temp = gb.createDirectPosition(new double[]{coordList[i].x, coordList[i].y,0});
 			 points.add(temp);
 		 }
 		return points;
 	}
-	public static Solid createSolidWithHeight(Object geometry, double h){
+	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Object geometry, double h){
 		Solid s;
-		List<DirectPosition> points = makeDirectPositions(geometry);
-		 List<Surface>sfList = makeSurfaces(points,h);
-		 s = createSolid(sfList);
+		List<DirectPosition> points = makeDirectPositions(gb3D,geometry);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
 		return s;
 	}
-	public static Solid createSolidWithHeight(Polygon p, double h){
+	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Polygon p, double h){
 		 Solid s;		 
-		 //Coordinate[] coordList = p.getCoordinates();
-		 List<DirectPosition> points = makeDirectPositionsFromPolygon(p);
-		 List<Surface>sfList = makeSurfaces(points,h);
-		 s = createSolid(sfList);
+		 List<DirectPosition> points = makeDirectPositionsFromPolygon(gb3D,p);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
 		 return s;
 	}
-	 public static Solid createSolidWithHeight(MultiPolygon mp, double h){
+	 public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,MultiPolygon mp, double h){
 		 Solid s;
-		 List<DirectPosition> points = makeDirectPositionsFromMultiPolygon(mp);
-		 List<Surface>sfList = makeSurfaces(points,h);
-		 s = createSolid(sfList);
+		 List<DirectPosition> points = makeDirectPositionsFromMultiPolygon(gb3D,mp);
+		 List<Surface>sfList = makeSurfaces(gb3D,points,h);
+		 s = createSolid(gb3D,sfList);
 		 return s;
 		 //PointArray points = gb.createPointArray();
 		 /*

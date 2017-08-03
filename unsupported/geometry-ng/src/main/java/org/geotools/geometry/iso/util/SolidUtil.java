@@ -11,6 +11,7 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.Position;
+import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
@@ -438,6 +439,9 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		else if(geometry instanceof com.vividsolutions.jts.geom.Polygon){
 			points = makeDirectPositionsFromPolygon(gb3D,(Polygon)geometry);
 		}
+		else if(geometry instanceof org.geotools.geometry.iso.primitive.SurfaceImpl){
+			points = makeDirectPositionsFromSurface(gb3D, (Surface)geometry);
+		}
 		
 		return points;
 		
@@ -474,9 +478,22 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		 }
 		return points;
 	}
-	public static List<DirectionPoint>makeDirectPositionsFromSurface(ISOGeometryBuilder gb, Surface s){
+	public static List<DirectPosition>makeDirectPositionsFromSurface(ISOGeometryBuilder gb, Surface s){
 		List<DirectPosition>points = new ArrayList<DirectPosition>();
-		return points
+		SurfaceBoundary sb = s.getBoundary();
+		Ring extr = sb.getExterior(); 
+		List<OrientableCurve>ocList = (List<OrientableCurve>) extr.getElements();
+		OrientableCurve oc = ocList.get(0);
+		Curve c = oc.getPrimitive();
+		List<LineString> ls = (List<LineString>) c.getSegments();
+		LineString l = ls.get(0);
+		List<Position>tempPoints = l.getControlPoints();
+		for(int i = 0 ; i < tempPoints.size(); i++){
+			Position tempPosition = tempPoints.get(i);
+			points.add(tempPosition.getDirectPosition());
+		}
+		
+		return points;
 	}
 	public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,Object geometry, double h){
 		Solid s;
@@ -492,6 +509,7 @@ public static Solid makeSolid(ISOGeometryBuilder builder, ArrayList<DirectPositi
 		 s = createSolid(gb3D,sfList);
 		 return s;
 	}
+
 	 public static Solid createSolidWithHeight(ISOGeometryBuilder gb3D,MultiPolygon mp, double h){
 		 Solid s;
 		 List<DirectPosition> points = makeDirectPositionsFromMultiPolygon(gb3D,mp);

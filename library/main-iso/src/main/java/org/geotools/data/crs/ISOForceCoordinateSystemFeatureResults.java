@@ -22,6 +22,7 @@ import java.util.Iterator;
 import org.geotools.data.store.ISOReprojectingFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureTypes;
+import org.geotools.feature.ISOFeatureTypes;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.collection.AbstractFeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -84,8 +85,8 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
             if ( results instanceof ISOReprojectFeatureResults ) {
                 results = ((ISOReprojectFeatureResults) results).getOrigin();
             }        
-            if ( results instanceof ForceCoordinateSystemFeatureResults ) {
-                results = ((ForceCoordinateSystemFeatureResults) results).getOrigin();
+            if ( results instanceof ISOForceCoordinateSystemFeatureResults ) {
+                results = ((ISOForceCoordinateSystemFeatureResults) results).getOrigin();
             }
             break;
         }
@@ -118,7 +119,7 @@ public class ISOForceCoordinateSystemFeatureResults extends AbstractFeatureColle
             return startingType;
         }
         else {
-            return FeatureTypes.transform(startingType, forcedCS, forceOnlyMissing);
+            return ISOFeatureTypes.transform(startingType, forcedCS, forceOnlyMissing);
         }
     }
    

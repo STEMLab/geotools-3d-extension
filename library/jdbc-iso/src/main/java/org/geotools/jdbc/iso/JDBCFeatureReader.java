@@ -200,7 +200,11 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryBuilder = new ISOGeometryBuilder(featureType.getCoordinateReferenceSystem());
+        if(featureType.getCoordinateReferenceSystem() != null) {
+        	geometryBuilder = new ISOGeometryBuilder(featureType.getCoordinateReferenceSystem());
+        } else {
+        	geometryBuilder = new ISOGeometryBuilder(featureType.getGeometryDescriptor().getType().getCoordinateReferenceSystem());
+        }
         		//(ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
         /*if (geometryFactory == null) {
             // look for a coordinate sequence factory

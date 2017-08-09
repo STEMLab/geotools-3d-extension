@@ -44,7 +44,7 @@ source_suffix = '.txt'
 
 # The master toctree document.
 master_doc = 'index'
-
+latex_keep_old_macro_names=False
 # General information about the project.
 project = u'geotools-3d-extension'
 copyright = u'2017, SoojinKim'

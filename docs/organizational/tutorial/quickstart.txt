@@ -325,16 +325,10 @@ Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자�
 
 5. Run the application and you can open csv file or connect to PostGIS.
 
-
-
 6-1. open csvfile from a example dataset.
 
 7-1. to get solids from csvfile, fill configuration box like this. wktField is column name of geometry.
 
-
-
 8. to show the data of csvfile, press getfeature button.
-
-
 
 .. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

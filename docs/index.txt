@@ -3,30 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Geotools-3d-extension's Documentation
+Welcome to GeoTools 3D Extension
 ======================================
-Welcome to GeoTools-3d-extension's Documentaion.
+GeoTools 3D Extension에 방문하신 것을 환영합니다.
+이 프로젝트는 GeoTools 라이브러리를 확장하여 3차원 공간 연산을 지원합니다.
+이 문서에서는 이 프로젝트에 대한 간단한 설명, 프로젝트를 빌드하는 방법, 그리고 몇가지 튜토리얼을 다루고 있습니다.
 
-This project is an extension of GeoTools library to support 3D spatial operations.
-
-First Steps
-===========
-The following sections give an overview of GeoTools-3d-extension from different perspectives.
-
-
-* :doc:`see installation<organizational/tutorial/building>`
-* :doc:`organizational/tutorial/quickstart`
-
-
-How To Use The Documentation
-============================
-The documentation is geared toward two distinct types of users:
-
-#. **User**: Are people who use GeoTools-3d-extension's functionality.
-#. **Developers**: Are people who write code to add functionality, fix bugs.
-
-
-Indices and tables
+Table of Contents
 ==================
 
 .. toctree::
@@ -37,12 +20,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-Need Help?
-==========
-Having trouble? Can't find what you ar looking for? We'd like to help!
-visit `our github`_.
-
-
-.. _our github: https://github.com/STEMLab/geotools-3d-extension

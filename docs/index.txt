@@ -12,10 +12,24 @@ GeoTools 3D Extension에 방문하신 것을 환영합니다.
 Table of Contents
 ==================
 
-.. toctree::
-   :maxdepth: 5
+.. _modules-docs:
 
-    <organizational/index>
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules
+
+   overview
+   JDBC
+
+.. _tutorial-docs:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorial
+
+   building
+   quickstart
+   datastore
 
 * :ref:`genindex`
 * :ref:`modindex`

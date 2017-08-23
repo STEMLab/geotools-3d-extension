@@ -80,6 +80,7 @@ Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자�
 	</build>
 	</project>
 
+.. code-block:: none
 
 4. Fill in the following code:
 
@@ -324,7 +325,6 @@ Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자�
 
 .. code-block:: none
 
-
 5. 위의 어플리케이션을 실행하면 당신은 CSV 파일을 열거나 PostGIS에 연결함으로써 3차원 DataStore을 만들 수 있다.
 
 .. image:: start.jpg
@@ -374,6 +374,5 @@ dropdownlist에는 연결된 데이터베이스의 테이블들을 볼 수 있�
 PostGIS DataStore로부터 getfeature함수를 적용한 결과는 다음과 같다.
 
 .. image:: dbresult.jpg
-
 
 .. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

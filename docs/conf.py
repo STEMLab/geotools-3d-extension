@@ -42,8 +42,6 @@ templates_path = ['.templates']
 # source_suffix = ['.rst', '.md']
 source_suffix = '.txt'
 
-source_encoding = 'cp949'
-
 # The master toctree document.
 master_doc = 'index'
 

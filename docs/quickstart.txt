@@ -373,4 +373,3 @@ PostGIS DataStore로부터 getfeature함수를 적용한 결과는 다음과 같
 
 .. image:: dbresult.jpg
 
-.. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

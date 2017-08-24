@@ -22,7 +22,7 @@ GeoTools는 지리공간 데이터를 위한 여러가지 툴을 제공하는 �
 *******
 License
 *******
-이 프로젝트의 라이센스는 GeoTools의 라이센스를 그대로 따릅니다.
+이 프로젝트의 라이센스는 다음과 같이 GeoTools의 라이센스를 그대로 따릅니다.
 
 - `GNU Lesser General Public License <https://www.gnu.org/licenses/lgpl.html>`_
 

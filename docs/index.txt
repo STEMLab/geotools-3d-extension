@@ -19,6 +19,7 @@ Table of Contents
    :caption: Modules
 
    overview
+   geometry
    JDBC
 
 .. _tutorial-docs:

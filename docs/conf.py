@@ -16,10 +16,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
-
 
 # -- General configuration ------------------------------------------------
 
@@ -136,6 +135,9 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    
+    'preamble': '\usepackage{kotex}',
+    
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

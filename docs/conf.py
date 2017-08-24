@@ -145,7 +145,7 @@ latex_elements = {
     #
     # 'figure_align': 'htbp',
     
-    \usepackage{kotex}
+    'preamble': '\usepackage{kotex}',
     
 }
 

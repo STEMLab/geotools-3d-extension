@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../quickstart.txt:2
 msgid "Quickstart Manual"
-msgstr "빠르게 시작하기"
+msgstr "빠르게 시작하는 메뉴얼"
 
 #: ../../quickstart.txt:3
 msgid ""

@@ -16,10 +16,18 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+latex_elements = {
+    # Additional stuff for the LaTeX preamble.
+    'preamble': "".join((
+        '\DeclareUnicodeCharacter{00A0}{ }',  # NO-BREAK SPACE
+        '\DeclareUnicodeCharacter{251C}{+}',  # BOX DRAWINGS LIGHT VERTICAL AND RIGHT
+        '\DeclareUnicodeCharacter{2514}{+}',  # BOX DRAWINGS LIGHT UP AND RIGHT
+    )),
+}
 
 # -- General configuration ------------------------------------------------
 
@@ -136,6 +144,9 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    
+    \usepackage{kotex}
+    
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

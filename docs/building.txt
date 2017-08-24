@@ -36,7 +36,7 @@ $ cd unsupported/geometry-ng
 $ sudo ./cppbuild.sh
 
 필요 라이브러리가 모두 제대로 설치되었는지 확인하기 위해 gt-geometry-ng 모듈을 다음과 같이 빌드합니다.
-모든 빌드가 완료된 후 테스트가 성공하면 설치가 완료된 것입니다.
+모든 빌드가 완료된 후 수행되는 모든 테스트가 성공하면 설치가 완료된 것입니다.
 
 $ mvn clean install
 

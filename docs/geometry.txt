@@ -4,3 +4,29 @@
 Geometry
 ########
 
+이 프로젝트에서 기하 모델은 ISO 19107 공간 스키마를 기반으로 하고 있습니다.
+GeoTools에서 이 기하 모델은 OpenGIS (gt-opengis) 모듈에서 자바 인터페이스로 정의되어 있습니다.
+그리고 ISO Geometry (gt-geometry) 모듈에서 이를 구현하고 있지만 Solid를 제외한 2.5D 기하까지만 지원하고 있고
+3차원 질의도 마찬가지로 지원하고 있지 않습니다. 이 때문에 이 구현을 그대로 사용하는 것은 불가능합니다.
+
+우리는 3차원 공간 데이터와 질의를 제공하기 위해서 ISO 기하 모델에서 모든 기하에 대한 정의와 3차원 공간 연산들을 직접 구현하는 방법이
+있지만 이는 엄청난 노력을 필요로 하고 탄탄하고 안정적인 기능을 제공하는 것이 어렵습니다.
+이 때문에 우리는 다른 오픈소스 라이브러리가 공간 연산을 담당하도록 하였습니다.
+
+우리가 3차원 기하 연산을 위해서 사용한 기하 라이브러리는 Simple Feature CGAL (SFCGAL)입니다.
+이 라이브러리는 CGAL과 Boost를 기반으로 구현되어 있으며 ISO 19107 공간 스키마와 OGC Simple Feature Access 1.2 표준을 기반으로
+기하 모델을 정의하고 있기 때문에 Solid 기하도 지원하고 있습니다. 또한 여러가지 3차원 기능들을 CGAL이 제공하는 기능들을 확장하여 구현하고 있습니다.
+
+*************
+Implemenation
+*************
+
+.. image:: images/sfcgal.png
+	:align: center
+
+**********
+References
+**********
+
+- `JavaCPP <https://github.com/bytedeco/javacpp>`_
+- `Simple Feature CGAL <http://www.sfcgal.org/>`_

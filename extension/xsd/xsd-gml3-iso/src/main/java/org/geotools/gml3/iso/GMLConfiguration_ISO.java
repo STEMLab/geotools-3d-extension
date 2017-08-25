@@ -79,12 +79,15 @@ import org.geotools.gml3.iso.bindings.TimePositionUnionBinding;
 import org.geotools.gml3.iso.bindings.ext.CompositeCurveTypeBinding;
 import org.geotools.gml3.iso.smil.SMIL20Configuration;
 import org.geotools.gml3.iso.smil.SMIL20LANGConfiguration;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xlink.XLINKConfiguration;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.Parser;
 import org.geotools.xs.XS;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.picocontainer.MutablePicoContainer;
 
@@ -141,7 +144,7 @@ public class GMLConfiguration_ISO extends Configuration {
     /**
      * The factory used to create geometries
      */
-    private ISOGeometryBuilder geometryBuilder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    private ISOGeometryBuilder geometryBuilder;
 
     private CoordinateReferenceSystem crs;
     
@@ -154,6 +157,13 @@ public class GMLConfiguration_ISO extends Configuration {
         super(GML.getInstance());
 
         this.extArcSurfaceSupport = extArcSurfaceSupport;
+        
+        try {
+			geometryBuilder = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         //add xlink dependency
         addDependency(new XLINKConfiguration());

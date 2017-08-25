@@ -133,7 +133,7 @@ public class AbstractGeometryTypeBinding extends AbstractComplexBinding {
             CoordinateReferenceSystem crs = CRS.decode(srs.toString());
             
             if (crs != null) {
-                if(!builder.getCoordinateReferenceSystem().equals(crs)) {
+                if(!CRS.equalsIgnoreMetadata(builder.getCoordinateReferenceSystem(), crs)) {
                 	builder.setCoordinateReferenceSystem(crs);
                 }
             } else {

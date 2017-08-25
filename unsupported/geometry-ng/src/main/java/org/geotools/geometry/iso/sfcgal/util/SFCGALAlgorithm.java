@@ -24,11 +24,13 @@ import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometry;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.TransfiniteSet;
 
+import com.vividsolutions.jts.util.Assert;
+
 /**
  * @author Donguk Seo
  *
  */
-public class Geometry3DOperation {
+public class SFCGALAlgorithm {
         
         /**
          * Compute the convexhull of geometry
@@ -39,11 +41,17 @@ public class Geometry3DOperation {
          */
         public static Geometry getConvexHull(GeometryImpl geom) {
                 SFGeometry g = SFCGALConvertor.geometryToSFCGALGeometry((Geometry) geom);
-                SFGeometry convex = SFAlgorithm.convexHull3D(g);
-
-                return SFCGALConvertor.geometryFromSFCGALGeometry(convex);
+                SFGeometry convex = null;
+                
+                if(geom.getCoordinateDimension() == 2) {
+                	convex = SFAlgorithm.convexHull(g);
+                } else if(geom.getCoordinateDimension() == 3) {
+                	convex = SFAlgorithm.convexHull3D(g);
+                }
+                
+                return SFCGALConvertor.geometryFromSFCGALGeometry(convex, geom.getCoordinateReferenceSystem());
         }
-
+        
         /**
          * Compute the distance between two geometries using distance3D operation of SFCGAL
          * 
@@ -52,13 +60,38 @@ public class Geometry3DOperation {
          * @return distance between two geometry objects
          */
         public static double distance(GeometryImpl gA, GeometryImpl gB) {
-                SFGeometry geometryA = SFCGALConvertor.geometryToSFCGALGeometry(gA);
-                SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
-                double distance = SFAlgorithm.distance3D(geometryA, geometryB);
-
-                return distance;
+            SFGeometry geometryA = SFCGALConvertor.geometryToSFCGALGeometry(gA);
+            SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
+            
+            double distance = Double.NaN;
+            if(gA.getCoordinateDimension() == 2) {
+            	distance = SFAlgorithm.distance(geometryA, geometryB);
+            } else if(gA.getCoordinateDimension() == 3) {
+            	distance = SFAlgorithm.distance3D(geometryA, geometryB);
+            }
+            
+            return distance;
         }
 
+        public static Geometry extrude(Geometry origin, double distance) {
+        	SFGeometry g = SFCGALConvertor.geometryToSFCGALGeometry(origin);
+        	
+        	SFGeometry result = null;
+        	if(origin.getCoordinateDimension() == 2) {
+        		result = SFAlgorithm.extrude(g, distance, distance, 0);
+            } else if(origin.getCoordinateDimension() == 3) {
+            	result = SFAlgorithm.extrude(g, distance, distance, distance);
+            }
+        	return SFCGALConvertor.geometryFromSFCGALGeometry(result, origin.getCoordinateReferenceSystem());
+        }
+        
+        /**
+         * 
+         * @param gA
+         * @param gB
+         * @param intersectionPatternMatrix
+         * @return
+         */
         public static boolean relate(GeometryImpl gA, GeometryImpl gB, String intersectionPatternMatrix) {
                 SFGeometry geometryA = SFCGALConvertor.geometryToSFCGALGeometry(gA);
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);                
@@ -112,11 +145,22 @@ public class Geometry3DOperation {
                 SFGeometry geometryA = SFCGALConvertor.geometryToSFCGALGeometry(gA);
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 
-                return intersects(geometryA, geometryB);
+                //Assert.isTrue(SFAlgorithm.isValid(geometryA));
+                //Assert.isTrue(SFAlgorithm.isValid(geometryB));
+                
+                return intersects(geometryA, geometryB, gA.getCoordinateDimension());
         }
         
-        private static boolean intersects(SFGeometry gA, SFGeometry gB) {
-                return SFAlgorithm.intersects3D(gA, gB);
+        private static boolean intersects(SFGeometry gA, SFGeometry gB, int dimension) {
+        	boolean result = false;
+        	if(dimension == 2) {
+        		result = SFAlgorithm.intersects(gA, gB);
+        	} else if(dimension == 3) {
+        		result = SFAlgorithm.intersects3D(gA, gB);
+        	} else {
+        		Assert.isTrue(false);
+        	}
+        	return result;
         }
 
         /**
@@ -270,7 +314,7 @@ public class Geometry3DOperation {
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 SFGeometry union  = union(geometryA, geometryB);
                 
-                return SFCGALConvertor.geometryFromSFCGALGeometry(union);
+                return SFCGALConvertor.geometryFromSFCGALGeometry(union, gA.getCoordinateReferenceSystem());
         }
         
         private static SFGeometry union(SFGeometry gA, SFGeometry gB) {
@@ -289,7 +333,7 @@ public class Geometry3DOperation {
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 SFGeometry intersection = intersection(geometryA, geometryB);
                 
-                return SFCGALConvertor.geometryFromSFCGALGeometry(intersection);
+                return SFCGALConvertor.geometryFromSFCGALGeometry(intersection, gA.getCoordinateReferenceSystem());
         }
         
         private static SFGeometry intersection(SFGeometry gA, SFGeometry gB) {
@@ -308,7 +352,7 @@ public class Geometry3DOperation {
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 SFGeometry difference  = difference(geometryA, geometryB);
 
-                return SFCGALConvertor.geometryFromSFCGALGeometry(difference);
+                return SFCGALConvertor.geometryFromSFCGALGeometry(difference, gA.getCoordinateReferenceSystem());
         }
         
         private static SFGeometry difference(SFGeometry gA, SFGeometry gB) {
@@ -327,7 +371,7 @@ public class Geometry3DOperation {
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 SFGeometry symDifference  = symmetricDifference(geometryA, geometryB);
 
-                return SFCGALConvertor.geometryFromSFCGALGeometry(symDifference);
+                return SFCGALConvertor.geometryFromSFCGALGeometry(symDifference, gA.getCoordinateReferenceSystem());
         }
         
         private static SFGeometry symmetricDifference(SFGeometry gA, SFGeometry gB) {

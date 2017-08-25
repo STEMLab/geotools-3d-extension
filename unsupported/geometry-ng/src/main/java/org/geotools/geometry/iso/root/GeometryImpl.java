@@ -31,6 +31,7 @@ import org.geotools.geometry.iso.aggregate.MultiPrimitiveImpl;
 import org.geotools.geometry.iso.aggregate.MultiSurfaceImpl;
 import org.geotools.geometry.iso.complex.ComplexImpl;
 import org.geotools.geometry.iso.complex.CompositeCurveImpl;
+import org.geotools.geometry.iso.complex.CompositeSolidImpl;
 import org.geotools.geometry.iso.complex.CompositeSurfaceImpl;
 import org.geotools.geometry.iso.coordinate.EnvelopeImpl;
 import org.geotools.geometry.iso.operation.overlay.OverlayOp;
@@ -39,8 +40,8 @@ import org.geotools.geometry.iso.primitive.CurveBoundaryImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.iso.primitive.PrimitiveImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
+import org.geotools.geometry.iso.primitive.SolidImpl;
 import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.sfcgal.util.SFCGALAlgorithm;
@@ -58,11 +59,13 @@ import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.Precision;
 import org.opengis.geometry.TransfiniteSet;
+import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.complex.Complex;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Solid;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -108,12 +111,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	//protected final GeometryFactory geometryFactory; // geometry for Line etc...
 	private transient PositionFactory positionFactory; // for position and point array
 	//protected final ComplexFactory complexFactory; // surface and friends
-
-        /**
-         * An object reference which can be used to carry ancillary data defined
-         * by the client.
-         */
-        protected Object userData;
 		
 	public GeometryImpl(CoordinateReferenceSystem crs, Precision pm ){
 		this.crs = crs;
@@ -124,7 +121,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	public GeometryImpl(CoordinateReferenceSystem coordinateReferenceSystem) {
 		this( coordinateReferenceSystem, new PrecisionModel() );
 	}
-	
 	
 	/*
 	 * (non-Javadoc)
@@ -268,11 +264,13 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	public final double distance(Geometry geometry) {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(geometry);
 		
-		if(geom instanceof PrimitiveImpl) {
-			return SFCGALAlgorithm.distance(this, geom);	
-		} else {
-			throw new UnsupportedOperationException("ComplexImpl type is not supproted yet");
+		if(geom instanceof Primitive) {
+			return SFCGALAlgorithm.distance(this, geom);
+		} else if(geom instanceof MultiPrimitive) {
+			return SFCGALAlgorithm.distance(this, geom);
 		}
+		Assert.isTrue(false, "The distance operation is not defined for this geometry object");
+		return Double.NaN;
 	}
 
 	/*
@@ -281,9 +279,14 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 * @see org.opengis.geometry.coordinate.root.Geometry#getBuffer(double)
 	 */
 	public Geometry getBuffer(double distance) {
-		return SFCGALAlgorithm.extrude(this, distance);
+		if(this instanceof Primitive) {
+			return SFCGALAlgorithm.extrude(this, distance);
+		} else if(this instanceof MultiPrimitive) {
+			return SFCGALAlgorithm.extrude(this, distance);
+		}
+		Assert.isTrue(false, "The buffer operation is not defined for this geometry object");
+		return null;
 	}
-
 
 	/**
 	 * Return a Primitive which represents the envelope of this Geometry instance
@@ -296,7 +299,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		PrimitiveFactoryImpl primitiveFactory = new PrimitiveFactoryImpl(crs, getPositionFactory());
 		return primitiveFactory.createPrimitive( this.getEnvelope() );
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -394,7 +396,13 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 * @see org.opengis.geometry.coordinate.root.Geometry#getConvexHull()
 	 */
 	public Geometry getConvexHull() {
-		return SFCGALAlgorithm.getConvexHull(this);
+		if(this instanceof Primitive) {
+			return SFCGALAlgorithm.getConvexHull(this);
+		} else if(this instanceof MultiPrimitive) {
+			return SFCGALAlgorithm.getConvexHull(this);
+		}
+		Assert.isTrue(false, "The convex hull operation is not defined for this geometry object");
+		return null;
 	}
 	
 	
@@ -594,7 +602,27 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 */
 	public boolean equals(TransfiniteSet pointSet) {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
-	    return SFCGALAlgorithm.equals(this, geom);
+		
+		int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.equals(this, geom);
+        }
+		
+		IntersectionMatrix tIM = null;
+		try {
+			tIM = RelateOp.relate(this, geom);
+		} catch (UnsupportedDimensionException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		boolean rValue = false;
+		
+		// No distinction between primitive and complex (explanation see thesis)
+		rValue = tIM.matches("T*F**FFF*");
+		return rValue;
 	}
 
 	/**
@@ -612,13 +640,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			return false;
 
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.touches(this, geom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.touches(this, geom);
+        }
 		
 		IntersectionMatrix tIM = null;
 		try {
@@ -632,38 +659,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		rValue = tIM.matches("F***T****")
 	  	  || tIM.matches("FT*******")
 	  	  || tIM.matches("F**T*****");
-		
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				rValue = tIM.matches("FT*******")
-//					  || tIM.matches("F**T*****");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				rValue = tIM.matches("F***T****")
-//					  || tIM.matches("FT*******")
-//					  || tIM.matches("F**T*****");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				rValue = tIM.matches("F***T****")
-//				  	  || tIM.matches("FT*******")
-//				  	  || tIM.matches("F**T*****");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				rValue = tIM.matches("F***T****")
-//			  	  	  || tIM.matches("FT*******")
-//			  	  	  || tIM.matches("F**T*****");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		}
 		
 		return rValue;	
 	}
@@ -692,13 +687,13 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			return false;
 		
 		/* for 3D coordinate geometry */
-	        int coordD1 = getCoordinateDimension();
-	        int coordD2 = geom.getCoordinateDimension();
-	        
-	        if(coordD1 == 3 && coordD2 == 3) {
-	                return SFCGALAlgorithm.overlaps(this, geom);
-	        }
-	        /* */
+        int coordD1 = getCoordinateDimension();
+        int coordD2 = geom.getCoordinateDimension();
+        
+        if(coordD1 == 3 && coordD2 == 3) {
+                return SFCGALAlgorithm.overlaps(this, geom);
+        }
+        /* */
 		
 		IntersectionMatrix tIM = null;
 		try {
@@ -713,45 +708,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			rValue = tIM.matches("1*T***T**");
 		else
 			rValue = tIM.matches("T*T***T**");
-
-		
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				if (geom.getDimension(null) == 1)
-//					rValue = tIM.matches("1*T***T**");
-//				else
-//					rValue = tIM.matches("T*T***T**");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				if (geom.getDimension(null) == 1)
-//					rValue = tIM.matches("1*T***T**");
-//				else
-//					rValue = tIM.matches("T*T***T**");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				if (geom.getDimension(null) == 1)
-//					rValue = tIM.matches("1*T***T**");
-//				else
-//					rValue = tIM.matches("T*T***T**");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				if (geom.getDimension(null) == 1)
-//					rValue = tIM.matches("1*T***T**");
-//				else
-//					rValue = tIM.matches("T*T***T**");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		}
-		
+	
 		return rValue;	
 	}
 	
@@ -799,44 +756,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		
 	}
 	
-	
-//	public boolean covers(TransfiniteSet pointSet) {
-//		// TO-DO test
-//		// TO-DO documentation
-//		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
-//
-//		// Return false, if the envelopes doesn´t intersect
-//		if (!((EnvelopeImpl)this.getEnvelope()).intersects(geom.getEnvelope()))
-//			return false;
-//		
-//		try {
-//			IntersectionMatrix tIM = RelateOp.relate(this, geom);
-//			return tIM.isCovers();
-//		} catch (UnsupportedDimensionException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-	
-//	public boolean coveredBy(TransfiniteSet pointSet) {
-//		// TO-DO test
-//		// TO-DO documentation
-//		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
-//
-//		// Return false, if the envelopes doesn´t intersect
-//		if (!((EnvelopeImpl)this.getEnvelope()).intersects(geom.getEnvelope()))
-//			return false;
-//		
-//		try {
-//			IntersectionMatrix tIM = RelateOp.relate(geom, this);
-//			return tIM.isCovers();
-//		} catch (UnsupportedDimensionException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-
-	
 	// ***************************************************************************
 	// ***************************************************************************
 	// ******  SET OPERATIONS
@@ -852,13 +771,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl otherGeom = GeometryImpl.castToGeometryImpl(pointSet);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = otherGeom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.union(this, otherGeom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = otherGeom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.union(this, otherGeom);
+        }
 		
 		// Return the result geometry of the Union operation between the input
 		// geometries
@@ -881,13 +799,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl otherGeom = GeometryImpl.castToGeometryImpl(pointSet);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = otherGeom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.intersection(this, otherGeom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = otherGeom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.intersection(this, otherGeom);
+        }
 		
 		try {
 			return OverlayOp.overlayOp(this, otherGeom, OverlayOp.INTERSECTION);
@@ -908,13 +825,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl otherGeom = GeometryImpl.castToGeometryImpl(pointSet);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = otherGeom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.difference(this, otherGeom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = otherGeom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.difference(this, otherGeom);
+        }
 		
 		try {
 			return OverlayOp.overlayOp(this, otherGeom, OverlayOp.DIFFERENCE);
@@ -935,13 +851,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl otherGeom = GeometryImpl.castToGeometryImpl(pointSet);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = otherGeom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.symmetricDifference(this, otherGeom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = otherGeom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.symmetricDifference(this, otherGeom);
+        }
 		
 		try {
 			return OverlayOp
@@ -972,6 +887,11 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			List<OrientableSurface> cs = new ArrayList<OrientableSurface>();
 			cs.add( (OrientableSurface) this);
 			return new CompositeSurfaceImpl(cs);
+		} else
+		if (this instanceof SolidImpl) {
+			List<Solid> cs = new ArrayList<Solid>();
+			cs.add( (Solid) this);
+			return new CompositeSolidImpl(cs);
 		} else
 		if (this instanceof MultiPrimitiveImpl) {
 			// TODO
@@ -1030,28 +950,5 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		}
 		return positionFactory;
 	}
-        
-        /**
-         * Gets the user data object for this geometry, if any.
-         *
-         * @return the user data object, or null if none set
-         */
-        public Object getUserData() {
-            return userData;
-        }
-        
-        /**
-         * A simple scheme for applications to add their own custom data to a Geometry.
-         * An example use might be to add an object representing a identification of a Geometry.
-         * <p>
-         * Note that user data objects are not present in geometries created by
-         * construction methods.
-         *
-         * @param userData an object, the semantics for which are defined by the
-         * application using this Geometry
-         */
-        public void setUserData(Object userData) {
-            this.userData = userData;
-        }
         
 }

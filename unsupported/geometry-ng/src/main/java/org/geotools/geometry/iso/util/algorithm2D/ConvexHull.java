@@ -107,7 +107,7 @@ public class ConvexHull {
 		if (geom instanceof PointImpl) {
 			// Add point
 			positions = new ArrayList<DirectPositionImpl>();
-			positions.add(((PointImpl)geom).getPosition());
+			positions.add(((PointImpl)geom).getDirectPosition());
 		} else if (geom instanceof CurveImpl) {
 			// Add control points
 			positions = new ArrayList<DirectPositionImpl>();

@@ -152,10 +152,6 @@ public class OrientablePrimitiveProxy implements OrientablePrimitive, Serializab
 		return primitive.distance(geometry);
 	}
 
-	public double getDistance(Geometry geometry) {
-		return primitive.getDistance(geometry);
-	}
-
 	public int getDimension(DirectPosition point) {
 		return primitive.getDimension(point);
 	}

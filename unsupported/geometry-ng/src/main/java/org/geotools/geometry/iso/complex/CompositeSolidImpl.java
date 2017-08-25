@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
-import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.SolidImpl;
 import org.opengis.geometry.Boundary;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.complex.Complex;
+import org.opengis.geometry.primitive.Solid;
 
 /**
  * A CompositeSolid (Figure 30) shall be a Complex with all the geometric
@@ -57,7 +57,7 @@ public class CompositeSolidImpl extends CompositeImpl<SolidImpl> {
 	 * saved in the element ArrayList of the according Complex
 	 * @param generator
 	 */
-	public CompositeSolidImpl(List<CurveImpl> generator) {
+	public CompositeSolidImpl(List<Solid> generator) {
 		super(generator);
 	}
 

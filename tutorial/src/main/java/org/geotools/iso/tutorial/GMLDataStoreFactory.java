@@ -1,3 +1,4 @@
+package org.geotools.iso.tutorial;
 /*
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org

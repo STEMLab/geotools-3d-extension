@@ -74,6 +74,7 @@ public abstract class CSVStrategy {
         String[] headers = null;
         try {
             csvReader = csvFileState.openCSVReader();
+            csvReader.setSafetySwitch(false);
             headers = csvReader.getHeaders();
             
             typesFromData = findMostSpecificTypesFromData(csvReader, headers);

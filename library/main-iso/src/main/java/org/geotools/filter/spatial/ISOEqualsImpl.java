@@ -18,6 +18,7 @@ package org.geotools.filter.spatial;
 
 //import org.geotools.filter.GeometryFilterImpl;
 import org.geotools.filter.ISOGeometryFilterImpl;
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.filter.FilterVisitor;
 import org.opengis.filter.expression.Expression;
@@ -46,12 +47,12 @@ public class ISOEqualsImpl extends ISOGeometryFilterImpl implements Equals {
         public boolean evaluateInternal(Geometry left, Geometry right) {
 		//Envelope envLeft = left.getEnvelopeInternal();
 		//Envelope envRight = right.getEnvelopeInternal();
-		ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
-		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
+		ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
+    	ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
 		if (envRight.equals(envLeft))
 			//TODO previous code HACK!! sfcgal is so slow : return left.equals(right);
-			//return left.equals(right);
-			return true;
+			return left.equals(right);
+			//return true;
 		else
 			return false;
 	}

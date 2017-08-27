@@ -17,6 +17,7 @@
 package org.geotools.gml3.iso.bindings;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
@@ -26,6 +27,7 @@ import org.geotools.geometry.DirectPosition3D;
 import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.bindings.GML3ParsingUtils;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
@@ -98,7 +100,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return PointArray.class;
+        return DirectPosition[].class;
     }
 
     /**
@@ -109,7 +111,16 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         int crsDimension = GML3ParsingUtils.dimensions(node);
 
-        // double[] values = (double[]) value;
+    	//TODO HACK
+    	if(gBuilder.getCoordinateReferenceSystem().getCoordinateSystem().getDimension() != crsDimension) {
+
+    		if(crsDimension == 2) {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84);
+    		} else {
+    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
+    		}
+    	}
+        
         Double[] values = (Double[]) value;
         BigInteger coordinatesCount = (BigInteger) node.getAttributeValue("count");
 
@@ -129,7 +140,10 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             throw new IllegalArgumentException("dimension must be greater or equal to 1");
         }
 
-        PointArray pa = gBuilder.createPointArray();
+        //PointArray pa = gBuilder.createPointArray();
+        //Change PointArray to DirectPosition ArrayList because there is no reason to implement this part by PointArray. 
+        ArrayList<DirectPosition> pa = new ArrayList<DirectPosition>();
+        
         
         if (dim == 1) {
             for (int i = 0; i < coordCount; i++) {
@@ -175,8 +189,11 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
             }
 
         }
-
-        return pa;
+        
+        DirectPosition[] res = new DirectPosition[pa.size()];
+        res = pa.toArray(res);
+        //return pa;
+        return res;
     }
 
     /**
@@ -187,27 +204,32 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
      */
     public Element encode(Object object, Document document, Element value) throws Exception {
         // TODO: remove this when the parser can do lists
-        PointArray pa = (PointArray) object;
+        DirectPosition[] dp = (DirectPosition[]) object;
         StringBuffer sb = new StringBuffer();
 
-        int dim = pa.getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
-        int size = pa.size();
-        int nOrdWithSpace = size * dim - 1;
-        int count = 0;
-        for (int i = 0; i < size; i++) {
-            Position p = pa.get(i);
-            double[] coords = p.getDirectPosition().getCoordinate();
-            for(int j = 0; j < coords.length; j++) {
-                sb.append(coords[j]);
-                
-                if (count < nOrdWithSpace) {
-                    sb.append(" ");
-                }
-                count++;
-            }
+        if(dp != null && dp.length > 0) {
+        	
+        	int dim = dp[0].getCoordinateReferenceSystem().getCoordinateSystem().getDimension();
+	        int len = dp.length;
+	        int nOrdWithSpace = len * dim - 1;
+	        int count = 0;
+	        for (int i = 0; i < len; i++) {
+	            DirectPosition p = dp[i];
+	            double[] coords = p.getDirectPosition().getCoordinate();
+	            for(int j = 0; j < coords.length; j++) {
+	                sb.append(coords[j]);
+	                
+	                if (count < nOrdWithSpace) {
+	                    sb.append(" ");
+	                }
+	                count++;
+	            }
+	        }
+	
+	        value.appendChild(document.createTextNode(sb.toString()));
+        } else {
+        	throw new IllegalArgumentException("DirectPosition[] is null or empty");
         }
-
-        value.appendChild(document.createTextNode(sb.toString()));
 
         return value;
     }

@@ -195,4 +195,5 @@ public class SFAlgorithm {
          */
         public static native double volume(@ByRef SFGeometry g);
 
+        public static native @Cast("bool") boolean isValid(@ByRef SFGeometry g, int tolerance);
 }

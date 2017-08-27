@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.filter.FilterVisitor;
@@ -85,11 +86,17 @@ public class ISOIntersectsImpl extends ISOAbstractPreparedGeometryFilter impleme
     protected final boolean basicEvaluate(Geometry left, Geometry right) {
         //Envelope envLeft = left.getEnvelopeInternal();
         //Envelope envRight = right.getEnvelopeInternal();
-    	ReferencedEnvelope3D envLeft = new ReferencedEnvelope3D(left.getEnvelope());
-		ReferencedEnvelope3D envRight = new ReferencedEnvelope3D(right.getEnvelope());
+    	ReferencedEnvelope envLeft = ReferencedEnvelope.reference(left.getEnvelope());
+    	ReferencedEnvelope envRight = ReferencedEnvelope.reference(right.getEnvelope());
 		
-		ReferencedEnvelope3D empty = new ReferencedEnvelope3D();
-		ReferencedEnvelope3D queryResult = envLeft.intersection(envRight);
+    	ReferencedEnvelope empty = ReferencedEnvelope.create(left.getCoordinateReferenceSystem());
+    	ReferencedEnvelope queryResult;
+    	if(envLeft instanceof ReferencedEnvelope3D) {
+    		queryResult = ((ReferencedEnvelope3D)envLeft).intersection((ReferencedEnvelope3D)envRight);
+    	} else {
+    		queryResult = envLeft.intersection(envRight);
+    	}
+
 		if(!empty.equals(queryResult)) {
 			return left.intersects(right);
 		}

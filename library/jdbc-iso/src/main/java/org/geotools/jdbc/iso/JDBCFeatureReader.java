@@ -93,7 +93,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
     /**
      * geometry factory used to create geometry objects
      */
-    protected ISOGeometryBuilder geometryFactory;
+    protected ISOGeometryBuilder geometryBuilder;
     /**
      * hints
      */
@@ -200,7 +200,12 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.hints = hints;
         
         //grab a geometry factory... check for a special hint
-        geometryFactory = (ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
+        if(featureType.getCoordinateReferenceSystem() != null) {
+        	geometryBuilder = new ISOGeometryBuilder(featureType.getCoordinateReferenceSystem());
+        } else {
+        	geometryBuilder = new ISOGeometryBuilder(featureType.getGeometryDescriptor().getType().getCoordinateReferenceSystem());
+        }
+        		//(ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);
         /*if (geometryFactory == null) {
             // look for a coordinate sequence factory
             CoordinateSequenceFactory csFactory = 
@@ -211,9 +216,9 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
             }
         }*/
 
-        if (geometryFactory == null) {
+        if (geometryBuilder == null) {
             // fall back on one privided by datastore
-            geometryFactory = dataStore.getGeometryFactory();
+            geometryBuilder = dataStore.getGeometryFactory();
         }
         
         Double linearizationTolerance = (Double) hints.get(Hints.LINEARIZATION_TOLERANCE);
@@ -243,7 +248,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         this.featureSource = other.featureSource;
         this.tx = other.tx;
         this.hints = other.hints;
-        this.geometryFactory = other.geometryFactory;
+        this.geometryBuilder = other.geometryBuilder;
         this.builder = other.builder;
         this.st = other.st;
         this.rs = other.rs;
@@ -337,7 +342,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
                         try {
                             value = dataStore.getSQLDialect()
                                              .decodeGeometryValue(gatt, rs, offset+attributeRsIndex[i],
-                                    geometryFactory, cx);
+                                    geometryBuilder, cx);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -441,7 +446,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         dataStore = null;
         featureSource = null;
         featureType = null;
-        geometryFactory = null;
+        geometryBuilder = null;
         tx = null;
         hints = null;
         next = null;

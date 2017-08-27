@@ -674,7 +674,7 @@ public class RelateOperatorsTest extends TestCase {
 	}
 	
 	private SurfaceImpl createSurfaceAwithHole() {
-		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90), (90 60, 110 100, 120 90, 100 60, 90 60))";
+		String wktSurface1 = "SURFACE ((10 90, 30 50, 70 30, 120 40, 150 70, 150 120, 100 150, 30 140, 10 90), (90 60, 100 60, 120 90, 110 100, 90 60))";
 		return this.createSurfaceFromWKT(wktSurface1);
 	}
 

@@ -117,12 +117,7 @@ public class ISOBBOX3DImpl implements BBOX3D {
 		// 3DBBOX must be run as a post-filter in order to support the third
 		// coordinate.
 
-		
-		Hints h = new Hints();
-		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, envelope.getCoordinateReferenceSystem());
-
-		ISOGeometryBuilder gfac = new ISOGeometryBuilder(h);
+		ISOGeometryBuilder gfac = new ISOGeometryBuilder(envelope.getCoordinateReferenceSystem());
 		Solid solid = Util.makeSolidFromEnvelope(gfac, envelope.getLowerCorner(), envelope.getUpperCorner());
 
 		return factory.literal(solid);

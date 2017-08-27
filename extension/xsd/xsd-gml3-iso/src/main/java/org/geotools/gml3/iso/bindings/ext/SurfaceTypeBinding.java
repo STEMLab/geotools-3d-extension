@@ -16,14 +16,19 @@
  */
 package org.geotools.gml3.iso.bindings.ext;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
+import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -34,12 +39,12 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class SurfaceTypeBinding extends AbstractComplexBinding {
 
-    GeometryFactory gf;
-    
-    public SurfaceTypeBinding(GeometryFactory gf) {
-        this.gf = gf;
+    ISOGeometryBuilder gBuilder;
+
+    public SurfaceTypeBinding(ISOGeometryBuilder gBuilder) {
+        this.gBuilder = gBuilder;
     }
-    
+
     /**
      * @generated
      */
@@ -49,7 +54,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
     
     @Override
     public int getExecutionMode() {
-        return BEFORE;
+        return AFTER;
     }
 
     /**
@@ -58,7 +63,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return MultiPolygon.class;
+        return Surface.class;
     }
 
     /**
@@ -67,21 +72,22 @@ public class SurfaceTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        Polygon[] patches = (Polygon[])node.getChildValue(Polygon[].class);
-        return gf.createMultiPolygon(patches);
+        Surface[] patches = (Surface[])node.getChildValue(Surface[].class);
+        List<Surface> l = Arrays.asList(patches);
+        return gBuilder.createSurface(l);
     }
     
     @Override
     public Object getProperty(Object object, QName name) throws Exception {
         if ("patches".equals(name.getLocalPart())) {
-            MultiPolygon multiSurface = (MultiPolygon) object;
-            Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
+            Surface s = (Surface) object;
+            /*Polygon[] members = new Polygon[multiSurface.getNumGeometries()];
 
             for (int i = 0; i < members.length; i++) {
                 members[i] = (Polygon) multiSurface.getGeometryN(i);
             }
 
-            return members;
+            return members;*/
         }
 
         return null;

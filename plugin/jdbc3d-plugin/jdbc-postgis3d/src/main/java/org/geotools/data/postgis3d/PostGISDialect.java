@@ -38,6 +38,10 @@ import java.util.logging.Level;
 import org.geotools.data.jdbc.iso.FilterToSQL;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
+import org.geotools.filter.FilterCapabilities;
+import org.geotools.filter.spatial.ISOContainsImpl;
+import org.geotools.filter.spatial.ISOEqualsImpl;
+import org.geotools.filter.spatial.ISOWithinImpl;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.CircularRing;
@@ -57,6 +61,7 @@ import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.filter.Filter;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -129,7 +134,6 @@ public class PostGISDialect extends BasicSQLDialect {
             put("BYTEA", byte[].class);
         }
     };
-    
     // geometry types that will not contain curves (we map to curved types
     // if the db type is supposed to contain curves, that leaves out
     // geometry and geometry collection as potential curve containers)
@@ -167,7 +171,15 @@ public class PostGISDialect extends BasicSQLDialect {
         }
     };
     
-    
+    public boolean acceptable(Geometry type) {
+    	boolean acceptable = false;
+
+		if(!(type instanceof Solid)) {
+			acceptable = true;
+		}
+    	
+    	return acceptable;
+    }
     
     @Override
     public boolean isAggregatedSortSupported(String function) {
@@ -427,12 +439,7 @@ public class PostGISDialect extends BasicSQLDialect {
                         if (env != null){
                             CoordinateReferenceSystem crs = ((GeometryDescriptor) att)
                                     .getCoordinateReferenceSystem();
-                            double[] lowerCorner = env.getLowerCorner().getDirectPosition().getCoordinate();
-                            double[] upperCorner = env.getUpperCorner().getDirectPosition().getCoordinate();
-                            if(env.getDimension() == 2) 
-                            	result.add(new ReferencedEnvelope(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], crs));
-                            else if(env.getDimension() == 3)
-                            	result.add(new ReferencedEnvelope3D(lowerCorner[0], upperCorner[0], lowerCorner[1], upperCorner[1], lowerCorner[2], upperCorner[2], crs));
+                            result.add(ReferencedEnvelope.create(env, crs));
                         }
                     }
                     rs.close();

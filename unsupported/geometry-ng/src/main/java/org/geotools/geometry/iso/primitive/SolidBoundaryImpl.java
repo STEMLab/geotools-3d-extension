@@ -117,7 +117,7 @@ public class SolidBoundaryImpl extends PrimitiveBoundaryImpl implements
 
 	public boolean isSimple() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class SolidBoundaryImpl extends PrimitiveBoundaryImpl implements
 	 */
 	@Override
 	public int getDimension(DirectPosition point) {
-		return point.getDimension();
+		return 3;
 	}
 
 	@Override

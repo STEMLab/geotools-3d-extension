@@ -16,7 +16,6 @@
  */
 package org.geotools.geometry.iso.primitive;
 
-import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.EnvelopeImpl;
 import org.geotools.geometry.iso.io.GeometryToString;
 import org.geotools.geometry.iso.sfcgal.util.SFCGALConvertor;
@@ -46,7 +45,7 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
     /**
 	 * 
 	 */
-        private SolidBoundary boundary = null; // add solid boundary
+    private SolidBoundary boundary = null; // add solid boundary
         
 	protected Envelope envelope;
 
@@ -126,32 +125,9 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
 	 * **************************************************************
 	 **************************************************************************/
 
-	/**
-	 * The method <code>dimension</code> returns the inherent dimension of
-	 * this Object, which is less than or equal to the coordinate dimension. The
-	 * dimension of a collection of geometric objects is the largest dimension
-	 * of any of its pieces. Points are 0-dimensional, curves are 1-dimensional,
-	 * surfaces are 2-dimensional, and solids are 3-dimensional. Locally, the
-	 * dimension of a geometric object at a point is the dimension of a local
-	 * neighborhood of the point - that is the dimension of any coordinate
-	 * neighborhood of the point. Dimension is unambiguously defined only for
-	 * DirectPositions interior to this Object. If the passed DirectPosition2D
-	 * is NULL, then the method returns the largest possible dimension for any
-	 * DirectPosition2D in this Object.
-	 * 
-	 * @param point
-	 *            a <code>DirectPosition2D</code> value
-	 * @return an <code>int</code> value
-	 */
-	public int dimension(@SuppressWarnings("unused")
-	final DirectPositionImpl point) {
-		return 3;
-	}
-
 	@Override
 	public SolidImpl clone() throws CloneNotSupportedException {
 		SolidBoundary newBoundary = (SolidBoundary) this.boundary.clone();
-		
 		return new SolidImpl(newBoundary);
 	}
 
@@ -175,7 +151,23 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
 		return volume();
 	}
 
-
+	/**
+	 * The method <code>dimension</code> returns the inherent dimension of
+	 * this Object, which is less than or equal to the coordinate dimension. The
+	 * dimension of a collection of geometric objects is the largest dimension
+	 * of any of its pieces. Points are 0-dimensional, curves are 1-dimensional,
+	 * surfaces are 2-dimensional, and solids are 3-dimensional. Locally, the
+	 * dimension of a geometric object at a point is the dimension of a local
+	 * neighborhood of the point - that is the dimension of any coordinate
+	 * neighborhood of the point. Dimension is unambiguously defined only for
+	 * DirectPositions interior to this Object. If the passed DirectPosition2D
+	 * is NULL, then the method returns the largest possible dimension for any
+	 * DirectPosition2D in this Object.
+	 * 
+	 * @param point
+	 *            a <code>DirectPosition2D</code> value
+	 * @return an <code>int</code> value
+	 */
 	@Override
 	public int getDimension(DirectPosition point) {
 		return 3;
@@ -188,38 +180,37 @@ public class SolidImpl extends PrimitiveImpl implements Solid {
 
 	@Override
 	public DirectPosition getRepresentativePoint() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String toString() {
-	        return GeometryToString.getString(this);
+		return GeometryToString.getString(this);
 	}
 	
 	@Override
-        public int hashCode() {
-                final int PRIME = 31;
-                int result = 1;
-                result = PRIME * result + ((boundary == null) ? 0 : boundary.hashCode());
-                result = PRIME * result + ((envelope == null) ? 0 : envelope.hashCode());
-                return result;
-        }
+    public int hashCode() {
+            final int PRIME = 31;
+            int result = 1;
+            result = PRIME * result + ((boundary == null) ? 0 : boundary.hashCode());
+            result = PRIME * result + ((envelope == null) ? 0 : envelope.hashCode());
+            return result;
+    }
 	
 	@Override
-        public boolean equals(Object obj) {
-                if (this == obj)
-                        return true;
-                if (obj == null)
-                        return false;
-                if (getClass() != obj.getClass())
-                        return false;
-                final SolidImpl other = (SolidImpl) obj;
-                if (boundary == null) {
-                        if (other.boundary != null)
-                                return false;
-                } else if (!boundary.equals(other.boundary))
-                        return false;
-                
-                return true;
-        }
+    public boolean equals(Object obj) {
+            if (this == obj)
+                    return true;
+            if (obj == null)
+                    return false;
+            if (getClass() != obj.getClass())
+                    return false;
+            final SolidImpl other = (SolidImpl) obj;
+            if (boundary == null) {
+                    if (other.boundary != null)
+                            return false;
+            } else if (!boundary.equals(other.boundary))
+                    return false;
+            
+            return true;
+    }
 }

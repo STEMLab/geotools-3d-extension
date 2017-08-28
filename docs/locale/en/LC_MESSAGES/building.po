@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: geotools-3d-extension 2.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-24 11:15+0900\n"
+"POT-Creation-Date: 2017-08-28 14:05+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,7 +88,7 @@ msgstr ""
 #: ../../building.txt:38
 msgid ""
 "필요 라이브러리가 모두 제대로 설치되었는지 확인하기 위해 gt-geometry-ng 모듈을 다음과 같이 빌드합니다. 모든 빌드가 "
-"완료된 후 테스트가 성공하면 설치가 완료된 것입니다."
+"완료된 후 수행되는 모든 테스트가 성공하면 설치가 완료된 것입니다."
 msgstr ""
 
 #: ../../building.txt:41 ../../building.txt:47
@@ -102,4 +102,11 @@ msgstr ""
 #: ../../building.txt:45
 msgid "$ cd ../../"
 msgstr ""
+
+#~ msgid ""
+#~ "필요 라이브러리가 모두 제대로 설치되었는지 확인하기 위해"
+#~ " gt-geometry-ng 모듈을 다음과 같이 "
+#~ "빌드합니다. 모든 빌드가 완료된 후 테스트가 성공하면 "
+#~ "설치가 완료된 것입니다."
+#~ msgstr ""
 

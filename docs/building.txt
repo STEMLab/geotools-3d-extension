@@ -23,6 +23,10 @@ Prerequisites
 GeoTools 3D installation on Ubuntu 16.04
 ****************************************
 
+먼저 다음의 명령어로 Git Repository로 부터 프로젝트를 받아옵니다.
+
+$ git clone https://github.com/STEMLab/geotools-3d-extension.git
+
 SFCGAL, CGAL, Boost 라이브러리에서 필요한 라이브러리들을 설치합니다.
 이미 이 라이브러리들이 설치되어 있다면 다음의 과정은 생략해도 좋습니다.
 

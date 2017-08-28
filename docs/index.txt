@@ -20,7 +20,8 @@ Table of Contents
 
    overview
    geometry
-   JDBC
+   datastore
+   gml
 
 .. _tutorial-docs:
 
@@ -30,8 +31,3 @@ Table of Contents
 
    building
    quickstart
-   datastore
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -1,3 +1,10 @@
-How to connect DataStore
-====================================
-Welcome to the GeoTools 3d-extension 'DataStore' documentation.
+.. datastore:
+
+#########
+DataStore
+#########
+
+TBD
+
+
+

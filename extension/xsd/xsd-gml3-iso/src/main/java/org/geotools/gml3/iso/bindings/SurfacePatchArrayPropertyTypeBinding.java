@@ -24,8 +24,8 @@ import org.geotools.gml3.iso.GML;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
-
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfacePatchArrayPropertyType.
@@ -71,7 +71,7 @@ public class SurfacePatchArrayPropertyTypeBinding extends AbstractComplexBinding
      * @generated modifiable
      */
     public Class getType() {
-        return Polygon[].class;
+        return Surface[].class;
     }
 
     /**
@@ -81,8 +81,8 @@ public class SurfacePatchArrayPropertyTypeBinding extends AbstractComplexBinding
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
 
-        List<Polygon> l = node.getChildValues( Polygon.class );
-        Polygon[] polygons = new Polygon[l.size()];
+        List<Surface> l = node.getChildValues( Surface.class );
+        Surface[] polygons = new Surface[l.size()];
         for ( int i = 0; i < l.size(); i++ ) {
             polygons[i] = l.get( i );
         }

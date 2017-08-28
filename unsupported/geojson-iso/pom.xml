@@ -40,6 +40,11 @@
         </license>
     </licenses>
 
+	<properties>
+	    <allow.test.skip>true</allow.test.skip>
+	    <allow.test.failure.ignore>true</allow.test.failure.ignore>
+	    <maven.test.skip>true</maven.test.skip>
+	</properties>
 
   <!-- =========================================================== -->
   <!--     Developers and Contributors                             -->
@@ -52,6 +57,15 @@
             <organization>OpenGeo</organization>
             <roles>
                 <role>Module Maintainer</role>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Hyung-Gyu Ryoo</name>
+            <id>hgryoo</id>
+            <email>hgryoo@pnu.edu</email>
+            <organization>Pusan National University</organization>
+            <roles>
                 <role>Java Developer</role>
             </roles>
         </developer>

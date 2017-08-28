@@ -39,7 +39,13 @@ public:
 			cpp_base_rings->push_back( *(SFCGAL::LineString *)(((SFLineString *)rings.at(i))->get_data()) );
 		}
 
-		data = new SFCGAL::Polygon(*cpp_base_rings);
+		data = new SFCGAL::Polygon(cpp_base_rings->at(0));
+		
+		SFCGAL::Polygon* poly = dynamic_cast<SFCGAL::Polygon*>(data);
+		if(cpp_base_rings->size() > 1) {
+			for(size_t i=1; i<cpp_base_rings->size(); i++)
+			poly->addInteriorRing(cpp_base_rings->at(i));
+		}
 	}
 	SFPolygon(const SFLineString& exteriorRing) : SFSurface(new SFCGAL::Polygon(*(SFCGAL::LineString *)(exteriorRing.get_data()))) { }
 	//SFPolygon(SFLineString* exteriorRing) : SFSurface(new SFCGAL::Polygon(*(SFCGAL::LineString *)(exteriorRing->get_data()))) { }
@@ -98,8 +104,6 @@ public:
 	bool isMeasured() const {
 		return data->isMeasured();
 	}
-
-
 
 	bool isCounterClockWiseOriented() {
 		return ((SFCGAL::Polygon *)data)->isCounterClockWiseOriented();

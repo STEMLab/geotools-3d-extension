@@ -39,17 +39,14 @@ import org.geotools.geometry.iso.primitive.CurveBoundaryImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
-import org.geotools.geometry.iso.primitive.RingImpl;
+import org.geotools.geometry.iso.primitive.PrimitiveImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
 import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
-import org.geotools.geometry.iso.sfcgal.util.Geometry3DOperation;
-import org.geotools.geometry.iso.topograph2D.Coordinate;
+import org.geotools.geometry.iso.sfcgal.util.SFCGALAlgorithm;
 import org.geotools.geometry.iso.topograph2D.IntersectionMatrix;
 import org.geotools.geometry.iso.util.Assert;
-import org.geotools.geometry.iso.util.algorithm2D.CGAlgorithms;
 import org.geotools.geometry.iso.util.algorithm2D.CentroidArea2D;
-import org.geotools.geometry.iso.util.algorithm2D.ConvexHull;
 import org.geotools.geometry.iso.util.algorithmND.CentroidLine;
 import org.geotools.geometry.iso.util.algorithmND.CentroidPoint;
 import org.geotools.referencing.CRS;
@@ -61,9 +58,7 @@ import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.Precision;
 import org.opengis.geometry.TransfiniteSet;
-import org.opengis.geometry.aggregate.MultiPrimitive;
 import org.opengis.geometry.complex.Complex;
-import org.opengis.geometry.coordinate.LineSegment;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Primitive;
@@ -255,16 +250,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			// PointImpl, CurveImpl, etc), if not it will fall through to here
 			throw new UnsupportedOperationException("Transform not implemented for this geometry type yet.");
 	}
-
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.opengis.geometry.coordinate.root.Geometry#getDistance(org.opengis.geometry.coordinate.root.Geometry)
-	 * @deprecated  use distance()
-	 */
-	public final double getDistance(Geometry geometry) {
-		return this.distance(geometry);
-	}
 	
 	/**
      * Computes the distance between this and another geometry.  We have
@@ -281,163 +266,13 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 * @see org.opengis.geometry.coordinate.root.Geometry#distance(org.opengis.geometry.coordinate.root.Geometry)
 	 */
 	public final double distance(Geometry geometry) {
-	        /* for 3D coordinate geometry */
-	        int g0Dim = getCoordinateDimension();
-	        int g1Dim = geometry.getCoordinateDimension();
-	        
-	        if(g0Dim == 3 && g1Dim == 3) {
-	                GeometryImpl geom = GeometryImpl.castToGeometryImpl(geometry);
-	                return Geometry3DOperation.distance(this, geom);
-	        }
-	        /* */
-	        
-		// first determine if this or the given geom is a multiprimitive, if so, break it
-		// down and loop through each of its geoms and determine the mindistance from
-		// those.
-        if (geometry instanceof MultiPrimitive) {
-            double minDistance = Double.POSITIVE_INFINITY;
-            MultiPrimitive gc1 = (MultiPrimitive) geometry;
-            Iterator<? extends Geometry> iter = gc1.getElements().iterator();
-            while (iter.hasNext()) {
-            	GeometryImpl prim = (GeometryImpl) iter.next();
-                double d = prim.distance(this);
-                if (d < minDistance) {
-                    minDistance = d;
-                    // can't get smaller than 0, so exit now if that is the case
-                    if (minDistance == 0) return 0;
-                }
-            }
-            return minDistance;
-        }
-        else if (this instanceof MultiPrimitive) {
-            double minDistance = Double.POSITIVE_INFINITY;
-            MultiPrimitive gc1 = (MultiPrimitive) this;
-            Iterator<? extends Geometry> iter = gc1.getElements().iterator();
-            while (iter.hasNext()) {
-            	GeometryImpl prim = (GeometryImpl) iter.next();
-                double d = prim.distance(geometry);
-                if (d < minDistance) {
-                    minDistance = d;
-                    // can't get smaller than 0, so exit now if that is the case
-                    if (minDistance == 0) return 0;
-                }
-            }
-            return minDistance;
-        }
-        else {
-        	// first check if the geometries intersect (if so the min distance is 0)
-        	if (this.intersects(geometry)) {
-        		return 0;
-        	}
-        	
-        	// ensure both this and the given geometry are either points or 
-        	// linesegments so we can use the CGAlrogrithm calculations.
-        	List<LineSegment> lines1 = null;
-        	List<LineSegment> lines2 = null;
-        	PointImpl point1 = null;
-        	PointImpl point2 = null;
-        	
-        	// convert this geom
-        	if (this instanceof PointImpl) {
-        		point1 = (PointImpl) this;
-        	}
-        	else if (this instanceof CurveImpl) {
-        		lines1 = ((CurveImpl)this).asLineSegments();
-        	}
-        	else if (this instanceof RingImplUnsafe) {
-        		lines1 = ((RingImplUnsafe)this).asLineString().asLineSegments();
-        	}
-        	else if (this instanceof RingImpl) {
-        		lines1 = ((RingImpl)this).asLineString().asLineSegments();
-        	}
-        	else if (this instanceof SurfaceImpl) {
-        		lines1 = ((RingImplUnsafe)((SurfaceImpl)this).getBoundary().getExterior()).asLineString().asLineSegments();
-        	}
-        	
-        	// convert given geom
-        	if (geometry instanceof PointImpl) {
-        		point2 = (PointImpl) geometry;
-        	}
-        	else if (geometry instanceof CurveImpl) {
-        		lines2 = ((CurveImpl)geometry).asLineSegments();
-        	}
-        	else if (geometry instanceof RingImplUnsafe) {
-        		lines2 = ((RingImplUnsafe)geometry).asLineString().asLineSegments();
-        	}
-        	else if (geometry instanceof RingImpl) {
-        		lines2 = ((RingImpl)geometry).asLineString().asLineSegments();
-        	}
-        	else if (geometry instanceof SurfaceImpl) {
-        		lines2 = ((RingImplUnsafe)((SurfaceImpl)geometry).getBoundary().getExterior()).asLineString().asLineSegments();
-        	}
-        	
-        	// now determine which algorithm to use for finding the shortest
-        	// distance between the two geometries
-        	if (point1 != null && point2 != null) {
-        		// use directposition.distance()
-        		return point1.getPosition().distance(point2.getPosition());
-        	}
-        	else if (lines1 != null) {
-        		if (point2 != null) {
-        			// loop through each linesegment and check for the min distance
-        			double minDistance = Double.POSITIVE_INFINITY;
-        			for (int i=0; i<lines1.size(); i++) {
-        				Coordinate c1 = new Coordinate(point2.getRepresentativePoint().getCoordinate());
-        				Coordinate cA = new Coordinate(lines1.get(i).getStartPoint().getCoordinate());
-        				Coordinate cB = new Coordinate(lines1.get(i).getEndPoint().getCoordinate());
-        				double d = CGAlgorithms.distancePointLine(c1, cA, cB);
-        				if ( d < minDistance) {
-        					minDistance = d;
-        					if (minDistance == 0) return 0;
-        				}
-        			}
-        			return minDistance;
-        		}
-        		else if (lines2 != null) {
-        			// loop through each set of linesegments and check for the 
-        			// min distance
-        			double minDistance = Double.POSITIVE_INFINITY;
-        			for (int i=0; i<lines1.size(); i++) {
-        				for (int y=0; y<lines2.size(); y++) {
-	        				Coordinate A = new Coordinate(lines1.get(i).getStartPoint().getCoordinate());
-	        				Coordinate B = new Coordinate(lines1.get(i).getEndPoint().getCoordinate());
-	        				Coordinate C = new Coordinate(lines2.get(y).getStartPoint().getCoordinate());
-	        				Coordinate D = new Coordinate(lines2.get(y).getEndPoint().getCoordinate());
-	        				double d = CGAlgorithms.distanceLineLine(A, B, C, D);
-	        				if ( d < minDistance) {
-	        					minDistance = d;
-	        					if (minDistance == 0) return 0;
-	        				}
-        				}
-        			}
-        			return minDistance;
-        		}
-        		
-        	}
-        	else if (lines2 != null) {
-        		if (point1 != null) {
-        			// loop through each linesegment and check for the min distance
-        			double minDistance = Double.POSITIVE_INFINITY;
-        			for (int i=0; i<lines2.size(); i++) {
-        				Coordinate c1 = new Coordinate(point1.getRepresentativePoint().getCoordinate());
-        				Coordinate cA = new Coordinate(lines2.get(i).getStartPoint().getCoordinate());
-        				Coordinate cB = new Coordinate(lines2.get(i).getEndPoint().getCoordinate());
-        				double d = CGAlgorithms.distancePointLine(c1, cA, cB);
-        				if ( d < minDistance) {
-        					minDistance = d;
-        					if (minDistance == 0) return 0;
-        				}
-        			}
-        			return minDistance;
-        		}
-        	}
-       	
-        }
-        
-		// if it is some other type, show an error
-		// TODO: implement code for any missing types
-		Assert.isTrue(false);
-		return Double.NaN;
+		GeometryImpl geom = GeometryImpl.castToGeometryImpl(geometry);
+		
+		if(geom instanceof PrimitiveImpl) {
+			return SFCGALAlgorithm.distance(this, geom);	
+		} else {
+			throw new UnsupportedOperationException("ComplexImpl type is not supproted yet");
+		}
 	}
 
 	/*
@@ -446,12 +281,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 * @see org.opengis.geometry.coordinate.root.Geometry#getBuffer(double)
 	 */
 	public Geometry getBuffer(double distance) {
-		// TODO semantic JR, SJ
-		// TODO implementation
-		// TODO test
-		// TODO documentation
-		Assert.isTrue(false);
-		return null;
+		return SFCGALAlgorithm.extrude(this, distance);
 	}
 
 
@@ -564,14 +394,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 * @see org.opengis.geometry.coordinate.root.Geometry#getConvexHull()
 	 */
 	public Geometry getConvexHull() {
-	        /* for 3D coordinate geometry */
-	        if(getCoordinateDimension() == 3) {
-	                return Geometry3DOperation.getConvexHull(this);
-	        }
-	        /* */
-	        
-		ConvexHull ch = new ConvexHull(this);
-		return ch.getConvexHull();		
+		return SFCGALAlgorithm.getConvexHull(this);
 	}
 	
 	
@@ -598,13 +421,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl geom2 = GeometryImpl.castToGeometryImpl(g2);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = geom1.getCoordinateDimension();
-	        int d2 = geom2.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.relate(geom1, geom2, intersectionPatternMatrix);
-	        }
-	        /* */
+        int d1 = geom1.getCoordinateDimension();
+        int d2 = geom2.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.relate(geom1, geom2, intersectionPatternMatrix);
+        }
 	        
 		IntersectionMatrix tIM = RelateOp.relate((GeometryImpl) geom1, (GeometryImpl) geom2);
 		return tIM.matches(intersectionPatternMatrix);
@@ -626,13 +448,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(aOther);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.relate(this, geom, intersectionPatternMatrix);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.relate(this, geom, intersectionPatternMatrix);
+        }
 	        
 		IntersectionMatrix tIM = RelateOp.relate(this, geom);
 		return tIM.matches(intersectionPatternMatrix);
@@ -647,13 +468,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.contains(this, geom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.contains(this, geom);
+        }
 	        
 		// a.Contains(b) = b.within(a)
 		return geom.within(this);
@@ -674,13 +494,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			return false;
 		
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.within(this, geom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.within(this, geom);
+        }
 	        
 		IntersectionMatrix tIM = null;
 		try {
@@ -692,32 +511,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		
 		boolean rValue = false;
 		rValue = tIM.matches("T*F**F***");
-		
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				rValue = tIM.matches("TFF******");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				rValue = tIM.matches("T*F******");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				rValue = tIM.matches("T***F****");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				rValue = tIM.matches("T*F**F***");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		}
-		
+
 		return rValue;	
 	}
 
@@ -760,48 +554,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		if (!((EnvelopeImpl)this.getEnvelope()).intersects(geom.getEnvelope()))
 			return true;
 		
-		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.disjoint(this, geom);
-	        }
-	        /* */
-
-//		String intersectionPatternMatrix = "";
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				// Empty: I/I
-//				// B/I, I/B, B/B may intersect
-//				intersectionPatternMatrix = "F********";
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				// Empty: I/I, I/B
-//				// B/I, B/B may intersect
-//				intersectionPatternMatrix = "FF*******";
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				// Empty: I/I, B/I
-//				// I/B, B/B may intersect
-//				intersectionPatternMatrix = "F**F*****";
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				// Empty: I/I, B/I, I/B, B/B
-//				intersectionPatternMatrix = "FF*FF****";
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		}
-
+		int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        if(d1 == 3 && d2 == 3) {
+            return SFCGALAlgorithm.disjoint(this, geom);
+        }
+		
 		String intersectionPatternMatrix = "FF*FF****";
 
 		try {
@@ -836,62 +594,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 */
 	public boolean equals(TransfiniteSet pointSet) {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
-
-		// Return false, if the envelopes doesn´t intersect
-		if (!((EnvelopeImpl)this.getEnvelope()).intersects(geom.getEnvelope()))
-			return false;
-		
-		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.equals(this, geom);
-	        }
-	        /* */
-		IntersectionMatrix tIM = null;
-		try {
-			tIM = RelateOp.relate(this, geom);
-		} catch (UnsupportedDimensionException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		boolean rValue = false;
-		
-		// No distinction between primitive and complex (explanation see thesis)
-		rValue = tIM.matches("T*F**FFF*");
-		
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				rValue = tIM.matches("T*F**FFF*");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				//rValue = tIM.matches("TTFF*TFF*");
-//				rValue = tIM.matches("T*F**FFF*");
-//			} else {
-//						Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				//rValue = tIM.matches("TFFT*FFT*");
-//				rValue = tIM.matches("T*F**FFF*");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				rValue = tIM.matches("T*F**FFF*");
-//			} else {
-//						Assert.isTrue(false);
-//			}
-//		}
-		
-		return rValue;	
-
-		
+	    return SFCGALAlgorithm.equals(this, geom);
 	}
 
 	/**
@@ -913,7 +616,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d2 = geom.getCoordinateDimension();
 	        
 	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.touches(this, geom);
+	                return SFCGALAlgorithm.touches(this, geom);
 	        }
 	        /* */
 		
@@ -993,7 +696,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int coordD2 = geom.getCoordinateDimension();
 	        
 	        if(coordD1 == 3 && coordD2 == 3) {
-	                return Geometry3DOperation.overlaps(this, geom);
+	                return SFCGALAlgorithm.overlaps(this, geom);
 	        }
 	        /* */
 		
@@ -1072,7 +775,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int coordD2 = geom.getCoordinateDimension();
 	        
 	        if(coordD1 == 3 && coordD2 == 3) {
-	                return Geometry3DOperation.crosses(this, geom);
+	                return SFCGALAlgorithm.crosses(this, geom);
 	        }
 	        /* */
 		
@@ -1153,7 +856,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d2 = otherGeom.getCoordinateDimension();
 	        
 	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.union(this, otherGeom);
+	                return SFCGALAlgorithm.union(this, otherGeom);
 	        }
 	        /* */
 		
@@ -1182,7 +885,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d2 = otherGeom.getCoordinateDimension();
 	        
 	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.intersection(this, otherGeom);
+	                return SFCGALAlgorithm.intersection(this, otherGeom);
 	        }
 	        /* */
 		
@@ -1209,7 +912,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d2 = otherGeom.getCoordinateDimension();
 	        
 	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.difference(this, otherGeom);
+	                return SFCGALAlgorithm.difference(this, otherGeom);
 	        }
 	        /* */
 		
@@ -1236,7 +939,7 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	        int d2 = otherGeom.getCoordinateDimension();
 	        
 	        if(d1 == 3 && d2 == 3) {
-	                return Geometry3DOperation.symmetricDifference(this, otherGeom);
+	                return SFCGALAlgorithm.symmetricDifference(this, otherGeom);
 	        }
 	        /* */
 		

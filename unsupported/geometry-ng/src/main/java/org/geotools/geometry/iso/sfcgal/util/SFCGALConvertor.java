@@ -23,24 +23,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.geotools.factory.GeoTools;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.aggregate.AggregateFactoryImpl;
 import org.geotools.geometry.iso.aggregate.MultiCurveImpl;
 import org.geotools.geometry.iso.aggregate.MultiPointImpl;
 import org.geotools.geometry.iso.aggregate.MultiPrimitiveImpl;
 import org.geotools.geometry.iso.aggregate.MultiSolidImpl;
 import org.geotools.geometry.iso.aggregate.MultiSurfaceImpl;
+import org.geotools.geometry.iso.complex.ComplexImpl;
+import org.geotools.geometry.iso.complex.CompositeImpl;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.GeometryFactoryImpl;
 import org.geotools.geometry.iso.coordinate.PolygonImpl;
 import org.geotools.geometry.iso.coordinate.PolyhedralSurfaceImpl;
 import org.geotools.geometry.iso.coordinate.TriangleImpl;
 import org.geotools.geometry.iso.coordinate.TriangulatedSurfaceImpl;
+import org.geotools.geometry.iso.primitive.BoundaryImpl;
+import org.geotools.geometry.iso.primitive.CurveBoundaryImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
-import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.primitive.PrimitiveImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
+import org.geotools.geometry.iso.primitive.SolidBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SolidImpl;
 import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
@@ -58,11 +61,9 @@ import org.geotools.geometry.iso.sfcgal.wrapper.SFPolyhedralSurface;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFSolid;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFTriangle;
 import org.geotools.geometry.iso.sfcgal.wrapper.SFTriangulatedSurface;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
-import org.opengis.geometry.aggregate.AggregateFactory;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiPrimitive;
@@ -87,6 +88,7 @@ import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.geometry.primitive.SurfacePatch;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * @author Donguk Seo
@@ -119,15 +121,6 @@ public class SFCGALConvertor {
 
         public static final int SFCGAL_MULTISOLID_ID = 102;
 
-        private static ISOGeometryBuilder builder = null;
-
-        static {
-                Hints hints = GeoTools.getDefaultHints();
-                hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-                hints.put(Hints.GEOMETRY_VALIDATE, false);
-                builder = new ISOGeometryBuilder(hints);
-        }
-
         /**
          * Convert a DirectPosition instance to a SFPoint
          * @param p DirectPosition instance
@@ -139,7 +132,7 @@ public class SFCGALConvertor {
                 double x = coord[0];
                 double y = coord[1];
                 double z;
-
+                
                 if (coord.length == 3) {
                         z = coord[2];
                         point = new SFPoint(x, y, z);
@@ -289,6 +282,7 @@ public class SFCGALConvertor {
                 Ring exterior = surface.getBoundary().getExterior();
                 List<Ring> interiors = surface.getBoundary().getInteriors();
 
+                /*
                 rings.add(ringToSFCGALLineString(exterior));
 
                 if(interiors != null) {
@@ -297,8 +291,19 @@ public class SFCGALConvertor {
 	                        rings.add(ringToSFCGALLineString((Ring) iter.next()));
 	                }
                 }
+                */
 
-                polygon = new SFPolygon(rings);
+                polygon = new SFPolygon();
+                polygon.setExteriorRing(ringToSFCGALLineString(exterior));
+                
+                if(interiors != null) {
+	                Iterator iter = interiors.iterator();
+	                while (iter.hasNext()) {
+	                	SFLineString l = ringToSFCGALLineString((Ring) iter.next());
+	                	l.reverse();
+	                	polygon.addInteriorRing(l);
+	                }
+                }                
 
                 return polygon;
         }
@@ -492,7 +497,7 @@ public class SFCGALConvertor {
          * @param p SFPoint instance
          * @return Instance of DirectPosition
          */
-        public static DirectPosition directPositionFromSFCGALPoint(SFPoint p) {
+        public static DirectPosition directPositionFromSFCGALPoint(SFPoint p, CoordinateReferenceSystem crs) {
                 /*
                  * Hints hints = GeoTools.getDefaultHints(); hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D); hints.put(Hints.GEOMETRY_VALIDATE,
                  * false); GeometryBuilder builder = new GeometryBuilder(hints);
@@ -506,6 +511,8 @@ public class SFCGALConvertor {
                         coord[2] = p.z();
                 if (p.coordinateDimension() == 4)
                         coord[3] = p.m();
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 position = builder.createDirectPosition(coord);
 
                 return position;
@@ -516,12 +523,13 @@ public class SFCGALConvertor {
          * @param p SFPoint instance
          * @return Instance of Point
          */
-        public static Point pointFromSFCGALPoint(SFPoint p) {
+        public static Point pointFromSFCGALPoint(SFPoint p, CoordinateReferenceSystem crs) {
                 /*
                  * Hints hints = GeoTools.getDefaultHints(); hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D); hints.put(Hints.GEOMETRY_VALIDATE,
                  * false); GeometryBuilder builder = new GeometryBuilder(hints);
                  */
-                Point point = builder.createPoint(directPositionFromSFCGALPoint(p));
+        		ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                Point point = builder.createPoint(directPositionFromSFCGALPoint(p, crs));
 
                 return point;
         }
@@ -531,16 +539,17 @@ public class SFCGALConvertor {
          * @param ls SFLineString instance
          * @return Instance of LineString
          */
-        public static LineString lineStringFromSFCGALLineString(SFLineString ls) {
+        public static LineString lineStringFromSFCGALLineString(SFLineString ls, CoordinateReferenceSystem crs) {
                 LineString lineString = null;
                 List<Position> positions = new ArrayList<Position>();
 
                 for (int i = 0; i < ls.numPoints(); i++) {
-                        DirectPosition position = directPositionFromSFCGALPoint(ls.pointN(i));
+                        DirectPosition position = directPositionFromSFCGALPoint(ls.pointN(i), crs);
 
                         positions.add(position);
                 }
 
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 lineString = builder.createLineString(positions);
 
                 return lineString;
@@ -551,12 +560,13 @@ public class SFCGALConvertor {
          * @param ls SFLineString instance
          * @return Instance of Curve
          */
-        public static Curve curveFromSFCGALLineString(SFLineString ls) {
+        public static Curve curveFromSFCGALLineString(SFLineString ls, CoordinateReferenceSystem crs) {
                 Curve curve = null;
-                LineString lineString = lineStringFromSFCGALLineString(ls);
+                LineString lineString = lineStringFromSFCGALLineString(ls, crs);
                 List<CurveSegment> segments = new ArrayList<CurveSegment>();
                 segments.add(lineString);
 
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 curve = builder.createCurve(segments);
 
                 return curve;
@@ -567,16 +577,17 @@ public class SFCGALConvertor {
          * @param ls SFLineString instance
          * @return Instance of Ring
          */
-        public static Ring ringFromSFCGALLineString(SFLineString ls) {
+        public static Ring ringFromSFCGALLineString(SFLineString ls, CoordinateReferenceSystem crs) {
                 Ring ring = null;
 
                 if (!ls.isClosed())
                         return null;
 
-                Curve curve = curveFromSFCGALLineString(ls);
+                Curve curve = curveFromSFCGALLineString(ls, crs);
                 List<OrientableCurve> curves = new ArrayList<OrientableCurve>();
                 curves.add(curve);
-
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 ring = builder.createRing(curves);
 
                 return ring;
@@ -587,18 +598,19 @@ public class SFCGALConvertor {
          * @param poly SFPolygon instance
          * @return Instance of Polygon
          */
-        public static Polygon polygonFromSFCGALPolygon(SFPolygon poly) {
+        public static Polygon polygonFromSFCGALPolygon(SFPolygon poly, CoordinateReferenceSystem crs) {
                 Polygon polygon = null;
 
-                Ring exterior = ringFromSFCGALLineString(poly.exteriorRing());
+                Ring exterior = ringFromSFCGALLineString(poly.exteriorRing(), crs);
 
                 List<OrientableCurve> interiors = new ArrayList<OrientableCurve>();
                 for (int i = 0; i < poly.numInteriorRings(); i++) {
-                        Ring interior = ringFromSFCGALLineString(poly.interiorRingN(i));
+                        Ring interior = ringFromSFCGALLineString(poly.interiorRingN(i), crs);
 
                         interiors.add(interior);
                 }
 
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 SurfaceBoundary boundary = builder.createSurfaceBoundary(exterior, interiors);
                 polygon = builder.createPolygon(boundary);
 
@@ -610,15 +622,16 @@ public class SFCGALConvertor {
          * @param tri SFTriangle instance
          * @return Instance of Triangle
          */
-        public static Triangle triangleFromSFCGALTriangle(SFTriangle tri) {
+        public static Triangle triangleFromSFCGALTriangle(SFTriangle tri, CoordinateReferenceSystem crs) {
                 Triangle triangle = null;
                 SFPolygon poly = tri.toPolygon();
-                Polygon polygon = polygonFromSFCGALPolygon(poly);
+                Polygon polygon = polygonFromSFCGALPolygon(poly, crs);
 
-                DirectPosition position1 = directPositionFromSFCGALPoint(tri.vertex(0));
-                DirectPosition position2 = directPositionFromSFCGALPoint(tri.vertex(1));
-                DirectPosition position3 = directPositionFromSFCGALPoint(tri.vertex(2));
+                DirectPosition position1 = directPositionFromSFCGALPoint(tri.vertex(0), crs);
+                DirectPosition position2 = directPositionFromSFCGALPoint(tri.vertex(1), crs);
+                DirectPosition position3 = directPositionFromSFCGALPoint(tri.vertex(2), crs);
 
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 GeometryFactoryImpl geometryFactory = (GeometryFactoryImpl) builder
                                 .getGeometryFactory();
                 triangle = geometryFactory.createTriangle(
@@ -633,10 +646,11 @@ public class SFCGALConvertor {
          * @param poly SFPolygon instance
          * @return Instance of Surface
          */
-        public static Surface surfaceFromSFCGALPolygon(SFPolygon poly) {
+        public static Surface surfaceFromSFCGALPolygon(SFPolygon poly, CoordinateReferenceSystem crs) {
                 Surface surface = null;
-                Polygon polygon = polygonFromSFCGALPolygon(poly);
+                Polygon polygon = polygonFromSFCGALPolygon(poly, crs);
 
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 surface = builder.createSurface(polygon.getBoundary());
 
                 return surface;
@@ -647,10 +661,10 @@ public class SFCGALConvertor {
          * @param tri SFTriangle instance
          * @return Instance of Surface
          */
-        public static Surface surfaceFromSFCGALTriangle(SFTriangle tri) {
+        public static Surface surfaceFromSFCGALTriangle(SFTriangle tri, CoordinateReferenceSystem crs) {
                 SFPolygon poly = tri.toPolygon();
 
-                return surfaceFromSFCGALPolygon(poly);
+                return surfaceFromSFCGALPolygon(poly, crs);
         }
 
         /**
@@ -659,7 +673,7 @@ public class SFCGALConvertor {
          * @return Instance of PolyhedralSurface
          */
         public static PolyhedralSurface polyhedralSurfaceFromSFCGALPolyhedralSurface(
-                        SFPolyhedralSurface polyhedral) {
+                        SFPolyhedralSurface polyhedral, CoordinateReferenceSystem crs) {
                 PolyhedralSurface polyhedralSurface = null;
 
                 SFGeometry boundary = polyhedral.boundary();
@@ -670,7 +684,9 @@ public class SFCGALConvertor {
                 }
                 merge = getSFGeometry(merge);
 
-                Curve exterior = curveFromSFCGALLineString((SFLineString) merge);
+                Curve exterior = curveFromSFCGALLineString((SFLineString) merge, crs);
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 SurfaceBoundary surfaceBoundary = builder.createSurfaceBoundary(exterior);
                 polyhedralSurface = new PolyhedralSurfaceImpl((SurfaceBoundaryImpl) surfaceBoundary);
 
@@ -683,7 +699,7 @@ public class SFCGALConvertor {
          * @return Instance of TriangulatedSurface
          */
         public static TriangulatedSurface triangulatedSurfaceFromSFCGALTriangulatedSurface(
-                        SFTriangulatedSurface triangulated) {
+                        SFTriangulatedSurface triangulated, CoordinateReferenceSystem crs) {
                 TriangulatedSurface triangulatedSurface = null;
 
                 SFGeometry boundary = triangulated.boundary();
@@ -695,7 +711,9 @@ public class SFCGALConvertor {
                 }
                 merge = getSFGeometry(merge);
 
-                Curve exterior = curveFromSFCGALLineString((SFLineString) merge);
+                Curve exterior = curveFromSFCGALLineString((SFLineString) merge, crs);
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 SurfaceBoundary surfaceBoundary = builder.createSurfaceBoundary(exterior);
                 triangulatedSurface = new TriangulatedSurfaceImpl(
                                 (SurfaceBoundaryImpl) surfaceBoundary);
@@ -708,17 +726,16 @@ public class SFCGALConvertor {
          * @param polyhedral SFPolyhedralSurface instance
          * @return Instance of Shell
          */
-        public static Shell shellFromSFCGALPolyhedralSurface(SFPolyhedralSurface polyhedral) {
+        public static Shell shellFromSFCGALPolyhedralSurface(SFPolyhedralSurface polyhedral, CoordinateReferenceSystem crs) {
                 Shell shell = null;
-                PrimitiveFactoryImpl primitiveFactory = (PrimitiveFactoryImpl) builder
-                                .getPrimitiveFactory();
-
+                
                 List<OrientableSurface> orientableSurfaces = new ArrayList<OrientableSurface>();
                 for (int i = 0; i < polyhedral.numPolygons(); i++) {
-                        orientableSurfaces.add(surfaceFromSFCGALPolygon(polyhedral.polygonN(i)));
+                        orientableSurfaces.add(surfaceFromSFCGALPolygon(polyhedral.polygonN(i), crs));
                 }
 
-                shell = primitiveFactory.createShell(orientableSurfaces);
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                shell = builder.createShell(orientableSurfaces);
 
                 return shell;
         }
@@ -728,22 +745,20 @@ public class SFCGALConvertor {
          * @param sfSolid SFSolid instance
          * @return Instance of Solid
          */
-        public static Solid solidFromSFCGALSolid(SFSolid sfSolid) {
+        public static Solid solidFromSFCGALSolid(SFSolid sfSolid, CoordinateReferenceSystem crs) {
                 Solid solid = null;
-                PrimitiveFactoryImpl primitiveFactory = (PrimitiveFactoryImpl) builder
-                                .getPrimitiveFactory();
-
-                Shell exterior = shellFromSFCGALPolyhedralSurface(sfSolid.exteriorShell());
+                Shell exterior = shellFromSFCGALPolyhedralSurface(sfSolid.exteriorShell(), crs);
 
                 List<Shell> interiors = new ArrayList<Shell>();
                 for (int i = 0; i < sfSolid.numInteriorShells(); i++) {
                         Shell interior = shellFromSFCGALPolyhedralSurface(sfSolid
-                                        .interiorShellN(i));
+                                        .interiorShellN(i), crs);
 
                         interiors.add(interior);
                 }
-
-                SolidBoundary boundary = primitiveFactory.createSolidBoundary(exterior, interiors);
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                SolidBoundary boundary = builder.createSolidBoundary(exterior, interiors);
                 solid = builder.createSolid(boundary);
 
                 return solid;
@@ -755,19 +770,17 @@ public class SFCGALConvertor {
          * @return Instance of MultiPrimitive
          */
         public static MultiPrimitive multiPrimitiveFromSFCGALGeometryCollection(
-                        SFGeometryCollection geometryCollection) {
+                        SFGeometryCollection geometryCollection, CoordinateReferenceSystem crs) {
                 MultiPrimitive multiPrimitive = null;
-                AggregateFactory aggregateFactory = (AggregateFactoryImpl) builder
-                                .getAggregateFactory();
-
+                
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 Set<Primitive> primitives = new HashSet<Primitive>();
                 for (int i = 0; i < geometryCollection.numGeometries(); i++) {
-                        Geometry g = geometryFromSFCGALGeometry(geometryCollection.geometryN(i));
-
+                        Geometry g = geometryFromSFCGALGeometry(geometryCollection.geometryN(i), crs);
                         primitives.add((Primitive) g);
                 }
 
-                multiPrimitive = aggregateFactory.createMultiPrimitive(primitives);
+                multiPrimitive = builder.createMultiPrimitive(primitives);
 
                 return multiPrimitive;
         }
@@ -777,18 +790,17 @@ public class SFCGALConvertor {
          * @param sfMultiPoint SFMultiPoint instance
          * @return Instance of MultiPoint
          */
-        public static MultiPoint multiPointFromSFCGALMultiPoint(SFMultiPoint sfMultiPoint) {
+        public static MultiPoint multiPointFromSFCGALMultiPoint(SFMultiPoint sfMultiPoint, CoordinateReferenceSystem crs) {
                 MultiPoint multiPoint = null;
-                AggregateFactory aggregateFactory = builder.getAggregateFactory();
-
                 Set<Point> points = new HashSet<Point>();
                 for (int i = 0; i < sfMultiPoint.numGeometries(); i++) {
-                        Point p = pointFromSFCGALPoint(sfMultiPoint.pointN(i));
+                        Point p = pointFromSFCGALPoint(sfMultiPoint.pointN(i), crs);
 
                         points.add(p);
                 }
 
-                multiPoint = aggregateFactory.createMultiPoint(points);
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                multiPoint = builder.createMultiPoint(points);
 
                 return multiPoint;
         }
@@ -799,19 +811,18 @@ public class SFCGALConvertor {
          * @return Instance of MultiCurve
          */
         public static MultiCurve multiCurveFromSFCGALMultiLineString(
-                        SFMultiLineString sfMultiLineString) {
+                        SFMultiLineString sfMultiLineString, CoordinateReferenceSystem crs) {
                 MultiCurve multiCurve = null;
-                AggregateFactory aggregateFactory = builder.getAggregateFactory();
-
                 Set<OrientableCurve> curves = new HashSet<OrientableCurve>();
                 for (int i = 0; i < sfMultiLineString.numGeometries(); i++) {
                         Curve curve = curveFromSFCGALLineString(sfMultiLineString
-                                        .lineStringN(i));
+                                        .lineStringN(i), crs);
 
                         curves.add(curve);
                 }
 
-                multiCurve = aggregateFactory.createMultiCurve(curves);
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                multiCurve = builder.createMultiCurve(curves);
 
                 return multiCurve;
         }
@@ -822,18 +833,18 @@ public class SFCGALConvertor {
          * @return Instance of MultiSurface
          */
         public static MultiSurface multiSurfaceFromSFCGALMultiPolygon(
-                        SFMultiPolygon sfMultiPolygon) {
+                        SFMultiPolygon sfMultiPolygon, CoordinateReferenceSystem crs) {
                 MultiSurface multiSurface = null;
-                AggregateFactory aggregateFactory = builder.getAggregateFactory();
 
                 Set<OrientableSurface> surfaces = new HashSet<OrientableSurface>();
                 for (int i = 0; i < sfMultiPolygon.numGeometries(); i++) {
-                        Surface surface = surfaceFromSFCGALPolygon(sfMultiPolygon.polygonN(i));
+                        Surface surface = surfaceFromSFCGALPolygon(sfMultiPolygon.polygonN(i), crs);
 
                         surfaces.add(surface);
                 }
 
-                multiSurface = aggregateFactory.createMultiSurface(surfaces);
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
+                multiSurface = builder.createMultiSurface(surfaces);
 
                 return multiSurface;
         }
@@ -843,14 +854,15 @@ public class SFCGALConvertor {
          * @param sfMultiSolid SFMultiSolid instance
          * @return Instance of MultiSolid
          */
-        public static MultiSolidImpl multiSolidFromSFCGALMultiSolid(SFMultiSolid sfMultiSolid) {
+        public static MultiSolidImpl multiSolidFromSFCGALMultiSolid(SFMultiSolid sfMultiSolid, CoordinateReferenceSystem crs) {
                 MultiSolidImpl multiSolid = null;
+                ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
                 AggregateFactoryImpl aggregateFactory = (AggregateFactoryImpl) builder
                                 .getAggregateFactory();
 
                 Set<Primitive> solids = new HashSet<Primitive>();
                 for (int i = 0; i < sfMultiSolid.numGeometries(); i++) {
-                        Solid solid = solidFromSFCGALSolid(sfMultiSolid.solidN(i));
+                        Solid solid = solidFromSFCGALSolid(sfMultiSolid.solidN(i), crs);
 
                         solids.add(solid);
                 }
@@ -911,34 +923,34 @@ public class SFCGALConvertor {
          * @param geom SFGeometry instance
          * @return Instance of Geometry
          */
-        public static Geometry geometryFromSFCGALGeometry(SFGeometry geom) {
+        public static Geometry geometryFromSFCGALGeometry(SFGeometry geom, CoordinateReferenceSystem crs) {
                 Geometry geometry = null;
                 geom = getSFGeometry(geom);
 
                 if (geom.geometryTypeId() == SFCGAL_POINT_ID) {
-                        geometry = pointFromSFCGALPoint((SFPoint) geom);
+                        geometry = pointFromSFCGALPoint((SFPoint) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_LINESTRING_ID) {
-                        geometry = curveFromSFCGALLineString((SFLineString) geom);
+                        geometry = curveFromSFCGALLineString((SFLineString) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_POLYGON_ID) {
-                        geometry = surfaceFromSFCGALPolygon((SFPolygon) geom);
+                        geometry = surfaceFromSFCGALPolygon((SFPolygon) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_TRIANGLE_ID) {
-                        geometry = surfaceFromSFCGALTriangle((SFTriangle) geom);
+                        geometry = surfaceFromSFCGALTriangle((SFTriangle) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_POLYHEDRALSURFACE_ID) {
-                        geometry = polyhedralSurfaceFromSFCGALPolyhedralSurface((SFPolyhedralSurface) geom);
+                        geometry = polyhedralSurfaceFromSFCGALPolyhedralSurface((SFPolyhedralSurface) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_TRIANGULATEDSURFACE_ID) {
-                        geometry = triangulatedSurfaceFromSFCGALTriangulatedSurface((SFTriangulatedSurface) geom);
+                        geometry = triangulatedSurfaceFromSFCGALTriangulatedSurface((SFTriangulatedSurface) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_SOLID_ID) {
-                        geometry = solidFromSFCGALSolid((SFSolid) geom);
+                        geometry = solidFromSFCGALSolid((SFSolid) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_GEOMETRYCOLLECTION_ID) {
-                        geometry = multiPrimitiveFromSFCGALGeometryCollection((SFGeometryCollection) geom);
+                        geometry = multiPrimitiveFromSFCGALGeometryCollection((SFGeometryCollection) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_MULTIPOINT_ID) {
-                        geometry = multiPointFromSFCGALMultiPoint((SFMultiPoint) geom);
+                        geometry = multiPointFromSFCGALMultiPoint((SFMultiPoint) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_MULTILINESTRING_ID) {
-                        geometry = multiCurveFromSFCGALMultiLineString((SFMultiLineString) geom);
+                        geometry = multiCurveFromSFCGALMultiLineString((SFMultiLineString) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_MULTIPOLYGON_ID) {
-                        geometry = multiSurfaceFromSFCGALMultiPolygon((SFMultiPolygon) geom);
+                        geometry = multiSurfaceFromSFCGALMultiPolygon((SFMultiPolygon) geom, crs);
                 } else if (geom.geometryTypeId() == SFCGAL_MULTISOLID_ID) {
-                        geometry = multiSolidFromSFCGALMultiSolid((SFMultiSolid) geom);
+                        geometry = multiSolidFromSFCGALMultiSolid((SFMultiSolid) geom, crs);
                 }
 
                 return geometry;
@@ -952,50 +964,102 @@ public class SFCGALConvertor {
         public static SFGeometry geometryToSFCGALGeometry(Geometry geom) {
                 SFGeometry geometry = null;
 
-                if (geom instanceof DirectPositionImpl) {
-                        geometry = SFCGALConvertor
-                                        .directPositionToSFCGALPoint((DirectPosition) geom);
-                } else if (geom instanceof PointImpl) {
-                        geometry = SFCGALConvertor.pointToSFCGALPoint((Point) geom);
-                } else if (geom instanceof CurveImpl) {
-                        geometry = SFCGALConvertor.curveToSFCGALLineString((Curve) geom);
-                } else if (geom instanceof RingImplUnsafe) {
-                        geometry = SFCGALConvertor.ringToSFCGALLineString((Ring) geom);
-                } else if (geom instanceof SurfaceImpl) {
-                        List<SurfacePatch> patches = (ArrayList<SurfacePatch>) ((Surface) geom)
-                                        .getPatches();
-                        SurfacePatch patch = patches.get(0);
-
-                        if (patches.size() == 1 && (patch instanceof TriangleImpl)) {
-                                geometry = SFCGALConvertor
-                                                .triangleToSFCGALTriangle((Triangle) patch);
-                        } else {
-                                geometry = SFCGALConvertor.surfaceToSFCGALPolygon((Surface) geom);
-                        }
-                } else if (geom instanceof PolyhedralSurfaceImpl) {
-                        geometry = SFCGALConvertor
-                                        .polyhedralSurfaceToSFCGALPolyhedralSurface((PolyhedralSurface) geom);
-                } else if (geom instanceof TriangulatedSurfaceImpl) {
-                        geometry = SFCGALConvertor
-                                        .triangulatedSurfaceToSFCGALPolyhedralSurface((TriangulatedSurface) geom);
-                } else if (geom instanceof SolidImpl) {
-                        geometry = SFCGALConvertor.solidToSFCGALSolid((Solid) geom);
+                if (geom instanceof PrimitiveImpl) {
+	                if (geom instanceof DirectPositionImpl) {
+	                        geometry = SFCGALConvertor
+	                                        .directPositionToSFCGALPoint((DirectPosition) geom);
+	                } else if (geom instanceof PointImpl) {
+	                        geometry = SFCGALConvertor.pointToSFCGALPoint((Point) geom);
+	                } else if (geom instanceof CurveImpl) {
+	                        geometry = SFCGALConvertor.curveToSFCGALLineString((Curve) geom);
+	                } else if (geom instanceof RingImplUnsafe) {
+	                        geometry = SFCGALConvertor.ringToSFCGALLineString((Ring) geom);
+	                } else if (geom instanceof SurfaceImpl) {
+	                		geometry = SFCGALConvertor.surfaceToSFCGALPolygon((Surface) geom);
+	                        /*List<SurfacePatch> patches = (ArrayList<SurfacePatch>) ((Surface) geom)
+	                                        .getPatches();
+	                        SurfacePatch patch = patches.get(0);
+	
+	                        if (patches.size() == 1 && (patch instanceof TriangleImpl)) {
+	                                geometry = SFCGALConvertor
+	                                                .triangleToSFCGALTriangle((Triangle) patch);
+	                        } else {
+	                                geometry = SFCGALConvertor.surfaceToSFCGALPolygon((Surface) geom);
+	                        }*/
+	                } else if (geom instanceof PolyhedralSurfaceImpl) {
+	                        geometry = SFCGALConvertor
+	                                        .polyhedralSurfaceToSFCGALPolyhedralSurface((PolyhedralSurface) geom);
+	                } else if (geom instanceof TriangulatedSurfaceImpl) {
+	                        geometry = SFCGALConvertor
+	                                        .triangulatedSurfaceToSFCGALPolyhedralSurface((TriangulatedSurface) geom);
+	                } else if (geom instanceof SolidImpl) {
+	                        geometry = SFCGALConvertor.solidToSFCGALSolid((Solid) geom);
+	                } 
                 } else if (geom instanceof MultiPrimitiveImpl) {
-                        geometry = SFCGALConvertor
-                                        .multiPrimitiveToSFCGALGeometryCollection((MultiPrimitive) geom);
-                } else if (geom instanceof MultiPointImpl) {
+                	
+                	if (geom instanceof MultiPointImpl) {
                         geometry = SFCGALConvertor.multiPointToSFCGALMultiPoint((MultiPoint) geom);
-                } else if (geom instanceof MultiCurveImpl) {
+                	} else if (geom instanceof MultiCurveImpl) {
                         geometry = SFCGALConvertor
-                                        .multiCurveToSFCGALMultiLineString((MultiCurve) geom);
-                } else if (geom instanceof MultiSurfaceImpl) {
+                                .multiCurveToSFCGALMultiLineString((MultiCurve) geom);
+                	} else if (geom instanceof MultiSurfaceImpl) {
                         geometry = SFCGALConvertor
                                         .multiSurfaceToSFCGALMultiPolygon((MultiSurface) geom);
-                } else if (geom instanceof MultiSolidImpl) {
+                	} else if (geom instanceof MultiSolidImpl) {
                         geometry = SFCGALConvertor
                                         .multiSolidToSFCGALMultiSolid((MultiSolidImpl) geom);
+                	} else {
+                        geometry = SFCGALConvertor
+                                        .multiPrimitiveToSFCGALGeometryCollection((MultiPrimitive) geom);	
+                	}
+                } else if (geom instanceof ComplexImpl) {
+                	
+                	if (geom instanceof BoundaryImpl) {
+                		
+                		if (geom instanceof CurveBoundaryImpl) {
+                			
+                			PointImpl startP = ((CurveBoundaryImpl) geom).getStartPoint();
+                			PointImpl endP = ((CurveBoundaryImpl) geom).getEndPoint();
+                			
+                			SFPoint sfStartP = SFCGALConvertor.pointToSFCGALPoint(startP);
+                			SFPoint sfEndP = SFCGALConvertor.pointToSFCGALPoint(endP);
+                			
+                			SFMultiPoint sfcgalMultiPoint = new SFMultiPoint();
+                			sfcgalMultiPoint.addGeometry(sfStartP);
+                			sfcgalMultiPoint.addGeometry(sfEndP);
+                			geometry = sfcgalMultiPoint;
+                			
+                		} else if (geom instanceof SurfaceBoundaryImpl) {
+                			List<SFLineString> sfLines = new ArrayList<SFLineString>();
+                			
+                			RingImplUnsafe exterior = (RingImplUnsafe) ((SurfaceBoundaryImpl) geom).getExterior();
+                			SFLineString sfLineExt = SFCGALConvertor.ringToSFCGALLineString(exterior);
+                			sfLines.add(sfLineExt);
+                			
+                			List<Ring> interiors = ((SurfaceBoundaryImpl) geom).getInteriors();
+                			for(Ring r : interiors) {
+                				SFLineString sfLine = SFCGALConvertor.ringToSFCGALLineString(r);
+                				sfLines.add(sfLine);
+                			}
+                			
+                			SFMultiLineString sfcgalMultiLineString = new SFMultiLineString();
+                			for(SFLineString l : sfLines) {
+                				sfcgalMultiLineString.addGeometry(l);
+                			}
+                			geometry = sfcgalMultiLineString;
+                		} else if (geom instanceof SolidBoundaryImpl) {
+                			
+                		} else {
+                			
+                		}
+                		
+                	} else if (geom instanceof CompositeImpl) {
+                		
+                	} else {
+                		
+                	}
+                	
                 }
-
                 return geometry;
         }
 }

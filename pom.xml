@@ -1242,12 +1242,12 @@
 		<module>library/data-iso</module>
 		<module>library/jdbc-iso</module>
 		<module>plugin/jdbc3d-plugin</module>
-
-		<!--<module>test</module>-->
-
 		<module>unsupported/csv-iso</module>
 		<module>extension/xsd</module>
 		<module>unsupported/process-feature3d</module>
+		<module>unsupported/geojson-iso</module>
+		<module>unsupported/geojsondatastore-iso</module>
 		
+		<module>tutorial</module>
 	</modules>
 </project>

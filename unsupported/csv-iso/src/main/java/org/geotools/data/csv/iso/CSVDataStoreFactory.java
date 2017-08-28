@@ -37,9 +37,13 @@ import org.geotools.data.csv.iso.parse.CSVSpecifiedWKTStrategy;
 import org.geotools.data.csv.iso.parse.CSVStrategy;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.KVP;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 //import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -67,8 +71,11 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
     public static final Param WKTP = new Param("wktField", String.class,
             "WKT field. Assumes a CSVSpecifiedWKTStrategy", false);
 
+    public static final Param SRS_PARAM = new Param("srs", String.class,
+            "Default SRS", false, "4329");
+    
     public static final Param[] parametersInfo = new Param[] { FILE_PARAM, NAMESPACEP, STRATEGYP,
-            LATFIELDP, LnGFIELDP, WKTP };
+            LATFIELDP, LnGFIELDP, WKTP, SRS_PARAM};
 
     @Override
     public String getDisplayName() {
@@ -156,7 +163,14 @@ public class CSVDataStoreFactory implements FileDataStoreFactorySpi {
 
     private FileDataStore createDataStoreFromFile(File file, URI namespace,
             Map<String, Serializable> params) throws IOException {
-        CSVFileState csvFileState = new CSVFileState(file, namespace);
+    	String srsParam = (String) SRS_PARAM.lookUp(params);
+    	CoordinateReferenceSystem crs = null;
+    	try {
+			crs = CRS.decode("EPSG:" + srsParam);
+		} catch (Exception e) {
+			//nothing
+		}
+        CSVFileState csvFileState = new CSVFileState(file, namespace, null, crs);
         Object strategyParam = STRATEGYP.lookUp(params);
         CSVStrategy csvStrategy = null;
         if (strategyParam != null) {

@@ -24,14 +24,7 @@ import java.util.Set;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
-import org.geotools.geometry.iso.primitive.ShellImpl;
 import org.geotools.referencing.CRS;
-import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.Envelope;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.geometry.MismatchedReferenceSystemException;
-import org.opengis.geometry.PositionFactory;
-import org.opengis.geometry.Precision;
 import org.opengis.geometry.aggregate.AggregateFactory;
 import org.opengis.geometry.aggregate.MultiCurve;
 import org.opengis.geometry.aggregate.MultiPoint;
@@ -54,7 +47,6 @@ import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
-import org.opengis.geometry.primitive.PrimitiveFactory;
 import org.opengis.geometry.primitive.PrimitiveFactory2;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
@@ -108,7 +100,7 @@ public class ISOGeometryBuilder {
         this.crs = crs;
         this.hints = GeoTools.getDefaultHints();
         hints.put( Hints.CRS, crs );
-        hints.put( Hints.GEOMETRY_VALIDATE, true );
+        hints.put( Hints.GEOMETRY_VALIDATE, false );
     }
     
     public ISOGeometryBuilder( String code ) throws NoSuchAuthorityCodeException, FactoryException{

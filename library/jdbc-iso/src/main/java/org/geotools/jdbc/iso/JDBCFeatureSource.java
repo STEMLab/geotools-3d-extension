@@ -36,44 +36,24 @@ import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.ISOFilteringFeatureReader;
+import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.MaxFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ISOReTypeFeatureReader;
 import org.geotools.data.Transaction;
 import org.geotools.data3d.store.ContentEntry;
-import org.geotools.data3d.store.ContentState;
 import org.geotools.data3d.store.ContentFeatureSource;
 import org.geotools.factory.Hints;
 import org.geotools.factory.Hints.Key;
-import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.ISOAttributeTypeBuilder;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.visitor.MaxVisitor;
 import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.NearestVisitor;
 import org.geotools.filter.ISOFilterAttributeExtractor;
-import org.geotools.filter.visitor.PostPreProcessFilterSplittingVisitor;
+import org.geotools.filter.visitor.ISOPostPreProcessFilterSplittingVisitor;
 import org.geotools.filter.visitor.ISOSimplifyingFilterVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.jdbc.iso.ColumnMetadata;
-import org.geotools.jdbc.iso.JDBCDataStore;
-import org.geotools.jdbc.iso.JDBCFeatureReader;
-import org.geotools.jdbc.iso.JDBCFeatureSource;
-import org.geotools.jdbc.iso.JDBCFeatureStore;
-import org.geotools.jdbc.iso.JDBCJoiningFeatureReader;
-import org.geotools.jdbc.iso.JDBCJoiningFilteringFeatureReader;
-import org.geotools.jdbc.iso.JDBCQueryCapabilities;
-import org.geotools.jdbc.iso.JDBCState;
-import org.geotools.jdbc.iso.JoinInfo;
-import org.geotools.jdbc.iso.NullHandlingVisitor;
-import org.geotools.jdbc.iso.NullPrimaryKey;
-import org.geotools.jdbc.iso.PreparedStatementSQLDialect;
-import org.geotools.jdbc.iso.PrimaryKey;
-import org.geotools.jdbc.iso.PrimaryKeyColumn;
-import org.geotools.jdbc.iso.PrimaryKeyFIDValidator;
-import org.geotools.jdbc.iso.SQLDialect;
-import org.geotools.jdbc.iso.VirtualTable;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.Association;
@@ -84,7 +64,9 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
+import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
+import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.geometry.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -113,7 +95,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         //TODO: cache this
         primaryKey = ((JDBCDataStore) entry.getDataStore()).getPrimaryKey(entry);
     }
-    
+
     /**
      * Copy existing feature source
      * @param featureSource jdbc feature source
@@ -412,12 +394,26 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         else {
             featureSource = ((JDBCFeatureStore)source).getFeatureSource();
         }
-
+        
+        boolean issupported = false;
+        if(original instanceof BinarySpatialOperator) {
+        	Literal lt = null;
+        	BinarySpatialOperator op = (BinarySpatialOperator)original;
+        	Expression e1 = op.getExpression1();
+        	Expression e2 = op.getExpression2();
+        	if(e1 instanceof Literal) {
+        		lt = (Literal)e1;
+        	}else if(e2 instanceof Literal) {
+        		lt = (Literal)e2;
+        	}
+        	Geometry g = (Geometry) lt.getValue();
+            issupported = getDataStore().getSQLDialect().acceptable(g);
+        }
         Filter[] split = new Filter[2];
         if ( original != null ) {
             //create a filter splitter
-            PostPreProcessFilterSplittingVisitor splitter = new PostPreProcessFilterSplittingVisitor(getDataStore()
-                    .getFilterCapabilities(), featureSource.getSchema(), null);
+        	ISOPostPreProcessFilterSplittingVisitor splitter = new ISOPostPreProcessFilterSplittingVisitor(getDataStore()
+                    .getFilterCapabilities(), featureSource.getSchema(), issupported);
             original.accept(splitter, null);
         
             split[0] = splitter.getFilterPre();
@@ -617,14 +613,15 @@ public class JDBCFeatureSource extends ContentFeatureSource {
         //create the reader
         FeatureReader<SimpleFeatureType, SimpleFeature> reader;
         
+        SQLDialect dialect = getDataStore().getSQLDialect();
         try {            
-            SQLDialect dialect = getDataStore().getSQLDialect();
+            
 
             // allow dialect to override this if needed
             if(getState().getTransaction() == Transaction.AUTO_COMMIT) {
                 cx.setAutoCommit(dialect.isAutoCommitQuery());
             }
-
+            
             if (query.getJoins().isEmpty()) {
                 //regular query
                 if ( dialect instanceof PreparedStatementSQLDialect ) {
@@ -672,6 +669,7 @@ public class JDBCFeatureSource extends ContentFeatureSource {
 
         // if post filter, wrap it
         if (postFilterRequired) {
+        	
             reader = new ISOFilteringFeatureReader<SimpleFeatureType, SimpleFeature>(reader, postFilter);
             if(!returnedSchema.equals(querySchema)) {
                 reader = new ISOReTypeFeatureReader(reader, returnedSchema);

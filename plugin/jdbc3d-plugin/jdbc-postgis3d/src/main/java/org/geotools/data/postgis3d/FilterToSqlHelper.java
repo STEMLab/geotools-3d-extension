@@ -130,20 +130,20 @@ class FilterToSqlHelper {
         caps.addAll(SQLDialect.BASE_DBMS_CAPABILITIES);
 
         // adding the spatial filters support
-        caps.addType(BBOX.class);
-        caps.addType(Contains.class);
-        caps.addType(Crosses.class);
-        caps.addType(Disjoint.class);
-        caps.addType(Equals.class);
+        //caps.addType(BBOX.class);
+        //caps.addType(Contains.class);
+        //caps.addType(Crosses.class);
+        //caps.addType(Disjoint.class);
+        //caps.addType(Equals.class);
         caps.addType(Intersects.class);
-        caps.addType(Overlaps.class);
-        caps.addType(Touches.class);
-        caps.addType(Within.class);
-        caps.addType(DWithin.class);
-        caps.addType(Beyond.class);
+        //caps.addType(Overlaps.class);
+        //caps.addType(Touches.class);
+        //caps.addType(Within.class);
+        //caps.addType(DWithin.class);
+        //caps.addType(Beyond.class);
         
         //temporal filters
-        caps.addType(After.class);
+        /*caps.addType(After.class);
         caps.addType(Before.class);
         caps.addType(Begins.class);
         caps.addType(BegunBy.class);
@@ -151,7 +151,7 @@ class FilterToSqlHelper {
         caps.addType(TOverlaps.class);
         caps.addType(Ends.class);
         caps.addType(EndedBy.class);
-        caps.addType(TEquals.class);
+        caps.addType(TEquals.class);*/
 
         if(encodeFunctions) {
             // add support for string functions

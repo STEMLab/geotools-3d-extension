@@ -231,3 +231,11 @@ SFGeometry& union3D( const SFGeometry& gA, const SFGeometry& gB ) {
 double volume( const SFGeometry& g ){
 	return CGAL::to_double(SFCGAL::algorithm::volume(*(g.get_data())));
 }
+
+bool isValid( const SFGeometry& g , const int tolerance) {
+	if (typeid(g) == typeid(SFTriangulatedSurface) || typeid(g) == typeid(SFPolyhedralSurface)) {
+		//TODO
+	} else {
+		return static_cast<bool>(SFCGAL::algorithm::isValid(*(g.get_data()), 0));
+	}
+}

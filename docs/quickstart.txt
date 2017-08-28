@@ -323,7 +323,7 @@ Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자�
 
 4. 위의 어플리케이션을 실행하면 당신은 CSV 파일을 열거나 PostGIS에 연결함으로써 3차원 DataStore을 만들 수 있다.
 
-.. image:: start.png
+.. image:: start.PNG
 
 5-1. CSV 파일 DataStore을 만들어 보자. 우선 Open csv file을 클릭하고, 예제 데이터를 열어라.
 

@@ -28,7 +28,7 @@ GeoTools는 지리공간 데이터를 위한 여러가지 툴을 제공하는 �
 - `GNU Lesser General Public License <https://www.gnu.org/licenses/lgpl.html>`_
 
 **********
-참
+참조
 **********
 
 - `GeoTools <http://geotools.org/>`_

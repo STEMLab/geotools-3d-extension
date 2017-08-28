@@ -74,11 +74,11 @@ msgstr ""
 
 #: ../../quickstart.txt:341
 msgid "7-1. DataStore에 있는 데이터를 보고싶다면, getfeature 버튼을 눌러라."
-msgstr ""
+msgstr "7-1. If you want to see the data in the DataStore, press the getfeature button."
 
 #: ../../quickstart.txt:345
 msgid "CSV DataStore로부터 getfeature함수를 적용한 결과는 다음과 같다."
-msgstr ""
+msgstr "The result of applying getfeature function from CSV DataStore is as follows."
 
 #: ../../quickstart.txt:349
 msgid "5-2 이번에는 PostGIS DataStore를 만들어 보자. 우선 Connect to PostGIS database를 클릭한다."

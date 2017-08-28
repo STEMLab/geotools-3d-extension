@@ -336,39 +336,39 @@ strategy는 기하가 파일에 어떻게 표현되어 있는지를 나타낸다
 만약 당신이 wkt를 입력하였다면, wkt형식의 칼럼 이름을 wktField에 입력하라.
 만약 당신이 latlng을 입력하였다면, lattitude, longitude 칼럼의 이름을 각각 latField, lngField에 입력하라.
 
-.. image:: csv.png
+.. image:: csv.PNG
 
 7-1. DataStore에 있는 데이터를 보고싶다면, getfeature 버튼을 눌러라.
 
-.. image:: getfeature.png
+.. image:: getfeature.PNG
 
 CSV DataStore로부터 getfeature함수를 적용한 결과는 다음과 같다. 
   
-.. image:: result.png
+.. image:: result.PNG
 
 5-2 이번에는 PostGIS DataStore를 만들어 보자. 우선 Connect to PostGIS database를 클릭한다.
 
-.. image:: postgis.png
+.. image:: postgis.PNG
 
 6-2 PostGIS DataStore를 생성하는 데 필요한 설정은 다음과 같다. 비밀번호 이후 설정은 옵션이므로 나머지는 입력하지 않고, finish버튼을 눌러도 무방하다.
 
-.. image:: postgis_conf.png
+.. image:: postgis_conf.PNG
 
 7-2 Insert Solid to PostGIS database버튼을 누르면 PostGIS 데이터베이스에 oneSolid라는 이름으로 id와 geometry를 칼럼으로 가지는 테이블이 하나 생기고, Solid 데이터 하나가 들어간다. 
 
-.. image:: insert.png
+.. image:: insert.PNG
 
 insert의 결과를 다음과 같이 확인할 수 있다. 
 
-.. image:: db.png
+.. image:: db.PNG
 
 dropdownlist에는 연결된 데이터베이스의 테이블들을 볼 수 있다. insert버튼을 누른 후에 새로 생성된 oneSolid테이블이 dropdownlist에 나타난 것을 확인할 수 있다.
 해당 테이블의 데이터를 보기 위해서 dropdownlist에서 oneSolid테이블이 선택된 채로 getfeature 버튼을 누른다. 
 
-.. image:: dbgetfeature.png
+.. image:: dbgetfeature.PNG
 
 PostGIS DataStore로부터 getfeature함수를 적용한 결과는 다음과 같다.
 
-.. image:: dbresult.png
+.. image:: dbresult.PNG
 
 .. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html

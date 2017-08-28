@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../building.txt:5
 msgid "빌드"
-msgstr ""
+msgstr "Building"
 
 #: ../../building.txt:7
 msgid ""

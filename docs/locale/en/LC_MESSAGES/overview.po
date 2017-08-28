@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: geotools-3d-extension 2.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-28 14:05+0900\n"
+"POT-Creation-Date: 2017-08-28 10:27-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,8 @@ msgstr ""
 "Generated-By: Babel 2.4.0\n"
 
 #: ../../overview.txt:5
-msgid "Overview"
-msgstr ""
+msgid "개요"
+msgstr "Overview"
 
 #: ../../overview.txt:7
 msgid ""
@@ -30,45 +30,76 @@ msgid ""
 " Z 좌표를 가진 기하를 대상으로 공간 질의를 수행하는 경우 Z 좌표를 고려하지 않고 처리되고 있습니다. 그 이유는 "
 "GeoTools가 Java Topology Suite(JTS) 라이브러리를 기하 정보를 다루기 위한 데이터 구조로 사용하고 있기 "
 "때문입니다."
-msgstr ""
+msgstr "This project is an extension library that was developed to expand the functions of GeoTools to store and process 3D geometry. GeoTools is a leading open source Java library that provides various tools for geospatial data. However, the ability to handle 3D spatial data is rarely supported. For example, it is not supported to store 3D geometry, Solid geometry information, and when spatial queries are performed on geometries with Z coordinates, Z coordinates are not considered. This is because GeoTools uses the Java Topology Suite (JTS) library as a data structure for handling geometry information."
 
 #: ../../overview.txt:13
 msgid ""
 "따라서 프로젝트는 Java Topology Suite(JTS) 라이브러리 대신 ISO 19107 공간 스키마 기반의 기하 "
 "라이브러리를 사용하여 3차원 공간 데이터를 사용할 수 있도록 하여 GeoTools에서 제공하고 있는 여러가지 기능들을 "
 "확장하였습니다."
-msgstr ""
+msgstr "Therefore, the project has expanded the many features provided by GeoTools by enabling the use of 3D spatial data using the ISO 19107 spatial schema-based geometry library instead of the Java Topology Suite (JTS) library."
 
 #: ../../overview.txt:16
-msgid ""
-"이 프로젝트는 다음의 기능들을 제공하는데 초점을 맞추고 있습니다. - 3차원 기하를 저장이 가능한 데이터 구조 - 3차원 객체에 "
-"대한 질의 처리 기능 - 3차원 공간 정보를 저장하기 위한 데이터 저장소의 연결 - 3차원 공간 정보의 공유를 위한 표준 웹 "
-"프로토콜 해석 기능 지원"
-msgstr ""
+msgid "이 프로젝트는 다음의 기능들을 제공하는데 초점을 맞추고 있습니다."
+msgstr "This project focuses on providing the following features:"
 
-#: ../../overview.txt:24
-msgid "License"
-msgstr ""
+#: ../../overview.txt:18
+msgid "3차원 기하를 저장이 가능한 데이터 구조"
+msgstr "Data structure that can store 3D geometry"
+
+#: ../../overview.txt:19
+msgid "3차원 객체에 대한 질의 처리 기능"
+msgstr "Query processing function for 3D objects"
+
+#: ../../overview.txt:20
+msgid "3차원 공간 정보를 저장하기 위한 데이터 저장소의 연결"
+msgstr "Connection of the data store to store 3D spatial information"
+
+#: ../../overview.txt:21
+msgid "3차원 공간 정보의 공유를 위한 표준 웹 프로토콜 해석 기능 지원"
+msgstr "Support standard web protocol analysis function for sharing 3-D spatial information"
 
 #: ../../overview.txt:25
-msgid "이 프로젝트의 라이센스는 다음과 같이 GeoTools의 라이센스를 그대로 따릅니다."
-msgstr ""
+msgid "라이센스"
+msgstr "License"
 
-#: ../../overview.txt:27
+#: ../../overview.txt:26
+msgid "이 프로젝트의 라이센스는 다음과 같이 GeoTools의 라이센스를 그대로 따릅니다."
+msgstr "The license for this project is licensed from GeoTools as follows:"
+
+#: ../../overview.txt:28
 msgid ""
 "`GNU Lesser General Public License "
 "<https://www.gnu.org/licenses/lgpl.html>`_"
 msgstr ""
 
-#: ../../overview.txt:31
-msgid "References"
-msgstr ""
+#: ../../overview.txt:32
+msgid "참조"
+msgstr "References"
 
-#: ../../overview.txt:33
+#: ../../overview.txt:34
 msgid "`GeoTools <http://geotools.org/>`_"
 msgstr ""
 
-#: ../../overview.txt:34
+#: ../../overview.txt:35
 msgid "`Java Topology Suite <https://locationtech.github.io/jts/>`_"
 msgstr ""
+
+#~ msgid "Overview"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "이 프로젝트는 다음의 기능들을 제공하는데 초점을 맞추고 "
+#~ "있습니다. - 3차원 기하를 저장이 가능한 데이터 "
+#~ "구조 - 3차원 객체에 대한 질의 처리 기능 "
+#~ "- 3차원 공간 정보를 저장하기 위한 데이터 "
+#~ "저장소의 연결 - 3차원 공간 정보의 공유를 위한"
+#~ " 표준 웹 프로토콜 해석 기능 지원"
+#~ msgstr ""
+
+#~ msgid "License"
+#~ msgstr ""
+
+#~ msgid "References"
+#~ msgstr ""
 

@@ -59,10 +59,7 @@ public class Geometry3DOperationTest extends TestCase {
         private static ISOGeometryBuilder builder = null;
 
         public void testMain() {
-                hints = GeoTools.getDefaultHints();
-                hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
-                hints.put(Hints.GEOMETRY_VALIDATE, false);
-                builder = new ISOGeometryBuilder(hints);
+                builder = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
 
                  _testPointPoint();
                  _testPointCurve();
@@ -91,19 +88,24 @@ public class Geometry3DOperationTest extends TestCase {
                 Point point2 = builder.createPoint(0, 0, 0);
                 Point point3 = builder.createPoint(0, 1, 0);
 
-                System.out.println(point1.toString());
-                System.out.println(point2.toString());
-                relateTest(point1, point2);
+                //System.out.println(point1.toString());
+                //System.out.println(point2.toString());
+                //relateTest(point1, point2);
+                
+                testAndAssertTest("PP1", (GeometryImpl) point1, (GeometryImpl) point2,
+                		true, true, false, false, false, false, false);
+                
 
                 System.out.println(point3.toString());
                 relateTest(point1, point3);
+                testAndAssertTest("PP2", (GeometryImpl) point1, (GeometryImpl) point3,
+                		false, false, false, false, false, false, false);
         }
 
         public void _testPointCurve() {
                 Point point = builder.createPoint(0, -1, 2);
                 ArrayList<Curve> curves = getCurves(builder);
-
-                System.out.println(point.toString());
+                
                 for (Curve curve : curves) {
                         System.out.println(curve.toString());
                         relateTest(point, curve);
@@ -1423,4 +1425,86 @@ public class Geometry3DOperationTest extends TestCase {
 
                 return rotatedSolid;
         }
+        
+        /**
+    	 * Tests a topologic relation between geometry objects and asserts the results according to the given should-values in the parameter list.
+    	 * @param g1 First Geometry
+    	 * @param g2 Second Geometry
+    	 * @param shouldBeEqual
+    	 * @param shouldIntersectAndNotBeDisjoint
+    	 * @param shouldOverlap
+    	 * @param shouldTouch
+    	 * @param shouldContain
+    	 * @param shouldbeWithin
+    	 * @param shouldCross
+    	 */
+    	private void testAndAssertTest(
+    			String testCaseID,
+    			GeometryImpl g1, GeometryImpl g2,
+    			boolean shouldBeEqual,
+    			boolean shouldIntersectAndNotBeDisjoint,
+    			boolean shouldOverlap,
+    			boolean shouldTouch,
+    			boolean shouldContain,
+    			boolean shouldbeWithin,
+    			boolean shouldCross) {
+    		
+    		//System.out.print("\nTestcase : (" + testCaseID + ")");
+    		//System.out.print("\nGeometry 1 :" + g1);
+    		//System.out.print("\nGeometry 2 :" + g2 + "\n");
+
+    		boolean result = false;
+    		
+    		// EQUALS
+    		result  = g1.equals(g2);
+    		//System.out.println("Equals - result: " + result);
+    		assertTrue(shouldBeEqual == result);
+    		
+    		// INTERSECTION
+    		result  = g1.intersects(g2);
+    		//System.out.println("Intersection - result: " + result);
+    		assertTrue(shouldIntersectAndNotBeDisjoint == result);
+    		
+    		// DISJOINT
+    		result = g1.disjoint(g2);
+    		//System.out.println("Disjoint - result: " + result);
+    		assertTrue(!shouldIntersectAndNotBeDisjoint == result);
+
+    		// OVERLAPS
+    		result  = g1.overlaps(g2);
+    		//System.out.println("Overlaps - result: " + result);
+    		assertTrue(shouldOverlap == result);
+    		
+    		// TOUCHES
+    		result  = g1.touches(g2);
+    		//System.out.println("Touches - result: " + result);
+    		assertTrue(shouldTouch == result);
+    		
+    		// CONTAINS
+    		result  = g1.contains(g2);
+    		//System.out.println("Contains - result: " + result);
+    		assertTrue(shouldContain == result);
+    		
+    		// WITHIN
+    		result = g1.within(g2);
+    		//System.out.println("Within - result: " + result);
+    		assertTrue(shouldbeWithin == result);
+
+    		// CROSSES
+    		result = g1.crosses(g2);
+    		//System.out.println("Crosses - result: " + result);
+    		assertTrue(shouldCross == result);
+
+//    		// COVERS
+//    		result  = g1.covers(g2);
+//    		//System.out.println("Covers - result: " + result);
+//    		assertTrue(shouldContain == result);
+//    		
+//    		// COVEREDBY
+//    		result = g1.coveredBy(g2);
+//    		//System.out.println("CoveredBy - result: " + result);
+//    		assertTrue(shouldBeCoveredBy == result);
+
+
+    	}
 }

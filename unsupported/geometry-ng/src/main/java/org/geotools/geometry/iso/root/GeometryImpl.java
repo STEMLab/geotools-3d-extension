@@ -18,6 +18,7 @@ package org.geotools.geometry.iso.root;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -400,7 +401,13 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			return SFCGALAlgorithm.getConvexHull(this);
 		} else if(this instanceof MultiPrimitive) {
 			return SFCGALAlgorithm.getConvexHull(this);
+		} 
+		/*
+		else {
+			Complex comp = (Complex) this;
+			Collection<? extends Primitive> primitives = comp.getElements();
 		}
+		*/
 		Assert.isTrue(false, "The convex hull operation is not defined for this geometry object");
 		return null;
 	}

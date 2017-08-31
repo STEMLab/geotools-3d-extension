@@ -9,6 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: geotools-3d-extension 2.7.1\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2017-08-28 10:27-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -31,4 +32,22 @@ msgstr ""
 
 #~ msgid "Welcome to the GeoTools 3d-extension 'DataStore' documentation."
 #~ msgstr ""
+=======
+"POT-Creation-Date: 2017-08-24 11:15+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.4.0\n"
+
+#: ../../datastore.txt:2
+msgid "How to connect DataStore"
+msgstr ""
+
+#: ../../datastore.txt:3
+msgid "Welcome to the GeoTools 3d-extension 'DataStore' documentation."
+msgstr ""
+>>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension
 

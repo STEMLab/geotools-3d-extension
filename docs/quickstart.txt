@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 빠르게 시작하는 메뉴얼
 ====================================
 빠르게 시작하는 메뉴얼은 3차원 지리공간을 처음 접하는 자바 개발자를 대상으로 설명한다.
@@ -372,3 +373,336 @@ PostGIS DataStore로부터 getfeature함수를 적용한 결과는 다음과 같
 .. image:: images/dbresult.PNG
 
 .. _GeoTools Eclipse Quickstart: https://docs.geotools.org/latest/userguide/tutorial/quickstart/eclipse.html
+=======
+Quickstart Manual
+====================================
+Quickstart Manual는 3차원 지리공간을 처음 접하는 자바 개발자를 대상으로 설명한다.
+자바와 이클립스 설치 및 프로젝트 생성은 GeoTools 페이지를 참고하라 `GeoTools Eclipse Quickstart`_.
+
+1. 프로젝트를 생성한 후 pom.xml파일을 열어라.
+
+2. GeoTools-3d-extention을 사용하기 위해서 pom.xml파일에 다음을 참고하여 dependency를 추가하라.
+
+.. code-block:: java
+   :linenos:
+
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	  <modelVersion>4.0.0</modelVersion>
+	  
+	    <artifactId>your project name</artifactId>
+	    
+		<parent>
+	  	<groupId>org.geotools</groupId>
+	  	<artifactId>geotools-iso</artifactId>
+	  	<version>15-SNAPSHOT</version>
+	  	<relativePath>..</relativePath>
+	  </parent>
+	  
+	  <properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  </properties>
+
+	  <dependencies> 
+	      <dependency>
+	      <groupId>org.geotools</groupId>
+	      <artifactId>gt-main-iso</artifactId>
+	      <version>${project.version}</version>
+	    </dependency>   
+	    <dependency>
+	    	<groupId>org.geotools</groupId>
+	  		<artifactId>gt-csv-iso</artifactId>
+	  		<version>${project.version}</version>
+	  	</dependency> 
+	  	
+	    <!-- Provides support for PostGIS. Note the different groupId -->
+		<dependency>
+	      <groupId>org.geotools.jdbc</groupId>
+	      <artifactId>gt-jdbc-postgis-iso</artifactId>
+	      <version>${project.version}</version>
+	    </dependency>
+
+	    <!-- Provides GUI components -->
+	    <dependency>
+	        <groupId>org.geotools</groupId>
+	        <artifactId>gt-swing</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.geotools</groupId>
+	        <artifactId>gt-cql</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>3.8.1</version>
+	      <scope>test</scope>
+	    </dependency>
+	  </dependencies>
+	  
+	  <build>
+	    <plugins>
+	        <plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-surefire-plugin</artifactId>
+			  <configuration>
+			    <forkCount>3</forkCount>
+			    <reuseForks>true</reuseForks>
+			    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+			  </configuration>
+			</plugin>
+	    </plugins>
+	</build>
+	</project>
+
+
+
+.. code-block:: java
+   :linenos:
+
+	import java.awt.BorderLayout;
+	import java.awt.Dimension;
+	import java.awt.event.ActionEvent;
+	import java.io.IOException;
+	import java.util.ArrayList;
+	import java.util.Map;
+	import javax.swing.ComboBoxModel;
+	import javax.swing.DefaultComboBoxModel;
+	import javax.swing.JComboBox;
+	import javax.swing.JFrame;
+	import javax.swing.JMenu;
+	import javax.swing.JMenuBar;
+	import javax.swing.JOptionPane;
+	import javax.swing.JScrollPane;
+	import javax.swing.JTable;
+	import javax.swing.JTextField;
+	import javax.swing.table.DefaultTableModel;
+
+	import org.geotools.data.DataStore;
+	import org.geotools.data.DataStoreFactorySpi;
+	import org.geotools.data.DataStoreFinder;
+	import org.geotools.data.FeatureWriter;
+	import org.geotools.data.ISODataUtilities;
+	import org.geotools.data.Transaction;
+	import org.geotools.data.csv.iso.CSVDataStoreFactory;
+	import org.geotools.data.postgis3d.PostgisNGDataStoreFactory;
+	import org.geotools.data.simple.SimpleFeatureCollection;
+	import org.geotools.data.simple.SimpleFeatureSource;
+	import org.geotools.factory.Hints;
+	import org.geotools.feature.ISOFeatureFactoryImpl;
+	import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
+	import org.geotools.feature.simple.SimpleFeatureBuilder;
+	import org.geotools.filter.text.cql2.CQL;
+	import org.geotools.filter.text.cql2.CQLException;
+	import org.geotools.referencing.crs.DefaultGeographicCRS;
+	import org.geotools.swing.action.SafeAction;
+	import org.geotools.swing.data.JDataStoreWizard;
+	import org.geotools.swing.table.FeatureCollectionTableModel;
+	import org.geotools.swing.wizard.JWizard;
+
+	import org.opengis.feature.simple.SimpleFeature;
+	import org.opengis.feature.simple.SimpleFeatureType;
+	import org.opengis.filter.Filter;
+	import org.opengis.geometry.ISOGeometryBuilder;
+	import org.opengis.geometry.primitive.Solid;
+
+	public class App  extends JFrame{
+
+		private DataStore dataStore;
+
+		private JComboBox featureTypeCBox;
+
+		private JTable table;
+
+		private JTextField text;
+
+		private static ISOGeometryBuilder builder;
+		
+		public static void main(String[] args) throws Exception {
+
+			Hints h = new Hints();
+			h.put(Hints.GEOMETRY_VALIDATE, false);
+			h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+			builder = new ISOGeometryBuilder(h);
+			
+			JFrame frame = new App();
+			frame.setVisible(true);
+
+		}
+
+		public App() {
+
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			getContentPane().setLayout(new BorderLayout());
+
+
+			text = new JTextField(80);
+			text.setText("include"); // include selects everything!
+			getContentPane().add(text, BorderLayout.NORTH);
+
+
+			table = new JTable();
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table.setModel(new DefaultTableModel(5, 5));
+			table.setPreferredScrollableViewportSize(new Dimension(500, 200));
+
+
+			JScrollPane scrollPane = new JScrollPane(table);
+			getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+
+			JMenuBar menubar = new JMenuBar();
+			setJMenuBar(menubar);
+
+
+			JMenu fileMenu = new JMenu("File");
+			menubar.add(fileMenu);
+
+
+			featureTypeCBox = new JComboBox();
+			menubar.add(featureTypeCBox);
+
+
+			JMenu dataMenu = new JMenu("Data");
+			menubar.add(dataMenu);
+
+			pack();
+
+			fileMenu.add(new SafeAction("Open csvfile...") {
+				public void action(ActionEvent e) throws Throwable {
+					connect(new CSVDataStoreFactory());
+				}
+			});
+
+			fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+				public void action(ActionEvent e) throws Throwable {
+					connect(new PostgisNGDataStoreFactory());
+				}
+			});
+
+			fileMenu.add(new SafeAction("Insert Solid to PostGIS database...") {
+				public void action(ActionEvent e) throws Throwable {
+					insertTable();
+				}
+			});
+
+			fileMenu.addSeparator();
+
+			fileMenu.add(new SafeAction("Exit") {
+				public void action(ActionEvent e) throws Throwable {
+					System.exit(0);
+				}
+			});
+
+			dataMenu.add(new SafeAction("Get features") {
+				public void action(ActionEvent e) throws Throwable {
+					filterFeatures();
+				}
+			});
+		}
+		
+		private void connect(DataStoreFactorySpi format) {
+
+			JDataStoreWizard wizard = new JDataStoreWizard(format);
+			int result = wizard.showModalDialog();
+
+			if (result == JWizard.FINISH) {
+				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
+
+				try {
+					dataStore = DataStoreFinder.getDataStore(connectionParameters);
+					if (dataStore == null) {
+						JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+					}
+					updateUI();
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+
+		private void insertTable() {
+			String typeName = "oneSolid";
+			ArrayList<Solid> al = ISODataUtilities.getSolids(builder);
+
+			ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
+			b.setCRS(DefaultGeographicCRS.WGS84_3D);
+			b.setName( typeName );
+			b.add("loc", Solid.class);
+
+			SimpleFeatureType schema = b.buildFeatureType();
+			SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
+			builder.add( al.get(0) );
+			SimpleFeature feature = builder.buildFeature( "fid.1" );
+			
+			try {
+					dataStore.createSchema((SimpleFeatureType) schema);
+					FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
+							schema.getTypeName(), Transaction.AUTO_COMMIT);
+					SimpleFeature newFeature = fw.next(); 
+					newFeature.setAttributes(feature.getAttributes());
+					fw.write();
+					fw.close();
+					
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		private void updateUI()  {
+			ComboBoxModel cbm;
+
+			try {
+				cbm = new DefaultComboBoxModel(dataStore.getTypeNames());
+				featureTypeCBox.setModel(cbm);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			table.setModel(new DefaultTableModel(5, 5));
+		}
+
+		private void filterFeatures()  {
+
+			String typeName = (String) featureTypeCBox.getSelectedItem();
+			SimpleFeatureSource source;
+
+			try {
+				source = dataStore.getFeatureSource(typeName);
+
+				Filter filter = CQL.toFilter(text.getText());
+				SimpleFeatureCollection features = source.getFeatures(filter);
+
+				FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
+				table.setModel(model);
+
+			} catch (IOException | CQLException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} 
+		}
+	}
+
+
+
+
+5. 위의 어플리케이션을 실행하면 당신은 CSV 파일을 열거나 PostGIS에 연결함으로써 3차원 DataStore을 만들 수 있다.
+
+.. image:: start.jpg
+
+
+
+>>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension

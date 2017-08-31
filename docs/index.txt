@@ -3,36 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-<<<<<<< HEAD
-GeoTools 3D Extension 메뉴얼 페이지에 방문을 환영합니다!
-======================================
-GeoTools 3D Extension에 방문하신 것을 환영합니다.
-이 프로젝트는 GeoTools 라이브러리를 확장하여 3차원 공간 연산을 지원합니다.
-이 문서에서는 이 프로젝트에 대한 간단한 설명, 프로젝트를 빌드하는 방법, 그리고 몇가지 튜토리얼을 다루고 있습니다.
-
-목차
-==================
-
-.. _modules-docs:
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Modules
-
-   overview
-   geometry
-   datastore
-   gml
-
-.. _tutorial-docs:
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorial
-
-   building
-   quickstart
-=======
 Welcome to GeoTools 3D Extension
 ======================================
 GeoTools 3D Extension에 방문하신 것을 환영합니다.
@@ -65,4 +35,3 @@ Table of Contents
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
->>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension

@@ -17,9 +17,9 @@ GeoTools에서 이 기하 모델은 OpenGIS (gt-opengis) 모듈에서 자바 인
 이 라이브러리는 CGAL과 Boost를 기반으로 구현되어 있으며 ISO 19107 공간 스키마와 OGC Simple Feature Access 1.2 표준을 기반으로
 기하 모델을 정의하고 있기 때문에 Solid 기하도 지원하고 있습니다. 또한 여러가지 3차원 기능들을 CGAL이 제공하는 기능들을 확장하여 구현하고 있습니다.
 
-**********************
-Internal Implementation
-**********************
+***********************
+내부 구현
+***********************
 
 3차원 기하 연산을 지원하기 위해 SFCGAL 라이브러리를 ISO 19107 공간 스키마를 구현하는 클래스에 연결했습니다.
 그 구조는 다음의 그림과 같습니다. 
@@ -42,7 +42,7 @@ SFGCAL의 해당 네이티브 메소드를 호출할 수 있습니다. SFCGAL에
 이는 다시 Java의 타입이나 GeoTools ISO Geometry로 변환되어 반환됩니다.
 
 **********
-References
+참조
 **********
 
 - `GeoTools ISO Geometry <http://docs.geotools.org/latest/userguide/library/opengis/geometry.html>`_

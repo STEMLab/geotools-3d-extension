@@ -1,6 +1,33 @@
 .. _install:
 
 ########
+<<<<<<< HEAD
+빌드
+########
+
+이 장에서는 이 프로젝트를 빌드하기 위한 방법을 소개합니다.
+이 프로젝트가 사용하는 몇 가지 라이브러리가 c++ 언어 기반이기 때문에
+이 프로젝트를 빌드하기 이전에 필요 라이브러리들을 우선적으로 설치하는 과정이 필요합니다.
+
+*************
+필요 라이브러리
+*************
+
+- CMAKE
+- GMP
+- MPFR
+- Boost
+- CGAL
+- SFCGAL
+
+****************************************
+Ubuntu 16.04에서 GeoTools 3D를 설치하기
+****************************************
+
+먼저 다음의 명령어로 Git Repository로 부터 프로젝트를 받아옵니다.
+
+$ git clone https://github.com/STEMLab/geotools-3d-extension.git
+=======
 Building
 ########
 
@@ -22,6 +49,7 @@ Prerequisites
 ****************************************
 GeoTools 3D installation on Ubuntu 16.04
 ****************************************
+>>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension
 
 SFCGAL, CGAL, Boost 라이브러리에서 필요한 라이브러리들을 설치합니다.
 이미 이 라이브러리들이 설치되어 있다면 다음의 과정은 생략해도 좋습니다.

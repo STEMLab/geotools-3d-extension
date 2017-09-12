@@ -115,7 +115,7 @@ public class SFCGALAlgorithm {
                 SFGeometry geometryA = SFCGALConvertor.geometryToSFCGALGeometry(gA);
                 SFGeometry geometryB = SFCGALConvertor.geometryToSFCGALGeometry(gB);
                 boolean result = geometryA.equals(geometryB);
-
+                
                 return result;
         }
         

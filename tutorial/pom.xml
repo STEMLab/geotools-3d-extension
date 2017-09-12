@@ -38,6 +38,16 @@
   		<artifactId>gt-xsd-gml3-iso</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+    <dependency>
+  	  	<groupId>org.geotools</groupId>
+  		<artifactId>gt-geojson-iso</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+    <dependency>
+  	  	<groupId>org.geotools</groupId>
+  		<artifactId>gt-geojsondatastore-iso</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
     
     <dependency>
       <groupId>org.geotools</groupId>

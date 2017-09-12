@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Configuration;
 import org.geotools.xml.test.XMLTestSupport;
@@ -80,7 +81,7 @@ import org.w3c.dom.NodeList;
 public abstract class GML3TestSupport extends XMLTestSupport {
 
 	protected ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
-	protected ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+	protected ISOGeometryBuilder gb3D;
 	
     @Override
     protected void setUp() throws Exception {
@@ -93,6 +94,8 @@ public abstract class GML3TestSupport extends XMLTestSupport {
         namespaces.put("xlink", "http://www.w3.org/1999/xlink");
         namespaces.put("xsi", "http://www.w3.org/2001/XMLSchema-instance");
         XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(namespaces));
+        
+        gb3D = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
     }
 
     protected void registerNamespaces(Element root) {

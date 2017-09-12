@@ -48,6 +48,8 @@ import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,8 +68,18 @@ import org.w3c.dom.Node;
 public class GML3MockData {
     static XSD gml = GML.getInstance();
     
-    static ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
-    static ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+    static ISOGeometryBuilder gb;
+    static ISOGeometryBuilder gb3D; 
+    
+    static {
+    	gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+    	try {
+			gb3D = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
     
     public static void setGML(XSD gml) {
         if (gml == null) {

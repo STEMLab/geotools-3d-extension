@@ -27,6 +27,7 @@ import org.geotools.geometry.DirectPosition3D;
 import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.gml3.iso.GML;
 import org.geotools.gml3.iso.bindings.GML3ParsingUtils;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
@@ -117,7 +118,7 @@ public class DirectPositionListTypeBinding extends AbstractComplexBinding {
     		if(crsDimension == 2) {
     			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84);
     		} else {
-    			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
+    			gBuilder.setCoordinateReferenceSystem(CRS.decode("EPSG:4329"));
     		}
     	}
         

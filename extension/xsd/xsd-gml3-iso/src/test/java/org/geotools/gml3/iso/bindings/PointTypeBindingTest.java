@@ -50,7 +50,7 @@ public class PointTypeBindingTest extends GML3TestSupport {
         assertEquals(gb3D.createDirectPosition(new double[] {1d, 2d, 10d})
         		, p.getDirectPosition());
 
-        assertEquals(p.getCoordinateReferenceSystem(), DefaultGeographicCRS.WGS84_3D);
+        assertEquals(p.getCoordinateReferenceSystem(), CRS.decode("EPSG:4329"));
     }
 
     public void testEncode() throws Exception {

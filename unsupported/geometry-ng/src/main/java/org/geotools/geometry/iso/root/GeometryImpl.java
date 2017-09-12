@@ -594,7 +594,28 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 	 */
 	public boolean equals(TransfiniteSet pointSet) {
 		GeometryImpl geom = GeometryImpl.castToGeometryImpl(pointSet);
-	    return SFCGALAlgorithm.equals(this, geom);
+	    
+	    int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+        	return SFCGALAlgorithm.equals(this, geom);
+        }
+        
+	    IntersectionMatrix tIM = null;
+		try {
+			tIM = RelateOp.relate(this, geom);
+		} catch (UnsupportedDimensionException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		boolean rValue = false;
+		
+		// No distinction between primitive and complex (explanation see thesis)
+		rValue = tIM.matches("T*F**FFF*");
+		
+		return rValue;	
 	}
 
 	/**
@@ -612,13 +633,12 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 			return false;
 
 		/* for 3D coordinate geometry */
-	        int d1 = getCoordinateDimension();
-	        int d2 = geom.getCoordinateDimension();
-	        
-	        if(d1 == 3 && d2 == 3) {
-	                return SFCGALAlgorithm.touches(this, geom);
-	        }
-	        /* */
+        int d1 = getCoordinateDimension();
+        int d2 = geom.getCoordinateDimension();
+        
+        if(d1 == 3 && d2 == 3) {
+                return SFCGALAlgorithm.touches(this, geom);
+        }
 		
 		IntersectionMatrix tIM = null;
 		try {
@@ -632,38 +652,6 @@ public abstract class GeometryImpl implements Geometry, Serializable  {
 		rValue = tIM.matches("F***T****")
 	  	  || tIM.matches("FT*******")
 	  	  || tIM.matches("F**T*****");
-		
-//		if (this instanceof PrimitiveImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Primitive / Primitive
-//				rValue = tIM.matches("FT*******")
-//					  || tIM.matches("F**T*****");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Primitive / Complex
-//				rValue = tIM.matches("F***T****")
-//					  || tIM.matches("FT*******")
-//					  || tIM.matches("F**T*****");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		} else
-//		if (this instanceof ComplexImpl) {
-//			if (geom instanceof PrimitiveImpl) {
-//				// Complex / Primitive
-//				rValue = tIM.matches("F***T****")
-//				  	  || tIM.matches("FT*******")
-//				  	  || tIM.matches("F**T*****");
-//			} else
-//			if (geom instanceof ComplexImpl) {
-//				// Complex / Complex
-//				rValue = tIM.matches("F***T****")
-//			  	  	  || tIM.matches("FT*******")
-//			  	  	  || tIM.matches("F**T*****");
-//			} else {
-//				Assert.isTrue(false);
-//			}
-//		}
 		
 		return rValue;	
 	}

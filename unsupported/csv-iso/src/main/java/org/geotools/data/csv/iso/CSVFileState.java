@@ -36,7 +36,7 @@ import com.csvreader.CsvReader;
 public class CSVFileState {
 
     private static CoordinateReferenceSystem DEFAULT_CRS() throws FactoryException {
-        return CRS.decode("EPSG:4329");
+        return CRS.decode("EPSG:4326");
     };
 
     private final File file;

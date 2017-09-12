@@ -105,7 +105,7 @@ public class CSVLatLonStrategy extends CSVStrategy {
             List<String> csvHeaders = Arrays.asList(headers);
             int index = csvHeaders.indexOf(latField);
             ISOAttributeTypeBuilder builder2 = new ISOAttributeTypeBuilder();
-            builder2.setCRS(DefaultGeographicCRS.WGS84_3D);
+            builder2.setCRS(DefaultGeographicCRS.WGS84);
             builder2.binding(Point.class);
             AttributeDescriptor descriptor = builder2.buildDescriptor(pointField);
             builder.add(index, descriptor);

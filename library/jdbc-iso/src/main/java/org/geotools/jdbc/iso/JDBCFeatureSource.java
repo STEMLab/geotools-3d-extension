@@ -395,25 +395,13 @@ public class JDBCFeatureSource extends ContentFeatureSource {
             featureSource = ((JDBCFeatureStore)source).getFeatureSource();
         }
         
-        boolean issupported = false;
-        if(original instanceof BinarySpatialOperator) {
-        	Literal lt = null;
-        	BinarySpatialOperator op = (BinarySpatialOperator)original;
-        	Expression e1 = op.getExpression1();
-        	Expression e2 = op.getExpression2();
-        	if(e1 instanceof Literal) {
-        		lt = (Literal)e1;
-        	}else if(e2 instanceof Literal) {
-        		lt = (Literal)e2;
-        	}
-        	Geometry g = (Geometry) lt.getValue();
-            issupported = getDataStore().getSQLDialect().acceptable(g);
-        }
+
+        
         Filter[] split = new Filter[2];
         if ( original != null ) {
             //create a filter splitter
-        	ISOPostPreProcessFilterSplittingVisitor splitter = new ISOPostPreProcessFilterSplittingVisitor(getDataStore()
-                    .getFilterCapabilities(), featureSource.getSchema(), issupported);
+        	ISOPostPreProcessFilterSplittingVisitor splitter = getDataStore().getSQLDialect().getFilterVisitor(getDataStore()
+                    .getFilterCapabilities(), featureSource.getSchema());
             original.accept(splitter, null);
         
             split[0] = splitter.getFilterPre();

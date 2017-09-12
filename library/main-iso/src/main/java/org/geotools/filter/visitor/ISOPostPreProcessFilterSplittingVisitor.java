@@ -131,7 +131,8 @@ import org.opengis.filter.temporal.TOverlaps;
  * certainty exactly how the logic for that part of this works, but
  * the test suite does seem to test it and the tests do pass.
  * 
- * 
+ * @author dzwiers
+ * @author commented and ported from gt to ogc filters by saul.farber
  * @author soojin kim
  *
  *
@@ -165,7 +166,6 @@ public class ISOPostPreProcessFilterSplittingVisitor implements FilterVisitor, E
 	    protected FilterCapabilities fcs = null;
 	    private SimpleFeatureType parent = null;
 	    protected Filter original = null;
-        protected boolean issupported = false;
         /**
          * If we're in the middle of a client-side transaction, this object
          * will help us figure out what we need to handle from updates/deletes
@@ -174,7 +174,7 @@ public class ISOPostPreProcessFilterSplittingVisitor implements FilterVisitor, E
 		private ClientTransactionAccessor transactionAccessor;
         private FilterFactory ff = CommonFactoryFinder.getFilterFactory(null);
 	
-	    private ISOPostPreProcessFilterSplittingVisitor() {
+	    protected ISOPostPreProcessFilterSplittingVisitor() {
 	    	// do nothing
 	    }
 	
@@ -191,10 +191,9 @@ public class ISOPostPreProcessFilterSplittingVisitor implements FilterVisitor, E
 	        this.transactionAccessor = transactionAccessor;
 	    }
 	    
-	    public ISOPostPreProcessFilterSplittingVisitor(FilterCapabilities fcs, SimpleFeatureType parent, boolean issupported) {
+	    public ISOPostPreProcessFilterSplittingVisitor(FilterCapabilities fcs, SimpleFeatureType parent) {
 	        this.fcs = fcs;
 	        this.parent = parent;
-	        this.issupported = issupported;
 	    }
 	    /**
 	     * Gets the filter that cannot be sent to the server and must be post-processed on the client by geotools.
@@ -528,10 +527,6 @@ public class ISOPostPreProcessFilterSplittingVisitor implements FilterVisitor, E
 	    protected void visitBinarySpatialOperator(BinarySpatialOperator filter) {
 	        if( original==null )
 	        	original=filter;
-            if(!issupported) {
-            	postStack.push(filter);
-                return;
-            }
             Class [] spatialOps = new Class[] { Beyond.class,
                     Contains.class, Crosses.class, Disjoint.class, DWithin.class,
                     Equals.class, Intersects.class, Overlaps.class, Touches.class,

@@ -48,7 +48,6 @@
   		<artifactId>gt-geojsondatastore-iso</artifactId>
   		<version>${project.version}</version>
   	</dependency>
-    
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-shapefile</artifactId>

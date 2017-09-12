@@ -1,3 +1,5 @@
+package org.geotools.iso.tutorial;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -689,8 +691,8 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
-   			//Filter filter = ff.contains("loc", (Geometry)sf);
-   			Filter filter = ff.equals("loc", al.get(0));
+   			Filter filter = ff.intersects("loc", al.get(0));
+   			//Filter filter = ff.equals("loc", al.get(0));
    		   
 			Query query = new Query(typeName, filter, new String[] { "loc" });
 

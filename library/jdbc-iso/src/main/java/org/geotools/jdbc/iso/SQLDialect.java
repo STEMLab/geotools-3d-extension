@@ -44,6 +44,8 @@ import org.geotools.feature.visitor.MinVisitor;
 import org.geotools.feature.visitor.SumVisitor;
 import org.geotools.feature.visitor.UniqueVisitor;
 import org.geotools.filter.FilterCapabilities;
+import org.geotools.filter.visitor.ClientTransactionAccessor;
+import org.geotools.filter.visitor.ISOPostPreProcessFilterSplittingVisitor;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
@@ -197,12 +199,12 @@ public abstract class SQLDialect {
      * @param cx Database connection.
      *
      */
+    public ISOPostPreProcessFilterSplittingVisitor getFilterVisitor(FilterCapabilities fcs, SimpleFeatureType parent) {
+    	return new ISOPostPreProcessFilterSplittingVisitor(fcs, parent);
+    }
     public boolean includeTable(String schemaName, String tableName, Connection cx)
         throws SQLException {
         return true;
-    }
-    public boolean acceptable(Geometry type) {
-    	return true;
     }
     /**
      * Registers the sql type name to java type mappings that the dialect uses when

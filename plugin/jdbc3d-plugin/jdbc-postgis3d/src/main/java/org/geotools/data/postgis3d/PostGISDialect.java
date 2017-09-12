@@ -42,6 +42,8 @@ import org.geotools.filter.FilterCapabilities;
 import org.geotools.filter.spatial.ISOContainsImpl;
 import org.geotools.filter.spatial.ISOEqualsImpl;
 import org.geotools.filter.spatial.ISOWithinImpl;
+import org.geotools.filter.visitor.ClientTransactionAccessor;
+import org.geotools.filter.visitor.ISOPostPreProcessFilterSplittingVisitor;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.jts.CircularRing;
@@ -171,16 +173,9 @@ public class PostGISDialect extends BasicSQLDialect {
         }
     };
     
-    public boolean acceptable(Geometry type) {
-    	boolean acceptable = false;
-
-		if(!(type instanceof Solid)) {
-			acceptable = true;
-		}
-    	
-    	return acceptable;
+    public ISOPostPreProcessFilterSplittingVisitor getFilterVisitor(FilterCapabilities fcs, SimpleFeatureType parent) {
+    	return new PostPreProcessPostGISFilterSplittingVisitor(fcs, parent, this);
     }
-    
     @Override
     public boolean isAggregatedSortSupported(String function) {
        return "distinct".equalsIgnoreCase(function);

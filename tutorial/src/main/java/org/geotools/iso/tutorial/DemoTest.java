@@ -148,6 +148,11 @@ public class DemoTest extends JFrame{
 				insertTable();
 			}
 		});
+		fileMenu.add(new SafeAction("Insert to GeoJSON") {
+			public void action(ActionEvent e) throws Throwable {
+				makeGeoJSON();
+			}
+		});
 		fileMenu.add(new SafeAction("pointToTable...") {
 			public void action(ActionEvent e) throws Throwable {
 				pointToTable();
@@ -769,6 +774,56 @@ public class DemoTest extends JFrame{
 				}
 				JDBCDataStore jds = (JDBCDataStore)dataStore1;
 				jds.setDatabaseSchema(null);
+
+				dataStore1.createSchema((SimpleFeatureType) schema);
+				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
+
+				// insert the feature
+				FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore1.getFeatureWriterAppend(
+						typeName, Transaction.AUTO_COMMIT);
+				//SimpleFeature f = fw.next();
+				SimpleFeatureCollection sfc = source.getFeatures();
+				SimpleFeatureIterator iterator = sfc.features();
+				while (iterator.hasNext()) {
+					SimpleFeature feature = iterator.next();
+					SimpleFeature newFeature = fw.next(); // new blank feature
+					newFeature.setAttributes(feature.getAttributes());
+					fw.write();
+				}
+				//fw.write();
+				fw.close();
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void makeGeoJSON() {
+		String typeName = (String) featureTypeCBox.getSelectedItem();
+
+		try {
+			SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
+			//source = dataStore.getFeatureSource(typeName);
+
+			FeatureType schema = dataStore.getSchema(typeName);//source.getSchema();
+			DataStore dataStore1;
+			JDataStoreWizard wizard = new JDataStoreWizard(new GeoJSONDataStoreFactory());
+			int result = wizard.showModalDialog();
+			if (result == JWizard.FINISH) {
+				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
+
+				dataStore1 = DataStoreFinder.getDataStore(connectionParameters);
+
+				if (dataStore1 == null) {
+					JOptionPane.showMessageDialog(null, "Could not connect - check parameters");
+				}
+				//JDBCDataStore jds = (JDBCDataStore)dataStore1;
+				//jds.setDatabaseSchema(null);
 
 				dataStore1.createSchema((SimpleFeatureType) schema);
 				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);

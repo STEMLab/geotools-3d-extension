@@ -17,7 +17,9 @@ package org.geotools.iso.data.geojson;
  *    Lesser General Public License for more details.
  */
 import java.io.IOException;
+import java.sql.PreparedStatement;
 
+import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Query;
@@ -28,10 +30,12 @@ import org.geotools.data3d.store.ContentEntry;
 import org.geotools.data3d.store.ContentFeatureStore;
 import org.geotools.data3d.store.ContentState;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.iso.data.geojson.GeoJSONInsertFeatureWriter;
 import org.opengis.feature.FeatureVisitor;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
+import org.opengis.filter.Filter;
 import org.opengis.util.ProgressListener;
 
 public class GeoJSONFeatureStore extends ContentFeatureStore {
@@ -46,10 +50,14 @@ public class GeoJSONFeatureStore extends ContentFeatureStore {
     @Override
     protected FeatureWriter<SimpleFeatureType, SimpleFeature> getWriterInternal(Query query,
             int flags) throws IOException {
+    	if ( (flags | WRITER_ADD) == WRITER_ADD ) {
+            return new GeoJSONInsertFeatureWriter(getState(), query, getSchema());
+        }
         return new GeoJSONFeatureWriter(getState(), query);
     }
 
-    GeoJSONFeatureSource delegate = new GeoJSONFeatureSource(entry, query) {
+
+	GeoJSONFeatureSource delegate = new GeoJSONFeatureSource(entry, query) {
         @Override
         public void setTransaction(Transaction transaction) {
             super.setTransaction(transaction);

@@ -38,6 +38,7 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.identity.FeatureIdImpl;
+import org.geotools.iso.geojson.feature.FeatureJSON;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -100,7 +101,7 @@ public class GeoJSONInsertFeatureWriter implements FeatureWriter<SimpleFeatureTy
         // inserted
     	 
 
-    	currentFeature = builder.buildFeature( "fid.1" );
+    	currentFeature = builder.buildFeature( null );
         return currentFeature;
     }
 
@@ -112,7 +113,6 @@ public class GeoJSONInsertFeatureWriter implements FeatureWriter<SimpleFeatureTy
     	if (this.currentFeature == null) {
             return; // current feature has been deleted
         }
-
         geoJSONWriter.write(currentFeature);
         nextID++;
         this.currentFeature = null; // indicate that it has been written

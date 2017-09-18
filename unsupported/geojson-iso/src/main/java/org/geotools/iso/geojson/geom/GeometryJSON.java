@@ -47,7 +47,9 @@ import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.Point;
 import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
+import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
+import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -196,7 +198,7 @@ public class GeometryJSON {
         }
         
         if (geometry instanceof Solid) {
-        	return null;
+        	return createSolid((Solid)geometry);
         }
         
         throw new IllegalArgumentException("Unable to encode object " + geometry);
@@ -388,7 +390,35 @@ public class GeometryJSON {
     public Surface readSurface(Object input) throws IOException {
         return parse(new SurfaceHandler(builder), input);
     }
+    /**
+     * Writes a Solid as GeoJSON.
+     * 
+     * @param poly The Solid.
+     * @param output The output. See {@link GeoJSONUtil#toWriter(Object)} for details.
+     */
+    public void writeSolid(Solid poly, Object output) throws IOException {
+        encode(createSolid(poly), output);
+    }
 
+    /**
+     * Writes a Solid as GeoJSON.
+     * <p>
+     * This method calls through to {@link #writeSolid(Solid, Object)}
+     * </p>
+     * @param poly The Solid.
+     * @param output The output stream.
+     */
+    public void writeSurface(Solid poly, OutputStream output) throws IOException {
+        writeSolid(poly, (Object)output);
+    }
+
+    Map<String,Object> createSolid(Solid poly) {
+        LinkedHashMap obj = new LinkedHashMap();
+        
+        obj.put("type", "Solid");
+        obj.put("coordinates", toList(poly));
+        return obj;
+    }
     /**
      * Reads a Surface from GeoJSON.
      * <p>
@@ -715,7 +745,26 @@ public class GeometryJSON {
         }
         return list;
     }
-    
+    List toList(Solid poly) {
+    	SolidBoundary sb = poly.getBoundary();
+    	
+        ArrayList list = new ArrayList();
+        for(Primitive r : sb.getExterior().getElements()) {
+        	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, (Surface)r), scale));
+        }
+        //list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, sb.getExterior()), scale));
+        
+        for(Shell s : sb.getInteriors()) {
+        	SurfaceBoundary isb = s.getBoundary();
+        	
+            list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, isb.getExterior()), scale));
+            
+            for(Ring r : isb.getInteriors()) {
+            	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, r), scale));
+            }
+        }
+        return list;
+    }
     List toList(MultiPrimitive mgeom) {
     	Set<? extends Primitive> prims = mgeom.getElements();
     	

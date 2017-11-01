@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -749,18 +750,16 @@ public class GeometryJSON {
     	SolidBoundary sb = poly.getBoundary();
     	
         ArrayList list = new ArrayList();
-        for(Primitive r : sb.getExterior().getElements()) {
-        	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, (Surface)r), scale));
+        for(Primitive p : sb.getExterior().getElements()) {
+        	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, (Surface)p), scale));
+        	
         }
-        //list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, sb.getExterior()), scale));
+
         
         for(Shell s : sb.getInteriors()) {
-        	SurfaceBoundary isb = s.getBoundary();
-        	
-            list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, isb.getExterior()), scale));
-            
-            for(Ring r : isb.getInteriors()) {
-            	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, r), scale));
+        	for(Primitive p : s.getElements()) {
+            	list.add(new PointArrayEncoder(PointArrayUtil.toList(builder, (Surface)p), scale));
+            	
             }
         }
         return list;

@@ -31,6 +31,7 @@ import org.geotools.feature.simple.SimpleFeatureImpl.Attribute;
 import org.geotools.feature.type.AttributeDescriptorImpl;
 import org.geotools.feature.type.Types;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.geometry.jts.coordinatesequence.CoordinateSequences;
 import org.geotools.util.Converters;
 import org.geotools.util.Utilities;
@@ -271,14 +272,14 @@ public class ISOSimpleFeatureImpl implements SimpleFeature {
     public BoundingBox getBounds() {
         //TODO: cache this value
     	CoordinateReferenceSystem crs = featureType.getCoordinateReferenceSystem();
-    	ReferencedEnvelope bounds = ReferencedEnvelope.create( crs );
+    	ReferencedEnvelope3D bounds = (ReferencedEnvelope3D) ReferencedEnvelope3D.create( crs );
     	
     	for ( Object o : values ) {
             if ( o instanceof Geometry ) {
                 Geometry g = (Geometry) o;
                 //TODO: check userData for crs... and ensure its of the same 
                 // crs as the feature type
-                bounds.expandToInclude(ReferencedEnvelope.create(g.getEnvelope(), crs));
+                bounds.expandToInclude(ReferencedEnvelope3D.create(g.getEnvelope(), crs));
             }
         }
         

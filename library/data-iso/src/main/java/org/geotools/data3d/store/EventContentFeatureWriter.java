@@ -24,6 +24,7 @@ import org.geotools.data.DiffFeatureWriter;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -128,7 +129,7 @@ public class EventContentFeatureWriter implements FeatureWriter<SimpleFeatureTyp
         }
         if (writer.hasNext()) {
             // modify existing feature
-            ReferencedEnvelope bounds = ReferencedEnvelope.reference(feature.getBounds());
+            ReferencedEnvelope3D bounds = (ReferencedEnvelope3D) ReferencedEnvelope3D.reference(feature.getBounds());
             state.fireFeatureUpdated(store, feature, bounds);
             feature = null;
         } else {

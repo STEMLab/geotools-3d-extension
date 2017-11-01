@@ -43,10 +43,14 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.util.SolidUtil;
 import org.geotools.iso.data.geojson.GeoJSONDataStoreFactory;
 //import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
@@ -60,6 +64,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.PointArray;
@@ -73,6 +78,8 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 
 
 public class DemoTest extends JFrame{
@@ -681,11 +688,11 @@ public class DemoTest extends JFrame{
 			source = dataStore.getFeatureSource(typeName);
    			FeatureType schema = source.getSchema();
 			//String name = schema.getGeometryDescriptor().getLocalName();
-   			PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
-   			for(int i = 2;i < 3;i++) {
-   				lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
-   			}
-   			lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
+   			//PointArray lp = new PointArrayImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}),new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{1,1,1}));
+   			//for(int i = 2;i < 3;i++) {
+   			//	lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{i,i,i}));
+   			//}
+   			//lp.add(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
    			//Curve al = builder.createCurve(lp);
    			//SurfaceBoundary s = builder.createSurfaceBoundary(al);
    			//Surface sf = builder.createSurface(s);
@@ -694,12 +701,22 @@ public class DemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
-   			ArrayList<Solid> al = getSolids(builder);
-   			Filter filter = ff.intersects("loc", al.get(0));
-   			//Filter filter = ff.equals("loc", al.get(0));
+   			ISOGeometryBuilder gb = null;
+			try {
+				gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
+			} catch (NoSuchAuthorityCodeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FactoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+   			//ArrayList<Solid> al = getSolids(builder);
+   			
+   			Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[] { -7.102795507E10, 4.237997E10, 0.0 }), gb.createDirectPosition(new double[] { -7.102795261E10, 4.237996648E10, 32.613401 })));
+   			//Filter filter = ff.equals("loc", al.get(0));	
    		   
-			Query query = new Query(typeName, filter, new String[] { "loc" });
+			Query query = new Query(typeName, filter, new String[] { "geom" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 

@@ -43,7 +43,9 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.util.SolidUtil;
 import org.geotools.iso.data.geojson.GeoJSONDataStoreFactory;
 //import org.geotools.gml2.GMLConfiguration_ISO;
 import org.geotools.jdbc.iso.JDBCDataStore;
@@ -60,6 +62,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.Function;
 import org.opengis.geometry.DirectPosition;
+import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
 import org.opengis.geometry.coordinate.PointArray;
@@ -696,10 +699,11 @@ public class DemoTest extends JFrame{
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
    			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
    			ArrayList<Solid> al = getSolids(builder);
-   			Filter filter = ff.intersects("loc", al.get(0));
+   			
+   			Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[]{-71.07883492, 42.35259891, 0}), gb.createDirectPosition(new double[]{-71.07881626, 42.35255993, 60.32515})));
    			//Filter filter = ff.equals("loc", al.get(0));
    		   
-			Query query = new Query(typeName, filter, new String[] { "loc" });
+			Query query = new Query(typeName, filter, new String[] { "geom" });
 
 			SimpleFeatureCollection features = source.getFeatures(query);
 
@@ -812,7 +816,8 @@ public class DemoTest extends JFrame{
 
 			FeatureType schema = dataStore.getSchema(typeName);//source.getSchema();
 			DataStore dataStore1;
-			JDataStoreWizard wizard = new JDataStoreWizard(new GeoJSONDataStoreFactory());
+			//JDataStoreWizard wizard = new JDataStoreWizard(new GeoJSONDataStoreFactory());
+			JDataStoreWizard wizard = new JDataStoreWizard(new CSVDataStoreFactory());
 			int result = wizard.showModalDialog();
 			if (result == JWizard.FINISH) {
 				Map<String, Object> connectionParameters = wizard.getConnectionParameters();
@@ -834,11 +839,20 @@ public class DemoTest extends JFrame{
 				//SimpleFeature f = fw.next();
 				SimpleFeatureCollection sfc = source.getFeatures();
 				SimpleFeatureIterator iterator = sfc.features();
-				while (iterator.hasNext()) {
+				int index = 0;
+				while (iterator.hasNext() && index < 1000) {
 					SimpleFeature feature = iterator.next();
+					Geometry g = (Geometry) feature.getDefaultGeometry();
+					GeometryToWKTscaleUpString decoder = new GeometryToWKTscaleUpString(false);
+					String newg = decoder.getString(g);
+					 WKTReader wktReader = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+                    Geometry geometry;
+                    geometry = wktReader.read(newg);
+                    feature.setDefaultGeometry(geometry);
 					SimpleFeature newFeature = fw.next(); // new blank feature
 					newFeature.setAttributes(feature.getAttributes());
 					fw.write();
+					index++;
 				}
 				//fw.write();
 				fw.close();

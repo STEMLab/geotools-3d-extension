@@ -15,6 +15,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -68,10 +69,12 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
+import org.geotools.geometry.iso.io.GeometryToString;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.geometry.iso.util.SolidUtil;
 import org.geotools.geometry.jts.ReferencedEnvelope3D;
 import org.geotools.gml2.iso.GML;
 import org.geotools.gml2.iso.simple.GMLWriter;
@@ -81,6 +84,7 @@ import org.geotools.gml3.iso.GMLConfiguration_ISO;
 import org.geotools.gml3.iso.simple.GenericGeometryEncoder;
 import org.geotools.gml3.iso.simple.SolidEncoder;
 import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
@@ -130,7 +134,7 @@ public class TTADemoTest extends JFrame{
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		h.put(Hints.CRS, CRS.decode("EPSG:4329"));
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new TTADemoTest();
 		frame.setTitle("GeoTools 3D DataStore DemoApplication");
@@ -181,6 +185,12 @@ public class TTADemoTest extends JFrame{
 		fileMenu.add(new SafeAction("Open CSV File") {
 			public void action(ActionEvent e) throws Throwable {
 				connect(new CSVDataStoreFactory());
+			}
+		});
+		fileMenu.add(new SafeAction("Connect to PostGIS database...") {
+			public void action(ActionEvent e) throws Throwable {
+				connect(new PostgisNGDataStoreFactory());
+				System.out.println("Connection succeeded");
 			}
 		});
 		
@@ -1080,7 +1090,7 @@ public class TTADemoTest extends JFrame{
 			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
-   			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+   			WKTReader wktr = new WKTReader(CRS.decode("EPSG:4329"));
    			Filter filter = CQL.toFilter("include");
    			long start = System.currentTimeMillis();
    			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
@@ -1195,9 +1205,9 @@ public class TTADemoTest extends JFrame{
 			Hints h = new Hints();
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
-   			WKTReader wktr = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+   			WKTReader wktr = new WKTReader(CRS.decode("EPSG:4329"));
    			Filter filter = CQL.toFilter("include");
-   			long start = System.currentTimeMillis();
+   			
    		
    			List<SimpleFeature> sfs = new ArrayList<SimpleFeature>();
    		
@@ -1211,30 +1221,67 @@ public class TTADemoTest extends JFrame{
    				filter = ff.equals("geom", (Geometry)wktr.read(cql[1]));
    			}
    			else if(cql[0].equalsIgnoreCase("intersects")) {
+   				//filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(builder, builder.createDirectPosition(new double[]{127.101, 37.511, 0}), builder.createDirectPosition(new double[]{127.106, 37.518, 70})));
+   				//filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(builder, builder.createDirectPosition(new double[]{Double.valueOf(cql[1]),Double.valueOf(cql[2]),Double.valueOf(cql[3])}), builder.createDirectPosition(new double[]{Double.valueOf(cql[1]),Double.valueOf(cql[2]),Double.valueOf(cql[3])})));
+   	   			//System.out.println(GeometryToString.getString(SolidUtil.makeFromEnvelope(builder, builder.createDirectPosition(new double[]{127.101, 37.511, 0}), builder.createDirectPosition(new double[]{127.106, 37.518, 70}))));
    				filter = ff.intersects("geom", (Geometry)wktr.read(cql[1]));
    			} 
    			SimpleFeatureCollection f = source.getFeatures();
    			SimpleFeatureIterator iterator = f.features();
+   			long start = System.currentTimeMillis();
+   			int input = 0;
 			while (iterator.hasNext()) {
 				SimpleFeature feature = iterator.next();
-				System.out.print(featureid + " : " + feature.getID() + " ");
-				long wstart = System.currentTimeMillis();
-				System.out.println("start time : " + ( wstart )/1000.0);
-				if(filter.evaluate(feature)) {
-					long wend = System.currentTimeMillis();
-					System.out.println("intersects end time : " + ( System.currentTimeMillis() )/1000.0);
-					System.out.println("evaluate time : " + ( wend - wstart )/1000.0);
-					sfs.add(feature);
-					
-				}else {
-					System.out.println("false");
-				}
+				//System.out.print(featureid + " : " + feature.getID() + " ");
+				//long wstart = System.currentTimeMillis();
+				//System.out.println("start time : " + ( wstart )/1000.0);
+				try{
+					if(filter.evaluate(feature)) {
+						//long wend = System.currentTimeMillis();
+						//System.out.println("intersects end time : " + ( System.currentTimeMillis() )/1000.0);
+						//System.out.println("evaluate time : " + ( wend - wstart )/1000.0);
+						sfs.add(feature);
+						
+					}else {
+						//System.out.println("false");
+					}
+				}catch(Exception e){
+					System.out.print(featureid + " : " + feature.getAttribute("id") + " ");
+	   				//continue;
+	   			}
 			}
+   			//Query query = new Query(typeName, filter, new String[] { "geom" });
+
+			//SimpleFeatureCollection features = source.getFeatures(query);
+
    			//SimpleFeatureCollection result = source.getFeatures(filter);
 			long end = System.currentTimeMillis();
 			//System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-			label.setText("time : " + ( end - start )/1000.0);
+			label.setText("time : " + ( end - start )/1000.0+", count : "+ sfs.size());
+			/*ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
+			b.setCRS(CRS.decode("EPSG:4329"));
+			b.setName( "correct" );
+			b.add("id", String.class);
+			b.add("geom", Solid.class);
+			SimpleFeatureType schema = b.buildFeatureType();
+			
+			dataStore.createSchema((SimpleFeatureType) schema);
+				//SimpleFeatureType actualSchema = dataStore1.getSchema(typeName);
+
+				// insert the feature
+			FeatureWriter<SimpleFeatureType, SimpleFeature> fw = dataStore.getFeatureWriterAppend(
+					"correct", Transaction.AUTO_COMMIT);
+			Iterator<SimpleFeature> iterator2 = sfs.iterator();
+			while (iterator2.hasNext()) {
+				SimpleFeature feature = iterator2.next();
+				SimpleFeature newFeature = fw.next(); // new blank feature
+				newFeature.setAttributes(feature.getAttributes());
+				fw.write();
+			}
+			//fw.write();
+			fw.close();*/
 			FeatureCollectionTableModel model = new FeatureCollectionTableModel(ISODataUtilities.collection(sfs));
+			//FeatureCollectionTableModel model = new FeatureCollectionTableModel(features);
 			table.setModel(model);
 		} catch (IOException | CQLException e) {
 			// TODO Auto-generated catch block

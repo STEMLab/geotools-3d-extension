@@ -43,10 +43,7 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
-<<<<<<< HEAD
 import org.geotools.geometry.iso.io.wkt.ParseException;
-=======
->>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension.git
 import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.util.SolidUtil;
@@ -98,7 +95,7 @@ public class DemoTest extends JFrame{
 		// TODO Auto-generated method stub
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		h.put(Hints.CRS, CRS.decode("EPSG:4329"));
 		builder = new ISOGeometryBuilder(h);
 		JFrame frame = new DemoTest();
 		frame.setVisible(true);
@@ -548,7 +545,7 @@ public class DemoTest extends JFrame{
 
 		return solidPoints;
 	}
-	private void pointToTable() {
+	private void pointToTable() throws NoSuchAuthorityCodeException, FactoryException {
 		String typeName = "newFlag2";
 		//hints = GeoTools.getDefaultHints();
 		//hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
@@ -568,7 +565,7 @@ public class DemoTest extends JFrame{
 		Surface sf = builder.createSurface(s);*/
 		//Point al = new PointImpl(new DirectPositionImpl(DefaultGeographicCRS.WGS84_3D,new double[]{0,0,0}));
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
-		b.setCRS(DefaultGeographicCRS.WGS84_3D);
+		b.setCRS(CRS.decode("EPSG:4329"));
 		//b.userData(Hints.COORDINATE_DIMENSION, 3);
 		//set the name
 		b.setName( typeName );
@@ -578,7 +575,7 @@ public class DemoTest extends JFrame{
 		//b.add( "location", Solid.class );
 		//b.add("loc", Point.class);
 
-		b.add("loc", Solid.class);
+		b.add("geom", Solid.class);
 
 		SimpleFeatureType schema = b.buildFeatureType();
 		SimpleFeatureBuilder builder = new SimpleFeatureBuilder(schema, new ISOFeatureFactoryImpl());
@@ -684,7 +681,7 @@ public class DemoTest extends JFrame{
 			e.printStackTrace();
 		}
 	}*/
-	private void constainsfilter() {
+	private void constainsfilter() throws NoSuchAuthorityCodeException, FactoryException {
 		String typeName = (String) featureTypeCBox.getSelectedItem();;
 		SimpleFeatureSource source;
 		try {
@@ -704,28 +701,14 @@ public class DemoTest extends JFrame{
    			h.put(Hints.FILTER_FACTORY, ISOFilterFactoryImpl.class);
    			FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(h);
    		    //Envelope bbox = new ReferencedEnvelope3D(-1, 1, -1, 1, -1, 1, DefaultGeographicCRS.WGS84 );
-<<<<<<< HEAD
-   			ISOGeometryBuilder gb = null;
-			try {
-				gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
-			} catch (NoSuchAuthorityCodeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FactoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-   			//ArrayList<Solid> al = getSolids(builder);
-   			
-   			Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[] { -7.102795507E10, 4.237997E10, 0.0 }), gb.createDirectPosition(new double[] { -7.102795261E10, 4.237996648E10, 32.613401 })));
-   			//Filter filter = ff.equals("loc", al.get(0));	
-=======
-   			ISOGeometryBuilder gb = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+
+   			ISOGeometryBuilder gb = new ISOGeometryBuilder(CRS.decode("EPSG:4329"));
    			ArrayList<Solid> al = getSolids(builder);
    			
-   			Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[]{-71.07883492, 42.35259891, 0}), gb.createDirectPosition(new double[]{-71.07881626, 42.35255993, 60.32515})));
-   			//Filter filter = ff.equals("loc", al.get(0));
->>>>>>> branch 'master' of https://github.com/STEMLab/geotools-3d-extension.git
+   			//Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[]{-7.102795507E10, 4.237997E10, 0.0}), gb.createDirectPosition(new double[]{-7.102795261E10, 4.237996648E10, 32.613401})));
+   			Filter filter = ff.intersects("geom", SolidUtil.makeFromEnvelope(gb, gb.createDirectPosition(new double[]{127.102384388568, 37.5133572865305, 19.3845610441522}), gb.createDirectPosition(new double[]{127.104048676055, 37.5131914838522, 1.84644697761965})));
+   			//Filter filter = ff.intersects("geom", al.get(0));
+
    		   
 			Query query = new Query(typeName, filter, new String[] { "geom" });
 
@@ -869,7 +852,7 @@ public class DemoTest extends JFrame{
 					Geometry g = (Geometry) feature.getDefaultGeometry();
 					GeometryToWKTscaleUpString decoder = new GeometryToWKTscaleUpString(false);
 					String newg = decoder.getString(g);
-					 WKTReader wktReader = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+					 WKTReader wktReader = new WKTReader(CRS.decode("EPSG:4329"));
                     Geometry geometry;
                     geometry = wktReader.read(newg);
                     feature.setDefaultGeometry(geometry);

@@ -826,6 +826,8 @@ public abstract class ContentFeatureSource implements SimpleFeatureSource {
                             + ":" + unexpected, unexpected);
                 }
             }
+        }catch(Exception e) {
+        	e.printStackTrace();
         }
         finally {
             progress.complete();            

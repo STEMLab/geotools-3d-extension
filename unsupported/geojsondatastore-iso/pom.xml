@@ -9,6 +9,11 @@
 	</parent>
 	<artifactId>gt-geojsondatastore-iso</artifactId>
 	<name>GeoJSON Datastore</name>
+
+	  <properties>
+	    <maven.test.skip>true</maven.test.skip>
+	  </properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.geotools</groupId>

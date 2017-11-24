@@ -129,7 +129,7 @@ public class EventContentFeatureWriter implements FeatureWriter<SimpleFeatureTyp
         }
         if (writer.hasNext()) {
             // modify existing feature
-            ReferencedEnvelope3D bounds = (ReferencedEnvelope3D) ReferencedEnvelope3D.reference(feature.getBounds());
+            ReferencedEnvelope bounds = ReferencedEnvelope.reference(feature.getBounds());
             state.fireFeatureUpdated(store, feature, bounds);
             feature = null;
         } else {

@@ -99,20 +99,20 @@ case $PLATFORM in
 
     	  # building boost
     	  cd boost_1_63_0
-        ./bootstrap.sh "--prefix=../" "--with-libraries=filesystem,system,thread,date_time,serialization"
-        ./b2 install "--prefix=../"
+        ./bootstrap.sh "--with-libraries=filesystem,system,thread,date_time,serialization"
+        ./b2 install
         cd ../
 
         # building cgal
         cd CGAL-4.7
-        cmake "-DCMAKE_INSTALL_PREFIX=.."
+        cmake .
         make
         make install
         cd ../
 
         # building sfcgal
         cd SFCGAL-1.3.0
-        cmake "-DCMAKE_INSTALL_PREFIX=.."
+        cmake .
         make
         make install
         cd ../

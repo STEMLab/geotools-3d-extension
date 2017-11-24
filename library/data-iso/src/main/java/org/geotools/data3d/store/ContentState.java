@@ -331,7 +331,7 @@ public class ContentState {
             return;
 
         Filter filter = idFilter(feature);
-        ReferencedEnvelope3D bounds = (ReferencedEnvelope3D) ReferencedEnvelope3D.create((ReferencedEnvelope3D) feature.getBounds());
+        ReferencedEnvelope bounds = ReferencedEnvelope.create((ReferencedEnvelope) feature.getBounds());
 
         FeatureEvent event = new FeatureEvent(source, Type.ADDED, bounds, filter);
 

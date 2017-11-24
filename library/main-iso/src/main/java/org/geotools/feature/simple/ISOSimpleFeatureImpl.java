@@ -272,14 +272,14 @@ public class ISOSimpleFeatureImpl implements SimpleFeature {
     public BoundingBox getBounds() {
         //TODO: cache this value
     	CoordinateReferenceSystem crs = featureType.getCoordinateReferenceSystem();
-    	ReferencedEnvelope3D bounds = (ReferencedEnvelope3D) ReferencedEnvelope3D.create( crs );
+    	ReferencedEnvelope bounds = ReferencedEnvelope3D.create( crs );
     	
     	for ( Object o : values ) {
             if ( o instanceof Geometry ) {
                 Geometry g = (Geometry) o;
                 //TODO: check userData for crs... and ensure its of the same 
                 // crs as the feature type
-                bounds.expandToInclude(ReferencedEnvelope3D.create(g.getEnvelope(), crs));
+                bounds.expandToInclude(ReferencedEnvelope.create(g.getEnvelope(), crs));
             }
         }
         

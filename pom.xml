@@ -1098,6 +1098,6 @@
 		<module>unsupported/geojsondatastore-iso</module>
 		
 		<module>tutorial</module>
-		<module>geotools-3d-examples</module>
+		
 	</modules>
 </project>

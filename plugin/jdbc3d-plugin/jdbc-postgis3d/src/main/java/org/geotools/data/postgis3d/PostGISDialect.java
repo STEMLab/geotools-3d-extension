@@ -174,7 +174,7 @@ public class PostGISDialect extends BasicSQLDialect {
     };
     
     public ISOPostPreProcessFilterSplittingVisitor getFilterVisitor(FilterCapabilities fcs, SimpleFeatureType parent) {
-    	return new PostPreProcessPostGISFilterSplittingVisitor(fcs, parent, this);
+    	return new ISOPostPreProcessFilterSplittingVisitor(fcs, parent);
     }
     @Override
     public boolean isAggregatedSortSupported(String function) {

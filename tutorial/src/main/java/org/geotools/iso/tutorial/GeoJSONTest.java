@@ -29,7 +29,7 @@ public class GeoJSONTest {
     		int count = 0;
     		while (reader.hasNext()) {
     			SimpleFeature next = reader.next();
-    			//System.out.println(next.getAttribute("name"));
+    			System.out.println(next);
     			count++;
     		}
         }

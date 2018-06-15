@@ -47,20 +47,6 @@ import org.geotools.geometry.iso.primitive.SolidBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SolidImpl;
 import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFAlgorithm;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometry;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometryCollection;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFLineString;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiLineString;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiPoint;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiPolygon;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiSolid;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPoint;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPolygon;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPolyhedralSurface;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFSolid;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFTriangle;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFTriangulatedSurface;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -87,8 +73,22 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
-import org.opengis.geometry.primitive.SurfacePatch;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import edu.pnu.stemlab.sfcgal4j.SFAlgorithm;
+import edu.pnu.stemlab.sfcgal4j.SFGeometry;
+import edu.pnu.stemlab.sfcgal4j.SFGeometryCollection;
+import edu.pnu.stemlab.sfcgal4j.SFLineString;
+import edu.pnu.stemlab.sfcgal4j.SFMultiLineString;
+import edu.pnu.stemlab.sfcgal4j.SFMultiPoint;
+import edu.pnu.stemlab.sfcgal4j.SFMultiPolygon;
+import edu.pnu.stemlab.sfcgal4j.SFMultiSolid;
+import edu.pnu.stemlab.sfcgal4j.SFPoint;
+import edu.pnu.stemlab.sfcgal4j.SFPolygon;
+import edu.pnu.stemlab.sfcgal4j.SFPolyhedralSurface;
+import edu.pnu.stemlab.sfcgal4j.SFSolid;
+import edu.pnu.stemlab.sfcgal4j.SFTriangle;
+import edu.pnu.stemlab.sfcgal4j.SFTriangulatedSurface;
 
 /**
  * @author Donguk Seo

@@ -939,19 +939,6 @@
 		</extensions>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<descriptors>
-						<descriptor>build/maven/assembly/binaryDist.xml</descriptor>
-						<descriptor>build/maven/assembly/sourceDist.xml</descriptor>
-						<descriptor>build/maven/assembly/userDocDist.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-
 			<!-- ======================================================= -->
 			<!-- Compilation. -->
 			<!-- ======================================================= -->
@@ -1075,131 +1062,6 @@
 			</plugin>
 
 			<!-- ======================================================= -->
-			<!-- Web site generation. -->
-			<!-- ======================================================= -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.0</version>
-			</plugin>
-
-			<!-- ======================================================= -->
-			<!-- Javadoc generation. -->
-			<!-- -->
-			<!-- Notes: -->
-			<!-- Do NOT link source code, because it duplicates -->
-			<!-- jxr-maven-plugin. -->
-			<!-- -->
-			<!-- <sourcepath/> and <subpackages/> elements do not -->
-			<!-- seem to work with aggregated javadoc. -->
-			<!-- -->
-			<!-- ======================================================= -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.plugin.version}</version>
-
-				<configuration>
-					<source>1.8</source>
-					<!-- Specifies whether or not the version text is included. -->
-					<version>false</version>
-					<!-- Omit qualifying package name before class names in output. -->
-					<noqualifier>all</noqualifier>
-					<!-- Shuts off non-error and non-warning messages. -->
-					<quiet>true</quiet>
-					<!-- The maximum Java heap size to be used to run javadoc. -->
-					<maxmemory>${javadoc.maxHeapSize}</maxmemory>
-					<!-- Specifies the encoding name of the source files. -->
-					<encoding>UTF-8</encoding>
-					<!-- Set an additional parameter for the command line. -->
-					<additionalparam>-keywords</additionalparam>
-					<breakiterator>true</breakiterator>
-					<excludePackageNames>
-						org.geotools.resources:org.geotools.maven:com:net.opengis:org.w3:javax:it.geosolutions
-					</excludePackageNames>
-
-					<!-- Custom taglets implemented in Java. -->
-					<taglets>
-						<taglet>
-							<tagletClass>org.geotools.maven.taglet.Tutorial</tagletClass>
-							<tagletArtifact>
-								<groupId>org.geotools.maven</groupId>
-								<artifactId>javadoc</artifactId>
-								<version>${project.version}</version>
-							</tagletArtifact>
-						</taglet>
-						<taglet>
-							<tagletClass>org.geotools.maven.taglet.Source</tagletClass>
-							<tagletArtifact>
-								<groupId>org.geotools.maven</groupId>
-								<artifactId>javadoc</artifactId>
-								<version>${project.version}</version>
-							</tagletArtifact>
-						</taglet>
-					</taglets>
-
-					<!-- Enables the Javadoc tool to interpret a simple, one-argument -->
-					<!-- custom block tag tagname in doc comments. Note: <placement/> -->
-					<!-- should be a combinaison of the letters Xaoptcmf. -->
-					<tags>
-						<tag>
-							<name>todo</name>
-							<placement>a</placement>
-							<head>TODO:</head>
-						</tag>
-						<tag>
-							<name>todo:</name>
-							<placement>a</placement>
-							<head>TODO:</head>
-						</tag>
-						<tag>
-							<name>TODO</name>
-							<placement>a</placement>
-							<head>TODO:</head>
-						</tag>
-						<tag>
-							<name>task</name>
-							<placement>tfmc</placement>
-							<head>TODO:</head>
-						</tag>
-						<tag>
-							<name>revisit</name>
-							<placement>tfmc</placement>
-							<head>TODO:</head>
-						</tag>
-						<tag>
-							<name>generated</name>
-							<placement>Xt</placement>
-							<head>Generated</head>
-						</tag>
-						<tag>
-							<name>UML</name>
-							<placement>a</placement>
-							<head>UML:</head>
-						</tag>
-						<tag>
-							<name>uml.property</name>
-							<placement>a</placement>
-							<head>UML property:</head>
-						</tag>
-						<tag>
-							<name>generated</name>
-							<placement>X</placement>
-						</tag>
-					</tags>
-
-					<!-- Creates links to existing javadoc-generated -->
-					<!-- documentation of external referenced classes. -->
-					<links>
-						<link>http://docs.oracle.com/javase/7/docs/api/</link>
-						<link>http://docs.oracle.com/javaee/7/api/</link>
-						<link>http://jscience.org/api/</link>
-						<link>http://tsusiatsoftware.net/jts/javadoc</link>
-					</links>
-				</configuration>
-			</plugin>
-
-			<!-- ======================================================= -->
 			<!-- Code coverage report -->
 			<!-- ======================================================= -->
 			<plugin>
@@ -1236,5 +1098,6 @@
 		<module>unsupported/geojsondatastore-iso</module>
 		
 		<module>tutorial</module>
+		<module>geotools-3d-examples</module>
 	</modules>
 </project>

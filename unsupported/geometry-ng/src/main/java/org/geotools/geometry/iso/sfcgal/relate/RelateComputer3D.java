@@ -18,18 +18,16 @@ package org.geotools.geometry.iso.sfcgal.relate;
 
 import java.util.ArrayList;
 
-import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.iso.sfcgal.util.SFCGALConvertor;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFAlgorithm;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometry;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometryCollection;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFLineString;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFMultiPoint;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPoint;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPolygon;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFSolid;
 import org.geotools.geometry.iso.topograph2D.Dimension;
 import org.geotools.geometry.iso.topograph2D.Location;
+
+import edu.pnu.stemlab.sfcgal4j.SFAlgorithm;
+import edu.pnu.stemlab.sfcgal4j.SFGeometry;
+import edu.pnu.stemlab.sfcgal4j.SFLineString;
+import edu.pnu.stemlab.sfcgal4j.SFPoint;
+import edu.pnu.stemlab.sfcgal4j.SFPolygon;
+import edu.pnu.stemlab.sfcgal4j.SFSolid;
 
 /**
  * @author Donguk Seo

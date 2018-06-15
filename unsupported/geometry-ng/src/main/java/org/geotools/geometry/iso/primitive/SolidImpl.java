@@ -20,13 +20,14 @@ import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.EnvelopeImpl;
 import org.geotools.geometry.iso.io.GeometryToString;
 import org.geotools.geometry.iso.sfcgal.util.SFCGALConvertor;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFAlgorithm;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFPolyhedralSurface;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.primitive.OrientablePrimitive;
 import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
+
+import edu.pnu.stemlab.sfcgal4j.SFAlgorithm;
+import edu.pnu.stemlab.sfcgal4j.SFPolyhedralSurface;
 
 /**
  * Solid , a subclass of Primitive, is the basis for 3-dimensional geometry. The

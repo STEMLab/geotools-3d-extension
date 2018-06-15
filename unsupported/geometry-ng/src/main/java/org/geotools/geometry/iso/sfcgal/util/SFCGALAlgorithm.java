@@ -19,12 +19,13 @@ package org.geotools.geometry.iso.sfcgal.util;
 import org.geotools.geometry.iso.root.GeometryImpl;
 import org.geotools.geometry.iso.sfcgal.relate.IntersectionMatrix3D;
 import org.geotools.geometry.iso.sfcgal.relate.RelateOp3D;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFAlgorithm;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometry;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.TransfiniteSet;
 
 import com.vividsolutions.jts.util.Assert;
+
+import edu.pnu.stemlab.sfcgal4j.SFAlgorithm;
+import edu.pnu.stemlab.sfcgal4j.SFGeometry;
 
 /**
  * @author Donguk Seo

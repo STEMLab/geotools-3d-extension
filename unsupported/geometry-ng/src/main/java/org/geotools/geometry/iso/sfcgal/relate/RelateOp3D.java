@@ -16,7 +16,7 @@
  */
 package org.geotools.geometry.iso.sfcgal.relate;
 
-import org.geotools.geometry.iso.sfcgal.wrapper.SFGeometry;
+import edu.pnu.stemlab.sfcgal4j.SFGeometry;
 
 /**
  * @author Donguk Seo

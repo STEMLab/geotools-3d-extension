@@ -28,7 +28,6 @@ import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
-import org.geotools.geometry.iso.sfcgal.wrapper.SFSolid;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
@@ -47,6 +46,7 @@ import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
 
+import edu.pnu.stemlab.sfcgal4j.SFSolid;
 import junit.framework.TestCase;
 
 /**

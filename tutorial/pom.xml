@@ -54,6 +54,12 @@
       <version>${project.version}</version>
     </dependency> 
 
+	<dependency>
+	  <groupId>org.citygml4j</groupId>
+	  <artifactId>citygml4j</artifactId>
+	  <version>2.7.0</version>
+	</dependency>
+
     <!-- Provides GUI components -->
     <dependency>
         <groupId>org.geotools</groupId>

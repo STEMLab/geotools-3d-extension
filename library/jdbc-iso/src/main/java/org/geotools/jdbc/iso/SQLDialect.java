@@ -675,7 +675,7 @@ public abstract class SQLDialect {
      * value.
      * @param The database connection.
      */
-    public abstract Envelope decodeGeometryEnvelope(ResultSet rs, int column, Connection cx )
+    public abstract Envelope decodeGeometryEnvelope(ResultSet rs, int column, Connection cx)
         throws SQLException, IOException;
 
     /**

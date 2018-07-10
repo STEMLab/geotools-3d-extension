@@ -28,6 +28,7 @@ import java.util.List;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.PositionFactoryImpl;
 import org.geotools.geometry.iso.aggregate.MultiPrimitiveImpl;
+import org.geotools.geometry.iso.aggregate.MultiSurfaceImpl;
 import org.geotools.geometry.iso.coordinate.LineStringImpl;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
@@ -43,7 +44,9 @@ import org.geotools.geometry.iso.util.AssertionFailedException;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.PositionFactory;
 import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.coordinate.LineString;
+import org.opengis.geometry.coordinate.PolyhedralSurface;
 import org.opengis.geometry.coordinate.Position;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.CurveSegment;
@@ -400,6 +403,8 @@ public class WKTReader {
 			return readPolygonText();
 		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_SOLID)) {
 		    return readSolidText();
+		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_POLYHEDRALSURFACE)) {
+			return readPolyhedralSurfaceText();
 		} else if ( type.equalsIgnoreCase(WKTConstants.WKT_MULTIPRIMITIVE)) {
 			return readMultiPrimitiveText();
 		}
@@ -562,6 +567,42 @@ public class WKTReader {
                 return shell;
 	}
 
+	/**
+     * Creates a <code>PolyhedralSurface</code> using the next token in the stream.
+     * 
+     * @param tokenizer
+     *            tokenizer over a stream of text in Well-known Text format. The
+     *            next tokens must form a &lt;Solid Text&gt;.
+     * @return a <code>Polygon</code> specified by the next token in the
+     *         stream
+     * @throws ParseException
+     *             if the coordinates used to create the <code>Solid</code>
+     *             shell and holes do not form closed surfaces, or if an
+     *             unexpected token was encountered.
+     * @throws IOException
+     *             if an I/O error occurs
+     */
+	private MultiSurface readPolyhedralSurfaceText() throws IOException, ParseException {
+	        
+	        String nextToken = getNextWord();
+	        
+	        if(nextToken.contains("Z") || nextToken.contains("M")) {
+	        	nextToken = getNextEmptyOrOpener();
+	        }
+	        
+	        if(nextToken.equals(EMPTY)) {
+	                return new MultiSurfaceImpl(this.crs, null);
+	        }
+	        
+	        HashSet<OrientableSurface> surfaces = new HashSet<OrientableSurface>();
+			do {
+				surfaces.add(this.readPolygonText());
+				nextToken = getNextCloserOrComma();
+			} while(nextToken.equals(COMMA));
+			
+	        return new MultiSurfaceImpl(crs, surfaces);
+	}
+	
 	/**
          * Creates a <code>Solid</code> using the next token in the stream.
          * 

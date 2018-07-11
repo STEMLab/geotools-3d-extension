@@ -266,6 +266,8 @@ class FilterToSqlHelper {
             }
         }
         
+        //FIXME
+        /*
         // add && filter if possible
         if(!(filter instanceof Disjoint)) {
             if(encodeBBOXFilterAsEnvelope && !isCurrentGeography()) {
@@ -284,6 +286,7 @@ class FilterToSqlHelper {
                 
             out.write(" AND ");
         }
+        */
 
         visitBinarySpatialOperator(filter, (Expression)property, (Expression)geometry, swapped, extraData);
     }

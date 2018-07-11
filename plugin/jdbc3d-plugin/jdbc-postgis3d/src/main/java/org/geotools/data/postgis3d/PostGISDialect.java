@@ -1087,7 +1087,7 @@ public class PostGISDialect extends BasicSQLDialect {
         	
         	GeometryToPostGISWKTString writer = new GeometryToPostGISWKTString(false);
             String wkt = writer.getString(value);
-            sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
+            sql.append("ST_GeomFromEWKT('" + wkt + ")'");
             
 
         }

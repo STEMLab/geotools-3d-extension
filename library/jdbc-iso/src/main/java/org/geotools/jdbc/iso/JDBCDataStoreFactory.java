@@ -36,6 +36,7 @@ import org.geotools.factory.Hints;
 import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.type.FeatureTypeFactoryImpl;
 import org.geotools.filter.ISOFilterFactoryImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.SimpleInternationalString;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -282,7 +283,7 @@ public abstract class JDBCDataStoreFactory implements DataStoreFactorySpi {
 			dataStore.getConnectionLifecycleListeners().add(listener);
 		}
 		Hints hints = GeoTools.getDefaultHints();
-		hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		hints.put(Hints.CRS, DefaultGeocentricCRS.CARTESIAN);
 		hints.put(Hints.GEOMETRY_VALIDATE, (Object) false);
 		ISOGeometryBuilder builder = new ISOGeometryBuilder(hints);
 

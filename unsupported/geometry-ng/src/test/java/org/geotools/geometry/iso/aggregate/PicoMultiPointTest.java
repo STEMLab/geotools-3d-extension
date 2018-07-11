@@ -29,6 +29,7 @@ import org.geotools.geometry.iso.io.CollectionFactoryMemoryImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.util.elem2D.Geo2DFactory;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.PositionFactory;
@@ -75,7 +76,7 @@ public class PicoMultiPointTest extends TestCase {
 	
 	public void testMain() {
 		
-		PicoContainer c = container( DefaultGeographicCRS.WGS84 );
+		PicoContainer c = container( DefaultGeocentricCRS.CARTESIAN );
 		
 		this._testMultiCurve(c);
 	}

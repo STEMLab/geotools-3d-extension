@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.coordinate.LineString;
@@ -43,7 +44,7 @@ public class CompatibleCRSBuilderTest extends TestCase {
 
 	public void testCRSEquals() throws Exception {
 
-		CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+		CoordinateReferenceSystem crs = DefaultGeocentricCRS.CARTESIAN;
 
 		CoordinateReferenceSystem crs2 = CRS.parseWKT(crs.toWKT());
 
@@ -52,7 +53,7 @@ public class CompatibleCRSBuilderTest extends TestCase {
 
 	public void testPrimFactCRS() throws UnsupportedOperationException,
 			FactoryException {
-		CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+		CoordinateReferenceSystem crs = DefaultGeocentricCRS.CARTESIAN;
 		ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
 
 		CoordinateReferenceSystem crs2 = CRS.parseWKT(crs.toWKT());

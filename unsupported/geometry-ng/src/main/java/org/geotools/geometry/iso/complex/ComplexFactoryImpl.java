@@ -25,6 +25,7 @@ import org.geotools.factory.Factory;
 import org.geotools.factory.GeoTools;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.primitive.PointImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.complex.ComplexFactory;
 import org.opengis.geometry.complex.CompositeCurve;
@@ -54,7 +55,7 @@ public class ComplexFactoryImpl implements Factory, ComplexFactory {
 	/** Just the defaults, use GeometryFactoryFinder for the rest */
 	public ComplexFactoryImpl( Hints hints ) {
 		if (hints == null) {
-			this.crs = DefaultGeographicCRS.WGS84;
+			this.crs = DefaultGeocentricCRS.CARTESIAN;
 			hints = GeoTools.getDefaultHints();
 	        hints.put(Hints.CRS, crs );
 		}

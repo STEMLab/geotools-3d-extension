@@ -34,6 +34,7 @@ import org.geotools.geometry.iso.coordinate.PointArrayImpl;
 import org.geotools.geometry.iso.coordinate.PositionImpl;
 import org.geotools.geometry.iso.coordinate.SurfacePatchImpl;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
@@ -88,7 +89,7 @@ public class PrimitiveFactoryImpl implements Serializable, Factory, PrimitiveFac
 	/** Just the defaults, use GeometryFactoryFinder for the rest */
 	public PrimitiveFactoryImpl( Hints hints ) {
 		if (hints == null) {
-			this.crs = DefaultGeographicCRS.WGS84;
+			this.crs = DefaultGeocentricCRS.CARTESIAN;
 			hints = GeoTools.getDefaultHints();
 	        hints.put(Hints.CRS, crs );
 	        geomValidate = true;

@@ -27,6 +27,7 @@ import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.primitive.PointImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 
@@ -86,7 +87,7 @@ public class SerializationTestCases extends TestCase {
 	public void testPointFactory() throws IOException, ClassNotFoundException {
 		
 		// create object, serialize, deserialize and compare results
-		DirectPosition dp = new DirectPositionImpl(DefaultGeographicCRS.WGS84, new double[]{1,2});
+		DirectPosition dp = new DirectPositionImpl(DefaultGeocentricCRS.CARTESIAN, new double[]{1,2});
 		PointImpl point = new PointImpl(dp);
 		PointImpl copy = (PointImpl) serializeAndDeSerialize(point);
 		assertTrue(point.equals(copy));

@@ -28,6 +28,7 @@ import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.coordinate.DirectPositionImpl;
 import org.geotools.geometry.iso.coordinate.DoublePointArray;
 import org.geotools.geometry.iso.coordinate.PointArrayImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -88,7 +89,7 @@ public class PositionFactoryImpl implements Serializable, Factory, PositionFacto
 	 */
 	public PositionFactoryImpl(Hints hints) {
 		if (hints == null) {
-		    this.crs =  DefaultGeographicCRS.WGS84;
+		    this.crs =  DefaultGeocentricCRS.CARTESIAN;
 	        this.precision = new PrecisionModel();
 		}
 		else {

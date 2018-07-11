@@ -53,9 +53,12 @@ import org.geotools.feature.ISOFeatureFactoryImpl;
 import org.geotools.feature.simple.ISOSimpleFeatureTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.ISOFilterFactoryImpl;
+import org.geotools.geometry.iso.io.wkt.ParseException;
+import org.geotools.geometry.iso.io.wkt.WKTReader;
 import org.geotools.geometry.iso.util.JTSParser;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.iso.JDBCDataStore;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
@@ -260,7 +263,7 @@ public class CityGML4JConvertorTest extends JFrame {
 		}
 	}
 	
-	private void queryFeatures()  {
+	private void queryFeatures() throws ParseException  {
 		String typeName = (String) featureTypeCBox.getSelectedItem();
 		SimpleFeatureSource source;
 		try {
@@ -280,16 +283,17 @@ public class CityGML4JConvertorTest extends JFrame {
 				FeatureType schema = source.getSchema();
 				String name = schema.getGeometryDescriptor().getLocalName();
 	
-				ReferencedEnvelope env = (ReferencedEnvelope) source.getBounds();
+				//ReferencedEnvelope env = (ReferencedEnvelope) source.getBounds();
 				
-				org.opengis.geometry.DirectPosition lower = env.getLowerCorner();
-				org.opengis.geometry.DirectPosition upper = env.getUpperCorner();
+				//org.opengis.geometry.DirectPosition lower = env.getLowerCorner();
+				//org.opengis.geometry.DirectPosition upper = env.getUpperCorner();
 				
-				LineSegment ls = geomBuilder.createLineSegment(lower, upper);
-				Curve c = geomBuilder.createCurve(Arrays.asList(ls));
+				//LineSegment ls = geomBuilder.createLineSegment(lower, upper);
+				WKTReader reader = new WKTReader(DefaultGeographicCRS.WGS84_3D);
+				Curve c = (Curve) reader.read("Curve(197988.1167951445 982358.3391372405 44.896768043749034, 197707.54445907986 981242.0744264929 44.933580635115504, 196896.2460717163 981484.9939220184 44.9573813341558, 197336.92284817807 981939.0492767135 44.96757285669446, 197710.42638736032 982117.941429229 44.94236546009779, 197087.63210040703 982214.1873574951 44.95265289582312, 196558.73953191517 981738.4784381008 44.936082392930984, 196602.33145256573 980978.1767511205 44.89442145451903, 197340.31366120372 981047.639376733 44.9323018733412)");
 				
 				ISOFilterFactoryImpl ff = new ISOFilterFactoryImpl();
-				Filter filter = ff.intersects("geom", c);
+				Filter filter = ff.intersects(schema.getGeometryDescriptor().getLocalName(), c);
 				
 				Query query = new Query(typeName, filter);
 	
@@ -340,10 +344,10 @@ public class CityGML4JConvertorTest extends JFrame {
 	public static void main(String[] args) throws Exception {
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, DefaultGeocentricCRS.CARTESIAN);
+		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
 		geomBuilder = new ISOGeometryBuilder(h);
 		CityGML4JConvertorTest frame = new CityGML4JConvertorTest();
-		//frame.importCityGML();
+		frame.importCityGML();
 		frame.setVisible(true);
 	}
 

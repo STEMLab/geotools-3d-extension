@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -400,7 +401,7 @@ public class SolidUtil {
 		double h = 10;
 
 		List<DirectPosition> points = new ArrayList<DirectPosition>();
-		ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84_3D);
+		ISOGeometryBuilder gb3D = new ISOGeometryBuilder(DefaultGeocentricCRS.CARTESIAN);
 		// DirectPosition p1 = gb.createDirectPosition(new double[]{0,0});
 		// DirectPosition p2 = gb.createDirectPosition(new double[]{10,0});
 		// DirectPosition p3 = gb.createDirectPosition(new double[]{10,10});

@@ -202,7 +202,7 @@ public class JDBCFeatureReader implements  FeatureReader<SimpleFeatureType, Simp
         //grab a geometry factory... check for a special hint
         if(featureType.getCoordinateReferenceSystem() != null) {
         	geometryBuilder = new ISOGeometryBuilder(featureType.getCoordinateReferenceSystem());
-        } else {
+        } else if(featureType.getGeometryDescriptor() != null){
         	geometryBuilder = new ISOGeometryBuilder(featureType.getGeometryDescriptor().getType().getCoordinateReferenceSystem());
         }
         		//(ISOGeometryBuilder) hints.get(Hints.GEOMETRY_FACTORY);

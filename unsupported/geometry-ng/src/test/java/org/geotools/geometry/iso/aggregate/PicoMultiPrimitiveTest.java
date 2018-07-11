@@ -32,6 +32,7 @@ import org.geotools.geometry.iso.io.CollectionFactoryMemoryImpl;
 import org.geotools.geometry.iso.primitive.CurveImpl;
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.util.elem2D.Geo2DFactory;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.PositionFactory;
@@ -80,7 +81,7 @@ public class PicoMultiPrimitiveTest extends TestCase {
 	
 	public void testMultiPrimitive() {
 		
-		CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+		CoordinateReferenceSystem crs = DefaultGeocentricCRS.CARTESIAN;
 		PicoContainer container = container( crs ); // normal 2D
 		PositionFactoryImpl pf = (PositionFactoryImpl ) container.getComponentInstanceOfType( PositionFactory.class );
 		AggregateFactoryImpl agf = (AggregateFactoryImpl) container.getComponentInstanceOfType( AggregateFactory.class );

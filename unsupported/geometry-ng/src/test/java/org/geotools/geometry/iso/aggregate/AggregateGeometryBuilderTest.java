@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.ISOGeometryBuilder;
@@ -67,7 +68,7 @@ public class AggregateGeometryBuilderTest extends TestCase {
 		assertTrue(position.equals(point.getCentroid()));
 		
 		// change CRS and test
-		builder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84_3D);
+		builder.setCoordinateReferenceSystem(DefaultGeocentricCRS.CARTESIAN);
 		PrimitiveFactory primitiveFactory3D = builder.getPrimitiveFactory();
 		Point point3D = primitiveFactory3D.createPoint(new double[] { 48.44, -123.37, 1.0 });
 		

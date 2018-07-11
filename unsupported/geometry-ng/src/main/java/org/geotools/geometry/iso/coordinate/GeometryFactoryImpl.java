@@ -34,6 +34,7 @@ import org.geotools.geometry.iso.primitive.RingImpl;
 import org.geotools.geometry.iso.primitive.SurfaceBoundaryImpl;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.util.Assert;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Envelope;
@@ -102,7 +103,7 @@ public class GeometryFactoryImpl implements Factory, GeometryFactory {
 	/** Just the defaults, use GeometryFactoryFinder for the rest */
 	public GeometryFactoryImpl( Hints hints ) {
 		if (hints == null) {
-			this.crs = DefaultGeographicCRS.WGS84;
+			this.crs = DefaultGeocentricCRS.CARTESIAN;
 			hints = GeoTools.getDefaultHints();
 	        hints.put(Hints.CRS, crs );
 		}

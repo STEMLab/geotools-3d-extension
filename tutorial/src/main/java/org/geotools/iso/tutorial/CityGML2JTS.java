@@ -3,6 +3,7 @@
  */
 package org.geotools.iso.tutorial;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.citygml4j.model.citygml.building.AbstractBoundarySurface;
@@ -57,11 +58,13 @@ public class CityGML2JTS {
 
     public static MultiPolygon toMultiPolygon(List<AbstractBoundarySurface> list) {
     	int size = list.size();
-    	Polygon[] polygons = new Polygon[size];
+    	List<Polygon> polygons = new ArrayList<Polygon>();
     	for(int i = 0; i < size; i++) {
-    		polygons[i] = toPolygon(list.get(i));
+    		List<Polygon> polys = toPolygon(list.get(i));
+    		polygons.addAll(polys);
     	}
-    	return geometryFactory.createMultiPolygon(polygons);
+    	Polygon[] array = polygons.toArray(new Polygon[polygons.size()]);
+    	return geometryFactory.createMultiPolygon(array);
     }
     
     /**
@@ -70,7 +73,7 @@ public class CityGML2JTS {
      * @param boundarySurfaceProperty
      * @return
      */
-    public static Polygon toPolygon(AbstractBoundarySurface boundarySurface) {
+    public static List<Polygon> toPolygon(AbstractBoundarySurface boundarySurface) {
 
         if (boundarySurface == null) {
             return null;
@@ -95,7 +98,7 @@ public class CityGML2JTS {
             return null;
         }
 
-        com.vividsolutions.jts.geom.Polygon[] polygons = new com.vividsolutions.jts.geom.Polygon[surfaceMember.size()];
+        List<Polygon> polygons = new ArrayList<Polygon>();
         int polygonIndex = 0;
         for (SurfaceProperty surfaceProp : surfaceMember) {
             if (surfaceProp.getObject() instanceof org.citygml4j.model.gml.geometry.primitives.Polygon) {
@@ -115,13 +118,16 @@ public class CityGML2JTS {
 
                 com.vividsolutions.jts.geom.LinearRing linearRing1 = geometryFactory.createLinearRing(coords);
                 com.vividsolutions.jts.geom.Polygon polygon = geometryFactory.createPolygon(linearRing1);
-                polygons[polygonIndex] = polygon;
+                polygons.add(polygon);
                 polygonIndex++;
             }
         }
-        MultiPolygon multiPolygon1 = geometryFactory.createMultiPolygon(polygons);
+        
+        //MultiPolygon multiPolygon1 = geometryFactory.createMultiPolygon(polygons);
         // We have to buffer to prevent JTS' topology side exceptions.
-        return (Polygon) multiPolygon1.buffer(0);
+        //return (Polygon) multiPolygon1.buffer(0);
+        
+        return polygons;
     }
 
     public static Geometry toPolygon(List<LinearRing> linearRings) {
@@ -146,7 +152,8 @@ public class CityGML2JTS {
         }
         MultiPolygon multiPolygon1 = geometryFactory.createMultiPolygon(polygons);
         // We have to buffer to prevent JTS' topology side exceptions.
-        return multiPolygon1.buffer(0);
+        //return multiPolygon1.buffer(0);
+        return multiPolygon1;
     }
 
 }

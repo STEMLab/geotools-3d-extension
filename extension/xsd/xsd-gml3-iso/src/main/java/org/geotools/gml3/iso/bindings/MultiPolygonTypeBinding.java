@@ -16,19 +16,22 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
-import org.geotools.gml3.iso.bindings.MultiSurfaceTypeBinding;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiPoint;
 import org.opengis.geometry.aggregate.MultiSurface;
-
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Surface;
 
 
 /**
@@ -96,27 +99,27 @@ public class MultiPolygonTypeBinding extends AbstractComplexBinding implements C
      */
     public Object parse(ElementInstance instance, Node node, Object value)
         throws Exception {
-        List polys = node.getChildValues(Polygon.class);
+        List polys = node.getChildValues(Surface.class);
+        Set<Surface> set = new HashSet<Surface>(polys);
+        return gBuilder.createMultiSurface(set);
 
         //return gFactory.createMultiPolygon((Polygon[]) polys.toArray(new Polygon[polys.size()]));
-        return null;
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
         if (GML.polygonMember.equals(name)) {
-           /* MultiPolygon multiPolygon = (MultiPolygon) object;
-            Polygon[] members = new Polygon[multiPolygon.getNumGeometries()];
+        	MultiSurface multiSurface = (MultiSurface) object;
+        	Surface[] members = new Surface[multiSurface.getElements().size()];
+        	
+        	int i = 0;
+        	for (OrientableSurface s : multiSurface.getElements()) {
+        		members[i++] = (Surface) s;
+        	}
+        	GML3EncodingUtils.setChildIDs(multiSurface);
 
-            for (int i = 0; i < members.length; i++) {
-                members[i] = (Polygon) multiPolygon.getGeometryN(i);
-            }
-
-            GML3EncodingUtils.setChildIDs(multiPolygon);*/
-
-            return null;
+            return members;
         }
-
         return null;
     }
 

@@ -10,10 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -55,11 +56,10 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.geometry.iso.io.wkt.ParseException;
 import org.geotools.geometry.iso.io.wkt.WKTReader;
+import org.geotools.geometry.iso.sfcgal.util.SFCGALConvertor;
 import org.geotools.geometry.iso.util.JTSParser;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.swing.action.SafeAction;
 import org.geotools.swing.data.JDataStoreWizard;
@@ -70,10 +70,27 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.ISOGeometryBuilder;
-import org.opengis.geometry.coordinate.LineSegment;
 import org.opengis.geometry.primitive.Curve;
+import org.opengis.geometry.primitive.OrientableSurface;
+import org.opengis.geometry.primitive.Surface;
+import org.osgeo.proj4j.CRSFactory;
+import org.osgeo.proj4j.CoordinateReferenceSystem;
+import org.osgeo.proj4j.CoordinateTransform;
+import org.osgeo.proj4j.CoordinateTransformFactory;
+import org.osgeo.proj4j.ProjCoordinate;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.math.Vector3D;
+import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
+
+import earcut4j.Earcut;
+import edu.pnu.stemlab.sfcgal4j.SFAlgorithm;
+import edu.pnu.stemlab.sfcgal4j.SFGeometry;
+import edu.pnu.stemlab.sfcgal4j.SFPolygon;
 
 /**
  * @author hgryoo
@@ -102,6 +119,8 @@ public class CityGML4JConvertorTest extends JFrame {
 
 		URL url = CityGML4JConvertorTest.class.getResource("CityGML_Building.gml");
 		CityGMLReader reader = in.createCityGMLReader(new File(url.getPath()));
+		
+		/*
 		reader = in.createFilteredCityGMLReader(reader, new CityGMLInputFilter() {
 			// return true if you want to consume the CityGML feature
 						// of the given qualified XML name, false otherwise
@@ -110,6 +129,7 @@ public class CityGML4JConvertorTest extends JFrame {
 						&& (name.getLocalPart().equals("Building") || name.getLocalPart().contains("Surface"));
 			}
 		});
+		*/
 		
 		int num = 0;
 		while (reader.hasNext()) {
@@ -117,14 +137,25 @@ public class CityGML4JConvertorTest extends JFrame {
 			
 			if(obj instanceof Building) {
 				Building b = (Building) obj;
-				String id = b.getId();
+				String id = b.getId().substring(0, 10);
 				buildings.put(id, b);
-			} else {
+			} else if(obj instanceof AbstractBoundarySurface){
 				AbstractBoundarySurface abs = (AbstractBoundarySurface) obj;
 				String id = abs.getId();
 				boundaries.put(id, abs);
+			} else {
+				System.out.println(obj);
 			}
 		}
+		
+		CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
+		CRSFactory csFactory = new CRSFactory();
+		
+		final String source = "+proj=lcc +lat_1=41.03333333333333 +lat_2=40.66666666666666 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000.0000000001 +y_0=0 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192 +no_defs ";
+		CoordinateReferenceSystem crs = csFactory.createFromParameters("SOURCE",source);
+		final String custom = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
+		CoordinateReferenceSystem customCRS = csFactory.createFromParameters("CUSTOM",custom);
+		CoordinateTransform trans = ctFactory.createTransform(crs, customCRS);
 		
 		for(Building b : buildings.values()) {
 			List<BoundarySurfaceProperty> list = b.getBoundedBySurface();
@@ -133,24 +164,76 @@ public class CityGML4JConvertorTest extends JFrame {
 			for(BoundarySurfaceProperty bsp : list) {
 				String href = bsp.getHref();
 				AbstractBoundarySurface surface = boundaries.get(href.replace("#", ""));
+				
+				System.out.println(surface.getClass().getSimpleName());
+					
 				surfaces.add(surface);
 			}
 			
+			GeometryFactory gf = new GeometryFactory();
 			MultiPolygon mp = CityGML2JTS.toMultiPolygon(surfaces);
-			buildingMap.put(b.getId(), mp);
-			num++;
+			
+			Polygon[] transformedPolygons = new Polygon[mp.getNumGeometries()];
+			for(int i = 0; i< mp.getNumGeometries(); i++) {
+				Geometry g = mp.getGeometryN(i);
+				Polygon p = (Polygon) g;
+				
+				Coordinate[] coordinates = p.getCoordinates();
+				Coordinate[] transformed = new Coordinate[coordinates.length];
+				for(int j = 0; j < coordinates.length; j++) {
+				    ProjCoordinate p1 = new ProjCoordinate();
+				    ProjCoordinate p2 = new ProjCoordinate();
+					
+				    p1.x = coordinates[j].y;
+				    p1.y = coordinates[j].x;
+				    p1.z = coordinates[j].z;
+				    
+					trans.transform(p1, p2);
+					transformed[j] = new Coordinate(p2.x, p2.y, coordinates[j].z);
+				}
+				
+				Polygon p2 = gf.createPolygon(transformed);
+				transformedPolygons[i] = p2;
+			}
+			
+			List<Polygon> earcuts = new ArrayList<Polygon>();
+			for(Polygon p : transformedPolygons) {
+				if(!p.isEmpty()) {
+					List<Polygon> triangles = triangulate(p.getExteriorRing().getCoordinates(), null, gf);
+					earcuts.addAll(triangles);
+				}
+			}
+			Polygon[] array = earcuts.toArray(new Polygon[earcuts.size()]);
+			MultiPolygon transformedMP = gf.createMultiPolygon(array);
+			
+			
+			/*
+			List<Polygon> earcuts = new ArrayList<Polygon>();
+			for(Polygon p : transformedPolygons) {
+				if(!p.isEmpty()) {
+					List<Polygon> triangles = getTriangles(p, gf);
+					earcuts.addAll(triangles);
+				}
+			}
+			Polygon[] array = earcuts.toArray(new Polygon[earcuts.size()]);
+			MultiPolygon transformedMP = gf.createMultiPolygon(array);
+			*/
+			
+			//MultiPolygon transformedMP = gf.createMultiPolygon(transformedPolygons);
+			
+			buildingMap.put(b.getId(), transformedMP);
+			System.out.println("buildings : " + num++);
 		}
 		
 		System.out.println("number of buildings : " + num);
 		//System.out.println(buildingMap);
 		reader.close();
 		
-		
 		ISOSimpleFeatureTypeBuilder b = new ISOSimpleFeatureTypeBuilder();
 		b.setCRS(DefaultGeographicCRS.WGS84_3D);
 		b.setName("buildings");
 		b.add("bid", String.class);
-		b.add("geom", org.opengis.geometry.aggregate.MultiSurface.class);
+		b.add("geom", org.opengis.geometry.primitive.Surface.class);
 		this.schema = b.buildFeatureType();
 		SimpleFeatureBuilder fBuilder = new SimpleFeatureBuilder(this.schema, new ISOFeatureFactoryImpl());
 		
@@ -158,12 +241,178 @@ public class CityGML4JConvertorTest extends JFrame {
 		for(Map.Entry<String, MultiPolygon> e : buildingMap.entrySet()) {
 			MultiPolygon jtsMP = e.getValue();
 			org.opengis.geometry.aggregate.MultiSurface isoMS = JTSParser.parseMultiPolygon(geomBuilder, jtsMP);
-			fBuilder.add( e.getKey() );
-			fBuilder.add( isoMS );
-			SimpleFeature feature = fBuilder.buildFeature( e.getKey() );
-			features.add(feature);
+			
+			for(OrientableSurface os : isoMS.getElements()) {
+				fBuilder.add( e.getKey() );
+				
+				SFGeometry geom = SFCGALConvertor.geometryToSFCGALGeometry(os);
+				boolean valid = SFAlgorithm.isValid(geom, 0);
+				if(!valid) {
+					SFPolygon poly = (SFPolygon) geom;
+					System.out.println(os);
+				}
+				
+				fBuilder.add( os );
+				SimpleFeature feature = fBuilder.buildFeature( e.getKey() );
+				features.add(feature);
+			}
 		}
 		
+	}
+	
+	public static List<Polygon> getTriangles(Polygon p, GeometryFactory gf) {
+		List<Polygon> triangles = new ArrayList<Polygon>();
+		
+		Coordinate[] coords = p.getCoordinates();
+		double[] coordv = new double[(coords.length - 1) * 3];
+		
+		int idx = 0;
+        for(int i = 0; i < coords.length - 1; i++) {
+            coordv[idx] = coords[i].x;
+            coordv[idx + 1] = coords[i].y;
+            coordv[idx + 2] = coords[i].z;
+            idx += 3;
+        }
+        
+        List<Integer> tIdx = Earcut.earcut(coordv, null, 3);
+        for(int i = 0; i < tIdx.size(); i += 3) {
+            Coordinate c1 = coords[tIdx.get(i)];
+            Coordinate c2 = coords[tIdx.get(i + 1)];
+            Coordinate c3 = coords[tIdx.get(i + 2)];
+
+            Polygon t = gf.createPolygon(new Coordinate[] {c1, c2, c3, c1} );
+            triangles.add(t);
+        }
+        
+		return triangles;
+	}
+	
+	public static Vector3D calVector (Coordinate[] vertices) {
+	      double vecx1 = vertices[1].x - vertices[0].x;
+	      double vecx2 = vertices[2].x - vertices[0].x;
+	     
+	      double vecy1 = vertices[1].y - vertices[0].y;
+	      double vecy2 = vertices[2].y - vertices[0].y;
+	      
+	      double vecz1 = vertices[1].z - vertices[0].z;
+	      double vecz2 = vertices[2].z - vertices[0].z;
+
+	      double nx = Math.abs(vecy1 * vecz2 - vecz1 * vecy2);
+	      double ny = Math.abs(-(vecx1 * vecz2 - vecz1 * vecx2));
+	      double nz = Math.abs(vecx1 * vecy2 - vecy1 * vecx2);
+	      
+	      return new Vector3D(nx, ny, nz);
+	}
+	
+	public static List<Polygon> triangulate (Coordinate[] exterior, List<Coordinate[]> interior, GeometryFactory gf) {
+		  Vector3D vec = calVector(exterior);
+		  
+		  double nx = vec.getX();
+		  double ny = vec.getY();
+		  double nz = vec.getZ();
+		  
+	      double max = Math.max(nx, ny);
+	      max = Math.max(max, nz);
+	      
+	      List<Double> newVertices = new ArrayList<Double>();
+	      List<Double> newInterior = new ArrayList<Double>();
+	      if(nz == max){
+	          for(int i = 0; i < exterior.length; i++) {
+	        	  newVertices.add(exterior[i].x);
+	              newVertices.add(exterior[i].y);
+	          }
+
+	          if(interior != null) {
+		          for(int i = 0; i < interior.size(); i++) {
+		        	  Coordinate[] coords = interior.get(i);
+		        	  for(int j = 0; j < coords.length; j++) {
+		        		  newInterior.add(coords[j].x);
+		        		  newInterior.add(coords[j].y);
+		        	  }
+		          }
+	          }
+	      }
+	      else if(nx == max){
+	          for(int i = 0; i < exterior.length; i++) {
+	        	  newVertices.add(exterior[i].y);
+	              newVertices.add(exterior[i].z);
+	          }
+
+	          if(interior != null) {
+		          for(int i = 0; i < interior.size(); i++) {
+		        	  Coordinate[] coords = interior.get(i);
+		        	  for(int j = 0; j < coords.length; j++) {
+		        		  newInterior.add(coords[j].y);
+		        		  newInterior.add(coords[j].z);
+		        	  }
+		          }
+	          }
+	      }
+	      else {
+	          for(int i = 0; i < exterior.length; i++) {
+	        	  newVertices.add(exterior[i].x);
+	              newVertices.add(exterior[i].z);
+	          }
+	          if(interior != null) {
+		          for(int i = 0; i < interior.size(); i++) {
+		        	  Coordinate[] coords = interior.get(i);
+		        	  for(int j = 0; j < coords.length; j++) {
+		        		  newInterior.add(coords[j].x);
+		        		  newInterior.add(coords[j].z);
+		        	  }
+		          }
+	          }
+	      }
+	      
+	      int interiorStartIndex = (newVertices.size() / 2) - 1;
+	      newVertices.addAll(newInterior);
+	      
+	      double[] array = new double[newVertices.size()];
+	      for(int i = 0; i < newVertices.size(); i++) {
+	    	  array[i] = newVertices.get(i);
+	      }
+	      
+	      List<Integer> triangleIdx = Earcut.earcut(array, new int[] {interiorStartIndex}, 2);
+	      
+	      List<Double> vertices = new ArrayList<Double>();
+	      for(int i = 0; i < exterior.length; i++) {
+	    	  vertices.add(exterior[i].x);
+	    	  vertices.add(exterior[i].y);
+	    	  vertices.add(exterior[i].z);
+          }
+
+	      if(interior != null) {
+	          for(int i = 0; i < interior.size(); i++) {
+	        	  Coordinate[] coords = interior.get(i);
+	        	  for(int j = 0; j < coords.length; j++) {
+	        		  vertices.add(coords[j].x);
+	        		  vertices.add(coords[j].y);
+	        		  vertices.add(coords[j].z);
+	        	  }
+	          }
+	      }
+	      
+          List<Coordinate> partition = new ArrayList<Coordinate>();
+	      for(int i = 0; i < triangleIdx.size(); i++) {
+	    	  Coordinate c = new Coordinate(
+	    			  vertices.get(triangleIdx.get(i) * 3), 
+	    			  vertices.get(triangleIdx.get(i) * 3 + 1),
+	    			  vertices.get(triangleIdx.get(i) * 3 + 2));
+	    	  partition.add(c);
+	      }
+	      
+	      List<Polygon> triangles = new ArrayList<Polygon>();
+	      for(int i = 0; i < partition.size(); i = i + 3) {
+	    	  Polygon poly = gf.createPolygon(new Coordinate[] {
+	    			  partition.get(i),
+	    			  partition.get(i + 1),
+	    			  partition.get(i + 2),
+	    			  partition.get(i)
+	    	  });
+	    	  triangles.add(poly);
+	      }
+	      
+	      return triangles;
 	}
 	
 	public CityGML4JConvertorTest() {
@@ -344,7 +593,7 @@ public class CityGML4JConvertorTest extends JFrame {
 	public static void main(String[] args) throws Exception {
 		Hints h = new Hints();
 		h.put(Hints.GEOMETRY_VALIDATE, false);
-		h.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+		h.put(Hints.CRS, CRS.decode("EPSG:2263"));
 		geomBuilder = new ISOGeometryBuilder(h);
 		CityGML4JConvertorTest frame = new CityGML4JConvertorTest();
 		frame.importCityGML();

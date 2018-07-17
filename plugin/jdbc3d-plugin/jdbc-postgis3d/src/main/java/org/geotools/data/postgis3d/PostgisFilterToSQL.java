@@ -100,7 +100,8 @@ public class PostgisFilterToSQL extends FilterToSQL {
             } else {
                 out.write("'SRID=" + currentSRID + ";");
             }
-    		out.write(writer.getString(geom));//geom.toText());
+    		out.write(writer.getString(geom));
+    		//geom.toText());
     		
     		/*
             if(geom.getCoordinateReferenceSystem() == null && currentGeometry  != null) {

@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.CRS.AxisOrder;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.logging.Logging;
 import org.geotools.xml.transform.TransformerBase;
@@ -200,7 +201,7 @@ public class GeometryTransformer extends TransformerBase {
                 CoordinateSequence coordSeq = new PackedCoordinateSequence.Double(coords, 2);*/
             	CoordinateReferenceSystem crs = null;
             	if(bounds.getCoordinateReferenceSystem() == null) {
-            		crs = DefaultGeographicCRS.WGS84_3D;
+            		crs = DefaultGeocentricCRS.CARTESIAN;
             	} else {
             		crs = bounds.getCoordinateReferenceSystem();
             	}

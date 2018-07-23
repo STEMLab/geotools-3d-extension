@@ -83,6 +83,6 @@
   </dependencies>
 
   <modules>
-    <module>jdbc-postgis3d</module>
+  	<module>jdbc-postgis3d</module>
   </modules>
 </project>

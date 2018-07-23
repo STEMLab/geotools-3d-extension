@@ -54,6 +54,19 @@
       <version>${project.version}</version>
     </dependency> 
 
+	<dependency>
+	  <groupId>org.citygml4j</groupId>
+	  <artifactId>citygml4j</artifactId>
+	  <version>2.7.0</version>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/org.osgeo/proj4j -->
+	<dependency>
+	    <groupId>org.osgeo</groupId>
+	    <artifactId>proj4j</artifactId>
+	    <version>0.1.0</version>
+	</dependency>
+
     <!-- Provides GUI components -->
     <dependency>
         <groupId>org.geotools</groupId>
@@ -64,6 +77,20 @@
         <groupId>org.geotools</groupId>
         <artifactId>gt-cql</artifactId>
         <version>${project.version}</version>
+    </dependency>
+    
+    <dependency>
+	    <groupId>earcut4j</groupId>
+	    <artifactId>earcut4j</artifactId>
+	    <version>2.1.1</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/lib/earcut4j-2.1.1.jar</systemPath>
+	</dependency>
+	
+	<dependency>
+        <groupId>edu.pnu.stemlab</groupId>
+        <artifactId>sfcgal4j-platform</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <!--<dependency>
         <groupId>org.geotools.jdbc</groupId>

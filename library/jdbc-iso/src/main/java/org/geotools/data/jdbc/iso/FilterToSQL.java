@@ -37,6 +37,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.Hints;
 import org.geotools.filter.FilterCapabilities;
 import org.geotools.filter.FunctionImpl;
+import org.geotools.filter.ISOFilterFactoryImpl;
 import org.geotools.filter.LikeFilterImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.geotools.jdbc.iso.JDBCDataStore;
@@ -161,7 +162,7 @@ public class FilterToSQL implements FilterVisitor, ExpressionVisitor {
     protected static final String IO_ERROR = "io problem writing filter";
 
     /** filter factory */
-    protected static FilterFactory filterFactory = CommonFactoryFinder.getFilterFactory(null);
+    protected static FilterFactory filterFactory = new ISOFilterFactoryImpl();
     
     /** The filter types that this class can encode */
     protected FilterCapabilities capabilities = null;

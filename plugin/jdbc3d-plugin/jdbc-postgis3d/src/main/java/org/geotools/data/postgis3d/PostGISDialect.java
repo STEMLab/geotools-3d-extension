@@ -59,6 +59,8 @@ import org.geotools.jdbc.iso.BasicSQLDialect;
 import org.geotools.jdbc.iso.ColumnMetadata;
 import org.geotools.jdbc.iso.JDBCDataStore;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.Version;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -415,15 +417,15 @@ public class PostGISDialect extends BasicSQLDialect {
                 if (att instanceof GeometryDescriptor) {
                     // use estimated extent (optimizer statistics)
                     StringBuffer sql = new StringBuffer();
-                    sql.append("select ST_AsText(ST_force_2d(ST_Envelope(ST_Estimated_Extent('");
+                    sql.append("select ST_AsText(BOX3D(ST_Extent(\"");
+                    sql.append(att.getName().getLocalPart());
+                    sql.append("\"))) FROM ");
+                    
                     if(schema != null) {
                         sql.append(schema);
-                        sql.append("', '");
+                        sql.append(".");
                     }
                     sql.append(tableName);
-                    sql.append("', '");
-                    sql.append(att.getName().getLocalPart());
-                    sql.append("'))))");
                     rs = st.executeQuery(sql.toString());
 
                     if (rs.next()) {
@@ -462,7 +464,7 @@ public class PostGISDialect extends BasicSQLDialect {
         try {
             String envelope = rs.getString(column);
             if (envelope != null)
-                return new WKTReader(GeoTools.getDefaultHints()).read(envelope).getEnvelope();
+                return new WKTReader(DefaultGeocentricCRS.CARTESIAN).read(envelope).getEnvelope();
             else// empty one
                 return null;//new Envelope();
         } catch (ParseException e) {
@@ -1085,7 +1087,7 @@ public class PostGISDialect extends BasicSQLDialect {
         	
         	GeometryToPostGISWKTString writer = new GeometryToPostGISWKTString(false);
             String wkt = writer.getString(value);
-            sql.append("ST_GeomFromText('" + wkt + "', " + srid + ")");
+            sql.append("ST_GeomFromEWKT('" + "SRID=" + srid + ";" + wkt + "')");
             
 
         }

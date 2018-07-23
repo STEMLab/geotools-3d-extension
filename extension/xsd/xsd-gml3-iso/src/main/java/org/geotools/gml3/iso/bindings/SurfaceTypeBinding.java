@@ -16,6 +16,11 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
@@ -23,7 +28,11 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -116,14 +125,15 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return new MultiPolygonTypeBinding(gb).parse(instance, node, value);
+    	List polys = node.getChildValues(SurfacePatch.class);
+    	return gb.createSurface(polys);
     }
 
     public int compareTo(Object o) {
         //JD: HACK here, since we map SurfaceType and MultiSurfaceType to MultiPolygon, there is a 
         // conflict when it comes to encoding where the actual type is not specifically specifid.
         // this comparison is made to ensure backwards compatability and favor MultiSurfaceTypeBinding 
-        if ( o instanceof MultiSurfaceTypeBinding ) {
+        if ( o instanceof SurfaceTypeBinding ) {
             return 1;
         }
         return 0;

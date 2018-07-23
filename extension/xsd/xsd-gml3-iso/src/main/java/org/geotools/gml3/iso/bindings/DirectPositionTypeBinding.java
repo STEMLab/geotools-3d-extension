@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
@@ -105,12 +106,14 @@ public class DirectPositionTypeBinding extends AbstractComplexBinding {
     	
     	//TODO HACK
     	if(gBuilder.getCoordinateReferenceSystem().getCoordinateSystem().getDimension() != dPos.length) {
-
+    		gBuilder.setCoordinateReferenceSystem(DefaultGeocentricCRS.CARTESIAN);
+    		/*
     		if(dPos.length == 2) {
     			gBuilder.setCoordinateReferenceSystem(DefaultGeographicCRS.WGS84);
     		} else {
     			gBuilder.setCoordinateReferenceSystem(CRS.decode("EPSG:4329"));
     		}
+    		*/
     	}
     	
         DirectPosition dp = gBuilder.createDirectPosition(dPos);

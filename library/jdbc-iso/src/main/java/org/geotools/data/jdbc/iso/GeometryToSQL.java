@@ -125,7 +125,7 @@ public class GeometryToSQL {
 	}
 
 	public String multiSurfaceToString(MultiSurface ms) {
-		return "MultiSurface(" + this.multiSurfaceCoordToString(ms) + ")";
+		return "MultiPolygon(" + this.multiSurfaceCoordToString(ms) + ")";
 	}
 	
 	public String multiSolidToString(MultiSolidImpl ms) {

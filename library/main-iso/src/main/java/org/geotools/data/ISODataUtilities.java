@@ -88,6 +88,7 @@ import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.resources.i18n.ErrorKeys;
 import org.geotools.resources.i18n.Errors;
@@ -1188,7 +1189,7 @@ public class ISODataUtilities {
             return new java.util.Date(0);
 
         if(type.isAssignableFrom(Geometry.class)) {
-	        ISOGeometryBuilder fac = new ISOGeometryBuilder(DefaultGeographicCRS.WGS84);
+	        ISOGeometryBuilder fac = new ISOGeometryBuilder(DefaultGeocentricCRS.CARTESIAN);
 	        DirectPosition ds = fac.createDirectPosition();
 	        
 	        //TODO : set the default value of ISO Geometry
@@ -2409,7 +2410,7 @@ public class ISODataUtilities {
                 hints.put(Hints.CRS, crs);
             } else {
                 //set default crs
-                hints.put(Hints.CRS, DefaultGeographicCRS.WGS84);
+                hints.put(Hints.CRS, DefaultGeocentricCRS.CARTESIAN);
             }
         }
         

@@ -28,6 +28,7 @@ import org.geotools.geometry.iso.primitive.PrimitiveFactoryImpl;
 import org.geotools.geometry.iso.primitive.RingImplUnsafe;
 import org.geotools.geometry.iso.primitive.SurfaceImpl;
 import org.geotools.geometry.iso.root.GeometryImpl;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.DirectPosition;
 import org.opengis.geometry.Geometry;
@@ -60,7 +61,7 @@ public class Geometry3DOperationTest extends TestCase {
 
         public void testMain() {
                 hints = GeoTools.getDefaultHints();
-                hints.put(Hints.CRS, DefaultGeographicCRS.WGS84_3D);
+                hints.put(Hints.CRS, DefaultGeocentricCRS.CARTESIAN);
                 hints.put(Hints.GEOMETRY_VALIDATE, false);
                 builder = new ISOGeometryBuilder(hints);
 

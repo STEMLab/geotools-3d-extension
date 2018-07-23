@@ -90,8 +90,20 @@ public class PostgisFilterToSQL extends FilterToSQL {
         	if(geom instanceof Solid) {
         		out.write("ST_makeSolid(");
         	}
-    		out.write("ST_GeomFromText('");
-    		out.write(writer.getString(geom));//geom.toText());
+    		//out.write("ST_GeomFromEWKT('");
+        	if(geom.getCoordinateReferenceSystem() == null && currentGeometry  != null) {
+                // if we don't know at all, use the srid of the geometry we're comparing against
+                // (much slower since that has to be extracted record by record as opposed to 
+                // being a constant)
+                //out.write("', ST_SRID(\"EPSG:" + CRS.toSRS(geom.getCoordinateReferenceSystem()) + "\"))");
+                out.write("'SRID=" + CRS.toSRS(geom.getCoordinateReferenceSystem()) + ";");
+            } else {
+                out.write("'SRID=" + currentSRID + ";");
+            }
+    		out.write(writer.getString(geom));
+    		//geom.toText());
+    		
+    		/*
             if(geom.getCoordinateReferenceSystem() == null && currentGeometry  != null) {
                 // if we don't know at all, use the srid of the geometry we're comparing against
                 // (much slower since that has to be extracted record by record as opposed to 
@@ -100,7 +112,9 @@ public class PostgisFilterToSQL extends FilterToSQL {
             } else {
                 out.write("', " + currentSRID + ")");
             }
-        	
+            */
+    		out.write("'::geometry");
+    		
         	if(geom instanceof Solid) {
         		out.write(")");
         	}

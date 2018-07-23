@@ -39,17 +39,24 @@ package org.geotools.data.postgis3d;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.geotools.factory.GeoTools;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.Geometry;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.aggregate.MultiCurve;
+import org.opengis.geometry.aggregate.MultiPoint;
+import org.opengis.geometry.aggregate.MultiPrimitive;
+import org.opengis.geometry.aggregate.MultiSurface;
 import org.opengis.geometry.coordinate.PointArray;
 import org.opengis.geometry.primitive.Curve;
 import org.opengis.geometry.primitive.OrientableCurve;
 import org.opengis.geometry.primitive.OrientableSurface;
 import org.opengis.geometry.primitive.Point;
+import org.opengis.geometry.primitive.Primitive;
 import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Shell;
 import org.opengis.geometry.primitive.Solid;
@@ -59,9 +66,7 @@ import org.opengis.geometry.primitive.SurfaceBoundary;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.LinearRing;
 //import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ByteArrayInStream;
 import com.vividsolutions.jts.io.ByteOrderDataInStream;
@@ -229,27 +234,19 @@ public class WKBReader {
             geom = readPolyHedralSurface();
             break;
         case WKBConstants.wkbMultiPoint:
-        	//TODO 
-        	throw new UnsupportedOperationException();
-            //geom = readMultiPoint();
-            //break;
+        	geom = readMultiPoint();
+            break;
         case WKBConstants.wkbMultiCurve:
         case WKBConstants.wkbMultiLineString:
-        	//TODO 
-        	throw new UnsupportedOperationException();
-            //geom = readMultiLineString();
-            //break;
+        	geom = readMultiLineString();
+            break;
         case WKBConstants.wkbMultiPolygon:
         case WKBConstants.wkbMultiSurface:
-        	//TODO 
-        	throw new UnsupportedOperationException();
-            //geom = readMultiPolygon();
-            //break;
+        	geom = readMultiPolygon();
+            break;
         case WKBConstants.wkbGeometryCollection:
-        	//TODO 
-        	throw new UnsupportedOperationException();
-            //geom = readGeometryCollection();
-            //break;
+        	geom = readGeometryCollection();
+            break;
         case WKBConstants.wkbCircularString:
         	//TODO 
         	throw new UnsupportedOperationException();
@@ -360,7 +357,58 @@ public class WKBReader {
         
         return (Ring) builder.createRing(exterior);
 
-    }/*
+   }
+   
+   private MultiSurface readMultiPolygon() throws IOException, ParseException {
+       int numGeom = dis.readInt();
+       
+       Set<Surface> surfaces = new HashSet<Surface>();
+       for (int i = 0; i < numGeom; i++) {
+           Geometry g = readGeometry();
+           if (!(g instanceof Surface))
+               throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPolygon");
+           surfaces.add((Surface) g);
+       }
+       return builder.createMultiSurface(surfaces);
+   }
+   
+   private MultiPoint readMultiPoint() throws IOException, ParseException {
+       int numGeom = dis.readInt();
+       
+       Set<Point> points = new HashSet<Point>();
+       for (int i = 0; i < numGeom; i++) {
+           Geometry g = readGeometry();
+           if (!(g instanceof Point))
+               throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPoint");
+           points.add((Point) g);
+       }
+       return builder.createMultiPoint(points);
+   }
+
+   private MultiCurve readMultiLineString() throws IOException, ParseException {
+       int numGeom = dis.readInt();
+       Set<Curve> curves = new HashSet<Curve>();
+       for (int i = 0; i < numGeom; i++) {
+           Geometry g = readGeometry();
+           if (!(g instanceof Curve))
+               throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiLineString");
+           curves.add((Curve) g);
+       }
+       return builder.createMultiCurve(curves);
+   }
+
+   private MultiPrimitive readGeometryCollection() throws IOException, ParseException {
+       int numGeom = dis.readInt();
+       
+       Set<Primitive> geoms = new HashSet<Primitive>();
+       for (int i = 0; i < numGeom; i++) {
+    	   Geometry g = readGeometry();
+    	   geoms.add((Primitive) g);
+       }
+       return builder.createMultiPrimitive(geoms);
+   }
+   
+   /*
    private LinearRing readLinearRing() throws IOException {
        int size = dis.readInt();
        double[] pts = readCoordinateSequenceRing(size);
@@ -402,53 +450,7 @@ public class WKBReader {
         }
         return builder.createPolygon(shell, holes);
     }
-
-    
-
-    private MultiPoint readMultiPoint() throws IOException, ParseException {
-        int numGeom = dis.readInt();
-        Point[] geoms = new Point[numGeom];
-        for (int i = 0; i < numGeom; i++) {
-            Geometry g = readGeometry();
-            if (!(g instanceof Point))
-                throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPoint");
-            geoms[i] = (Point) g;
-        }
-        return builder.createMultiPoint(geoms);
-    }
-
-    private MultiLineString readMultiLineString() throws IOException, ParseException {
-        int numGeom = dis.readInt();
-        LineString[] geoms = new LineString[numGeom];
-        for (int i = 0; i < numGeom; i++) {
-            Geometry g = readGeometry();
-            if (!(g instanceof LineString))
-                throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiLineString");
-            geoms[i] = (LineString) g;
-        }
-        return builder.createMultiLineString(geoms);
-    }
-
-    private MultiPolygon readMultiPolygon() throws IOException, ParseException {
-        int numGeom = dis.readInt();
-        Polygon[] geoms = new Polygon[numGeom];
-        for (int i = 0; i < numGeom; i++) {
-            Geometry g = readGeometry();
-            if (!(g instanceof Polygon))
-                throw new ParseException(INVALID_GEOM_TYPE_MSG + "MultiPolygon");
-            geoms[i] = (Polygon) g;
-        }
-        return builder.createMultiPolygon(geoms);
-    }
-
-    private GeometryCollection readGeometryCollection() throws IOException, ParseException {
-        int numGeom = dis.readInt();
-        Geometry[] geoms = new Geometry[numGeom];
-        for (int i = 0; i < numGeom; i++) {
-            geoms[i] = readGeometry();
-        }
-        return builder.createGeometryCollection(geoms);
-    }*/
+    */
 
     //private CoordinateSequence readCoordinateSequence(int size) throws IOException {
     private double[] readCoordinateSequence(int size) throws IOException {

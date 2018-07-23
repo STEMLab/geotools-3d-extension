@@ -24,6 +24,7 @@ import java.util.Set;
 import org.geotools.factory.Factory;
 import org.geotools.factory.Hints;
 import org.geotools.geometry.iso.PrecisionModel;
+import org.geotools.referencing.crs.DefaultGeocentricCRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.geometry.aggregate.AggregateFactory;
 import org.opengis.geometry.aggregate.MultiCurve;
@@ -74,7 +75,7 @@ public class AggregateFactoryImpl implements Factory, AggregateFactory {
 	 */
 	public AggregateFactoryImpl(Hints hints) {
 		if (hints == null) {
-		    this.crs =  DefaultGeographicCRS.WGS84;
+		    this.crs =  DefaultGeocentricCRS.CARTESIAN;
 		}
 		else {
 			this.crs = (CoordinateReferenceSystem) hints.get(Hints.CRS);

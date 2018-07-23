@@ -16,6 +16,8 @@
  */
 package org.geotools.gml3.iso.bindings;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.geotools.gml3.iso.GML;
@@ -24,10 +26,11 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
+import org.opengis.geometry.coordinate.Polygon;
+import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
+import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:PolygonPatchType.
@@ -102,7 +105,7 @@ public class PolygonPatchTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Surface.class;
+        return Polygon.class;
     }
 
     /**
@@ -111,7 +114,17 @@ public class PolygonPatchTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-        return new PolygonTypeBinding( gBuilder ).parse( instance, node, value);
+        //TODO: schema allows no exterior ring, but what the heck is that all about ?
+        Ring exterior = (Ring) node.getChildValue("exterior");
+        List<Ring> interiors = null;
+
+        if (node.hasChild("interior")) {
+            List list = node.getChildValues("interior");
+            interiors = list;
+        }
+
+        SurfaceBoundary sb = gBuilder.createSurfaceBoundary(exterior, interiors);
+        return gBuilder.createPolygon(sb);
     }
 
 }

@@ -252,6 +252,12 @@ public class WKTReader {
 	 */
 	private String getNextEmptyOrOpener() throws IOException, ParseException {
 		String nextWord = getNextWord();
+		
+		//HACK for reading Z or M
+		if(nextWord.contains("Z") || nextWord.contains("M")) {
+			nextWord = getNextWord();
+		}
+		
 		if (nextWord.equals(EMPTY) || nextWord.equals(L_PAREN)) {
 			return nextWord;
 		}

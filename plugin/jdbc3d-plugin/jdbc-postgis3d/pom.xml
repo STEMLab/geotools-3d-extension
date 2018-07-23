@@ -13,19 +13,15 @@
                                http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-  <groupId>org.geotools.jdbc</groupId>
-  <artifactId>gt-jdbc3d-plugin</artifactId>
-  <version>15-SNAPSHOT</version>
+	  <groupId>org.geotools.jdbc</groupId>
+	  <artifactId>gt-jdbc3d-plugin</artifactId>
+	  <version>15-SNAPSHOT</version>
   </parent>
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geotools.jdbc</groupId>
   <artifactId>gt-jdbc-postgis-iso</artifactId>
-  <packaging>jar</packaging>
   <name>PostGIS DataStore 3D</name>
-
-
 
   <description>
 	DataStore for PostGIS Database.
@@ -68,8 +64,6 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-jdbc-iso</artifactId>
       <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>

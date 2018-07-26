@@ -5,7 +5,10 @@
 
 This project is extension of [GeoTools](geotools.org) library to support 3D spatial operations.  
 We are just working on making a prototype now. We need to make many tests and fix bugs.  
-We will inform you if we are ready. Thank you. [Simple demonstration](https://www.youtube.com/watch?v=SsNlYwbfso8)
+We will inform you if we are ready. Thank you. 
+
+[Demonstration Video](https://www.youtube.com/watch?v=SsNlYwbfso8)
+[Demonstartion Site](http://13.209.49.135/start.html)
 
 | Continuous Integration | Chat |
 |:------------------:|:----:|

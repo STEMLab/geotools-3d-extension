@@ -5,8 +5,8 @@
 
 This project is extension of [GeoTools](geotools.org) library to support 3D spatial operations.  
 
--[Demonstration Video](https://www.youtube.com/watch?v=SsNlYwbfso8)
--[Demonstartion Site](http://13.209.49.135/start.html)
+* [Demonstration Video](https://www.youtube.com/watch?v=SsNlYwbfso8)
+* [Demonstartion Site](http://13.209.49.135/start.html)
 
 | Continuous Integration | Chat |
 |:------------------:|:----:|

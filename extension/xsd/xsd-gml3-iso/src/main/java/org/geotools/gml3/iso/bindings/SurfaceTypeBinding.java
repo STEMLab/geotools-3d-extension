@@ -16,10 +16,8 @@
  */
 package org.geotools.gml3.iso.bindings;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -28,11 +26,7 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
-import org.opengis.geometry.coordinate.Polygon;
-import org.opengis.geometry.primitive.Ring;
 import org.opengis.geometry.primitive.Surface;
-import org.opengis.geometry.primitive.SurfaceBoundary;
-import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -126,7 +120,9 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
     	List polys = node.getChildValues("patches");
-    	return gb.createSurface(polys);
+    	Map<String, List> patchesMap = (Map<String, List>) polys.get(0);
+    	List patches = patchesMap.get("PolygonPatch");
+    	return gb.createSurface(patches);
     }
 
     public int compareTo(Object o) {

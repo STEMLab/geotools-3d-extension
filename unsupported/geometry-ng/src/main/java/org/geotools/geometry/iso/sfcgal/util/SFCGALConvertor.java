@@ -711,13 +711,26 @@ public class SFCGALConvertor {
                 }
                 merge = getSFGeometry(merge);
 
-                Curve exterior = curveFromSFCGALLineString((SFLineString) merge, crs);
-                
                 ISOGeometryBuilder builder = new ISOGeometryBuilder(crs);
-                SurfaceBoundary surfaceBoundary = builder.createSurfaceBoundary(exterior);
-                triangulatedSurface = new TriangulatedSurfaceImpl(
-                                (SurfaceBoundaryImpl) surfaceBoundary);
-
+                if(merge instanceof SFLineString) {
+                	Curve exterior = curveFromSFCGALLineString((SFLineString) merge, crs);
+                	SurfaceBoundary surfaceBoundary = builder.createSurfaceBoundary(exterior);
+                	triangulatedSurface = new TriangulatedSurfaceImpl(
+                            (SurfaceBoundaryImpl) surfaceBoundary);
+                } else if(merge instanceof SFMultiLineString) {
+                	SFMultiLineString multi = (SFMultiLineString) merge;
+                	List<Polygon> polys = new ArrayList<Polygon>();
+                	for(int i = 0; i < multi.numGeometries(); i++) {
+                		SFGeometry sfLine = multi.geometryN(i);
+                		sfLine = getSFGeometry(sfLine);
+                		Curve c = curveFromSFCGALLineString((SFLineString) sfLine, crs);
+                		SurfaceBoundary surfaceBoundary = builder.createSurfaceBoundary(c);
+                		polys.add(builder.createPolygon(surfaceBoundary));
+                	}
+                	triangulatedSurface = new TriangulatedSurfaceImpl(crs, 
+                			polys);
+                }
+                
                 return triangulatedSurface;
         }
 

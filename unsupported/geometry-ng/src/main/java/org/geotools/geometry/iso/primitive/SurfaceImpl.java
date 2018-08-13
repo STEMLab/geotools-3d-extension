@@ -220,7 +220,6 @@ public class SurfaceImpl extends OrientableSurfaceImpl implements Surface {
 		TransfiniteSet unionResultSurface = firstPatchSurface.union(ms);
 		if (! (unionResultSurface instanceof SurfaceImpl))
 			throw new IllegalArgumentException("Surface patches are not continuous");
-		
 		return (SurfaceBoundaryImpl) ((SurfaceImpl)unionResultSurface).getBoundary();
 	}
 

@@ -40,6 +40,7 @@ import org.opengis.geometry.primitive.Solid;
 import org.opengis.geometry.primitive.SolidBoundary;
 import org.opengis.geometry.primitive.Surface;
 import org.opengis.geometry.primitive.SurfaceBoundary;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * 
@@ -107,7 +108,20 @@ public class GeometryToWKTString {
 	}
 
 	private String surfaceToString(Surface s) {
-		return "Surface(" + surfaceBoundaryCoordToString((SurfaceBoundary)s.getBoundary()) + ")";
+		//if(s.getBoundary() != null) {
+			return "Surface(" + surfaceBoundaryCoordToString((SurfaceBoundary)s.getBoundary()) + ")";
+		/*
+		} else {
+			String str = "Surface(";
+			List<? extends SurfacePatch> patches = s.getPatches();
+			for(int i = 0; i < patches.size(); i++) {
+				SurfacePatch patch = patches.get(i);
+				str += patch.toString();
+			}
+			str += ")";
+			return str;
+		}
+		*/
 	}
 	
 	private String shellToString(Shell s) {

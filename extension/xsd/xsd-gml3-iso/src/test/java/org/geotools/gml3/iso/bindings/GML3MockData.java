@@ -1081,6 +1081,15 @@ public class GML3MockData {
         return surface;
     }
     
+    public static Element surface3D(Document document, Node parent, boolean addSrsDimension) {
+        Element surface = element(qName("Surface"), document ,parent);
+        Element patches = element(qName("patches"), document, surface);
+        
+        polygonWithPos3D(document, patches, qName("PolygonPatch"), true);
+        
+        return surface;
+    }
+    
     public static Element feature(Document document, Node parent) {
         Element feature = element(TEST.TestFeature, document, parent);
         Element geom = element(new QName(TEST.NAMESPACE, "geom"), document, feature);

@@ -125,7 +125,7 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      * @generated modifiable
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
-    	List polys = node.getChildValues("patches");
+    	List polys = node.getChildValues(SurfacePatch.class);
     	return gb.createSurface(polys);
     }
 

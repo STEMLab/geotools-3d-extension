@@ -90,7 +90,7 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
      * @generated modifiable
      */
     public Class getType() {
-        return Surface.class;
+        return Polygon.class;
     }
 
     /**
@@ -111,13 +111,13 @@ public class PolygonTypeBinding extends AbstractComplexBinding {
         }
 
         SurfaceBoundary sb = gBuilder.createSurfaceBoundary(exterior, interiors);
-        return gBuilder.createSurface(sb);
+        return gBuilder.createPolygon(sb);
     }
 
     public Object getProperty(Object object, QName name)
         throws Exception {
-    	Surface polygon = (Surface) object;
-    	SurfaceBoundary sb = polygon.getBoundary();
+    	Polygon polygon = (Polygon) object;
+    	SurfaceBoundary sb = (SurfaceBoundary) polygon.getBoundary();
     	
         if ("exterior".equals(name.getLocalPart())) {
             return sb.getExterior();

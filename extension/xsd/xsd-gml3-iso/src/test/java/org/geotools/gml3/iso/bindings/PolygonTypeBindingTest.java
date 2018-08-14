@@ -39,7 +39,7 @@ public class PolygonTypeBindingTest extends GML3TestSupport {
     
     @Override
     protected boolean enableExtendedArcSurfaceSupport() {
-        return true;
+        return false;
     }
 
     public void testNoInterior() throws Exception {
@@ -50,7 +50,7 @@ public class PolygonTypeBindingTest extends GML3TestSupport {
     }
 
     public void testPolygon3D() throws Exception {
-        GML3MockData.polygon3D(document, document, true);
+        GML3MockData.polygon3D(document, document, null, true);
 
         Surface polygon = (Surface) parse();
         assertNotNull(polygon);

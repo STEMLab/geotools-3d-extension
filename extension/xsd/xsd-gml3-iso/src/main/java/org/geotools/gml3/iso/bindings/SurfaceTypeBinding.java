@@ -27,6 +27,7 @@ import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.geometry.ISOGeometryBuilder;
 import org.opengis.geometry.primitive.Surface;
+import org.opengis.geometry.primitive.SurfacePatch;
 
 /**
  * Binding object for the type http://www.opengis.net/gml:SurfaceType.
@@ -120,9 +121,15 @@ public class SurfaceTypeBinding extends AbstractComplexBinding implements Compar
      */
     public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
     	List polys = node.getChildValues("patches");
-    	Map<String, List> patchesMap = (Map<String, List>) polys.get(0);
-    	List patches = patchesMap.get("PolygonPatch");
-    	return gb.createSurface(patches);
+    	
+    	Object first = polys.get(0);
+    	if(first instanceof Map) {
+        	Map<String, List> patchesMap = (Map<String, List>) polys.get(0);
+        	List patches = patchesMap.get("PolygonPatch");
+        	return gb.createSurface(patches);
+    	} else {
+        	return gb.createSurface(polys);
+    	}
     }
 
     public int compareTo(Object o) {

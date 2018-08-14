@@ -50,7 +50,7 @@ public class CompositeSurfaceTypeBindingTest extends GML3TestSupport {
     }
 
     public void testPolygon3D() throws Exception {
-        GML3MockData.polygon3D(document, document, true);
+        GML3MockData.polygon3D(document, document, null, true);
 
         Surface polygon = (Surface) parse();
         assertNotNull(polygon);

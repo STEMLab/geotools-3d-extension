@@ -349,6 +349,27 @@ public class GML3MockData {
         return linearRing;
     }
     
+    public static Element linearRingWithPos3D_2(Document document, Node parent, boolean addSrsDimension) {
+        Element linearRing = element(qName("LinearRing"), document, parent);
+        if(addSrsDimension) {
+            linearRing.setAttribute("srsDimension", "3");
+        }
+
+        Element pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.0 2.0 10.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("3.0 4.0 20.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("3.0 2.0 15.0"));
+
+        pos = element(qName("pos"), document, linearRing);
+        pos.appendChild(document.createTextNode("1.0 2.0 10.0"));
+
+        return linearRing;
+    }
+    
     public static Element interiorLinearRingWithPos3D(Document document, Node parent, boolean addSrsDimension) {
         Element linearRing = element(qName("LinearRing"), document, parent);
         if(addSrsDimension) {
@@ -662,9 +683,20 @@ public class GML3MockData {
         return polygon;
     }
     
-    public static Element polygon3D(Document document, Node parent, boolean addSrsDimension) {
-        return polygonWithPos3D(document, parent, qName("Polygon"), true);
+    public static Element polygon3D(Document document, Node parent, QName name, boolean addSrsDimension) {
+    	if(name == null) {
+    		name = qName("Polygon");
+    	}
+        return polygonWithPos3D(document, parent, name, true);
     }
+    
+    public static Element polygon3D_2(Document document, Node parent, QName name, boolean addSrsDimension) {
+    	if(name == null) {
+    		name = qName("Polygon");
+    	}
+    	return polygonWithPos3D_2(document, parent, name, true);
+    }
+    
     
     public static Element polygonWithPos3D(Document document, Node parent, QName name, boolean addSrsDimension) {
         Element polygon = element(name, document, parent);
@@ -677,6 +709,18 @@ public class GML3MockData {
         
         Element interior = element(qName("interior"), document, polygon);
         interiorLinearRingWithPos3D(document, interior, false);
+
+        return polygon;
+    }
+    
+    public static Element polygonWithPos3D_2(Document document, Node parent, QName name, boolean addSrsDimension) {
+        Element polygon = element(name, document, parent);
+        if(addSrsDimension) {
+            polygon.setAttribute("srsDimension", "3");
+        }
+
+        Element exterior = element(qName("exterior"), document, polygon);
+        linearRingWithPos3D_2(document, exterior, false);
 
         return polygon;
     }
@@ -878,10 +922,10 @@ public class GML3MockData {
         
 
         Element polygonMember = element(qName("polygonMember"), document, multiPolygon);
-        polygon3D(document, polygonMember, false);
+        polygon3D(document, polygonMember, qName("Polygon"), false);
 
         polygonMember = element(qName("polygonMember"), document, multiPolygon);
-        polygon3D(document, polygonMember, false);
+        polygon3D(document, polygonMember, qName("Polygon"), false);
 
         return multiPolygon;
     }
@@ -1077,6 +1121,25 @@ public class GML3MockData {
         Element patches = element(qName("patches"), document, surface);
         
         polygon(document,patches,qName("PolygonPatch"),true);
+        
+        return surface;
+    }
+    
+    public static Element surface3D(Document document, Node parent) {
+        Element surface = element(qName("Surface"), document ,parent);
+        Element patches = element(qName("patches"), document, surface);
+        
+        polygon3D(document,patches,qName("PolygonPatch"),true);
+        
+        return surface;
+    }
+    
+    public static Element surface3DMultiPatches(Document document, Node parent) {
+        Element surface = element(qName("Surface"), document ,parent);
+        Element patches = element(qName("patches"), document, surface);
+        
+        polygon3D(document,patches,qName("PolygonPatch"),true);
+        polygon3D_2(document,patches,qName("PolygonPatch"),true);
         
         return surface;
     }

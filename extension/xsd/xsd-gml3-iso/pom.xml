@@ -42,7 +42,12 @@
     </license>
   </licenses>
 
-
+  <properties>
+    <allow.test.skip>false</allow.test.skip>
+    <allow.test.failure.ignore>true</allow.test.failure.ignore>
+    <maven.test.skip>false</maven.test.skip>
+  </properties>
+  
   <!-- =========================================================== -->
   <!--     Developers and Contributors                             -->
   <!-- =========================================================== -->
